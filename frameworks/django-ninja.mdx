@@ -129,7 +129,7 @@ api = NinjaAPI()
 
 @api.get("/items", auth=APIKeyAuth())
 def list_items(request: HttpRequest) -> list[str]:
-    assert request.auth.check_scopes(["read:items"])  # type: ignore
+    assert request.auth.has_scopes(["read:items"])  # type: ignore
     print("Key name:", request.auth.name)  # type: ignore
     print("Key scopes:", request.auth.scopes)  # type: ignore
     return ["item1"]

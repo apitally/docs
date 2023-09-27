@@ -158,7 +158,7 @@ from apitally.starlette import ApitallyMiddleware, APIKeyAuth
 @requires(["authenticated"])
 def list_items(request: Request):
     assert request.user.is_authenticated
-    assert request.auth.check_scopes(["read:items"])
+    assert request.auth.has_scopes(["read:items"])
     print("Key name:", request.user.display_name)
     print("Key scopes:", request.auth.scopes)
     return ["item1"]

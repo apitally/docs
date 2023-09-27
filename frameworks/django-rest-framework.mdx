@@ -161,7 +161,7 @@ from apitally.django_rest_framework import HasAPIKey
 @api_view()
 @permission_classes([HasAPIKey])
 def list_items(request: Request) -> Response:
-    assert request.auth.check_scopes(["read:items"])
+    assert request.auth.has_scopes(["read:items"])
     print("Key name:", request.auth.name)
     print("Key scopes:", request.auth.scopes)
     return Response(["item1"])

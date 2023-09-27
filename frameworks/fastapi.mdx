@@ -139,7 +139,7 @@ app.add_middleware(ApitallyMiddleware, client_id="your-client-id", sync_api_keys
 
 @app.get("/items")
 def list_items(key_info: Annotated[KeyInfo, Security(api_key_auth)]) -> list[str]:
-    assert key_info.check_scopes(["read:items"])
+    assert key_info.has_scopes(["read:items"])
     print("Key name:", key_info.name)
     print("Key scopes:", key_info.scopes)
     return ["item1"]

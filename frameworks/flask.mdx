@@ -143,7 +143,7 @@ app.wsgi_app = ApitallyMiddleware(
 @app.route("/items")
 @require_api_key
 def list_items():
-    assert g.key_info.check_scopes(["read:items"])
+    assert g.key_info.has_scopes(["read:items"])
     print("Key name:", g.key_info.name)
     print("Key scopes:", g.key_info.scopes)
     return ["item1"]
