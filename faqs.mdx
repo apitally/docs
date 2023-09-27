@@ -3,30 +3,27 @@ title: "FAQs"
 description: "Answers to some frequently asked questions."
 ---
 
+#### How is Apitally different to other solutions?
+
+Apitally is a simple, lightweight and cost-effective solution that doesn't require you to change
+your infrastructure. Most alternatives work by proxying your API traffic through their service.
+Apitally adds a small dependency to your source code instead, offering in particular smaller teams
+an easier path to adoption.<br />
+If you just want an easy way to monitor your API traffic and/or manage API keys and
+don't need an enterprise-grade API management solution, Apitally might be a good fit for you.
+
 #### What data is being collected by Apitally?
 
 Only metadata, such as the HTTP method, path, and response status code, is
-collected. The request body and response body are never collected. Our client libraries are
-open-source, so you can verify this for yourself.
+collected by Apitally. The request and response body are never sent to Apitally, so you don't have to worry about exposing sensitive data.
+Our client libraries are open-source, so you can verify this for yourself.
 
-#### Where are my API keys stored?
+#### Does Apitally store my API keys?
 
-Your API keys are never stored by Apitally or synchronized with your
+No! Your API keys are never stored by Apitally or synchronized with your
 application. Instead, [secure hashes](https://en.wikipedia.org/wiki/Scrypt)
-are used to verify if a client-provided API key is valid.
-
-#### Can Apitally replace an APM solution?
-
-Apitally only provides aggregated statistics on response times and error rates.
-Application Performance Monitoring (APM) solutions usually allow you to investigate
-individual requests and show traces of which parts of your code took how long to execute.
-As such, Apitally is not a replacement for an APM solution.
-
-#### I'm using a framework that currently isn't supported. Will you add support for it?
-
-We're happy to consider it. Please reach out to discuss your use case.
+are used to verify if a provided API key is valid.
 
 #### Can I start managing my API keys with Apitally without disrupting existing consumers?
 
-Yes, Apitally makes it easy to import your existing API keys. Your consumers will not
-notice any difference.
+Yes! Apitally makes it easy to import your existing API keys, so you can migrate to Apitally without disrupting existing consumers.
