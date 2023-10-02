@@ -3,14 +3,20 @@ title: "FAQs"
 description: "Answers to some frequently asked questions."
 ---
 
+#### How does Apitally work?
+
+Our client libraries implement a simple middleware that intercepts API requests and responses,
+aggregates relevant metadata, and sends it to Apitally's servers in 1 minute intervals.
+This happens asynchronously as to not impact the performance of your application.
+
 #### How is Apitally different to other solutions?
 
 Apitally is a simple, lightweight and cost-effective solution that doesn't require you to change
 your infrastructure. Most alternatives work by proxying your API traffic through their service.
 Apitally adds a small dependency to your source code instead, offering in particular smaller teams
 an easier path to adoption.<br />
-If you just want an easy way to monitor your API traffic and/or manage API keys and
-don't need an enterprise-grade API management solution, Apitally might be a good fit for you.
+If you just need a simple way to monitor your API traffic and/or manage API keys and
+don't require an enterprise-grade API management solution, Apitally might be a good fit for you.
 
 #### What data is being collected by Apitally?
 
