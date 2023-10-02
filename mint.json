@@ -59,7 +59,7 @@
       "pages": ["overview", "quickstart", "features", "pricing", "faqs"]
     },
     {
-      "group": "Supported frameworks",
+      "group": "Setup guides",
       "pages": [
         "frameworks/fastapi",
         "frameworks/starlette",
