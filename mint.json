@@ -28,12 +28,12 @@
       "url": "mailto:support@apitally.io"
     },
     {
-      "name": "Log in",
-      "url": "https://app.apitally.io"
+      "name": "Sign up",
+      "url": "https://app.apitally.io/?signup"
     }
   ],
   "topbarCtaButton": {
-    "name": "Get started",
+    "name": "Log in",
     "url": "https://app.apitally.io"
   },
   "anchors": [
