@@ -26,10 +26,25 @@ Our client libraries are open-source, so you can verify this for yourself.
 
 #### Does Apitally store my API keys?
 
-No! Your API keys are never stored by Apitally or synchronized with your
-application. Instead, [secure hashes](https://en.wikipedia.org/wiki/Scrypt)
-are used to verify if a provided API key is valid.
+No! Your API keys are never stored by Apitally or synchronized with your application in plain text.
+Instead, secure hashes are used to verify if a provided API key is valid.
+
+#### What hashing algorithm does Apitally use for API keys?
+
+Apitally uses [scrypt](https://en.wikipedia.org/wiki/Scrypt) to hash API keys, along with a random salt.
+Scrypt is known for its memory-intensive design which makes it challenging and resource-consuming for attackers to crack using brute force.
+Trusted by many in the cryptographic community, scrypt provides a high degree of security for your API keys.
 
 #### Can I start managing my API keys with Apitally without disrupting existing consumers?
 
 Yes! Apitally makes it easy to import your existing API keys, so you can migrate to Apitally without disrupting existing consumers.
+
+#### Is support for other web frameworks planned in the future?
+
+Yes! The following frameworks are currently on our roadmap, in order of priority and subject to change:
+
+1. Falcon (Python)
+2. Express (Node.js)
+3. Koa (Node.js)
+4. Spring Boot (Java)
+5. Gin (Go)
