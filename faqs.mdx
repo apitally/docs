@@ -18,10 +18,23 @@ an easier path to adoption.<br />
 If you just need a simple way to monitor your API traffic and/or manage API keys and
 don't require an enterprise-grade API management solution, Apitally might be a good fit for you.
 
+#### Which web frameworks does Apitally support?
+
+The following frameworks are currently supported:
+
+1. FastAPI (Python)
+2. Starlette (Python)
+3. Flask (Python)
+4. Django Ninja (Python)
+5. Django REST Framework (Python)
+
+Support for more web frameworks is planned in the future.
+
 #### What data is being collected by Apitally?
 
-Only metadata, such as the HTTP method, path, and response status code, is
-collected by Apitally. The request and response body are never sent to Apitally, so you don't have to worry about exposing sensitive data.
+Only metadata about API requests and responses is recorded and aggregated before being sent to Apitally.
+This includes the HTTP method used, the requested path, the response status code and timing.
+The request and response bodies are never sent to Apitally, so you don't have to worry about exposing sensitive data.
 Our client libraries are open-source, so you can verify this for yourself.
 
 #### Does Apitally store my API keys?
@@ -35,7 +48,7 @@ Apitally uses [scrypt](https://en.wikipedia.org/wiki/Scrypt) to hash API keys, a
 Scrypt is known for its memory-intensive design which makes it challenging and resource-consuming for attackers to crack using brute force.
 Trusted by many in the cryptographic community, scrypt provides a high degree of security for your API keys.
 
-#### Can I start managing my API keys with Apitally without disrupting existing consumers?
+#### Can I import existing API keys into Apitally?
 
 Yes! Apitally makes it easy to import your existing API keys, so you can migrate to Apitally without disrupting existing consumers.
 
@@ -44,7 +57,8 @@ Yes! Apitally makes it easy to import your existing API keys, so you can migrate
 Yes! The following frameworks are currently on our roadmap, in order of priority and subject to change:
 
 1. Falcon (Python)
-2. Express (Node.js)
-3. Koa (Node.js)
-4. Spring Boot (Java)
-5. Gin (Go)
+2. Sanic (Python)
+3. Express (Node.js)
+4. Koa (Node.js)
+5. Spring Boot (Java)
+6. Gin (Go)
