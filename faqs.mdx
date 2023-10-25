@@ -30,16 +30,22 @@ The following frameworks are currently supported:
 
 Support for more web frameworks is planned in the future.
 
+#### Does the Apitally middleware impact my application's performance?
+
+No, the Apitally client libraries are designed to have minimal impact on your application's performance.
+If your web framework is asynchronous, the Apitally client will perform its tasks without blocking the main event loop.
+For web frameworks that are not asynchronous, Apitally utilizes a separate thread instead.
+
 #### What data is being collected by Apitally?
 
-Only metadata about API requests and responses is recorded and aggregated before being sent to Apitally.
-This includes the HTTP method used, the requested path, the response status code and timing.
-The request and response bodies are never sent to Apitally, so you don't have to worry about exposing sensitive data.
+The Apitally middleware only collects metadata about your API endpoints as well as requests and responses.
+This includes HTTP methods, paths, response status codes and timing.
+The request and response headers and bodies are never recorded by Apitally, so you don't have to worry about exposing sensitive data.
 Our client libraries are open-source, so you can verify this for yourself.
 
 #### Does Apitally store my API keys?
 
-No! Your API keys are never stored by Apitally or synchronized with your application in plain text.
+No, your API keys are never stored by Apitally or synchronized with your application in plain text.
 Instead, secure hashes are used to verify if a provided API key is valid.
 
 #### What hashing algorithm does Apitally use for API keys?
@@ -50,11 +56,11 @@ Trusted by many in the cryptographic community, scrypt provides a high degree of
 
 #### Can I import existing API keys into Apitally?
 
-Yes! Apitally makes it easy to import your existing API keys, so you can migrate to Apitally without disrupting existing consumers.
+Yes, Apitally makes it easy to import your existing API keys, so you can migrate to Apitally without disrupting existing consumers.
 
 #### Is support for other web frameworks planned in the future?
 
-Yes! The following frameworks are currently on our roadmap, in order of priority and subject to change:
+Yes, the following frameworks are currently on our roadmap, in order of priority and subject to change:
 
 1. Falcon (Python)
 2. Sanic (Python)
