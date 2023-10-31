@@ -5,18 +5,18 @@ description: "Understand what's in the box."
 
 ## API traffic monitoring
 
-- Monitor API traffic in near real-time, per consumer, endpoint and across multiple environments
-- List all endpoints of your application (even those that haven't been used)
-- List consumers of your application with their number of requests and error rates
-- View number of successful and failed requests over time
-- View different percentiles of response times of endpoints
+- Monitor API traffic in near real-time, per endpoint, consumer, and across multiple environments
+- View error rates, including both client and server errors
+- View different percentiles and a histogram of response times of endpoints
+- View a breakdown of status codes returned by endpoints
 - View details about validation errors users are encountering (FastAPI and Django Ninja only)
-- Understand which status codes are being returned
+- List all endpoints of your application (even those that haven't been used)
 - Filter to different time periods and individual consumers
 - Data retention of up to one year
 
 ## API key management
 
+- Easily set up API key authentication in your application with our client libraries
 - Create and manage API keys for your application
 - Define scopes and assign them to API keys for fine-grained access control
 - Select which environments API keys are valid in
@@ -24,13 +24,12 @@ description: "Understand what's in the box."
 - Rotate API keys with a grace period to avoid service interruptions
 - Disable API keys to immediately revoke access (and re-enable them later if needed)
 - Track the usage of API keys over time
-- Import existing API keys, optionally with name and expiration date
-- Easily set up API key authentication in your application with our client libraries
+- Import existing API keys
 
 ## General
 
 - Support for FastAPI, Starlette, Flask, Django Ninja and Django REST Framework (more soon)
-- Add and manage applications and their different environments
+- Add and manage applications and their environments
 - View number of active instances of each application per environment
 - Create and switch between different teams
 - Invite team members with owner, admin or read-only permissions
