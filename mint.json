@@ -38,6 +38,11 @@
   },
   "anchors": [
     {
+      "name": "Home",
+      "icon": "house",
+      "url": "https://apitally.io"
+    },
+    {
       "name": "Community",
       "icon": "slack",
       "url": "https://apitally-community.slack.com"
@@ -56,7 +61,7 @@
   "navigation": [
     {
       "group": "Get started",
-      "pages": ["overview", "quickstart", "features", "pricing", "faqs"]
+      "pages": ["overview", "quickstart", "features", "faqs"]
     },
     {
       "group": "Setup guides",
