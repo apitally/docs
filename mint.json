@@ -50,7 +50,7 @@
     {
       "name": "Blog",
       "icon": "newspaper",
-      "url": "https://apitally.medium.com"
+      "url": "https://blog.apitally.io"
     }
   ],
   "navigation": [
@@ -71,7 +71,8 @@
   ],
   "footerSocials": {
     "github": "https://github.com/apitally",
-    "twitter": "https://twitter.com/apitally_io"
+    "twitter": "https://twitter.com/apitally_io",
+    "medium": "https://blog.apitally.io"
   },
   "feedback": {
     "thumbsRating": false,
