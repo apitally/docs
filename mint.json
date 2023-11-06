@@ -43,11 +43,6 @@
       "url": "https://apitally.io"
     },
     {
-      "name": "Community",
-      "icon": "slack",
-      "url": "https://apitally-community.slack.com"
-    },
-    {
       "name": "GitHub",
       "icon": "github",
       "url": "https://github.com/apitally"
@@ -76,7 +71,6 @@
   ],
   "footerSocials": {
     "github": "https://github.com/apitally",
-    "slack": "https://apitally-community.slack.com",
     "twitter": "https://twitter.com/apitally_io"
   },
   "feedback": {
