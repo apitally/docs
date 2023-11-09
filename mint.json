@@ -56,7 +56,14 @@
   "navigation": [
     {
       "group": "Get started",
-      "pages": ["overview", "quickstart", "features", "faqs"]
+      "pages": [
+        "overview",
+        "quickstart",
+        "features",
+        "how-it-works",
+        "advanced",
+        "faqs"
+      ]
     },
     {
       "group": "Setup guides",
