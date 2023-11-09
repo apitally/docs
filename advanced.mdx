@@ -8,7 +8,8 @@ description: "Go beyond the basics."
 If your application makes the OpenAPI specification (often named `openapi.json`) of your application available in an endpoint, Apitally can use that to enrich the captured metadata for your endpoints with descriptions.
 These will then be shown in the modal that appears when you click on an endpoint on the _Traffic_ page in the dashboard.
 
-FastAPI and Django Ninja provide this out of the box, and Apitally is already configured to use it. For other frameworks you can explicitly set the `openapi_url` argument when adding the middleware to your application:
+FastAPI and Django Ninja provide this out of the box, and Apitally is already configured to use it.
+For other frameworks you can explicitly set the `openapi_url` argument when adding the middleware to your application:
 
 <CodeGroup>
 
@@ -34,9 +35,9 @@ APITALLY_MIDDLEWARE = {
 ## Reporting app versions
 
 Apitally can display the currently deployed version of your app in a tooltip that appears if you hover over the environment pills on the _Apps_ page in the dashboard.
-This can be useful is you have multiple environments and want to know which version of your app is running in each environment.
+This can be useful if you have multiple environments and want to know which version of your app is running in each environment.
 
-To report the app version, you need to set the `app_version` argument when adding the middleware to your application:
+To report the app version, set the `app_version` argument when adding the middleware to your application:
 
 <CodeGroup>
 
