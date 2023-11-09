@@ -86,8 +86,8 @@ r = redis.Redis(host="localhost", port=6379, decode_responses=True)
 
 class ApitallyKeyCache(ApitallyKeyCacheBase):
     def store(self, data: str) -> None:
-        r.set("apitally:key_cache", data)
+        r.set(self.cache_key, data)
 
     def retrieve(self) -> str | None:
-        return r.get("apitally:key_cache")
+        return r.get(self.cache_key)
 ```
