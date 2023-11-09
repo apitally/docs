@@ -76,7 +76,7 @@ Should the initial synchronization fail, for example due to temporary network er
 
 If this scenario worries you, you can cache API key hashes in your application by implementing a class `ApitallyKeyCache` and passing it to the `key_cache_class` argument when adding the middleware.
 
-The example below uses Redis to cache the API key hashes, but you can use any storage you want.
+The example below uses Redis to cache the API key hashes, but you can use any storage you want, as long as it persists between restarts of your application.
 
 ```python
 import redis
