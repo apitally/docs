@@ -8,20 +8,17 @@
   "favicon": "/images/favicon.svg",
   "colors": {
     "primary": "#0b9797",
-    "light": "#AE87FF",
+    "light": "#0b9797",
     "dark": "#0b9797",
     "background": {
-      "dark": "#090014"
+      "dark": "#121212"
     },
     "anchors": {
-      "from": "#e6f4f4",
+      "from": "#9dd5d5",
       "to": "#0b9797"
     }
   },
-  "modeToggle": {
-    "default": "light",
-    "isHidden": true
-  },
+  "backgroundImage": "/images/background.png",
   "topbarLinks": [
     {
       "name": "Support",
@@ -55,9 +52,9 @@
   ],
   "navigation": [
     {
-      "group": "Get started",
+      "group": "Overview",
       "pages": [
-        "overview",
+        "introduction",
         "quickstart",
         "features",
         "how-it-works",
