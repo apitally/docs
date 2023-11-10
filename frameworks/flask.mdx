@@ -3,7 +3,7 @@ title: "Flask"
 description: "Set your Flask application up to work with Apitally."
 ---
 
-This page guides you through the steps of configuring your [Flask](https://flask.palletsprojects.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io).
+This page guides you through the steps of configuring your [Flask](https://flask.palletsprojects.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
 
 Once you're done with this guide, you will be able to:
 
@@ -15,7 +15,7 @@ Once you're done with this guide, you will be able to:
 
 ## Add middleware
 
-To get started, create a new app in Apitally and select Flask as your framework.
+To get started, create a new app in the [Apitally dashboard](https://app.apitally.io) and select Flask as your framework.
 
 Install the [Apitally client library](https://pypi.org/project/apitally/) in your Starlette project (e.g. using `pip` or `poetry`) with the `flask` extra.
 
@@ -36,7 +36,7 @@ apitally = { version = "*", extras = ["flask"] }
 </CodeGroup>
 
 Add the Apitally middleware to your Flask application and provide the `client_id` for your app.
-The `client_id` is displayed in Apitally immediately after creating the app or on the _Setup instructions_ page for your app.
+The `client_id` is displayed in the Apitally dashboard immediately after creating the app or on the _Setup instructions_ page for your app.
 
 You can use the optional `env` argument to provide a name for the current environment, otherwise _default_ will be used.
 New environments will be visible in Apitally as soon as data is received from them. You can mark environments as production or non-production on the _Manage environments_ screen.
