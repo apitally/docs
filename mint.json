@@ -22,7 +22,7 @@
   "topbarLinks": [
     {
       "name": "Support",
-      "url": "support"
+      "url": "/support"
     },
     {
       "name": "Sign up",
