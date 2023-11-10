@@ -13,11 +13,17 @@ Once you're done with this guide, you will be able to:
 - Secure your application with API keys that can be easily managed through Apitally
 - Manage scopes to control access to your endpoints
 
+## Create app
+
+To get started, create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and select Django Ninja as your framework.
+
+![Create app](./images/create-app-django-ninja.png)
+
+Take a note of the client ID displayed after submitting. You will need it in the next step.
+
 ## Add middleware
 
-To get started, create a new app in the [Apitally dashboard](https://app.apitally.io) and select Django Ninja as your framework.
-
-Install the [Apitally client library](https://pypi.org/project/apitally/) in your Django project (e.g. using `pip` or `poetry`) with the `django_ninja` extra.
+Next, install the [Apitally client library](https://pypi.org/project/apitally/) in your Django project (e.g. using `pip` or `poetry`) with the `django_ninja` extra.
 
 <CodeGroup>
 ```shell pip
@@ -85,7 +91,7 @@ APITALLY_MIDDLEWARE = {
   <Snippet file="identify-consumers-check.mdx" />
 </div>
 
-## Configure API key auth
+## Configure API key authentication
 
 To secure your Django Ninja application with API key authentication, you first have to enable synchronization of API key hashes from Apitally to your application.
 Simply set `sync_api_keys` to `True` in the middleware settings.
