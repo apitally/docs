@@ -5,7 +5,7 @@ description: "Go beyond the basics."
 
 ## Capturing endpoint descriptions
 
-If your application makes its OpenAPI specification (often named `openapi.json`) available in an endpoint, Apitally can use that to enrich the captured metadata for your endpoints with descriptions.
+If your application makes its OpenAPI specification (often named `openapi.json`) available in an endpoint, Apitally can use that to enrich the captured metadata about your endpoints with descriptions.
 These will then be shown in the modal that appears when you click on an endpoint on the _Traffic_ page in the dashboard.
 
 FastAPI and Django Ninja provide this out of the box, and Apitally is already configured to use it.
@@ -34,7 +34,7 @@ APITALLY_MIDDLEWARE = {
 
 ## Reporting app versions
 
-Apitally can display the currently deployed version of your app in a tooltip that appears if you hover over the environment pills on the _Apps_ page in the dashboard.
+Apitally can display the currently deployed version of your app in the tooltip that appears if you hover over the environment pills on the _Apps_ page in the dashboard.
 This can be useful if you have multiple environments and want to know which version of your app is running in each environment.
 
 To report the app version, set the `app_version` argument when adding the middleware to your application:
@@ -72,9 +72,9 @@ APITALLY_MIDDLEWARE = {
 ## Caching API key hashes
 
 If you're using Apitally's API key management, your application will fetch API key hashes from the Apitally Hub on startup (and then again every minute).
-Should the initial synchronization fail, for example due to temporary network errors, your application will exit as it won't be able to authenticate requests.
+Should the initial synchronization fail, for example due to temporary network issues, your application will exit as it won't be able to authenticate requests.
 
-If this scenario worries you, you can cache API key hashes in your application by implementing a class `ApitallyKeyCache` and passing it to the `key_cache_class` argument when adding the middleware.
+If this scenario worries you, you can cache API key hashes in your application by implementing an `ApitallyKeyCache` class and passing it to the `key_cache_class` argument when adding the middleware.
 
 The example below uses Redis to cache the API key hashes, but you can use any storage you want, as long as it persists between restarts of your application.
 
