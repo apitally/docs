@@ -5,30 +5,51 @@ description: "A good look under the hood."
 
 ## Client library
 
-Apitally integrates directly with your application through an open-source [client library](https://github.com/apitally/python-client), which is a small dependency to add to your project.
+Apitally integrates directly with your application through one of our open-source client libraries, which is a small dependency to add to your project.
+
+<CardGroup cols={2}>
+  <Card
+    title="Client library for Python"
+    icon="python"
+    href="https://github.com/apitally/python-client"
+    target="_blank"
+  >
+    GitHub repository
+  </Card>
+  <Card
+    title="Client library for Node.js"
+    icon="js"
+    href="https://github.com/apitally/nodejs-client"
+    target="_blank"
+  >
+    GitHub repository
+  </Card>
+</CardGroup>
+
+The diagram below illustrates how the client libraries works.
 
 <img
   className="block dark:hidden rounded-xl"
   style={{ border: "solid 1px #22222222" }}
-  src="./images/how-it-works-light.png"
+  src="https://assets.apitally.io/docs/how-it-works-light.png"
   alt="Diagram showing how the Apitally client library works"
 />
 <img
   className="hidden dark:block rounded-xl"
   style={{ border: "solid 1px #dddddd22" }}
-  src="./images/how-it-works-dark.png"
+  src="https://assets.apitally.io/docs/how-it-works-dark.png"
   alt="Diagram showing how the Apitally client library works"
 />
 
-The client library provides the following functionality:
+The client libraries include the following features:
 
 - Introspection of your application to capture metadata about endpoints.
 - Lightweight middleware for each supported framework, which captures request and response metadata.
-- An asynchronous and a threaded client that handles communication with the Apitally Hub.
+- A non-blocking client that handles communication with the Apitally Hub.
 - Functions that allow you to easily secure endpoints with API key authentication and permission checks.
 
 <Note>
-  The client library is designed to be resilient to temporary network failures
+  The client libraries are designed to be resilient to temporary network failures
   when communicating with the Apitally Hub and will retry sending data for up to
   1 hour.
 </Note>
@@ -44,7 +65,7 @@ This is so that your application can validate API keys locally without having to
 ### During runtime
 
 When your application receives a request, the middleware times the invokation of the request handler and captures metadata about the request and response, such as the HTTP method, path and the HTTP status code.
-If the response is a validation error (status 422), the middleware inspects the response body for further details about the error.
+If the response is a validation error (status 400 or 422), the middleware inspects the response body for further details about the error.
 
 The captured metadata is then passed to the client which immediately aggregates it with previously received data.
 The client synchronizes the aggregated data with the Apitally Hub in one minute intervals.
