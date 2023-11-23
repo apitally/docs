@@ -1,0 +1,208 @@
+---
+title: "NestJS"
+description: "Set your NestJS application up to work with Apitally."
+---
+
+This page guides you through the steps of configuring your [NestJS](https://nestjs.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
+
+Once you're done with this guide, you will be able to:
+
+- Monitor traffic to your NestJS application
+- Keep track of response times and errors
+- Understand how individual consumers use your application
+- Secure your application with API keys that are easily managed through our dashboard
+- Use scopes to control different levels of access to your endpoints
+
+<Warning>Apitally currently only works with NestJS applications that use Express as the underlying HTTP server, which is the default.</Warning>
+
+## Create app
+
+To get started, create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and select NestJS as your framework.
+
+![Create app](https://assets.apitally.io/docs/create-app-nestjs.png)
+
+Take a note of the client ID displayed after submitting. You will need it in the next step.
+
+## Add middleware
+
+Next, install the [Apitally client library](https://www.npmjs.com/package/apitally) in your NestJS project.
+
+<CodeGroup>
+```shell npm
+npm install apitally
+```
+
+```shell yarn
+yarn add apitally
+```
+</CodeGroup>
+
+Add the Apitally middleware to the underlying Express instance of your NestJS application using the `useApitally` function and provide the `clientId` for your app.
+You'll find the `clientId` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
+
+<CodeGroup>
+```javascript ESM
+import { NestFactory } from "@nestjs/core";
+import { useApitally } from "apitally/nestjs";
+import { AppModule } from "./app.module";
+
+const app = await NestFactory.create(AppModule);
+const expressInstance = app.getHttpAdapter().getInstance();
+
+useApitally(expressInstance, {
+  clientId: "your-client-id",
+  env: "default", // or "dev", "prod" etc. (optional)
+});
+```
+
+```javascript CommonJS
+const { NestFactory } = require("@nestjs/core");
+const { useApitally } = require("apitally/nestjs");
+const { AppModule } = require("./app.module");
+
+const app = await NestFactory.create(AppModule);
+const expressInstance = app.getHttpAdapter().getInstance();
+
+useApitally(expressInstance, {
+  clientId: "your-client-id",
+  env: "default", // or "dev", "prod" etc. (optional)
+});
+```
+</CodeGroup>
+
+<div className="mt-4">
+  <Snippet file="middleware-first-note.mdx" />
+</div>
+
+<Snippet file="env-argument.mdx" />
+
+<Snippet file="add-middleware-check.mdx" />
+
+## Identify consumers
+
+<Snippet file="identify-consumers.mdx" />
+
+To associate requests with consumers, set the `consumerIdentifier` property on the [request object](https://expressjs.com/en/api.html#req), for example in an authorization guard.
+
+```javascript
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class AuthGuard {
+  async canActivate(context) {
+    const request = context.switchToHttp().getRequest();
+    const result = authenticateRequest(request); // assuming this sets request.user
+    if (result && request.user) {
+      request.consumerIdentifier = request.user.username;
+    }
+    return result;
+  }
+}
+```
+
+<Snippet file="consumer-identifier.mdx" />
+
+<Snippet file="identify-consumers-check.mdx" />
+
+## Configure API key authentication
+
+To secure your NestJS application with API key authentication, you first have to enable synchronization of API key hashes from Apitally to your application.
+Simply set the `syncApiKeys` argument to `True` when adding the middleware.
+
+```javascript
+useApitally(expressInstance, {
+  clientId: "your-client-id",
+  env: "default",
+  syncApiKeys: true, // <--
+});
+```
+
+<div className="-mt-4">
+  <Snippet file="api-key-sync-info.mdx" />
+</div>
+
+Bind the `ApitallyApiKeyGuard` to your controllers with [`@UseGuard`](https://docs.nestjs.com/guards#binding-guards) to secure them with API key authentication.
+Alternatively, you can also apply the guard at the method level or globally to all controllers and routes.
+You can optionally decorate routes with `@Scopes` to specify scopes that the API key must have.
+
+<CodeGroup>
+```javascript Controller level
+import { Controller, Get, UseGuards } from "@nestjs/common";
+import { ApitallyApiKeyGuard, Scopes } from "apitally/nestjs";
+
+@Controller()
+@UseGuards(ApitallyApiKeyGuard)
+export class AppController {
+  @Get("/hello")
+  @Scopes("hello") // optional, also accepts multiple arguments
+  getHello() {
+    return "Hello world!";
+  }
+}
+```
+
+```javascript Method level
+import { Controller, Get, UseGuards } from "@nestjs/common";
+import { ApitallyApiKeyGuard, Scopes } from "apitally/nestjs";
+
+@Controller()
+export class AppController {
+  @Get("/hello")
+  @UseGuards(ApitallyApiKeyGuard)
+  @Scopes("hello") // optional, also accepts multiple arguments
+  getHello() {
+    return "Hello world!";
+  }
+}
+```
+
+```javascript Global
+import { Module } from "@nestjs/common";
+import { APP_GUARD } from '@nestjs/core';
+import { ApitallyApiKeyGuard } from "apitally/nestjs";
+import { AppController } from "./app.controller";
+
+@Module({
+  imports: [],
+  controllers: [AppController],
+  providers: [{
+    provide: APP_GUARD,
+    useClass: ApitallyApiKeyGuard,
+  }],
+})
+export class AppModule {}
+```
+
+```javascript Access key info
+import { Controller, Get, UseGuards } from "@nestjs/common";
+import { ApitallyApiKeyGuard, GetKeyInfo } from "apitally/nestjs";
+
+@Controller()
+@UseGuards(ApitallyApiKeyGuard)
+export class AppController {
+  @Get("/hello")
+  getHello(@GetKeyInfo() keyInfo) {
+    return `Hello ${keyInfo.name}! Your scopes are: ${keyInfo.scopes.join(", ")}`
+  }
+}
+```
+</CodeGroup>
+
+You can access information about the API key in your route handler methods via the `@GetKeyInfo` decorator.
+This can be useful if you need to check scopes dynamically, for example.
+
+<div className="mt-4">
+  <Snippet file="configure-api-key-auth-check.mdx" />
+</div>
+
+### Custom header
+
+While it is recommended to use the standard `Authorization` header for API key authentication,
+you can configure your application to accept a custom header instead.
+Simply set the static property `customHeader` on the `ApitallyApiKeyGuard` class.
+
+```javascript
+import { ApitallyApiKeyGuard } from "apitally/nestjs";
+
+ApitallyApiKeyGuard.customHeader = "ApiKey";
+```

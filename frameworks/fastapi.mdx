@@ -38,15 +38,10 @@ poetry add "apitally[fastapi]"
 [tool.poetry.dependencies]
 apitally = { version = "*", extras = ["fastapi"] }
 ```
-
 </CodeGroup>
 
 Add the Apitally middleware to your FastAPI application and provide the `client_id` for your app.
-The `client_id` is displayed in the Apitally dashboard immediately after creating the app or on the _Setup instructions_ page for your app.
-
-You can use the optional `env` argument to provide a name for the current environment, otherwise _default_ will be used.
-New environments will be visible in Apitally as soon as data is received from them.
-You can mark environments as production or non-production on the _Manage environments_ screen.
+You'll find the `client_id` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
 
 ```python
 from fastapi import FastAPI
@@ -56,13 +51,15 @@ app = FastAPI()
 app.add_middleware(
     ApitallyMiddleware,
     client_id="your-client-id",
-    env="your-env-name",
+    env="default",  # or "dev", "prod" etc. (optional)
 )
 ```
 
 <div className="-mt-4">
-  <Snippet file="other-middlewares-note.mdx" />
+  <Snippet file="middleware-last-note.mdx" />
 </div>
+
+<Snippet file="env-argument.mdx" />
 
 <Snippet file="add-middleware-check.mdx" />
 
@@ -70,9 +67,8 @@ app.add_middleware(
 
 <Snippet file="identify-consumers.mdx" />
 
-To associate requests with consumers, set the `consumer_identifier` attribute on the [`request.state`](https://www.starlette.io/requests/#other-state) object. You could do this <Tooltip tip="See example below">in a dependency</Tooltip> or another middleware, for example.
-
-<Snippet file="consumer-identifier.mdx" />
+To associate requests with consumers, set the `consumer_identifier` attribute on the [`request.state`](https://www.starlette.io/requests/#other-state) object.
+You could do this <Tooltip tip="See example below">in a dependency</Tooltip> or another middleware, for example.
 
 ```python
 from typing import Annotated
@@ -94,9 +90,9 @@ def identify_consumer(current_user: Annotated[User, Depends(get_current_user)]):
 app = FastAPI(dependencies=[Depends(identify_consumer)])
 ```
 
-<div className="-mt-4">
-  <Snippet file="identify-consumers-check.mdx" />
-</div>
+<Snippet file="consumer-identifier.mdx" />
+
+<Snippet file="identify-consumers-check.mdx" />
 
 ## Configure API key authentication
 
@@ -107,7 +103,7 @@ Simply set the `sync_api_keys` argument to `True` when adding the middleware.
 app.add_middleware(
     ApitallyMiddleware,
     client_id="your-client-id",
-    env="your-env-name",
+    env="default",  # or "dev", "prod" etc.
     sync_api_keys=True,  # <--
 )
 ```
@@ -119,11 +115,7 @@ app.add_middleware(
 In FastAPI you can easily secure individual endpoints, routers or the whole application by injecting the built-in `Security` dependency and passing the `api_key_auth` function as the first argument.
 You can optionally specify a list of `scopes` that the API key must have.
 
-If you want to access information about the API key in your endpoint function, add the dependency as an argument to the function instead.
-This can be useful if you need to check scopes dynamically, for example.
-
 <CodeGroup>
-
 ```python Endpoint dependency
 from fastapi import FastAPI, Security
 from apitally.fastapi import ApitallyMiddleware, api_key_auth
@@ -178,8 +170,10 @@ app.add_middleware(ApitallyMiddleware, client_id="your-client-id", sync_api_keys
 def list_items() -> list[str]:
     return ["item1"]
 ```
-
 </CodeGroup>
+
+If you want to access information about the API key in your endpoint function, add the dependency as an argument to the function.
+This can be useful if you need to check scopes dynamically, for example.
 
 <div className="mt-4">
   <Snippet file="configure-api-key-auth-check.mdx" />

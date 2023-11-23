@@ -1,0 +1,205 @@
+---
+title: "Fastify"
+description: "Set your Fastify application up to work with Apitally."
+---
+
+This page guides you through the steps of configuring your [Fastify](https://fastify.dev) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
+
+Once you're done with this guide, you will be able to:
+
+- Monitor traffic to your Fastify application
+- Keep track of response times and errors
+- Understand how individual consumers use your application
+- Secure your application with API keys that are easily managed through our dashboard
+- Use scopes to control different levels of access to your endpoints
+
+## Create app
+
+To get started, create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and select Fastify as your framework.
+
+![Create app](https://assets.apitally.io/docs/create-app-fastify.png)
+
+Take a note of the client ID displayed after submitting. You will need it in the next step.
+
+## Add plugin
+
+Next, install the [Apitally client library](https://www.npmjs.com/package/apitally) and the [fastify-plugin](https://www.npmjs.com/package/fastify-plugin) package in your Fastify project.
+
+<CodeGroup>
+```shell npm
+npm install apitally fastify-plugin
+```
+
+```shell yarn
+yarn add apitally fastify-plugin
+```
+</CodeGroup>
+
+Register the Apitally plugin with your Fastify application and provide the `clientId` for your app.
+You'll find the `clientId` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
+
+<CodeGroup>
+```javascript ESM
+import Fastify from "fastify";
+import { apitallyPlugin } from "apitally/fastify";
+
+const fastify = Fastify({ logger: true });
+
+await fastify.register(apitallyPlugin, {
+  clientId: "your-client-id",
+  env: "default", // or "dev", "prod" etc. (optional)
+});
+```
+
+```javascript CommonJS
+const fastify = require("fastify")({ logger: true });
+const { apitallyPlugin } = require("apitally/fastify");
+
+await fastify.register(apitallyPlugin, {
+  clientId: "your-client-id",
+  env: "default", // or "dev", "prod" etc. (optional)
+});
+```
+</CodeGroup>
+
+<Snippet file="env-argument.mdx" />
+
+<Snippet file="add-middleware-check.mdx" />
+
+## Identify consumers
+
+<Snippet file="identify-consumers.mdx" />
+
+To associate requests with consumers, set the `consumerIdentifier` property on the [`Request`](https://fastify.dev/docs/latest/Reference/Request/) object, for example in your authentication function.
+
+```javascript
+fastify.addHook("onRequest", async (request, reply) => {
+  try {
+    await request.jwtVerify() // Assuming @fastify/jwt is used for authentication
+    request.consumerIdentifier = request.user.name;
+  } catch (err) {
+    reply.send(err)
+  }
+});
+```
+
+<Snippet file="consumer-identifier.mdx" />
+
+<Snippet file="identify-consumers-check.mdx" />
+
+## Configure API key authentication
+
+To secure your Fastify application with API key authentication, you first have to enable synchronization of API key hashes from Apitally to your application.
+Simply set the `syncApiKeys` argument to `True` when registering the plugin.
+
+```javascript
+await fastify.register(apitallyPlugin, {
+  clientId: "your-client-id",
+  env: "default",
+  syncApiKeys: true, // <--
+});
+```
+
+<div className="-mt-4">
+  <Snippet file="api-key-sync-info.mdx" />
+</div>
+
+Use the `requireApiKey` function in a `preValidation` hook to secure your routes with API key authentication and use the optional `scopes` argument to specify required scopes. This can be done either at the route level or in a shared hook.
+
+<CodeGroup>
+```javascript Route (ESM)
+import Fastify from "fastify";
+import { apitallyPlugin, requireApiKey } from "apitally/fastify";
+
+const fastify = Fastify({ logger: true });
+
+await fastify.register(apitallyPlugin, {
+  clientId: "your-client-id",
+  env: "default",
+  syncApiKeys: true,
+});
+
+fastify.get(
+  "/hello",
+  {
+    preValidation: requireApiKey({ scopes: "hello" }),
+  },
+  async function (request) {
+    // Access API key info via request.keyInfo
+    const apiKeyName = request.keyInfo.name;
+    const apiKeyScopes = request.keyInfo.scopes.join(", ");
+    return `Hello ${apiKeyName}! Your scopes are: ${apiKeyScopes}`;
+  },
+);
+```
+
+```javascript Shared (ESM)
+import Fastify from "fastify";
+import { apitallyPlugin, requireApiKey } from "apitally/fastify";
+
+const fastify = Fastify({ logger: true });
+
+await fastify.register(apitallyPlugin, {
+  clientId: "your-client-id",
+  env: "default",
+  syncApiKeys: true,
+});
+
+fastify.addHook("preValidation", requireApiKey())
+```
+
+```javascript Route (CommonJS)
+const fastify = require("fastify")({ logger: true });
+const { apitallyPlugin, requireApiKey } = require("apitally/fastify");
+
+await fastify.register(apitallyPlugin, {
+  clientId: "your-client-id",
+  env: "default",
+  syncApiKeys: true,
+});
+
+fastify.get(
+  "/hello",
+  {
+    preValidation: requireApiKey({ scopes: "hello" }),
+  },
+  async function (request) {
+    // Access API key info via request.keyInfo
+    const apiKeyName = request.keyInfo.name;
+    const apiKeyScopes = request.keyInfo.scopes.join(", ");
+    return `Hello ${apiKeyName}! Your scopes are: ${apiKeyScopes}`;
+  },
+);
+```
+</CodeGroup>
+
+You can access information about the API key in your route handler function via the `request.keyInfo` property.
+This can be useful if you need to check scopes dynamically, for example.
+
+<div className="mt-4">
+  <Snippet file="configure-api-key-auth-check.mdx" />
+</div>
+
+### Custom header
+
+While it is recommended to use the standard `Authorization` header for API key authentication,
+you can configure your application to accept a custom header instead.
+Simply pass the `customHeader` argument to the `requireApiKey` function.
+
+<CodeGroup>
+```javascript Route
+fastify.get(
+  "/hello",
+  {
+    preValidation: requireApiKey({ customHeader: "ApiKey" }),
+  },
+  async function (request) {
+    // ...
+  },
+);
+```
+
+```javascript Shared
+fastify.addHook("preValidation", requireApiKey({ customHeader: "ApiKey" }))
+```
+</CodeGroup>

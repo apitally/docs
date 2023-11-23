@@ -38,14 +38,10 @@ poetry add "apitally[flask]"
 [tool.poetry.dependencies]
 apitally = { version = "*", extras = ["flask"] }
 ```
-
 </CodeGroup>
 
 Add the Apitally middleware to your Flask application and provide the `client_id` for your app.
-The `client_id` is displayed in the Apitally dashboard immediately after creating the app or on the _Setup instructions_ page for your app.
-
-You can use the optional `env` argument to provide a name for the current environment, otherwise _default_ will be used.
-New environments will be visible in Apitally as soon as data is received from them. You can mark environments as production or non-production on the _Manage environments_ screen.
+You'll find the `client_id` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
 
 ```python
 from flask import Flask
@@ -55,13 +51,15 @@ app = Flask(__name__)
 app.wsgi_app = ApitallyMiddleware(
     app,
     client_id="your-client-id",
-    env="your-env-name",
+    env="default",  # or "dev", "prod" etc. (optional)
 )
 ```
 
 <div className="-mt-4">
-  <Snippet file="other-middlewares-note.mdx" />
+  <Snippet file="middleware-last-note.mdx" />
 </div>
+
+<Snippet file="env-argument.mdx" />
 
 <Snippet file="add-middleware-check.mdx" />
 
@@ -70,8 +68,6 @@ app.wsgi_app = ApitallyMiddleware(
 <Snippet file="identify-consumers.mdx" />
 
 To associate requests with consumers, set the `consumer_identifier` attribute on the [`g`](https://flask.palletsprojects.com/en/2.3.x/appcontext/#storing-data) object, for example in a [`before_request`](https://flask.palletsprojects.com/en/2.2.x/api/#flask.Flask.before_request) function.
-
-<Snippet file="consumer-identifier.mdx" />
 
 ```python
 from flask import g, request
@@ -82,9 +78,9 @@ def identify_consumer():
     g.consumer_identifier = request.remote_addr
 ```
 
-<div className="-mt-4">
-  <Snippet file="identify-consumers-check.mdx" />
-</div>
+<Snippet file="consumer-identifier.mdx" />
+
+<Snippet file="identify-consumers-check.mdx" />
 
 ## Configure API key authentication
 
@@ -95,7 +91,7 @@ Simply set the `sync_api_keys` argument to `True` when adding the middleware.
 app.wsgi_app = ApitallyMiddleware(
     app,
     client_id="your-client-id",
-    env="your-env-name",
+    env="default",  # or "dev", "prod" etc.
     sync_api_keys=True,  # <--
 )
 ```
@@ -107,11 +103,7 @@ app.wsgi_app = ApitallyMiddleware(
 Use the `@require_api_key` decorator on your Flask route functions to secure them with API key authentication
 and add the optional `scopes` argument to specify required scopes.
 
-You can access information about the API key in your endpoint function via the `g.key_info` object.
-This can be useful if you need to check scopes dynamically, for example.
-
 <CodeGroup>
-
 ```python Authentication
 from flask import Flask
 from apitally.flask import ApitallyMiddleware, require_api_key
@@ -120,7 +112,7 @@ app = Flask(__name__)
 app.wsgi_app = ApitallyMiddleware(
     app,
     client_id="your-client-id",
-    env="your-env-name",
+    env="default",  # or "dev", "prod" etc.
     sync_api_keys=True,
 )
 
@@ -138,7 +130,7 @@ app = Flask(__name__)
 app.wsgi_app = ApitallyMiddleware(
     app,
     client_id="your-client-id",
-    env="your-env-name",
+    env="default",  # or "dev", "prod" etc.
     sync_api_keys=True,
 )
 
@@ -150,8 +142,10 @@ def list_items():
     print("Key scopes:", g.key_info.scopes)
     return ["item1"]
 ```
-
 </CodeGroup>
+
+You can access information about the API key in your endpoint function via the `g.key_info` object.
+This can be useful if you need to check scopes dynamically, for example.
 
 <div className="mt-4">
   <Snippet file="configure-api-key-auth-check.mdx" />
@@ -165,7 +159,6 @@ Simply pass the `custom_header` argument to the `@require_api_key` decorator.
 You can use [`functools.partial`](https://docs.python.org/3/library/functools.html#functools.partial) to avoid repeating this for every route.
 
 <CodeGroup>
-
 ```python Custom header
 from apitally.flask import require_api_key
 
@@ -186,5 +179,4 @@ require_api_key = partial(require_api_key, custom_header="ApiKey")
 def list_items():
     return ["item1"]
 ```
-
 </CodeGroup>

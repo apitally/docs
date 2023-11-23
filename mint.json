@@ -65,11 +65,15 @@
     {
       "group": "Setup guides",
       "pages": [
-        "frameworks/fastapi",
-        "frameworks/starlette",
-        "frameworks/flask",
         "frameworks/django-ninja",
-        "frameworks/django-rest-framework"
+        "frameworks/django-rest-framework",
+        "frameworks/express",
+        "frameworks/fastapi",
+        "frameworks/fastify",
+        "frameworks/flask",
+        "frameworks/koa",
+        "frameworks/nestjs",
+        "frameworks/starlette"
       ]
     }
   ],

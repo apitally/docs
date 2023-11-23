@@ -5,7 +5,7 @@ description: "Answers to some frequently asked questions."
 
 #### Who is Apitally for?
 
-Apitally is for software engineers and engineering teams of all sizes who build and maintain REST APIs in Python.
+Apitally is for software engineers and engineering teams of all sizes who build and maintain REST APIs in Python or Node.js.
 If you need a simple and affordable way to monitor your API and/or manage API keys and
 don't require an enterprise-grade solution with all the bells and whistles, Apitally might be a good fit for you.
 
@@ -20,13 +20,15 @@ Our client libraries are open-source, so you can verify this for yourself.
 
 The following frameworks are currently supported:
 
-1. FastAPI (Python)
-2. Starlette (Python)
-3. Flask (Python)
-4. Django Ninja (Python)
-5. Django REST Framework (Python)
-
-Support for more web frameworks is planned in the future.
+- Django Ninja (Python)
+- Django REST Framework (Python)
+- Express (Node.js)
+- FastAPI (Python)
+- Fastify (Node.js)
+- Flask (Python)
+- Koa (Node.js)
+- NestJS (Node.js)
+- Starlette (Python)
 
 #### Does the Apitally middleware impact my application's performance?
 
@@ -37,7 +39,7 @@ For web frameworks that are not asynchronous, Apitally utilizes a separate threa
 #### How does Apitally identify API consumers?
 
 If you're using Apitally's API key management, the client library will automatically identify consumers based on the API key used.
-However, you can also provide your own logic to identify consumers, for example based on a different authentication scheme.
+However, you can also provide your own logic to identify consumers, for example based on a different authentication mechanism.
 Check out the [setup guide](/quickstart) for your framework to learn more.
 
 #### Does Apitally store my API keys?
@@ -57,11 +59,4 @@ Yes, Apitally makes it easy to import your existing API keys, so you can migrate
 
 #### Is support for other web frameworks planned in the future?
 
-Yes, the following frameworks are currently on our roadmap, in order of priority and subject to change:
-
-1. Falcon (Python)
-2. Sanic (Python)
-3. Express (Node.js)
-4. Koa (Node.js)
-5. Spring Boot (Java)
-6. Gin (Go)
+Yes, based on feedback from the community. Please let us know in our [GitHub Discussions](https://github.com/orgs/apitally/discussions/categories/feedback-ideas) if you'd like to see support for a specific web framework.

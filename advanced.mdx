@@ -12,12 +12,10 @@ FastAPI and Django Ninja provide this out of the box, and Apitally is already co
 For other frameworks you can explicitly set the `openapi_url` argument when adding the middleware to your application:
 
 <CodeGroup>
-
 ```python Flask
 app.wsgi_app = ApitallyMiddleware(
     app,
     client_id="your-client-id",
-    env="your-env-name",
     openapi_url="/openapi.json",  # <--
 )
 ```
@@ -25,11 +23,9 @@ app.wsgi_app = ApitallyMiddleware(
 ```python Django
 APITALLY_MIDDLEWARE = {
     "client_id": "your-client-id",
-    "env": "your-env-name",
     "openapi_url": "/api/openapi",  # <--
 }
 ```
-
 </CodeGroup>
 
 ## Reporting app versions
@@ -40,12 +36,10 @@ This can be useful if you have multiple environments and want to know which vers
 To report the app version, set the `app_version` argument when adding the middleware to your application:
 
 <CodeGroup>
-
 ```python FastAPI / Starlette
 app.add_middleware(
     ApitallyMiddleware,
     client_id="your-client-id",
-    env="your-env-name",
     app_version="1.0.0",  # <--
 )
 ```
@@ -54,7 +48,6 @@ app.add_middleware(
 app.wsgi_app = ApitallyMiddleware(
     app,
     client_id="your-client-id",
-    env="your-env-name",
     app_version="1.0.0",  # <--
 )
 ```
@@ -62,11 +55,9 @@ app.wsgi_app = ApitallyMiddleware(
 ```python Django
 APITALLY_MIDDLEWARE = {
     "client_id": "your-client-id",
-    "env": "your-env-name",
     "app_version": "1.0.0",  # <--
 }
 ```
-
 </CodeGroup>
 
 ## Caching API key hashes

@@ -1,0 +1,198 @@
+---
+title: "Koa"
+description: "Set your Koa application up to work with Apitally."
+---
+
+This page guides you through the steps of configuring your [Koa](https://koajs.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
+
+Once you're done with this guide, you will be able to:
+
+- Monitor traffic to your Koa application
+- Keep track of response times and errors
+- Understand how individual consumers use your application
+- Secure your application with API keys that are easily managed through our dashboard
+- Use scopes to control different levels of access to your endpoints
+
+## Create app
+
+To get started, create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and select Koa as your framework.
+
+![Create app](https://assets.apitally.io/docs/create-app-koa.png)
+
+Take a note of the client ID displayed after submitting. You will need it in the next step.
+
+## Add middleware
+
+Next, install the [Apitally client library](https://www.npmjs.com/package/apitally) in your Koa project.
+
+<CodeGroup>
+```shell npm
+npm install apitally
+```
+
+```shell yarn
+yarn add apitally
+```
+</CodeGroup>
+
+Add the Apitally middleware to your Koa application using the `useApitally` function and provide the `clientId` for your app.
+You'll find the `clientId` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
+
+<CodeGroup>
+```javascript ESM
+import Koa from "koa";
+import { useApitally } from "apitally/koa";
+
+const app = new Koa();
+
+useApitally(app, {
+  clientId: "your-client-id",
+  env: "default", // or "dev", "prod" etc. (optional)
+});
+```
+
+```javascript CommonJS
+const Koa = require("koa");
+const { useApitally } = require("apitally/koa");
+
+const app = new Koa();
+
+useApitally(app, {
+  clientId: "your-client-id",
+  env: "default", // or "dev", "prod" etc. (optional)
+});
+```
+</CodeGroup>
+
+<div className="mt-4">
+  <Snippet file="middleware-first-note.mdx" />
+</div>
+
+<Snippet file="env-argument.mdx" />
+
+<Snippet file="add-middleware-check.mdx" />
+
+## Identify consumers
+
+<Snippet file="identify-consumers.mdx" />
+
+To associate requests with consumers, set the `consumerIdentifier` variable on the [`ctx.state`](https://koajs.com/#context) property in a middleware.
+
+```javascript
+app.use(function (ctx, next) {
+  if (ctx.isAuthenticated()) {
+    ctx.state.consumerIdentifier = ctx.state.user.username
+  }
+  next()
+})
+```
+
+<Snippet file="consumer-identifier.mdx" />
+
+<Snippet file="identify-consumers-check.mdx" />
+
+## Configure API key authentication
+
+To secure your Koa application with API key authentication, you first have to enable synchronization of API key hashes from Apitally to your application.
+Simply set the `syncApiKeys` argument to `True` when adding the middleware.
+
+```javascript
+useApitally(app, {
+  clientId: "your-client-id",
+  env: "default",
+  syncApiKeys: true, // <--
+});
+```
+
+<div className="-mt-4">
+  <Snippet file="api-key-sync-info.mdx" />
+</div>
+
+Add the middleware returned by the `requireApiKey` function to your routes to secure them with API key authentication and use the optional `scopes` argument to specify required scopes.
+
+<Note>
+The example below assumes your application uses the [@koa/router](https://npmjs.com/package/@koa/router) package, but it should work similarly with other router middlewares.
+</Note>
+
+<CodeGroup>
+```javascript ESM
+import Koa from "koa";
+import Router from "@koa/router";
+import { useApitally, requireApiKey } from "apitally/koa";
+
+const app = new Koa();
+const router = new Router();
+
+useApitally(app, {
+  clientId: "your-client-id",
+  env: "default",
+  syncApiKeys: true,
+});
+
+router.get(
+  "/hello",
+  requireApiKey({ scopes: ["hello"] }), // <--
+  async (ctx) => {
+    // Access API key info via ctx.state.keyInfo
+    const apiKeyName = ctx.state.keyInfo.name;
+    const apiKeyScopes = ctx.state.keyInfo.scopes.join(", ");
+    ctx.body = `Hello ${apiKeyName}! Your scopes are: ${apiKeyScopes}`;
+  }
+);
+
+app.use(router.routes());
+app.use(router.allowedMethods());
+```
+
+```javascript CommonJS
+const Koa = require('koa');
+const Router = require('@koa/router');
+const { useApitally, requireApiKey } = require("apitally/koa");
+
+const app = new Koa();
+const router = new Router();
+
+useApitally(app, {
+  clientId: "your-client-id",
+  env: "default",
+  syncApiKeys: true,
+});
+
+router.get(
+  "/hello",
+  requireApiKey({ scopes: ["hello"] }), // <--
+  async (ctx) => {
+    // Access API key info via ctx.state.keyInfo
+    const apiKeyName = ctx.state.keyInfo.name;
+    const apiKeyScopes = ctx.state.keyInfo.scopes.join(", ");
+    ctx.body = `Hello ${apiKeyName}! Your scopes are: ${apiKeyScopes}`;
+  }
+);
+
+app.use(router.routes());
+app.use(router.allowedMethods());
+```
+</CodeGroup>
+
+You can access information about the API key in your route handler function via the `ctx.state.keyInfo` property.
+This can be useful if you need to check scopes dynamically, for example.
+
+<div className="mt-4">
+  <Snippet file="configure-api-key-auth-check.mdx" />
+</div>
+
+### Custom header
+
+While it is recommended to use the standard `Authorization` header for API key authentication,
+you can configure your application to accept a custom header instead.
+Simply pass the `customHeader` argument to the `requireApiKey` function.
+
+```javascript
+router.get(
+  "/hello",
+  requireApiKey({ customHeader: "ApiKey" }),
+  async (ctx) => {
+    // ...
+  }
+);
+```

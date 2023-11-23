@@ -38,14 +38,10 @@ poetry add "apitally[starlette]"
 [tool.poetry.dependencies]
 apitally = { version = "*", extras = ["starlette"] }
 ```
-
 </CodeGroup>
 
 Add the Apitally middleware to your Starlette application and provide the `client_id` for your app.
-The `client_id` is displayed in the Apitally dashboard immediately after creating the app or on the _Setup instructions_ page for your app.
-
-You can use the optional `env` argument to provide a name for the current environment, otherwise _default_ will be used.
-New environments will be visible in Apitally as soon as data is received from them. You can mark environments as production or non-production on the _Manage environments_ screen.
+You'll find the `client_id` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
 
 ```python
 from starlette.applications import Starlette
@@ -55,13 +51,15 @@ app = Starlette(routes=[...])
 app.add_middleware(
     ApitallyMiddleware,
     client_id="your-client-id",
-    env="your-env-name",
+    env="default",  # or "dev", "prod" etc. (optional)
 )
 ```
 
 <div className="-mt-4">
-  <Snippet file="other-middlewares-note.mdx" />
+  <Snippet file="middleware-last-note.mdx" />
 </div>
+
+<Snippet file="env-argument.mdx" />
 
 <Snippet file="add-middleware-check.mdx" />
 
@@ -73,10 +71,7 @@ To associate requests with consumers, provide a <Tooltip tip="See example below"
 
 Alternatively, you can set the `consumer_identifier` attribute on the [`request.state`](https://www.starlette.io/requests/#other-state) object, for example in another middleware or directly in your endpoint functions.
 
-<Snippet file="consumer-identifier.mdx" />
-
 <CodeGroup>
-
 ```python Callback function
 from starlette.requests import Request
 
@@ -88,7 +83,7 @@ def identify_consumer(request: Request) -> str | None:
 app.add_middleware(
     ApitallyMiddleware,
     client_id="your-client-id",
-    env="your-env-name",
+    env="default",  # or "dev", "prod" etc.
     identify_consumer_callback=identify_consumer,
 )
 ```
@@ -101,12 +96,11 @@ def list_items(request: Request):
         request.state.consumer_identifier = request.user.identity
     return ["item1"]
 ```
-
 </CodeGroup>
 
-<div className="mt-4">
-  <Snippet file="identify-consumers-check.mdx" />
-</div>
+<Snippet file="consumer-identifier.mdx" />
+
+<Snippet file="identify-consumers-check.mdx" />
 
 ## Configure API key authentication
 
@@ -117,7 +111,7 @@ Simply set the `sync_api_keys` argument to `True` when adding the middleware.
 app.add_middleware(
     ApitallyMiddleware,
     client_id="your-client-id",
-    env="your-env-name",
+    env="default",  # or "dev", "prod" etc.
     sync_api_keys=True,  # <--
 )
 ```
@@ -130,11 +124,7 @@ Add Starlette's [`AuthenticationMiddleware`](https://www.starlette.io/authentica
 and then use the [`@requires`](https://www.starlette.io/authentication/#permissions) decorator to secure your endpoints.
 Always include the `authenticated` scope and optionally any other required scopes.
 
-You can access information about the API key in your endpoint function via the [`request.user`](https://www.starlette.io/authentication/#users) and
-[`request.auth`](https://www.starlette.io/authentication/#authcredentials) objects. This can be useful if you need to check scopes dynamically, for example.
-
 <CodeGroup>
-
 ```python Authentication
 from starlette.authentication import requires
 from starlette.middleware.authentication import AuthenticationMiddleware
@@ -178,8 +168,10 @@ app = Starlette(routes=routes)
 app.add_middleware(ApitallyMiddleware, client_id="your-client-id", sync_api_keys=True)
 app.add_middleware(AuthenticationMiddleware, backend=APIKeyAuth())
 ```
-
 </CodeGroup>
+
+You can access information about the API key in your endpoint function via the [`request.user`](https://www.starlette.io/authentication/#users) and
+[`request.auth`](https://www.starlette.io/authentication/#authcredentials) objects. This can be useful if you need to check scopes dynamically, for example.
 
 By default, Starlette returns a `400 Bad Request` response when users provide an invalid API key.
 You can customize this behavior by providing your own `on_error` callback to the authentication middleware.

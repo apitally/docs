@@ -38,25 +38,24 @@ poetry add "apitally[django_rest_framework]"
 [tool.poetry.dependencies]
 apitally = { version = "*", extras = ["django_rest_framework"] }
 ```
-
 </CodeGroup>
 
 <Snippet file="configure-django-middleware.mdx" />
 
 ```python
 MIDDLEWARE = [
-    # Other middlewares first ...
     "apitally.django_rest_framework.ApitallyMiddleware",
+    # Other middleware ...
 ]
 APITALLY_MIDDLEWARE = {
     "client_id": "your-client-id",
-    "env": "your-env-name",
+    "env": "default", # or "dev", "prod" etc. (optional)
 }
 ```
 
-<div className="-mt-4">
-  <Snippet file="add-middleware-check.mdx" />
-</div>
+<Snippet file="env-argument.mdx" />
+
+<Snippet file="add-middleware-check.mdx" />
 
 ## Identify consumers
 
@@ -64,10 +63,7 @@ APITALLY_MIDDLEWARE = {
 
 To associate requests with consumers, provide a <Tooltip tip="See example below">callback function</Tooltip> to the `ApitallyMiddleware` that takes a [`HttpRequest`](https://docs.djangoproject.com/en/4.2/ref/request-response/#httprequest-objects) object as an argument and returns a consumer identifier or `None`.
 
-<Snippet file="consumer-identifier.mdx" />
-
 <CodeGroup>
-
 ```python Callback function definition
 from django.http import HttpRequest
 
@@ -80,16 +76,15 @@ def identify_consumer(request: HttpRequest) -> str | None:
 ```python Middleware settings
 APITALLY_MIDDLEWARE = {
     "client_id": "your-client-id",
-    "env": "your-env-name",
+    "env": "default", # or "dev", "prod" etc.
     "identify_consumer_callback": "your_project.api.utils.identify_consumer",
 }
 ```
-
 </CodeGroup>
 
-<div className="mt-4">
-  <Snippet file="identify-consumers-check.mdx" />
-</div>
+<Snippet file="consumer-identifier.mdx" />
+
+<Snippet file="identify-consumers-check.mdx" />
 
 ## Configure API key authentication
 
@@ -99,7 +94,7 @@ Simply set `sync_api_keys` to `True` in the middleware settings.
 ```python
 APITALLY_MIDDLEWARE = {
     "client_id": "your-client-id",
-    "env": "your-env-name",
+    "env": "default", # or "dev", "prod" etc.
     "sync_api_keys": True,  # <--
 }
 ```
@@ -111,11 +106,7 @@ APITALLY_MIDDLEWARE = {
 To secure your API views with API key authentication use the `HasAPIKey` permission class or
 the `HasAPIKeyWithScopes` permission class factory, if you need to specify required scopes.
 
-You can access information about the API key in your endpoint function via the `request.auth` object.
-This can be useful if you need to check scopes dynamically, for example.
-
 <CodeGroup>
-
 ```python Class-based view
 from rest_framework.views import APIView
 from rest_framework.request import Request
@@ -168,8 +159,10 @@ def list_items(request: Request) -> Response:
     print("Key scopes:", request.auth.scopes)
     return Response(["item1"])
 ```
-
 </CodeGroup>
+
+You can access information about the API key in your endpoint function via the `request.auth` object.
+This can be useful if you need to check scopes dynamically, for example.
 
 <div className="mt-4">
   <Snippet file="configure-api-key-auth-check.mdx" />
