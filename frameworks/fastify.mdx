@@ -75,10 +75,10 @@ To associate requests with consumers, set the `consumerIdentifier` property on t
 ```javascript
 fastify.addHook("onRequest", async (request, reply) => {
   try {
-    await request.jwtVerify() // Assuming @fastify/jwt is used for authentication
+    await request.jwtVerify(); // Assuming @fastify/jwt is used for authentication
     request.consumerIdentifier = request.user.name;
   } catch (err) {
-    reply.send(err)
+    reply.send(err);
   }
 });
 ```
