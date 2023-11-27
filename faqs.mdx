@@ -6,12 +6,12 @@ description: "Answers to some frequently asked questions."
 #### Who is Apitally for?
 
 Apitally is for software engineers and engineering teams of all sizes who build and maintain REST APIs in Python or Node.js.
-If you need a simple and affordable way to monitor your API and/or manage API keys and
+If you need a simple and affordable way to monitor your APIs and/or manage API keys and
 don't require an enterprise-grade solution with all the bells and whistles, Apitally might be a good fit for you.
 
 #### What data is being collected by Apitally?
 
-The Apitally middleware only collects metadata about your API endpoints as well as requests and responses.
+The Apitally client libararies only collect metadata about your API endpoints as well as requests and responses.
 This includes HTTP methods, paths, response status codes and timing.
 The request and response headers and bodies are never recorded by Apitally, so you don't have to worry about exposing sensitive data.
 Our client libraries are open-source, so you can verify this for yourself.
@@ -34,11 +34,11 @@ The following frameworks are currently supported:
 
 No, the Apitally client libraries are designed to have minimal impact on your application's performance.
 If your web framework is asynchronous, the Apitally client will perform its tasks without blocking the main event loop.
-For web frameworks that are not asynchronous, Apitally utilizes a separate thread instead.
+For synchronous web frameworks (e.g. Flask), Apitally utilizes a separate thread instead.
 
 #### How does Apitally identify API consumers?
 
-If you're using Apitally's API key management, the client library will automatically identify consumers based on the API key used.
+If you're using Apitally's API key management features, the client libraries will automatically identify consumers based on the API key used.
 However, you can also provide your own logic to identify consumers, for example based on a different authentication mechanism.
 Check out the [setup guide](/quickstart) for your framework to learn more.
 
@@ -55,7 +55,7 @@ Trusted by many in the cryptographic community, scrypt provides a high degree of
 
 #### Can I import existing API keys into Apitally?
 
-Yes, Apitally makes it easy to import your existing API keys, so you can migrate to Apitally without disrupting existing consumers.
+Yes, Apitally makes it easy to import your existing API keys, so you can migrate them to Apitally without disrupting existing consumers.
 
 #### Is support for other web frameworks planned in the future?
 
