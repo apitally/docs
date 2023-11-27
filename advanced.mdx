@@ -91,7 +91,7 @@ await fastify.register(apitallyPlugin, {
 ## Caching API key hashes
 
 If you're using Apitally's API key management, your application will fetch API key hashes from the Apitally Hub on startup (and then again every minute).
-Should the initial synchronization fail, for example due to temporary network issues, your application will exit as it won't be able to authenticate requests.
+Should the initial synchronization fail, for example due to temporary network issues, your application will exit (with code 1) as it won't be able to authenticate requests.
 
 If this scenario worries you, you can cache API key hashes in your application by implementing a class with `store()` and `retrieve()` methods and passing it to the `key_cache_class` / `keyCacheClass` argument when adding the middleware.
 
@@ -119,7 +119,7 @@ import { createClient } from "redis";
 const redis = createClient();
 await redis.connect();
 
-class TestKeyCache extends KeyCacheBase {
+class ApitallyKeyCache extends KeyCacheBase {
   async store(data: string) {
     await redis.set(this.cacheKey, data);
   }
