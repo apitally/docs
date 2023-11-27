@@ -56,7 +56,10 @@
       "pages": [
         "introduction",
         "quickstart",
-        "features",
+        {
+          "group": "Features",
+          "pages": ["features/api-monitoring", "features/api-key-management"]
+        },
         "how-it-works",
         "advanced",
         "faqs"
