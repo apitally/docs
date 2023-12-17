@@ -72,7 +72,7 @@ You could do this <Tooltip tip="See example below">in a dependency</Tooltip> or 
 
 ```python
 from typing import Annotated
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, Request
 from fastapi.security import OAuth2PasswordBearer
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -84,7 +84,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     user = fake_decode_token(token)
     return user
 
-def identify_consumer(current_user: Annotated[User, Depends(get_current_user)]):
+def identify_consumer(request: Request, current_user: Annotated[User, Depends(get_current_user)]):
     request.state.consumer_identifier = current_user.username
 
 app = FastAPI(dependencies=[Depends(identify_consumer)])
