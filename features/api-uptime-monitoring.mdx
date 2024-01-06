@@ -27,7 +27,7 @@ If the endpoint returns a successful response within 5 seconds, your application
 
 <Tip>We recommend you use a dedicated health check endpoint that doesn't require authentication.</Tip>
 
-If a health check request fails or times out, Apitally will send you an alert.
+If a health check request fails or times out, Apitally will retry the request once before sending you an alert.
 The alert includes details about the failed request, so you can get to the bottom of the issue quickly.
 
 <CardGroup cols={2}>
