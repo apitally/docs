@@ -58,7 +58,11 @@
         "quickstart",
         {
           "group": "Features",
-          "pages": ["features/api-monitoring", "features/api-key-management"]
+          "pages": [
+            "features/api-traffic-monitoring",
+            "features/api-uptime-monitoring",
+            "features/api-key-management"
+          ]
         },
         "how-it-works",
         "advanced",
@@ -84,7 +88,7 @@
   "footerSocials": {
     "github": "https://github.com/apitally",
     "twitter": "https://twitter.com/apitally_io",
-    "medium": "https://blog.apitally.io"
+    "linkedin": "https://www.linkedin.com/company/apitally"
   },
   "feedback": {
     "thumbsRating": false,
