@@ -51,7 +51,7 @@ app = FastAPI()
 app.add_middleware(
     ApitallyMiddleware,
     client_id="your-client-id",
-    env="default",  # or "dev", "prod" etc. (optional)
+    env="dev",  # or "prod" etc.
 )
 ```
 
@@ -103,7 +103,7 @@ Simply set the `sync_api_keys` argument to `True` when adding the middleware.
 app.add_middleware(
     ApitallyMiddleware,
     client_id="your-client-id",
-    env="default",  # or "dev", "prod" etc.
+    env="dev",  # or "prod" etc.
     sync_api_keys=True,  # <--
 )
 ```

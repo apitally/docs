@@ -48,7 +48,7 @@ app.use(express.json());
 
 useApitally(app, {
   clientId: "your-client-id",
-  env: "default", // or "dev", "prod" etc. (optional)
+  env: "dev", // or "prod" etc.
 });
 ```
 
@@ -61,7 +61,7 @@ app.use(express.json());
 
 useApitally(app, {
   clientId: "your-client-id",
-  env: "default", // or "dev", "prod" etc. (optional)
+  env: "dev", // or "prod" etc.
 });
 ```
 </CodeGroup>
@@ -101,7 +101,7 @@ Simply set the `syncApiKeys` argument to `True` when adding the middleware.
 ```javascript
 useApitally(app, {
   clientId: "your-client-id",
-  env: "default",
+  env: "dev", // or "prod" etc.
   syncApiKeys: true, // <--
 });
 ```
@@ -122,7 +122,7 @@ app.use(express.json());
 
 useApitally(app, {
   clientId: "your-client-id",
-  env: "default",
+  env: "dev", // or "prod" etc.
   syncApiKeys: true,
 });
 
@@ -147,7 +147,7 @@ app.use(express.json());
 
 useApitally(app, {
   clientId: "your-client-id",
-  env: "default",
+  env: "dev", // or "prod" etc.
   syncApiKeys: true,
 });
 

@@ -49,7 +49,7 @@ MIDDLEWARE = [
 ]
 APITALLY_MIDDLEWARE = {
     "client_id": "your-client-id",
-    "env": "default", # or "dev", "prod" etc. (optional)
+    "env": "dev",  # or "prod" etc.
 }
 ```
 
@@ -76,7 +76,7 @@ def identify_consumer(request: HttpRequest) -> str | None:
 ```python Middleware settings
 APITALLY_MIDDLEWARE = {
     "client_id": "your-client-id",
-    "env": "default", # or "dev", "prod" etc.
+    "env": "dev",  # or "prod" etc.
     "identify_consumer_callback": "your_project.api.utils.identify_consumer",
 }
 ```
@@ -94,7 +94,7 @@ Simply set `sync_api_keys` to `True` in the middleware settings.
 ```python
 APITALLY_MIDDLEWARE = {
     "client_id": "your-client-id",
-    "env": "default", # or "dev", "prod" etc.
+    "env": "dev",  # or "prod" etc.
     "sync_api_keys": True,  # <--
 }
 ```

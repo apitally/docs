@@ -47,7 +47,7 @@ const fastify = Fastify({ logger: true });
 
 await fastify.register(apitallyPlugin, {
   clientId: "your-client-id",
-  env: "default", // or "dev", "prod" etc. (optional)
+  env: "dev", // or "prod" etc.
 });
 ```
 
@@ -57,7 +57,7 @@ const { apitallyPlugin } = require("apitally/fastify");
 
 await fastify.register(apitallyPlugin, {
   clientId: "your-client-id",
-  env: "default", // or "dev", "prod" etc. (optional)
+  env: "dev", // or "prod" etc.
 });
 ```
 </CodeGroup>
@@ -95,7 +95,7 @@ Simply set the `syncApiKeys` argument to `True` when registering the plugin.
 ```javascript
 await fastify.register(apitallyPlugin, {
   clientId: "your-client-id",
-  env: "default",
+  env: "dev", // or "prod" etc.
   syncApiKeys: true, // <--
 });
 ```
@@ -115,7 +115,7 @@ const fastify = Fastify({ logger: true });
 
 await fastify.register(apitallyPlugin, {
   clientId: "your-client-id",
-  env: "default",
+  env: "dev", // or "prod" etc.
   syncApiKeys: true,
 });
 
@@ -141,7 +141,7 @@ const fastify = Fastify({ logger: true });
 
 await fastify.register(apitallyPlugin, {
   clientId: "your-client-id",
-  env: "default",
+  env: "dev", // or "prod" etc.
   syncApiKeys: true,
 });
 
@@ -154,7 +154,7 @@ const { apitallyPlugin, requireApiKey } = require("apitally/fastify");
 
 await fastify.register(apitallyPlugin, {
   clientId: "your-client-id",
-  env: "default",
+  env: "dev", // or "prod" etc.
   syncApiKeys: true,
 });
 
