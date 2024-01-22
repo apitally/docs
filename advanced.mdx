@@ -16,6 +16,7 @@ For other frameworks you can explicitly set the `openapi_url` / `openApiUrl` arg
 app.wsgi_app = ApitallyMiddleware(
     app,
     client_id="your-client-id",
+    env="dev",
     openapi_url="/openapi.json",  # <--
 )
 ```
@@ -23,6 +24,7 @@ app.wsgi_app = ApitallyMiddleware(
 ```python Django
 APITALLY_MIDDLEWARE = {
     "client_id": "your-client-id",
+    "env": "dev",
     "openapi_url": "/api/openapi",  # <--
 }
 ```
@@ -30,6 +32,7 @@ APITALLY_MIDDLEWARE = {
 ```javascript Express / Koa
 useApitally(app, {
   clientId: "your-client-id",
+  env: "dev",
   openApiUrl: "/api-docs", // <--
 });
 ```
@@ -37,6 +40,7 @@ useApitally(app, {
 ```javascript Fastify
 await fastify.register(apitallyPlugin, {
   clientId: "your-client-id",
+  env: "dev",
   openApiUrl: "/docs/json", // <--
 });
 ```
@@ -54,6 +58,7 @@ To report the app version, set the `app_version` / `appVersion` argument when ad
 app.add_middleware(
     ApitallyMiddleware,
     client_id="your-client-id",
+    env="dev",
     app_version="1.0.0",  # <--
 )
 ```
@@ -62,6 +67,7 @@ app.add_middleware(
 app.wsgi_app = ApitallyMiddleware(
     app,
     client_id="your-client-id",
+    env="dev",
     app_version="1.0.0",  # <--
 )
 ```
@@ -69,6 +75,7 @@ app.wsgi_app = ApitallyMiddleware(
 ```python Django
 APITALLY_MIDDLEWARE = {
     "client_id": "your-client-id",
+    "env": "dev",
     "app_version": "1.0.0",  # <--
 }
 ```
@@ -76,6 +83,7 @@ APITALLY_MIDDLEWARE = {
 ```javascript Express / Koa
 useApitally(app, {
   clientId: "your-client-id",
+  env: "dev",
   appVersion: "1.0.0", // <--
 });
 ```
@@ -83,6 +91,7 @@ useApitally(app, {
 ```javascript Fastify
 await fastify.register(apitallyPlugin, {
   clientId: "your-client-id",
+  env: "dev",
   appVersion: "1.0.0", // <--
 });
 ```
