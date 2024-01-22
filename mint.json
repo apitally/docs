@@ -35,14 +35,19 @@
   },
   "anchors": [
     {
-      "name": "Home",
-      "icon": "house",
+      "name": "Website",
+      "icon": "globe",
       "url": "https://apitally.io"
     },
     {
       "name": "GitHub",
       "icon": "github",
       "url": "https://github.com/apitally"
+    },
+    {
+      "name": "Slack",
+      "icon": "slack",
+      "url": "https://apitally-community.slack.com"
     },
     {
       "name": "Blog",
