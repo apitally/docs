@@ -55,16 +55,24 @@ await fastify.register(apitallyPlugin, {
 const fastify = require("fastify")({ logger: true });
 const { apitallyPlugin } = require("apitally/fastify");
 
-await fastify.register(apitallyPlugin, {
+fastify.register(apitallyPlugin, {
   clientId: "your-client-id",
   env: "dev", // or "prod" etc.
+});
+
+// Wrap your routes in a plugin, so Apitally can detect them
+fastify.register((instance, opts, done) => {
+  instance.get("/", (request, reply) => {
+    reply.send("hello");
+  });
+  done();
 });
 ```
 </CodeGroup>
 
-<Snippet file="env-argument.mdx" />
-
-<Snippet file="add-middleware-check.mdx" />
+<div className="mt-4">
+  <Snippet file="add-middleware-check.mdx" />
+</div>
 
 ## Identify consumers
 
@@ -100,7 +108,7 @@ await fastify.register(apitallyPlugin, {
 });
 ```
 
-<div className="-mt-4">
+<div style={{ marginTop: "-1rem" }}>
   <Snippet file="api-key-sync-info.mdx" />
 </div>
 

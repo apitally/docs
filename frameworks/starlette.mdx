@@ -55,11 +55,9 @@ app.add_middleware(
 )
 ```
 
-<div className="-mt-4">
+<div style={{ marginTop: "-1rem" }}>
   <Snippet file="middleware-last-note.mdx" />
 </div>
-
-<Snippet file="env-argument.mdx" />
 
 <Snippet file="add-middleware-check.mdx" />
 
@@ -116,7 +114,7 @@ app.add_middleware(
 )
 ```
 
-<div className="-mt-4">
+<div style={{ marginTop: "-1rem" }}>
   <Snippet file="api-key-sync-info.mdx" />
 </div>
 
@@ -187,7 +185,7 @@ def on_auth_error(request: Request, exc: Exception) -> Response:
 app.add_middleware(AuthenticationMiddleware, backend=APIKeyAuth(), on_error=on_auth_error)
 ```
 
-<div className="-mt-4">
+<div style={{ marginTop: "-1rem" }}>
   <Snippet file="configure-api-key-auth-check.mdx" />
 </div>
 
