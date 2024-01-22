@@ -3,25 +3,24 @@ title: "NestJS"
 description: "Set your NestJS application up to work with Apitally."
 ---
 
+import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
+import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
+import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
+
 This page guides you through the steps of configuring your [NestJS](https://nestjs.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
 
-Once you're done with this guide, you will be able to:
+<SetupGuideStartSnippet framework="NestJS" />
 
-- Monitor traffic to your NestJS application
-- Keep track of response times and errors
-- Understand how individual consumers use your application
-- Secure your application with API keys that are easily managed through our dashboard
-- Use scopes to control different levels of access to your endpoints
 
 <Warning>Apitally currently only works with NestJS applications that use Express as the underlying HTTP server, which is the default.</Warning>
 
 ## Create app
 
-To get started, create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and select NestJS as your framework.
+<CreateAppSnippet1 framework="NestJS" />
 
 ![Create app](https://assets.apitally.io/docs/create-app-nestjs.png)
 
-Take a note of the client ID displayed after submitting. You will need it in the next step.
+<CreateAppSnippet2 />
 
 ## Add middleware
 

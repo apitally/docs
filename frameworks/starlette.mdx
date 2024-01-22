@@ -3,27 +3,27 @@ title: "Starlette"
 description: "Set your Starlette application up to work with Apitally."
 ---
 
+import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
+import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
+import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
+import AddMiddlewarePythonSnippet from '/snippets/add-middleware-python.mdx';
+
 This page guides you through the steps of configuring your [Starlette](https://www.starlette.io) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
 
-Once you're done with this guide, you will be able to:
+<SetupGuideStartSnippet framework="Starlette" />
 
-- Monitor traffic to your Starlette application
-- Keep track of response times and errors
-- Understand how individual consumers use your application
-- Secure your application with API keys that are easily managed through our dashboard
-- Use scopes to control different levels of access to your endpoints
 
 ## Create app
 
-To get started, create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and select Starlette as your framework.
+<CreateAppSnippet1 framework="Starlette" />
 
 ![Create app](https://assets.apitally.io/docs/create-app-starlette.png)
 
-Take a note of the client ID displayed after submitting. You will need it in the next step.
+<CreateAppSnippet2 />
 
 ## Add middleware
 
-Next, install the [Apitally client library](https://pypi.org/project/apitally/) in your Starlette project (e.g. using `pip` or `poetry`) with the `starlette` extra.
+<AddMiddlewarePythonSnippet framework="Starlette" extra="starlette" />
 
 <CodeGroup>
 ```shell pip

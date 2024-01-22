@@ -3,27 +3,26 @@ title: "Django REST Framework"
 description: "Set your Django application up to work with Apitally."
 ---
 
+import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
+import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
+import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
+import AddMiddlewarePythonSnippet from '/snippets/add-middleware-python.mdx';
+
 This page guides you through the steps of configuring your [Django REST Framework](https://www.django-rest-framework.org) (DRF) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
 
-Once you're done with this guide, you will be able to:
-
-- Monitor traffic to your Django REST Framework application
-- Keep track of response times and errors
-- Understand how individual consumers use your application
-- Secure your application with API keys that can be easily managed through our dashboard
-- Manage scopes to control access to your endpoints
+<SetupGuideStartSnippet framework="Django REST Framework" />
 
 ## Create app
 
-To get started, create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and select Django REST Framework as your framework.
+<CreateAppSnippet1 framework="Django REST Framework" />
 
 ![Create app](https://assets.apitally.io/docs/create-app-django-rest-framework.png)
 
-Take a note of the client ID displayed after submitting. You will need it in the next step.
+<CreateAppSnippet2 />
 
 ## Add middleware
 
-Next, install the [Apitally client library](https://pypi.org/project/apitally/) in your Django project (e.g. using `pip` or `poetry`) with the `django_rest_framework` extra.
+<AddMiddlewarePythonSnippet framework="Django" extra="django_rest_framework" />
 
 <CodeGroup>
 ```shell pip
