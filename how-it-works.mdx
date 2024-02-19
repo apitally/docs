@@ -46,7 +46,6 @@ The client libraries include the following features:
 - Introspection of your application to capture metadata about endpoints.
 - Lightweight middleware for each supported framework, which captures request and response metadata.
 - A non-blocking client that handles communication with the Apitally Hub.
-- Functions that allow you to easily secure endpoints with API key authentication and permission checks.
 
 <Note>
   The clients are designed to be resilient to temporary network failures
@@ -59,9 +58,6 @@ The client libraries include the following features:
 When your application starts running and the Apitally middleware is initialized, it introspects your application to capture metadata about all available endpoints.
 This metadata is then sent to the Apitally Hub in a once-off request.
 
-If you have enabled the synchronization of API keys, the client will also retrieve API key hashes and metadata from the Apitally Hub.
-This is so that your application can validate API keys locally without having to make a network request.
-
 ### During runtime
 
 When your application receives a request, the middleware times the invokation of the request handler and captures metadata about the request and response, such as the HTTP method, path and the HTTP status code.
@@ -69,8 +65,6 @@ If the response is a validation error (status 400 or 422), the middleware inspec
 
 The captured metadata is then passed to the client which immediately aggregates it with previously received data.
 The client synchronizes the aggregated data with the Apitally Hub in one minute intervals.
-
-If you have enabled the synchronization of API keys, the client will also fetch updated API key hashes and metadata from the Apitally Hub in the same interval.
 
 <Note>
   The communication with the Apitally Hub happens either asynchronously or in a

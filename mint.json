@@ -11,7 +11,7 @@
     "light": "#0b9797",
     "dark": "#0b9797",
     "background": {
-      "dark": "#121212"
+      "dark": "#0e1515"
     },
     "anchors": {
       "from": "#9dd5d5",
@@ -48,11 +48,6 @@
       "name": "Slack",
       "icon": "slack",
       "url": "https://join.slack.com/t/apitally-community/shared_invite/zt-2b3xxqhdu-9RMq2HyZbR79wtzNLoGHrg"
-    },
-    {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://blog.apitally.io"
     }
   ],
   "navigation": [
@@ -65,14 +60,12 @@
           "group": "Features",
           "pages": [
             "features/api-traffic-monitoring",
-            "features/api-uptime-monitoring",
-            "features/api-key-management"
+            "features/api-uptime-monitoring"
           ]
         },
         "how-it-works",
         "advanced",
-        "reference",
-        "faqs"
+        "reference"
       ]
     },
     {
