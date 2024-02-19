@@ -25,13 +25,13 @@
       "url": "/support"
     },
     {
-      "name": "Sign up",
-      "url": "https://app.apitally.io/?signup"
+      "name": "Log in",
+      "url": "https://app.apitally.io"
     }
   ],
   "topbarCtaButton": {
-    "name": "Dashboard",
-    "url": "https://app.apitally.io"
+    "name": "Sign up",
+    "url": "https://app.apitally.io/?signup"
   },
   "anchors": [
     {
