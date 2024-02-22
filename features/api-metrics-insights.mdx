@@ -1,13 +1,14 @@
 ---
-title: API traffic monitoring
-description: Analyze API traffic, errors, and response times. Break it down by consumer.
+title: API metrics & insights
+description: Understand API usage and performance. Break it down by consumer.
 ---
 
 ## Requests
 
-Apitally keeps track of all requests handled by your API and shows you aggregated traffic data overall and for each of your API's endpoints.
+Apitally keeps track of all requests handled by your API and provides insights into the overall traffic as well as the usage of each endpoint.
 On the *Traffic* dashboard you can choose to analyze requests for time ranges from just the last hour to 12 months.
-And if your application is set up to identify API consumers (learn more [below](#consumers)), you can filter the dashboard to show only requests from individual consumers.
+
+If your application is set up to identify API consumers (learn more [below](#consumers)), you can filter the dashboard to show only requests from individual consumers.
 
 <CardGroup cols={2}>
   <Card>
@@ -22,7 +23,8 @@ And if your application is set up to identify API consumers (learn more [below](
   </Card>
 </CardGroup>
 
-Particularly useful for users monitoring multiple applications, Apitally also includes a sparkline graph for each app on the *Apps* page for a quick overview of traffic patterns across apps.
+Particularly useful for users monitoring multiple applications, Apitally also includes sparkline graphs on the *Apps* page for a quick overview of traffic patterns across apps.
+This can help to quickly identify unexpected spikes or drops in traffic for any of your apps.
 
 <Card>
   <div style={{ margin: "-1.25rem -1.5rem" }}>
@@ -41,7 +43,7 @@ Particularly useful for users monitoring multiple applications, Apitally also in
 Monitoring API errors is crucial for maintaining a robust system.
 Server errors (5xx) usually signal underlying issues with your API, such as bugs in your code or networking problems.
 
-However, paying attention to client errors (4xx) is equally important, even if some are anticipated and not indicative of API problems.
+Paying attention to client errors (4xx) is equally important, even if some are anticipated and not indicative of API problems.
 Analyzing client errors can provide valuable insights into how systems interact with your API.
 It can aid in refining your API's design or documentation, and even uncover potential issues within those systems.
 
@@ -64,8 +66,7 @@ This feature is currently supported for the following frameworks:
 
 - FastAPI (using pydantic)
 - Django Ninja (using pydantic)
-- Express (using express-validator)
-- Express (using Joi + celebrate)
+- Express (using express-validator or Joi + celebrate)
 - Fastify (using Ajv)
 - NestJS (using class-validator)
 
@@ -77,6 +78,17 @@ You can analyze different percentiles of response times (p50, p75 and p95) over 
 <Card>
   <div style={{ margin: "-1.25rem -1.5rem" }}>
     <img src="https://assets.apitally.io/docs/traffic-response-times-endpoint.png" alt="Traffic dashboard - Response times for specific endpoint" />
+  </div>
+</Card>
+
+## Payload sizes
+
+Apitally records the payload size of each request and response based on the `Content-Length` headers.
+It provides insights into the distribution of payload sizes for specific endpoints as well as the overall amount of data transferred.
+
+<Card>
+  <div style={{ margin: "-1.25rem -1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/traffic-data-transferred-endpoint.png" alt="Traffic dashboard - Data transferred and payload sizes for specific endpoint" />
   </div>
 </Card>
 

@@ -59,7 +59,7 @@
         {
           "group": "Features",
           "pages": [
-            "features/api-traffic-monitoring",
+            "features/api-metrics-insights",
             "features/api-uptime-monitoring"
           ]
         },
