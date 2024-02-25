@@ -83,6 +83,16 @@
       ]
     }
   ],
+  "redirects": [
+    {
+      "source": "/features/api-monitoring",
+      "destination": "/features/features/api-metrics-insights"
+    },
+    {
+      "source": "/features/api-traffic-monitoring",
+      "destination": "/features/features/api-metrics-insights"
+    }
+  ],
   "footerSocials": {
     "github": "https://github.com/apitally",
     "twitter": "https://twitter.com/apitally_io",
