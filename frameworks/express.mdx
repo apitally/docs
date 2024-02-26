@@ -76,6 +76,7 @@ useApitally(app, {
 
 To associate requests with consumers, set the `consumerIdentifier` property on the [request object](https://expressjs.com/en/api.html#req) in a middleware.
 
+<CodeGroup>
 ```javascript Example
 app.use(function (req, res, next) {
   if (req.user) {
@@ -84,6 +85,24 @@ app.use(function (req, res, next) {
   next()
 })
 ```
+
+```javascript Example for TypeScript
+import type { Request } from "express";
+
+declare module "express" {
+  interface Request {
+    consumerIdentifier?: string;
+  }
+}
+
+app.use(function (req: Request, res, next) {
+  if (req.user) {
+    req.consumerIdentifier = req.user.username
+  }
+  next()
+})
+```
+</CodeGroup>
 
 <Snippet file="consumer-identifier.mdx" />
 
