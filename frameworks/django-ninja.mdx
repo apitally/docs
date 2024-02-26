@@ -22,20 +22,20 @@ This page guides you through the steps of configuring your [Django Ninja](https:
 
 ## Add middleware
 
-<AddMiddlewarePythonSnippet framework="Django" extra="django_ninja" />
+<AddMiddlewarePythonSnippet framework="Django" extra="django" />
 
 <CodeGroup>
 ```shell pip
-pip install "apitally[django_ninja]"
+pip install "apitally[django]"
 ```
 
 ```shell poetry
-poetry add "apitally[django_ninja]"
+poetry add "apitally[django]"
 ```
 
 ```toml pyproject.toml
 [tool.poetry.dependencies]
-apitally = { version = "*", extras = ["django_ninja"] }
+apitally = { version = "*", extras = ["django"] }
 ```
 </CodeGroup>
 
@@ -43,7 +43,7 @@ apitally = { version = "*", extras = ["django_ninja"] }
 
 ```python
 MIDDLEWARE = [
-    "apitally.django_ninja.ApitallyMiddleware",
+    "apitally.django.ApitallyMiddleware",
     # Other middleware ...
 ]
 APITALLY_MIDDLEWARE = {

@@ -22,20 +22,20 @@ This page guides you through the steps of configuring your [Django REST Framewor
 
 ## Add middleware
 
-<AddMiddlewarePythonSnippet framework="Django" extra="django_rest_framework" />
+<AddMiddlewarePythonSnippet framework="Django" extra="django" />
 
 <CodeGroup>
 ```shell pip
-pip install "apitally[django_rest_framework]"
+pip install "apitally[django]"
 ```
 
 ```shell poetry
-poetry add "apitally[django_rest_framework]"
+poetry add "apitally[django]"
 ```
 
 ```toml pyproject.toml
 [tool.poetry.dependencies]
-apitally = { version = "*", extras = ["django_rest_framework"] }
+apitally = { version = "*", extras = ["django"] }
 ```
 </CodeGroup>
 
@@ -43,7 +43,7 @@ apitally = { version = "*", extras = ["django_rest_framework"] }
 
 ```python
 MIDDLEWARE = [
-    "apitally.django_rest_framework.ApitallyMiddleware",
+    "apitally.django.ApitallyMiddleware",
     # Other middleware ...
 ]
 APITALLY_MIDDLEWARE = {
