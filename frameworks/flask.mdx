@@ -59,6 +59,10 @@ app.wsgi_app = ApitallyMiddleware(
   <Snippet file="middleware-last-note.mdx" />
 </div>
 
+<Warning>
+  If you're using uWSGI to serve your Flask app in production, make sure to run it with the<br />`--enable-threads` and `--lazy-apps` options. Otherwise the Apitally client won't work correctly.
+</Warning>
+
 <Snippet file="add-middleware-check.mdx" />
 
 ## Identify consumers
