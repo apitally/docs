@@ -78,6 +78,7 @@
         "frameworks/fastify",
         "frameworks/flask",
         "frameworks/koa",
+        "frameworks/litestar",
         "frameworks/nestjs",
         "frameworks/starlette"
       ]
