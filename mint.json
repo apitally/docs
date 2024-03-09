@@ -55,7 +55,6 @@
       "group": "Overview",
       "pages": [
         "introduction",
-        "quickstart",
         {
           "group": "Features",
           "pages": [
@@ -85,6 +84,10 @@
     }
   ],
   "redirects": [
+    {
+      "source": "/quickstart",
+      "destination": "/introduction"
+    },
     {
       "source": "/features/api-monitoring",
       "destination": "/features/features/api-metrics-insights"
