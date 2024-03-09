@@ -1,9 +1,9 @@
 ---
 title: API metrics & insights
-description: Understand API usage and performance. Break it down by consumer.
+description: Understand API usage, errors and performance. Break it down by consumer.
 ---
 
-## Requests
+## Traffic monitoring
 
 Apitally keeps track of all requests handled by your API and provides insights into the overall traffic as well as the usage of each endpoint.
 On the *Traffic* dashboard you can choose to analyze requests for time ranges from just the last hour to 12 months.
@@ -38,7 +38,7 @@ This can help to quickly identify unexpected spikes or drops in traffic for any 
   </Tip>
 </div>
 
-## Client & server errors
+## Error monitoring
 
 Monitoring API errors is crucial for maintaining a robust system.
 Server errors (5xx) usually signal underlying issues with your API, such as bugs in your code or networking problems.
@@ -55,7 +55,7 @@ The Apitally dashboard allows you to visualize error rates over time and per end
   </div>
 </Card>
 
-## Validation errors
+### Validation errors
 
 Validating incoming requests is a fundamental task for API developers and frameworks.
 Many frameworks offer built-in validation capabilities, or are compatible with third-party validation libraries.
@@ -66,13 +66,14 @@ This feature is currently supported for the following frameworks:
 
 - FastAPI (using pydantic)
 - Django Ninja (using pydantic)
+- Litestar (using pydantic, attrs or other modeling libraries)
 - Express (using express-validator or Joi + celebrate)
 - Fastify (using Ajv)
 - NestJS (using class-validator)
 
-## Response times
+## Performance monitoring
 
-Apitally measures the time it takes your application to respond to requests and gives you valueable performance insights for the whole API and individual endpoints.
+Apitally measures the time it takes your application to respond to API requests and gives you valueable performance insights for the whole API and individual endpoints.
 You can analyze different percentiles of response times (p50, p75 and p95) over time and view a histogram of response times for specific endpoints.
 
 <Card>
@@ -83,7 +84,7 @@ You can analyze different percentiles of response times (p50, p75 and p95) over 
 
 ## Payload sizes
 
-Apitally records the payload size of each request and response based on the `Content-Length` headers.
+Apitally records the payload size of each API request and response based on the `Content-Length` headers.
 It provides insights into the distribution of payload sizes for specific endpoints as well as the overall amount of data transferred.
 
 <Card>
@@ -92,7 +93,7 @@ It provides insights into the distribution of payload sizes for specific endpoin
   </div>
 </Card>
 
-## Consumers
+## Consumer insights
 
 Understanding how different consumers interact with your API, which endpoints they use, what errors they encounter and the latencies they experience can yield meaningful insights.
 
