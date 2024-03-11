@@ -8,6 +8,7 @@ import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
 import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import AddMiddlewarePythonSnippet from '/snippets/add-middleware-python.mdx';
+import UWSGIWarning from '/snippets/uwsgi-warning.mdx';
 
 This page guides you through the steps of configuring your [Django REST Framework](https://www.django-rest-framework.org) (DRF) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
 
@@ -52,6 +53,10 @@ APITALLY_MIDDLEWARE = {
     "env": "dev",  # or "prod" etc.
 }
 ```
+
+<div style={{ marginTop: "-0.5rem" }}>
+  <UWSGIWarning framework="Django" />
+</div>
 
 <Snippet file="add-middleware-check.mdx" />
 

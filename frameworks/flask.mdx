@@ -8,6 +8,7 @@ import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
 import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import AddMiddlewarePythonSnippet from '/snippets/add-middleware-python.mdx';
+import UWSGIWarning from '/snippets/uwsgi-warning.mdx';
 
 This page guides you through the steps of configuring your [Flask](https://flask.palletsprojects.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
 
@@ -56,13 +57,11 @@ app.wsgi_app = ApitallyMiddleware(
 )
 ```
 
-<div style={{ marginTop: "-1rem" }}>
+<div style={{ marginTop: "-0.5rem" }}>
   <Snippet file="middleware-last-note.mdx" />
 </div>
 
-<Warning>
-  If you're using uWSGI to serve your Flask app in production, make sure to run it with the<br />`--enable-threads` and `--lazy-apps` options. Otherwise the Apitally client won't work correctly.
-</Warning>
+<UWSGIWarning framework="Flask" />
 
 <Snippet file="add-middleware-check.mdx" />
 
