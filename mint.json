@@ -108,9 +108,8 @@
     "raiseIssue": true
   },
   "analytics": {
-    "posthog": {
-      "apiKey": "phc_kOKUlIHUZPLsz5a6Bqix8h7uy5zl7SaMWSDlXhLVZka",
-      "apiHost": "https://ph.apitally.io"
+    "plausible": {
+      "domain": "docs.apitally.io"
     }
   }
 }
