@@ -45,9 +45,14 @@
       "url": "https://github.com/apitally"
     },
     {
-      "name": "Slack",
+      "name": "Community",
       "icon": "slack",
       "url": "https://join.slack.com/t/apitally-community/shared_invite/zt-2b3xxqhdu-9RMq2HyZbR79wtzNLoGHrg"
+    },
+    {
+      "name": "Roadmap",
+      "icon": "road",
+      "url": "https://apitally.features.vote/roadmap"
     }
   ],
   "navigation": [
