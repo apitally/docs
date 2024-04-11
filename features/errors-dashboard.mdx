@@ -1,0 +1,38 @@
+---
+title: API errors dashboard
+sidebarTitle: Errors dashboard
+description: Understand API usage, errors and performance. Break it down by consumer.
+---
+
+## Errors dashboard
+
+Monitoring API errors is crucial for maintaining a robust system.
+Server errors (5xx) usually signal underlying issues with your API, such as bugs in your code or networking problems.
+
+Paying attention to client errors (4xx) is equally important, even if some are anticipated and not indicative of API problems.
+Analyzing client errors can provide valuable insights into how systems interact with your API.
+It can aid in refining your API's design or documentation, and even uncover potential issues within those systems.
+
+The Apitally dashboard allows you to visualize error rates over time and per endpoint and gives you a breakdown of response status codes.
+
+<Card>
+  <div style={{ margin: "-1.25rem -1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/traffic-errors-endpoint.png" alt="Traffic dashboard - Error rates for specific endpoint" />
+  </div>
+</Card>
+
+### Validation errors
+
+Validating incoming requests is a fundamental task for API developers and frameworks.
+Many frameworks offer built-in validation capabilities, or are compatible with third-party validation libraries.
+
+Apitally provides insights into specific validation errors encountered by your API consumers, which can help you refine validation rules or reveal issues on the consumer side.
+
+This feature is currently supported for the following frameworks:
+
+- FastAPI (using pydantic)
+- Django Ninja (using pydantic)
+- Litestar (using pydantic, attrs or other modeling libraries)
+- Express (using express-validator or Joi + celebrate)
+- Fastify (using Ajv)
+- NestJS (using class-validator)

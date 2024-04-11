@@ -1,0 +1,56 @@
+---
+title: API traffic dashboard
+sidebarTitle: Traffic dashboard
+description: Keep track of key API metrics and understand API usage.
+---
+
+<CardGroup cols={2}>
+  <Card>
+    <div style={{ margin: "-1.25rem -1.5rem" }}>
+      <img src="https://assets.apitally.io/docs/traffic-requests.png" alt="Traffic dashboard - Requests for whole API" />
+    </div>
+  </Card>
+  <Card>
+    <div style={{ margin: "-1.25rem -1.5rem" }}>
+      <img src="https://assets.apitally.io/docs/traffic-requests-endpoint.png" alt="Traffic dashboard - Requests for specific endpoint" />
+    </div>
+  </Card>
+</CardGroup>
+
+Apitally keeps track of all requests handled by your API and provides insights into the overall traffic as well as the usage of each endpoint.
+On the *Traffic* dashboard you can analyze requests for various time ranges, from just the last hour up to the last 12 months.
+
+The dashboard provides a few filtering options:
+
+- By environment (e.g. prod or dev)
+- By API consumer or consumer group
+- By endpoint group (a set of endpoints sharing a common path prefix)
+
+## Key API metrics
+
+The dashboard provides the following key metrics across API endpoints:
+
+- **Number of requests**, broken down by successful and unsuccessful requests
+- **Error rate**, broken down by client and server errors
+- **Response time**, as 50th, 75th and 95th percentiles
+- **Data transferred**, broken down by incoming (requests) and outgoing (responses)
+
+By clicking on the metrics at the top you can toggle between different charts showing how each metric has been trending over time.
+
+## Endpoints table
+
+The traffic dashboard includes a table showing all endpoints of your API along with the above mentioned metrics specific to each endpoint.
+This allows you to get a quick overview of the usage and performance of each endpoint.
+
+The table is ordered by the number of requests by default, so the most frequently used endpoint is at the top.
+You can search and sort the table by any of the other metrics too.
+
+A red triangle with an exclamation mark next to the error rate indicates that server errors have occurred in that endpoint.
+
+### Excluding endpoints
+
+If your application includes health check endpoints (or similar) that are called automatically and frequently, you may want to exclude all those requests from API metric calculations, as they can mask insights about traffic from real API consumers.
+
+Simply select *Exclude Endpoint* in the dropdown menu in the endpoints table (the button with three vertical dots on the right).
+
+Endpoints marked as excluded are also hidden in the endpoints table, unless you select *Show excluded endpoints* at the bottom of the table.

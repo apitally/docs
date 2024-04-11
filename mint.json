@@ -63,8 +63,12 @@
         {
           "group": "Features",
           "pages": [
-            "features/api-metrics-insights",
-            "features/api-uptime-monitoring"
+            "features/apps-overview",
+            "features/traffic-dashboard",
+            "features/endpoint-insights",
+            "features/consumer-insights",
+            "features/errors-dashboard",
+            "features/uptime-monitoring"
           ]
         },
         "how-it-works",
