@@ -5,7 +5,7 @@ description: The entrypoint of your Apitally dashboard.
 
 <Card>
   <div style={{ margin: "-1.25rem -1.5rem" }}>
-    <img src="https://assets.apitally.io/docs/apps.png" alt="Apps overview with sparklines" />
+    <img src="https://assets.apitally.io/docs/apps-overview.webp" alt="Apps overview with sparklines" />
   </div>
 </Card>
 
@@ -17,9 +17,25 @@ The overview includes sparkline graphs of requests for a quick overview of traff
 This can help to quickly identify unexpected spikes or drops in traffic for any of your apps.
 Clicking on a graph takes you to the [traffic dashboard](/features/traffic-dashboard).
 
-## Creating apps
+## Creating an app
 
-...
+<CardGroup cols={2}>
+  <Card>
+    <div style={{ margin: "-1.25rem -1.5rem" }}>
+      <img src="https://assets.apitally.io/docs/create-app.webp" alt="Create app modal" />
+    </div>
+  </Card>
+  <Card>
+    <div style={{ margin: "-1.25rem -1.5rem" }}>
+      <img src="https://assets.apitally.io/docs/app-setup-instructions.webp" alt="App setup instructions" />
+    </div>
+  </Card>
+</CardGroup>
+
+Adding a new app to Apitally is very straightforward. Simply specify a name, select the framework used by your app and hit *Submit*.
+You can optionally add or remove [environments](#environments) as appropriate for your app.
+
+After submitting, you will see tailored instructions on how to set up your application with one of our client libraries.
 
 ## Environments
 
@@ -28,4 +44,4 @@ A green environment badge in the app overview indicates an environment that is c
 
 You can manage environments when creating or editing an app. You can also reorder environments so they're always displayed in an order that makes sense to you, e.g. `production` > `staging` > `development`.
 
-When Apitally starts receiving data from a new environment that doesn't exist, it is created automatically.
+When Apitally starts receiving data from a new environment that doesn't exist yet, it is created automatically.
