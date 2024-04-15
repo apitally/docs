@@ -26,7 +26,18 @@ The *Info* tab presents metadata about the endpoint, such as the summary and des
   </div>
 </Card>
 
-...
+The *Requests* tab provides different breakdowns of the requests made to the API endpoint. At the top you see a summary with the following metrics:
+
+- Total requests
+- Requests per minute
+- Successful requests
+- Client errors
+- Server errors
+
+Below the summary, you find a bar chart showing the distribution of requests over time, broken down by successful and failed requests.
+
+The horizontal bar chart at the bottom shows which API consumers have been making the most requests to this endpoint (top 10).
+Again, this is broken down by successful and failed requests.
 
 ## Errors
 
@@ -35,6 +46,12 @@ The *Info* tab presents metadata about the endpoint, such as the summary and des
     <img src="https://assets.apitally.io/docs/endpoint-insights-errors.webp" alt="Endpoint insights - Errors tab" />
   </div>
 </Card>
+
+The *Errors* tab provides details about failed requests to your API endpoint.
+Requests are considered unsuccessful if the response status code is in the 4xx or 5xx range, and the specific status code has not been marked as expected.
+
+At the top you see a breakdown of unsuccessful status codes returned by the endpoint, along with the number of occurrences and the percentage of all requests.
+You can click on the status codes to navigate to the [errors dashboard](/features/errors-dashboard), which provides more detailed insights into that specific error.
 
 ...
 
