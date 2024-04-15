@@ -1,24 +1,60 @@
 ---
 title: API endpoint insights
 sidebarTitle: Endpoint insights
-description: Understand the usage and performance of each API endpoint.
+description: Understand the usage and performance of individual API endpoints.
 ---
 
-Something here...
+By clicking on a row in the [endpoints table](/features/traffic-dashboard#endpoints-table) on the traffic dashboard, you can access detailed insights into the usage and performance of that specific API endpoint.
 
-- Number of successful and unsuccessful requests over time
-- Total requests within selected timeframe
-- Requests per minute
-- Number and percentage of client and server errors
-- Number of requests per API consumer
+The endpoint insights are presented in a tabbed interface with the sections described below.
 
-## Payload sizes
-
-Apitally records the payload size of each API request and response based on the `Content-Length` headers.
-It provides insights into the distribution of payload sizes for specific endpoints as well as the overall amount of data transferred.
+## Info
 
 <Card>
   <div style={{ margin: "-1.25rem -1.5rem" }}>
-    <img src="https://assets.apitally.io/docs/traffic-data-transferred-endpoint.png" alt="Traffic dashboard - Data transferred and payload sizes for specific endpoint" />
+    <img src="https://assets.apitally.io/docs/endpoint-insights-info.webp" alt="Endpoint insights - Info tab" />
   </div>
 </Card>
+
+The *Info* tab presents metadata about the endpoint, such as the summary and description, if provided by your application (e.g. via the OpenAPI schema).
+
+## Requests
+
+<Card>
+  <div style={{ margin: "-1.25rem -1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/endpoint-insights-requests.webp" alt="Endpoint insights - Requests tab" />
+  </div>
+</Card>
+
+...
+
+## Errors
+
+<Card>
+  <div style={{ margin: "-1.25rem -1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/endpoint-insights-errors.webp" alt="Endpoint insights - Errors tab" />
+  </div>
+</Card>
+
+...
+
+## Response times
+
+<Card>
+  <div style={{ margin: "-1.25rem -1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/endpoint-insights-response-times.webp" alt="Endpoint insights - Response times tab" />
+  </div>
+</Card>
+
+...
+
+## Data transferred
+
+<Card>
+  <div style={{ margin: "-1.25rem -1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/endpoint-insights-data-transferred.webp" alt="Endpoint insights - Data transferred tab" />
+  </div>
+</Card>
+
+Apitally records the payload size of each API request and response based on the `Content-Length` headers.
+It provides insights into the distribution of payload sizes for specific endpoints as well as the overall amount of data transferred.
