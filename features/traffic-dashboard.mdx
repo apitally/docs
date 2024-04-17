@@ -20,12 +20,6 @@ description: Keep track of key API metrics and understand API usage.
 Apitally keeps track of all requests handled by your API and provides insights into the overall traffic as well as the usage of each endpoint.
 On the *Traffic* dashboard you can analyze requests for various time ranges, from just the last hour up to the last 12 months.
 
-The dashboard provides a few filtering options:
-
-- By environment (e.g. prod or dev)
-- By API consumer or consumer group
-- By endpoint group (a set of endpoints sharing a common path prefix)
-
 ## Key API metrics
 
 The following key metrics are presented on the dashboard:
@@ -36,6 +30,20 @@ The following key metrics are presented on the dashboard:
 - **Data transferred**, broken down by incoming (requests) and outgoing (responses)
 
 By clicking on the metrics at the top you can toggle between different charts showing how each metric has been trending over time.
+
+## Filtering options
+
+<Card>
+  <div style={{ margin: "-1.25rem -1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/traffic-filter.webp" alt="Traffic dashboard filtering options" />
+  </div>
+</Card>
+
+The dashboard provides the following filtering options:
+
+- By environment (e.g. prod or dev)
+- By API consumer or consumer group
+- By endpoint group (a set of endpoints sharing a common path prefix)
 
 ## Endpoints table
 
