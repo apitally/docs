@@ -25,22 +25,21 @@ That's where health checks come in.
 Health checks monitor your application's availability by sending HTTP GET requests to a specified endpoint in 1 minute intervals.
 If the endpoint returns a successful response within 5 seconds, your application is considered healthy.
 
+<Card>
+  <div style={{ margin: "-1.25rem -1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/uptime-configure-health-checks.png" alt="Configure health checks" />
+  </div>
+</Card>
+
 <Tip>We recommend you use a dedicated health check endpoint that doesn't require authentication.</Tip>
 
 If a health check request fails or times out, Apitally will retry the request once before sending you an alert.
 The alert includes details about the failed request, so you can get to the bottom of the issue quickly.
 
-<CardGroup cols={2}>
-  <Card>
-    <div style={{ margin: "-1.25rem -1.5rem" }}>
-      <img src="https://assets.apitally.io/docs/uptime-configure-health-checks.png" alt="Configure health checks" />
-    </div>
-  </Card>
-  <Card>
-    <div style={{ margin: "-1.25rem -1.5rem" }}>
-      <img src="https://assets.apitally.io/docs/uptime-health-check-alert.png" alt="Alerts for failed health checks" />
-    </div>
-  </Card>
-</CardGroup>
+<Card>
+  <div style={{ margin: "-1.25rem -1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/alerts.webp" alt="Alerts for failed health checks" />
+  </div>
+</Card>
 
 Health checks are a premium feature and only available on our paid plans.

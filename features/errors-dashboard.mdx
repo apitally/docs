@@ -12,9 +12,9 @@ description: Understand the frequency, causes and impact of client and server er
 
 
 Monitoring API errors is crucial for maintaining a robust system.
-Server errors (5xx) usually signal underlying issues with your application, such as bugs in your code or networking problems.
+Server errors (`5xx`) usually signal underlying issues with your application, such as bugs in your code or networking problems.
 
-Paying attention to client errors (4xx) is equally important, even if some are anticipated and not indicative of API problems.
+Paying attention to client errors (`4xx`) is equally important, even if some are anticipated and not indicative of API problems.
 Analyzing client errors can provide valuable insights into how systems interact with your API.
 It can uncover potential issues within those systems and aid in refining your API's design or documentation.
 
@@ -70,4 +70,10 @@ If a `500 Internal Server Error` response is caused by an unhandled exception in
 
 ## Expected errors
 
-...
+In certain applications or use cases, some client errors may be part of normal operation.
+You might not want these errors included in error rate metrics or combined with other unsuccessful requests.
+
+Apitally enables you to mark specific client error status codes as expected for certain API endpoints.
+This prevents them from being counted as errors in error rate calculations, and requests with these response status codes are considered successful.
+
+To do this, simply select *Mark as expected* from the dropdown menu in the errors table, which is opened by clicking on the button with three vertical dots on the right.
