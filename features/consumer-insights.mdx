@@ -1,0 +1,53 @@
+---
+title: API consumer insights
+sidebarTitle: Consumer insights
+description: Understand how individual consumers use your API.
+---
+
+<Tip>
+  To use this feature, your application must identify API consumers by providing a unique consumer identifier for each request. Check out the [setup guide](/quickstart) for your framework to learn more (it's easy!).
+</Tip>
+
+<Card>
+  <div style={{ margin: "-1.25rem -1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/consumers.webp" alt="Consumers overview" />
+  </div>
+</Card>
+
+Understanding how different consumers interact with your API, which endpoints they use, what errors they encounter and the latencies they experience can yield meaningful insights.
+
+The *Consumers* page lists all identified API consumers, including traffic sparkline graphs for a quick overview of traffic patterns, error rates and the time of the last request.
+From there, you can click through to the [traffic dashboard](/features/traffic-dashboard) filtered to requests from a specific API consumer or consumer group.
+
+<Card>
+  <div style={{ margin: "-1.25rem -1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/traffic-requests-consumer.webp" alt="Traffic dashboard filtered to an API consumer" />
+  </div>
+</Card>
+
+## Managing consumers
+
+Consumers are automatically created when Apitally receives data for API requests associated with a new consumer identifier.
+A name is generated based on that identifier, but you can change it to make it more meaningful.
+
+You also have the option to hide consumers if they are no longer of interest and you don't expect any further API requests from them.
+If your API receives requests from a hidden consumer, it will be unhidden automatically.
+
+## Consumer groups
+
+In addition to analyzing individual API consumers, you have the option to create and analyze groups of consumers.
+For example, if you have both internal and external API consumers, you could create two groups to understand their API usage separately.
+
+<Card>
+  <div style={{ margin: "-1.25rem -1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/create-consumer-group.webp" alt="Create consumer group dialog" />
+  </div>
+</Card>
+
+<Note>
+  Each API consumer can only be assigned to one group at a time. Assigning a consumer to a new group will remove it from their current group.
+</Note>
+
+You can choose between viewing individual API consumers and consumer groups on the *Consumers* page using the toggle at the top of the page.
+
+The traffic dashboard includes a filtering option for consumer groups too.

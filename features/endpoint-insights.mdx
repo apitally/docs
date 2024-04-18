@@ -1,0 +1,92 @@
+---
+title: API endpoint insights
+sidebarTitle: Endpoint insights
+description: Understand the usage and performance of individual API endpoints.
+---
+
+By clicking on a row in the [endpoints table](/features/traffic-dashboard#endpoints-table) on the traffic dashboard, you can access detailed insights into the usage and performance of that specific API endpoint.
+
+The endpoint insights are presented in a tabbed interface with the sections described below.
+
+## Info
+
+<Card>
+  <div style={{ margin: "-1.25rem -1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/endpoint-insights-info.webp" alt="Endpoint insights - Info tab" />
+  </div>
+</Card>
+
+The *Info* tab presents metadata about the endpoint, such as the summary and description, if provided by your application (e.g. via the OpenAPI schema).
+
+## Requests
+
+<Card>
+  <div style={{ margin: "-1.25rem -1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/endpoint-insights-requests.webp" alt="Endpoint insights - Requests tab" />
+  </div>
+</Card>
+
+The *Requests* tab provides different breakdowns of the requests made to the API endpoint. At the top you see a summary with the following metrics:
+
+- Total requests
+- Requests per minute
+- Successful requests
+- Client errors
+- Server errors
+
+Below the summary, you find a bar chart showing the distribution of requests over time, broken down by successful and failed requests.
+
+The horizontal bar chart at the bottom shows which API consumers have been making the most requests to this endpoint (top 10).
+Again, this is broken down by successful and failed requests.
+
+## Errors
+
+<Card>
+  <div style={{ margin: "-1.25rem -1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/endpoint-insights-errors.webp" alt="Endpoint insights - Errors tab" />
+  </div>
+</Card>
+
+The *Errors* tab provides details about failed requests to your API endpoint.
+Requests are considered unsuccessful if the response status code is in the 4xx or 5xx range, and the specific status code has not been marked as expected.
+
+At the top you see a breakdown of unsuccessful status codes returned by the endpoint, along with the number of occurrences and the percentage of all requests.
+You can click on the status codes to navigate to the [errors dashboard](/features/errors-dashboard), which provides more details about that specific error.
+
+An area chart shows a trend of client and server error rates over time.
+The error rates are calculated as the number of failed requests divided by the total number of requests.
+
+If the endpoint returned validation errors to consumers, the table at the bottom provides details about those errors.
+That includes the fields that failed validation, the error messages, and the number of occurrences.
+
+## Response times
+
+<Card>
+  <div style={{ margin: "-1.25rem -1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/endpoint-insights-response-times.webp" alt="Endpoint insights - Response times tab" />
+  </div>
+</Card>
+
+The *Response times* tab provides insights into the performance of the API endpoint, measured by the time it takes to respond to requests.
+In the summary at the top you see the median, 75th, 90th and 95th percentile of response times.
+
+The area chart below shows how these percentiles have been trending over time.
+
+Additionally you see a histogram of response times, providing a full picture of the distribution of response times for the endpoint, including any outliers.
+
+## Data transferred
+
+<Card>
+  <div style={{ margin: "-1.25rem -1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/endpoint-insights-data-transferred.webp" alt="Endpoint insights - Data transferred tab" />
+  </div>
+</Card>
+
+The *Data transferred* tab provides insights into the size of payloads received and sent by the API endpoint.
+These are based on the `Content-Length` headers in the requests and responses.
+
+The summary at the top includes the total amount of data transferred in the selected period as well as the average sizes of requests and responses.
+
+The bar chart below shows the distribution of data transferred over time, broken down by incoming (requests) and outgoing (responses).
+
+There are also histograms of the request and response sizes, so you can get a full picture of their distribution, including any outliers.
