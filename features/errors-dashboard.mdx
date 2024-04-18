@@ -1,7 +1,7 @@
 ---
 title: API errors dashboard
 sidebarTitle: Errors dashboard
-description: Understand the occurrence, causes and impact of client and server errors.
+description: Understand the frequency, causes and impact of client and server errors.
 ---
 
 <Card>
@@ -18,26 +18,42 @@ Paying attention to client errors (4xx) is equally important, even if some are a
 Analyzing client errors can provide valuable insights into how systems interact with your API.
 It can uncover potential issues within those systems and aid in refining your API's design or documentation.
 
-The Apitally dashboard allows you to visualize error rates over time and per endpoint and gives you a breakdown of response status codes.
+The *Errors* dashboard in Apitally provides a comprehensive overview of the errors encountered by consumers of your API.
 
-## Error occurrences
+The bar chart at the top shows the distribution of errors over time, broken down by client and server errors.
+When you hover over the bars you'll see a tooltip with the number of occurences of each error status code.
 
-<Card>
-  <div style={{ margin: "-1.25rem -1.5rem" }}>
-    <img src="https://assets.apitally.io/docs/error-occurrences.webp" alt="Error occurrences" />
-  </div>
-</Card>
+The table below lists all error status codes returned by your API's endpoints and is sorted by the number of occurrences, so the most frequently occurring errors are at the top.
 
-## Error details
+## Error insights
 
-For certain errors, the modal includes a *Details* tab that provides additional information about the error.
+<CardGroup cols={2}>
+  <Card>
+    <div style={{ margin: "-1.25rem -1.5rem" }}>
+      <img src="https://assets.apitally.io/docs/error-occurrences.webp" alt="Error occurrences" />
+    </div>
+  </Card>
+  <Card>
+    <div style={{ margin: "-1.25rem -1.5rem" }}>
+      <img src="https://assets.apitally.io/docs/error-details.webp" alt="Error details" />
+    </div>
+  </Card>
+</CardGroup>
+
+Clicking on an error in this table opens up a modal with further insights about that error.
+
+This includes a summary with the total number of occurences, the number of affected API consumers and the time of the last occurrence.
+
+A bar chart shows the frequency of the error over time and a second, horizontal bar chart displays the number of occurences per API consumer, helping you identify which consumers are most affected by the error.
+
+For validation and server errors, the modal includes a *Details* tab that provides additional information about the error.
 
 ### Validation errors
 
 Validating incoming requests is a fundamental task for API developers and frameworks.
 Many frameworks offer built-in validation capabilities, or are compatible with third-party validation libraries.
 
-Apitally provides insights into specific validation errors encountered by your API consumers, which can help you refine validation rules or reveal issues on the consumer side.
+Apitally captures specific validation error messages encountered by your API consumers, which can help you refine validation rules or reveal issues on the consumer side.
 
 This feature is currently supported for the following frameworks:
 
@@ -49,5 +65,9 @@ This feature is currently supported for the following frameworks:
 - NestJS (using class-validator)
 
 ### Server errors
+
+If a `500 Internal Server Error` response is caused by an unhandled exception in your code, Apitally captures details about the exception, such as the stack trace and the error message, and includes those in the *Details* tab of the error modal.
+
+## Expected errors
 
 ...
