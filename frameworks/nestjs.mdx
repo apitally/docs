@@ -80,7 +80,7 @@ useApitally(expressInstance, {
 
 <Snippet file="identify-consumers.mdx" />
 
-To associate requests with consumers, set the `consumerIdentifier` property on the [request object](https://expressjs.com/en/api.html#req), for example in an authorization guard.
+To associate requests with consumers, set the `apitallyConsumer` property on the [request object](https://expressjs.com/en/api.html#req), for example in an authorization guard.
 
 ```javascript
 import { Injectable } from '@nestjs/common';
@@ -91,7 +91,7 @@ export class AuthGuard {
     const request = context.switchToHttp().getRequest();
     const result = authenticateRequest(request); // assuming this sets request.user
     if (result && request.user) {
-      request.consumerIdentifier = request.user.username;
+      request.apitallyConsumer = request.user.username;
     }
     return result;
   }

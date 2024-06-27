@@ -69,7 +69,7 @@ app.wsgi_app = ApitallyMiddleware(
 
 <Snippet file="identify-consumers.mdx" />
 
-To associate requests with consumers, set the `consumer_identifier` attribute on the [`g`](https://flask.palletsprojects.com/en/2.3.x/appcontext/#storing-data) object, for example in a [`before_request`](https://flask.palletsprojects.com/en/2.2.x/api/#flask.Flask.before_request) function.
+To associate requests with consumers, set the `apitally_consumer` attribute on the [`g`](https://flask.palletsprojects.com/en/2.3.x/appcontext/#storing-data) object, for example in a [`before_request`](https://flask.palletsprojects.com/en/2.2.x/api/#flask.Flask.before_request) function.
 
 ```python
 from flask import g, request
@@ -77,7 +77,7 @@ from flask import g, request
 @app.before_request
 def identify_consumer():
     """Identify consumer based on their IP address."""
-    g.consumer_identifier = request.remote_addr
+    g.apitally_consumer = request.remote_addr
 ```
 
 <Snippet file="consumer-identifier.mdx" />

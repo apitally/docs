@@ -74,12 +74,12 @@ useApitally(app, {
 
 <Snippet file="identify-consumers.mdx" />
 
-To associate requests with consumers, set the `consumerIdentifier` variable on the [`ctx.state`](https://koajs.com/#context) property in a middleware.
+To associate requests with consumers, set the `apitallyConsumer` variable on the [`ctx.state`](https://koajs.com/#context) property in a middleware.
 
 ```javascript
 app.use(function (ctx, next) {
   if (ctx.isAuthenticated()) {
-    ctx.state.consumerIdentifier = ctx.state.user.username
+    ctx.state.apitallyConsumer = ctx.state.user.username
   }
   next()
 })

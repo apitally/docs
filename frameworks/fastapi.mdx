@@ -65,7 +65,7 @@ app.add_middleware(
 
 <Snippet file="identify-consumers.mdx" />
 
-To associate requests with consumers, set the `consumer_identifier` attribute on the [`request.state`](https://www.starlette.io/requests/#other-state) object.
+To associate requests with consumers, set the `apitally_consumer` attribute on the [`request.state`](https://www.starlette.io/requests/#other-state) object.
 You could do this <Tooltip tip="See example below">in a dependency</Tooltip> or another middleware, for example.
 
 ```python
@@ -83,7 +83,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     return user
 
 def identify_consumer(request: Request, current_user: Annotated[User, Depends(get_current_user)]):
-    request.state.consumer_identifier = current_user.username
+    request.state.apitally_consumer = current_user.username
 
 app = FastAPI(dependencies=[Depends(identify_consumer)])
 ```

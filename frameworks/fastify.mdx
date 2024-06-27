@@ -77,13 +77,13 @@ fastify.register((instance, opts, done) => {
 
 <Snippet file="identify-consumers.mdx" />
 
-To associate requests with consumers, set the `consumerIdentifier` property on the [`Request`](https://fastify.dev/docs/latest/Reference/Request/) object, for example in your authentication function.
+To associate requests with consumers, set the `apitallyConsumer` property on the [`Request`](https://fastify.dev/docs/latest/Reference/Request/) object, for example in your authentication function.
 
 ```javascript
 fastify.addHook("onRequest", async (request, reply) => {
   try {
     await request.jwtVerify(); // Assuming @fastify/jwt is used for authentication
-    request.consumerIdentifier = request.user.name;
+    request.apitallyConsumer = request.user.name;
   } catch (err) {
     reply.send(err);
   }

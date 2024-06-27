@@ -68,7 +68,7 @@ app.add_middleware(
 
 To associate requests with consumers, provide a <Tooltip tip="See example below">callback function</Tooltip> to the `ApitallyMiddleware` that takes a [`Request`](https://www.starlette.io/requests/) object as an argument and returns a consumer identifier or `None`.
 
-Alternatively, you can set the `consumer_identifier` attribute on the [`request.state`](https://www.starlette.io/requests/#other-state) object, for example in another middleware or directly in your endpoint functions.
+Alternatively, you can set the `apitally_consumer` attribute on the [`request.state`](https://www.starlette.io/requests/#other-state) object, for example in another middleware or directly in your endpoint functions.
 
 <CodeGroup>
 ```python Callback function
@@ -92,7 +92,7 @@ from starlette.requests import Request
 
 def list_items(request: Request):
     if request.user.is_authenticated:
-        request.state.consumer_identifier = request.user.identity
+        request.state.apitally_consumer = request.user.identity
     return ["item1"]
 ```
 </CodeGroup>
