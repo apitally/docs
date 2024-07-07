@@ -7,6 +7,8 @@ description: "Set up your Express application with Apitally to monitor API traff
 import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
 import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
+import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
+import ConsumerNameGroupSnippet from '/snippets/consumer-name-group.mdx';
 
 This page guides you through the steps of configuring your [Express](https://expressjs.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
 
@@ -105,6 +107,23 @@ app.use(function (req: Request, res, next) {
 ```
 </CodeGroup>
 
-<Snippet file="consumer-identifier.mdx" />
+<ConsumerIdentifierSnippet />
 
 <Snippet file="identify-consumers-check.mdx" />
+
+## Name and group consumers
+
+<ConsumerNameGroupSnippet language="javascript" />
+
+```javascript
+app.use(function (req, res, next) {
+  if (req.user) {
+    req.apitallyConsumer = {
+      identifier: req.user.username,
+      name: `${req.user.first_name} ${req.user.last_name}`,
+      group: req.user.group,
+    }
+  }
+  next()
+})
+```

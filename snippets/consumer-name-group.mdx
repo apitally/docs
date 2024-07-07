@@ -1,0 +1,10 @@
+By default, Apitally generates a name for new consumers from the consumer identifier.
+You can always change it in the Apitally dashboard, and you can assign consumers to groups there too.
+
+If you have many consumers, you may prefer to set a name and group programmatically from your application.
+
+{language == "python" && <p>To do this, you can provide instances of the <code>ApitallyConsumer</code> class, instead of simple strings, which has optional keyword arguments for a name and group.
+Both should be strings with a maximum length of 64 characters.</p>}
+
+{language == "javascript" && <p>To do this, you can provide on object of type <code>ApitallyConsumer</code>, instead of simple strings, with optional properties for a name and group.
+Both should be strings with a maximum length of 64 characters.</p>}

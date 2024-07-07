@@ -9,6 +9,8 @@ import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import AddMiddlewarePythonSnippet from '/snippets/add-middleware-python.mdx';
 import UWSGIWarning from '/snippets/uwsgi-warning.mdx';
+import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
+import ConsumerNameGroupSnippet from '/snippets/consumer-name-group.mdx';
 
 This page guides you through the steps of configuring your [Flask](https://flask.palletsprojects.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
 
@@ -80,6 +82,23 @@ def identify_consumer():
     g.apitally_consumer = request.remote_addr
 ```
 
-<Snippet file="consumer-identifier.mdx" />
+<ConsumerIdentifierSnippet />
 
 <Snippet file="identify-consumers-check.mdx" />
+
+## Name and group consumers
+
+<ConsumerNameGroupSnippet language="python" />
+
+```python
+from flask import g, request
+from apitally.flask import ApitallyConsumer
+
+@app.before_request
+def identify_consumer():
+    g.apitally_consumer = ApitallyConsumer(
+      identifier="john.doe@example.com",
+      name="John Doe",
+      group="Customers",
+    )
+```

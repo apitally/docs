@@ -8,6 +8,8 @@ import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
 import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import AddMiddlewarePythonSnippet from '/snippets/add-middleware-python.mdx';
+import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
+import ConsumerNameGroupSnippet from '/snippets/consumer-name-group.mdx';
 
 This page guides you through the steps of configuring your [FastAPI](https://fastapi.tiangolo.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
 
@@ -76,18 +78,50 @@ from fastapi.security import OAuth2PasswordBearer
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 class User(BaseModel):
-    username: str
+    user_id: str
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> User:
     user = fake_decode_token(token)
     return user
 
-def identify_consumer(request: Request, current_user: Annotated[User, Depends(get_current_user)]):
-    request.state.apitally_consumer = current_user.username
+def identify_consumer(request: Request, current_user: Annotated[User, Depends(get_current_user)]) -> None:
+    request.state.apitally_consumer = current_user.user_id
 
 app = FastAPI(dependencies=[Depends(identify_consumer)])
 ```
 
-<Snippet file="consumer-identifier.mdx" />
+<ConsumerIdentifierSnippet />
 
 <Snippet file="identify-consumers-check.mdx" />
+
+## Name and group consumers
+
+<ConsumerNameGroupSnippet language="python" />
+
+```python
+from typing import Annotated
+from fastapi import FastAPI, Depends, Request
+from fastapi.security import OAuth2PasswordBearer
+from apitally.fastapi import ApitallyMiddleware, ApitallyConsumer
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+class User(BaseModel):
+    user_id: str
+    name: str
+    group: str
+
+
+async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> User:
+    user = fake_decode_token(token)
+    return user
+
+def identify_consumer(request: Request, current_user: Annotated[User, Depends(get_current_user)]) -> None:
+    request.state.apitally_consumer = ApitallyConsumer(
+        identifier=current_user.user_id,
+        name=current_user.name,
+        group=current_user.group,
+    )
+
+app = FastAPI(dependencies=[Depends(identify_consumer)])
+```
