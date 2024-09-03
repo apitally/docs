@@ -6,13 +6,13 @@ description: Keep track of key API metrics and understand API usage.
 
 <CardGroup cols={2}>
   <Card>
-    <div style={{ margin: "-1.25rem -1.5rem" }}>
-      <img src="https://assets.apitally.io/docs/traffic-requests.webp" alt="Traffic dashboard - Requests" />
+    <div style={{ margin: "-1.5rem" }}>
+      <img src="https://assets.apitally.io/docs/traffic-requests-2.webp" alt="Traffic dashboard - Requests chart" />
     </div>
   </Card>
   <Card>
-    <div style={{ margin: "-1.25rem -1.5rem" }}>
-      <img src="https://assets.apitally.io/docs/traffic-response-time.webp" alt="Traffic dashboard - Response time" />
+    <div style={{ margin: "-1.5rem" }}>
+      <img src="https://assets.apitally.io/docs/traffic-requests-per-minute.webp" alt="Traffic dashboard - Requests per minute chart" />
     </div>
   </Card>
 </CardGroup>
@@ -22,20 +22,20 @@ On the *Traffic* dashboard you can analyze requests for various time ranges, fro
 
 ## Key API metrics
 
-The following key metrics are presented on the dashboard:
+The following key metrics are presented on the traffic dashboard:
 
-- **Number of requests**, broken down by successful and failed requests
-- **Error rate**, broken down by client and server errors
-- **Response time**, as 50th, 75th and 95th percentiles
-- **Data transferred**, broken down by incoming (requests) and outgoing (responses)
+- Number of successful and failed requests
+- Requests per minute (RPM)
+- Error rate
+- Data transferred (received and sent)
 
 By clicking on the metrics at the top you can toggle between different charts showing how each metric has been trending over time.
 
 ## Filtering options
 
 <Card>
-  <div style={{ margin: "-1.25rem -1.5rem" }}>
-    <img src="https://assets.apitally.io/docs/traffic-filter.webp" alt="Traffic dashboard filtering options" />
+  <div style={{ margin: "-1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/traffic-filter-2.webp" alt="Traffic dashboard filtering options" />
   </div>
 </Card>
 
@@ -48,7 +48,7 @@ The dashboard provides the following filtering options:
 ## Endpoints table
 
 The traffic dashboard includes a table showing all endpoints of your API along with the above mentioned metrics specific to each endpoint.
-This allows you to get a quick overview of the usage and performance of each endpoint.
+This allows you to get a quick overview of the usage of each endpoint.
 
 The table is ordered by the number of requests by default, so the most frequently used endpoint is at the top.
 You can search and sort the table by any of the other metrics too.
