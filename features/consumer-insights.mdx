@@ -9,8 +9,8 @@ description: Understand how individual consumers use your API.
 </Tip>
 
 <Card>
-  <div style={{ margin: "-1.25rem -1.5rem" }}>
-    <img src="https://assets.apitally.io/docs/consumers-2.webp" alt="Consumers overview" />
+  <div style={{ margin: "-1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/consumers-3.webp" alt="Consumers overview" />
   </div>
 </Card>
 
@@ -19,19 +19,13 @@ Understanding how different consumers interact with your API, which endpoints th
 The chart at the top of the *Consumers* page shows the number of unique API consumers that have interacted with your API over time.
 You can select from different time periods in the dropdown above, and filter by environment.
 
-Below the chart you'll find a list of all API consumers, including traffic sparkline graphs for a quick overview of traffic patterns, error rates and the time of the last request.
-From there, you can click through to the [traffic dashboard](/features/traffic-dashboard) filtered to requests from a specific API consumer or consumer group.
-
-<Card>
-  <div style={{ margin: "-1.25rem -1.5rem" }}>
-    <img src="https://assets.apitally.io/docs/traffic-requests-consumer.webp" alt="Traffic dashboard filtered to an API consumer" />
-  </div>
-</Card>
+Below the chart you'll find a list of all API consumers, including traffic sparkline graphs for a quick overview of traffic patterns, number of requests, error rates and the time of the last request.
+From there, you can navigate to different dashboards filtered to requests from a specific API consumer or consumer group.
 
 ## Managing consumers
 
 Consumers are automatically created when Apitally receives data for API requests associated with a new consumer identifier.
-A name is generated based on that identifier, but you can change it to make it more meaningful.
+If not provided by your application, a name is generated based on that identifier, but you can always change it to make it more meaningful.
 
 You also have the option to hide consumers if they are no longer of interest and you don't expect any further API requests from them.
 If your API receives requests from a hidden consumer, it will be unhidden automatically.
@@ -42,8 +36,8 @@ In addition to analyzing individual API consumers, you have the option to create
 For example, if you have both internal and external API consumers, you could create two groups to understand their API usage separately.
 
 <Card>
-  <div style={{ margin: "-1.25rem -1.5rem" }}>
-    <img src="https://assets.apitally.io/docs/create-consumer-group.webp" alt="Create consumer group dialog" />
+  <div style={{ margin: "-1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/create-consumer-group-2.webp" alt="Create consumer group dialog" />
   </div>
 </Card>
 
@@ -53,4 +47,4 @@ For example, if you have both internal and external API consumers, you could cre
 
 You can choose between viewing individual API consumers and consumer groups on the *Consumers* page using the toggle at the top of the page.
 
-The traffic dashboard includes a filtering option for consumer groups too.
+The traffic, errors and performance dashboards include a filtering option for consumer groups too.
