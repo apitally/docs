@@ -65,9 +65,10 @@
           "pages": [
             "features/apps-overview",
             "features/traffic-dashboard",
-            "features/endpoint-insights",
-            "features/consumer-insights",
             "features/errors-dashboard",
+            "features/performance-dashboard",
+            "features/consumer-insights",
+            "features/endpoint-insights",
             "features/uptime-monitoring"
           ]
         },

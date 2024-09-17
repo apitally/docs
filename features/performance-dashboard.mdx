@@ -1,0 +1,46 @@
+---
+title: API performance dashboard
+sidebarTitle: Performance dashboard
+description: Measure user satisfaction with your API's response times using the Apdex score.
+---
+
+<Card>
+  <div style={{ margin: "-1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/performance.webp" alt="Performance dashboard" />
+  </div>
+</Card>
+
+
+Apitally measures the time it takes your application to respond to API requests.
+On the performance dashboard, you can analyze response times and the Apdex score for your whole API and individual endpoints.
+
+## Response time distribution
+
+The performance dashboard shows the 50th, 75th and 95th percentiles of API response times, helping you understand their distribution.
+For example, if the 95th percentile is high while the 50th and 75th percentile are low, it means that a small percentage of requests take a long time to complete.
+
+When you click on an endpoint in the table, you can also see the response time distribution for that endpoint as a histogram.
+
+## Apdex score
+
+The Apdex score is an open industry standard to measure user satisfaction with an application's response times.
+
+The score is based on a response time threshold (T) and four counts:
+
+- <b>Satisfied:</b> Response time is less than or equal to T.
+- <b>Tolerating:</b> Response time is greater than T but less than or equal to 4T.
+- <b>Frustrated:</b> Response time is greater than 4T.
+
+The Apdex score is calculated as:
+
+$${\displaystyle\text{Apdex score} = \frac{\text{Satisfied} + 0.5 \cdot \text{Tolerating} + 0 \cdot \text{Frustrated}}{\text{Total}}}$$
+
+Apdex scores range from 0 to 1, with 0 meaning that users were frustrated with all response times, and 1 meaning that users were satisfied with all response times.
+
+### Configuring the threshold
+
+By default, Apitally assumes a response time threshold (T) of 500 ms. You can configure this threshold for your whole application and override it for individual endpoints.
+
+To configure the threshold for your whole application, go to the *Apps* page, select *Edit app* in the dropdown for your application and change the "Response time threshold" field under *Performance metrics*.
+
+To override the threshold for an individual endpoint, open the respective dropdown menu in the endpoints table on the performance dashboard, select *Endpoint settings* and update the "Response time threshold" field.
