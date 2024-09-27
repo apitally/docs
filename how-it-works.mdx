@@ -76,4 +76,4 @@ The client synchronizes the aggregated data with the Apitally Hub in one minute 
 
 When the Apitally Hub receives data from your application, it puts it in a queue for asynchronous processing. The data should be processed and visible on the dashboard within a few seconds.
 
-Data is retained for up to 12 months and deleted after that.
+Data is retained at 1-minute granularity for 32 days and then aggregated to 30-minute intervals. We delete data completely after 13 months.
