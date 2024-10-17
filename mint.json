@@ -69,7 +69,8 @@
             "features/performance-dashboard",
             "features/consumer-insights",
             "features/endpoint-insights",
-            "features/uptime-monitoring"
+            "features/uptime-monitoring",
+            "features/custom-alerts"
           ]
         },
         "how-it-works",
