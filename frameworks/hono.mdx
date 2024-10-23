@@ -1,0 +1,94 @@
+---
+title: "Setup guide for Hono"
+sidebarTitle: "Hono"
+description: "Set up your Hono application with Apitally to monitor API requests, errors, performance and uptime."
+---
+
+import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
+import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
+import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
+import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
+import ConsumerNameGroupSnippet from '/snippets/consumer-name-group.mdx';
+
+This page guides you through the steps of configuring your [Hono](https://hono.dev) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
+
+<SetupGuideStartSnippet framework="Hono" />
+
+## Create app
+
+<CreateAppSnippet1 framework="Hono" />
+
+![Create app](https://assets.apitally.io/docs/create-app-hono.webp)
+
+<CreateAppSnippet2 />
+
+## Add middleware
+
+Next, install the [Apitally client library](https://www.npmjs.com/package/apitally) in your Hono project.
+
+<CodeGroup>
+```shell npm
+npm install apitally
+```
+
+```shell yarn
+yarn add apitally
+```
+</CodeGroup>
+
+Add the Apitally middleware to your Hono application using the `useApitally` function and provide the `clientId` for your app.
+You'll find the `clientId` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
+
+```javascript
+import { Hono } from "hono";
+import { useApitally } from "apitally/hono";
+
+const app = new Hono();
+
+useApitally(app, {
+  clientId: "your-client-id",
+  env: "dev", // or "prod" etc.
+});
+```
+
+<div>
+  <Snippet file="middleware-first-note.mdx" />
+</div>
+
+<Snippet file="add-middleware-check.mdx" />
+
+## Identify consumers
+
+<Snippet file="identify-consumers.mdx" />
+
+To associate requests with consumers, set the `apitallyConsumer` key on the [`Context`](https://hono.dev/docs/api/context#set-get) object in a middleware.
+
+```javascript
+app.use(async (c, next) => {
+  const consumerIdentifier = c.get("jwtPayload")?.sub;
+  c.set("apitallyConsumer", consumerIdentifier);
+  await next();
+});
+```
+
+<ConsumerIdentifierSnippet />
+
+<Snippet file="identify-consumers-check.mdx" />
+
+## Name and group consumers
+
+<ConsumerNameGroupSnippet language="javascript" />
+
+```javascript
+app.use(async (c, next) => {
+  const payload = c.get("jwtPayload");
+  if (payload) {
+    c.set("apitallyConsumer", {
+      identifier: payload.sub,
+      name: payload.name,
+      group: payload.group
+    });
+  }
+  await next();
+});
+```

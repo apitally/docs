@@ -87,6 +87,7 @@
         "frameworks/fastapi",
         "frameworks/fastify",
         "frameworks/flask",
+        "frameworks/hono",
         "frameworks/koa",
         "frameworks/litestar",
         "frameworks/nestjs",
