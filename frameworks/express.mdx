@@ -127,3 +127,7 @@ app.use(function (req, res, next) {
   next()
 })
 ```
+
+## Known issues
+
+- `@sentry/node` v7 is incompatible with Apitally. It's instrumentation logic erases metadata on Express routers that Apitally requires. To resolve this, please upgrade `@sentry/node` to v8.

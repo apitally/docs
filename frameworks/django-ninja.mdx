@@ -109,3 +109,7 @@ def identify_consumer(request: HttpRequest) -> ApitallyConsumer | None:
         )
     return None
 ```
+
+## Known issues
+
+- When running Django with Gunicorn, the option `preload_app` must be set to `False`. Otherwise, the Apitally client will not work correctly.
