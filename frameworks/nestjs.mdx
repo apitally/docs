@@ -14,7 +14,6 @@ This page guides you through the steps of configuring your [NestJS](https://nest
 
 <SetupGuideStartSnippet framework="NestJS" />
 
-
 <Warning>Apitally currently only works with NestJS applications that use Express as the underlying HTTP server, which is the default.</Warning>
 
 ## Create app
@@ -39,7 +38,7 @@ yarn add apitally
 ```
 </CodeGroup>
 
-Add the Apitally middleware to the underlying Express instance of your NestJS application using the `useApitally` function and provide the `clientId` for your app.
+Add the Apitally middleware to your NestJS application using the `useApitally` function and provide the `clientId` for your app.
 You'll find the `clientId` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
 
 <CodeGroup>
@@ -49,9 +48,8 @@ import { useApitally } from "apitally/nestjs";
 import { AppModule } from "./app.module";
 
 const app = await NestFactory.create(AppModule);
-const expressInstance = app.getHttpAdapter().getInstance();
 
-useApitally(expressInstance, {
+useApitally(app, {
   clientId: "your-client-id",
   env: "dev", // or "prod" etc.
 });
@@ -63,9 +61,8 @@ const { useApitally } = require("apitally/nestjs");
 const { AppModule } = require("./app.module");
 
 const app = await NestFactory.create(AppModule);
-const expressInstance = app.getHttpAdapter().getInstance();
 
-useApitally(expressInstance, {
+useApitally(app, {
   clientId: "your-client-id",
   env: "dev", // or "prod" etc.
 });
