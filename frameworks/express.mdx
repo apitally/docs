@@ -128,6 +128,20 @@ app.use(function (req, res, next) {
 })
 ```
 
+## Capture server errors
+
+The Apitally client library installs an error handler that captures server error details automatically.
+It is added to the bottom of the middleware stack.
+
+However, if your application already has custom error handlers that return a response and don't call `next(err)`, you need to add the following line of code for Apitally to capture server error details.
+
+```javascript {2}
+app.use(function (err, req, res, next) {
+  res.locals.serverError = err;
+  // Your custom error handling logic ...
+});
+```
+
 ## Known issues
 
 - `@sentry/node` v7 is incompatible with Apitally. It's instrumentation logic erases metadata on Express routers that Apitally requires. To resolve this, please upgrade `@sentry/node` to v8.
