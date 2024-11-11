@@ -70,7 +70,7 @@
             "features/consumer-insights",
             "features/endpoint-insights",
             "features/uptime-monitoring",
-            "features/custom-alerts"
+            "features/alerting"
           ]
         },
         "how-it-works",
@@ -111,6 +111,10 @@
     {
       "source": "/features/api-metrics-insights",
       "destination": "/features/traffic-dashboard"
+    },
+    {
+      "source": "/features/custom-alerts",
+      "destination": "/features/alerting"
     }
   ],
   "footerSocials": {

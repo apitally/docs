@@ -1,0 +1,87 @@
+---
+title: Alerting
+sidebarTitle: Alerting
+description: Configure thresholds for various API traffic, error and performance metrics and get notified when they are breached.
+---
+
+Apitally allows you to automatically monitor API metrics and get notified when they breach a configured threshold.
+This eliminates the need to manually check the dashboard and provides a first line of defense against potential issues.
+
+<Card>
+  <div style={{ margin: "-1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/custom-alert.webp" alt="Custom alert" />
+  </div>
+</Card>
+
+## Creating alerts
+
+You can create a new custom alert in these simple steps:
+
+1. Choose a name for your alert, and optionally add a description. Both will be shown in alert notifications to help you quickly figure out what's going on.
+2. Select the app and the environment you want to monitor.
+3. Select the metric you want to monitor and set the threshold value and condition (e.g. "greater than 100"). See below for a list of available metrics.
+4. Choose an aggregation window and the frequency at which the alert condition should be evaluated.
+
+There are additional options available for more complex alerting needs, such as filtering, cron scheduling and delaying notifications. These are described in the sections below.
+
+<Card>
+  <div style={{ margin: "-1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/create-alert-3.webp" alt="Create alert modal" />
+  </div>
+</Card>
+
+### Available metrics
+
+- Requests per minute
+- Total requests
+- Data transferred (requests and responses)
+- Data sent (responses)
+- Data received (requests)
+- Consumers (unique)
+- Errors (client & server errors)
+- Client errors
+- Server errors
+- Error rate
+- Response time p50
+- Response time p75
+- Response time p95
+- Apdex score
+
+### Filtering options
+
+You can narrow down the scope of your alerts using the following filters:
+
+- *Consumer:* Monitor a specific API consumer.
+- *Consumer group:* Track metrics for a group of consumers.
+- *Endpoint:* Alert on a specific API endpoint.
+- *Endpoint group:* Monitor a group of endpoints.
+
+These filters can be found under *Additional filters* when creating or editing an alert.
+
+### Cron scheduling
+
+While the default check frequency is set using the *Check every* field, you can define more complex schedules using [cron expressions](https://en.wikipedia.org/wiki/Cron#Cron_expression) under the *Advanced options* section.
+The cron schedule will override the basic check frequency when specified.
+
+Examples of cron expressions:
+
+- `*/5 9-17 * * 1-5`: Check every 5 minutes between 9 AM and 5 PM on weekdays.
+- `5 * * * *`: Check 5 minutes past the hour every hour.
+- `0 9 * * *`: Check every day at 9 AM.
+
+<Tip>You can write and test your cron expressions on [crontab guru](https://crontab.guru/).</Tip>
+
+### Tuning notifications
+
+Apitally provides several options for controlling the frequency and timing of alert notifications:
+
+- *Aggregation window:* Define the time period over which metrics are aggregated during evaluation. Selecting a longer period can smooth out transient spikes.
+- *Check every / Cron schedule for checks:* Set how often or when exactly to evaluate the alert conditions.
+- *Notify after triggered:* Control how long a threshold must be breached before sending notifications.
+- *Notify after resolved:* Specify when to send resolution notifications after conditions return to normal. This can reduce noise when conditions fluctuate around the threshold.
+
+Tuning these settings helps prevent alert fatigue from transient issues while ensuring you're notified of persistent problems.
+
+## Slack integration
+
+Apitally integrates with Slack to send alert notifications to a channel in your Slack workspace. To set up the Slack integration, navigate to the *Settings* page and select *Configure integrations*.
