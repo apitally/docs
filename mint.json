@@ -69,13 +69,20 @@
             "features/performance-dashboard",
             "features/consumer-insights",
             "features/endpoint-insights",
+            "features/request-log",
             "features/uptime-monitoring",
             "features/alerting"
           ]
         },
         "how-it-works",
         "advanced",
-        "reference"
+        {
+          "group": "Reference",
+          "pages": [
+            "reference/python",
+            "reference/javascript"
+          ]
+        }
       ]
     },
     {
