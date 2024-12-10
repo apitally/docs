@@ -28,10 +28,13 @@ The *Requests* tab provides different breakdowns of the requests made to the API
 - Client errors
 - Server errors
 
-Below the summary, you find a bar chart showing the distribution of requests over time, broken down by successful and failed requests.
+Below the summary, you find a bar chart showing the distribution of requests over time, broken down by response status code.
+You can hover over the bars to see the exact number of requests for each status code.
+By clicking on the bars of dragging to select a range, you can zoom in on a specific time period.
 
 The horizontal bar chart at the bottom shows which API consumers have been making the most requests to this endpoint (top 10).
-Again, this is broken down by successful and failed requests.
+Again, this is broken down by status codes.
+You can filter to one of the consumers by clicking on the respective bar.
 
 ## Errors
 
@@ -50,8 +53,10 @@ You can click on the status codes to navigate to the [errors dashboard](/feature
 An area chart shows a trend of client and server error rates over time.
 The error rates are calculated as the number of failed requests divided by the total number of requests.
 
-If the endpoint returned validation errors to consumers, the table at the bottom provides details about those errors.
+If the endpoint returned validation errors to consumers, the table below provides details about those errors.
 That includes the fields that failed validation, the error messages, and the number of occurrences.
+
+If there were any server errors, another table provides details about the exception type and message, the number of occurrences and a stacktrace.
 
 ## Response times
 

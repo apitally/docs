@@ -12,36 +12,36 @@ FastAPI provides this out of the box, and Apitally is already configured to use 
 For other frameworks you can explicitly set the `openapi_url` / `openApiUrl` argument when adding the middleware to your application:
 
 <CodeGroup>
-```python Flask
+```python Flask {5}
 app.wsgi_app = ApitallyMiddleware(
     app,
     client_id="your-client-id",
     env="dev",
-    openapi_url="/openapi.json",  # <--
+    openapi_url="/openapi.json",
 )
 ```
 
-```python Django
+```python Django {4}
 APITALLY_MIDDLEWARE = {
     "client_id": "your-client-id",
     "env": "dev",
-    "openapi_url": "/api/openapi",  # <--
+    "openapi_url": "/api/openapi",
 }
 ```
 
-```javascript Express / Koa
+```javascript Express / Koa {4}
 useApitally(app, {
   clientId: "your-client-id",
   env: "dev",
-  openApiUrl: "/api-docs", // <--
+  openApiUrl: "/api-docs",
 });
 ```
 
-```javascript Fastify
+```javascript Fastify {4}
 await fastify.register(apitallyPlugin, {
   clientId: "your-client-id",
   env: "dev",
-  openApiUrl: "/docs/json", // <--
+  openApiUrl: "/docs/json",
 });
 ```
 </CodeGroup>
@@ -54,45 +54,45 @@ This can be useful if you have multiple environments and want to know which vers
 To report the app version, set the `app_version` / `appVersion` argument when adding the middleware to your application:
 
 <CodeGroup>
-```python FastAPI / Starlette
+```python FastAPI / Starlette {5}
 app.add_middleware(
     ApitallyMiddleware,
     client_id="your-client-id",
     env="dev",
-    app_version="1.0.0",  # <--
+    app_version="1.0.0",
 )
 ```
 
-```python Flask
+```python Flask {5}
 app.wsgi_app = ApitallyMiddleware(
     app,
     client_id="your-client-id",
     env="dev",
-    app_version="1.0.0",  # <--
+    app_version="1.0.0",
 )
 ```
 
-```python Django
+```python Django {4}
 APITALLY_MIDDLEWARE = {
     "client_id": "your-client-id",
     "env": "dev",
-    "app_version": "1.0.0",  # <--
+    "app_version": "1.0.0",
 }
 ```
 
-```javascript Express / Koa
+```javascript Express / Koa {4}
 useApitally(app, {
   clientId: "your-client-id",
   env: "dev",
-  appVersion: "1.0.0", // <--
+  appVersion: "1.0.0",
 });
 ```
 
-```javascript Fastify
+```javascript Fastify {4}
 await fastify.register(apitallyPlugin, {
   clientId: "your-client-id",
   env: "dev",
-  appVersion: "1.0.0", // <--
+  appVersion: "1.0.0",
 });
 ```
 </CodeGroup>
