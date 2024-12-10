@@ -1,7 +1,7 @@
 ---
 title: Python reference
 sidebarTitle: Python
-description: The parameters of our client library for Python.
+description: The parameters of the Apitally client library for Python.
 ---
 
 ## Middleware
@@ -35,3 +35,74 @@ The following are the parameters of the `RequestLoggingConfig` dataclass.
 | `mask_response_body_callback` | Callback function for masking the response body. Takes two parameters `request` and `response` and returns the response body as `bytes` or `None`. | `Callable` | `None` |
 | `exclude_paths` | List of regular expressions for matching paths to exclude from logging. | `list[str]` | `[]` |
 | `exclude_callback` | Callback function for excluding requests from logging. Takes two parameters `request` and `response` and returns a `True`, if the request should be excluded, or `False` otherwise. | `Callable` | `None` |
+
+### Request dict
+
+Below are the keys of the `request` dicts that are passed to the user-provided callback functions.
+
+| Key | Description | Type |
+| :-- | :---------- | :--- |
+| `timestamp` | Unix timestamp of the request. | `float` |
+| `method` | HTTP method of the request. | `str` |
+| `path` | Path of the request. | `str` |
+| `url` | Full URL of the request. | `str` |
+| `headers` | Array of key-value pairs representing the request headers. | `list[tuple[str, str]]` |
+| `size` | Size of the request body in bytes. | `int` |
+| `consumer` | Identifier of the consumer making the request. | `str` |
+| `body` | Raw request body. | `bytes` |
+
+### Response dict
+
+Below are the keys of the `response` dicts that are passed to some of the user-provided callback functions.
+
+| Key | Description | Type |
+| :-- | :---------- | :--- |
+| `status_code` | HTTP status code of the response. | `int` |
+| `response_time` | Time taken to respond to the request in seconds. | `float` |
+| `headers` | Array of key-value pairs representing the response headers. | `list[tuple[str, str]]` |
+| `size` | Size of the response body in bytes. | `int` |
+| `body` | Raw response body. | `bytes` |
+
+### Default masking
+
+The below regular expressions are used to mask sensitive query parameters and headers.
+
+```python
+# Query parameters
+MASK_QUERY_PARAM_PATTERNS = [
+    r"auth",
+    r"api-?key",
+    r"secret",
+    r"token",
+    r"password",
+    r"pwd",
+]
+```
+
+```python
+# Headers
+MASK_HEADER_PATTERNS = [
+    r"auth",
+    r"api-?key",
+    r"secret",
+    r"token",
+    r"cookie",
+]
+```
+
+### Default exclusions
+
+The below regular expressions are used to exclude common health check endpoints from logging.
+They are applied to the request path.
+
+```python
+# Common paths of health check endpoints
+EXCLUDE_PATH_PATTERNS = [
+    r"/_?healthz?$",
+    r"/_?health[_-]?checks?$",
+    r"/_?heart[_-]?beats?$",
+    r"/ping$",
+    r"/ready$",
+    r"/live$",
+]
+```

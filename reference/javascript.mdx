@@ -1,7 +1,7 @@
 ---
 title: JavaScript reference
 sidebarTitle: JavaScript
-description: The parameters of our client library for Node.js.
+description: The parameters of the Apitally client library for Node.js.
 ---
 
 ## Middleware
@@ -40,8 +40,8 @@ The following are the keys of the `requestLoggingConfig` object.
 
 Below are the properties of the `request` objects that are passed to the user-provided callback functions.
 
-| Field | Description | Type |
-| :---- | :---------- | :--- |
+| Property | Description | Type |
+| :------- | :---------- | :--- |
 | `timestamp` | Unix timestamp of the request. | `number` |
 | `method` | HTTP method of the request. | `string` |
 | `path` | Path of the request. | `string` |
@@ -49,19 +49,19 @@ Below are the properties of the `request` objects that are passed to the user-pr
 | `headers` | Array of key-value pairs representing the request headers. | `[string, string][]` |
 | `size` | Size of the request body in bytes. | `number` |
 | `consumer` | Identifier of the consumer making the request. | `string` |
-| `body` | Request body as bytes in a `Buffer`. | `Buffer` |
+| `body` | Raw request body as bytes. | `Buffer` |
 
 ### Response object
 
 Below are the properties of the `response` objects that are passed to some of the user-provided callback functions.
 
-| Field | Description | Type |
-| :---- | :---------- | :--- |
+| Property | Description | Type |
+| :------- | :---------- | :--- |
 | `statusCode` | HTTP status code of the response. | `number` |
 | `responseTime` | Time taken to respond to the request in seconds. | `number` |
 | `headers` | Array of key-value pairs representing the response headers. | `[string, string][]` |
 | `size` | Size of the response body in bytes. | `number` |
-| `body` | Response body as bytes in a `Buffer`. | `Buffer` |
+| `body` | Raw response body as bytes. | `Buffer` |
 
 ### Default masking
 
