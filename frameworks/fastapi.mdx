@@ -124,3 +124,72 @@ def identify_consumer(request: Request, current_user: Annotated[User, Depends(ge
 
 app = FastAPI(dependencies=[Depends(identify_consumer)])
 ```
+
+## Configure request logging
+
+<Info>
+The request log is an opt-in feature available on our paid plans only.
+</Info>
+
+Logging of individual requests and responses is disabled by default to protect your data privacy.
+You can enable it by providing a `RequestLoggingConfig` object, which allows you to configure in detail what parts of the request and response should be logged.
+There are also options to mask sensitive information and exclude certain requests from logging.
+
+Apitally applies default masking and exclusion rules to common sensitive information like `Authorization` headers and common health check paths.
+
+<CodeGroup>
+```python Basic example
+from fastapi import FastAPI
+from apitally.fastapi import ApitallyMiddleware, RequestLoggingConfig
+
+app = FastAPI()
+app.add_middleware(
+    ApitallyMiddleware,
+    client_id="your-client-id",
+    env="dev",  # or "prod" etc.
+    request_logging_config=RequestLoggingConfig(
+        enabled=True,
+        log_query_params=True,
+        log_request_headers=True,
+        log_request_body=True,
+        log_response_headers=True,
+        log_response_body=True,
+    ),
+)
+```
+
+```python Advanced example
+from fastapi import FastAPI
+from apitally.fastapi import ApitallyMiddleware, RequestLoggingConfig
+
+app = FastAPI()
+app.add_middleware(
+    ApitallyMiddleware,
+    client_id="your-client-id",
+    env="dev",  # or "prod" etc.
+    request_logging_config=RequestLoggingConfig(
+        enabled=True,
+        log_query_params=True,
+        log_request_headers=True,
+        log_request_body=True,
+        log_response_headers=True,
+        log_response_body=True,
+        # Mask some query parameters with sensitive information
+        mask_query_params=[r"$card_number$"],
+        # Mask some custom headers with sensitive information (applied to both request and response headers)
+        # Common sensitive headers like `Authorization` are masked by default
+        mask_headers=[r"^X-Some-Secret$"],
+        # Only log request body for some parts of the API
+        mask_request_body_callback=lambda request: request["body"] if request["path"].startswith("/api/v2/") else None,
+        # Only log response body for unsuccessful requests
+        mask_response_body_callback=lambda request, response: response["body"] if response["status_code"] >= 400 else None,
+        # Exclude some paths from request logging (common health check paths are excluded by default)
+        exclude_paths=[r"\/metrics$"],
+        # Exclude requests from a specific consumer
+        exclude_callback=lambda request, response: request["consumer"] == "some-consumer",
+    ),
+)
+```
+</CodeGroup>
+
+Check out the [reference page](/reference/python) for more details about the request logging configuration options.
