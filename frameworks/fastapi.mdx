@@ -10,6 +10,7 @@ import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import AddMiddlewarePythonSnippet from '/snippets/add-middleware-python.mdx';
 import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
 import ConsumerNameGroupSnippet from '/snippets/consumer-name-group.mdx';
+import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
 
 This page guides you through the steps of configuring your [FastAPI](https://fastapi.tiangolo.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
 
@@ -127,15 +128,7 @@ app = FastAPI(dependencies=[Depends(identify_consumer)])
 
 ## Configure request logging
 
-<Info>
-The request log is an opt-in feature available on our paid plans only.
-</Info>
-
-Logging of individual requests and responses is disabled by default to protect your data privacy.
-You can enable it by providing a `RequestLoggingConfig` object, which allows you to configure in detail what parts of the request and response should be logged.
-There are also options to mask sensitive information and exclude certain requests from logging.
-
-Apitally applies default masking and exclusion rules to common sensitive information like `Authorization` headers and common health check paths.
+<RequestLoggingConfigSnippet language="python" />
 
 <CodeGroup>
 ```python Basic example
@@ -175,10 +168,10 @@ app.add_middleware(
         log_response_headers=True,
         log_response_body=True,
         # Mask some query parameters with sensitive information
-        mask_query_params=[r"$card_number$"],
-        # Mask some custom headers with sensitive information (applied to both request and response headers)
+        mask_query_params=[r"^card_number$"],
+        # Mask custom header with sensitive information (applied to both request and response headers)
         # Common sensitive headers like `Authorization` are masked by default
-        mask_headers=[r"^X-Some-Secret$"],
+        mask_headers=[r"^X-Sensitive-Header$"],
         # Only log request body for some parts of the API
         mask_request_body_callback=lambda request: request["body"] if request["path"].startswith("/api/v2/") else None,
         # Only log response body for unsuccessful requests
@@ -191,5 +184,3 @@ app.add_middleware(
 )
 ```
 </CodeGroup>
-
-Check out the [reference page](/reference/python) for more details about the request logging configuration options.
