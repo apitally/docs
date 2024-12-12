@@ -8,22 +8,57 @@ description: Log, find and inspect each request and response.
 Request log is an opt-in feature available on our paid plans only.
 </Info>
 
+<Card>
+  <div style={{ margin: "-1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/request-log.webp" alt="Request log" />
+  </div>
+</Card>
+
 The request log allows you to see a chronological list of all requests made to your API, allowing you to inspect details such as the request URL, headers, payloads and more.
 
-There are several ways to filter and search the request log to find the requests you're interested in.
+Clicking on the timeline graph at the top allows you to quickly jump to a specific time point.
+
+<Tip>Hold down the Cmd/Alt key and drag on the chart to zoom to a time range.</Tip>
 
 ## Enable logging
 
-By default, our client libraries do not send logs to Apitally to protect your data privacy.
+By default, our client libraries do not send request logs to Apitally.
 You must explicitly enable logging in your application, and configure which aspects of the request and response you want to include.
-There are also various options for masking sensitive data.
+There are also various options for excluding or masking sensitive data.
 
 Learn more in the setup guide for your specific framework.
 
 ## Filtering options
 
-...
+<Card>
+  <div style={{ margin: "-1.5rem" }}>
+    <img src="https://assets.apitally.io/docs/request-log-filters.webp" alt="Request log filters" />
+  </div>
+</Card>
+
+The filter panel offers many options to filter and search the request log to find the requests you're interested in.
+
+- Consumer / consumer group
+- Endpoint / endpoint group
+- URL (partial match)
+- HTTP method
+- Response status code
+- Request / response size
+- Response time
 
 ## Request details
 
-...
+<CardGroup cols={2}>
+  <Card>
+    <div style={{ margin: "-1.5rem" }}>
+      <img src="https://assets.apitally.io/docs/request-log-details.webp" alt="Request log - Details" />
+    </div>
+  </Card>
+  <Card>
+    <div style={{ margin: "-1.5rem" }}>
+      <img src="https://assets.apitally.io/docs/request-log-headers.webp" alt="Request log - Headers" />
+    </div>
+  </Card>
+</CardGroup>
+
+Clicking on a request opens a modal with detailed information about the request and response, including parameters, headers, payloads, and more.

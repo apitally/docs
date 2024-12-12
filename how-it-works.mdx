@@ -66,6 +66,9 @@ If the response is a validation error (status 400 or 422), the middleware inspec
 The captured metadata is then passed to the client which immediately aggregates it with previously received data.
 The client synchronizes the aggregated data with the Apitally Hub in one minute intervals.
 
+If request logging is enabled, the client writes the request and response data to a compressed temporary file on disk.
+During the next synchronization interval, the client reads the log file and sends the compressed data to the Apitally Hub.
+
 <Note>
   The communication with the Apitally Hub happens either asynchronously or in a
   separate thread, depending on your framework, which means that it doesn't
