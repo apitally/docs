@@ -1,7 +1,7 @@
 ---
 title: "Setup guide for Starlette"
 sidebarTitle: "Starlette"
-description: "Set up your Starlette application with Apitally to monitor API requests, errors, performance and uptime."
+description: "Just a few simple steps to get started with Apitally."
 ---
 
 import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
@@ -10,6 +10,7 @@ import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import AddMiddlewarePythonSnippet from '/snippets/add-middleware-python.mdx';
 import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
 import ConsumerNameGroupSnippet from '/snippets/consumer-name-group.mdx';
+import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
 
 This page guides you through the steps of configuring your [Starlette](https://www.starlette.io) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
 
@@ -119,3 +120,62 @@ def identify_consumer(request: Request) -> ApitallyConsumer | None:
         )
     return None
 ```
+
+## Configure request logging
+
+<RequestLoggingConfigSnippet language="python" />
+
+<CodeGroup>
+```python Basic example
+from starlette.applications import Starlette
+from apitally.starlette import ApitallyMiddleware, RequestLoggingConfig
+
+app = Starlette(routes=[...])
+app.add_middleware(
+    ApitallyMiddleware,
+    client_id="your-client-id",
+    env="dev",  # or "prod" etc.
+    request_logging_config=RequestLoggingConfig(
+        enabled=True,
+        log_query_params=True,
+        log_request_headers=True,
+        log_request_body=True,
+        log_response_headers=True,
+        log_response_body=True,
+    ),
+)
+```
+
+```python Advanced example
+from starlette.applications import Starlette
+from apitally.starlette import ApitallyMiddleware, RequestLoggingConfig
+
+app = Starlette(routes=[...])
+app.add_middleware(
+    ApitallyMiddleware,
+    client_id="your-client-id",
+    env="dev",  # or "prod" etc.
+    request_logging_config=RequestLoggingConfig(
+        enabled=True,
+        log_query_params=True,
+        log_request_headers=True,
+        log_request_body=True,
+        log_response_headers=True,
+        log_response_body=True,
+        # Mask some query parameters with sensitive information
+        mask_query_params=[r"^card_number$"],
+        # Mask custom header with sensitive information (applied to both request and response headers)
+        # Common sensitive headers like `Authorization` are masked by default
+        mask_headers=[r"^X-Sensitive-Header$"],
+        # Only log request body for some parts of the API
+        mask_request_body_callback=lambda request: request["body"] if request["path"].startswith("/api/v2/") else None,
+        # Only log response body for unsuccessful requests
+        mask_response_body_callback=lambda request, response: response["body"] if response["status_code"] >= 400 else None,
+        # Exclude some paths from request logging (common health check paths are excluded by default)
+        exclude_paths=[r"\/metrics$"],
+        # Exclude requests from a specific consumer
+        exclude_callback=lambda request, response: request["consumer"] == "some-consumer",
+    ),
+)
+```
+</CodeGroup>

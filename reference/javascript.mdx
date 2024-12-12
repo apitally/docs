@@ -1,0 +1,108 @@
+---
+title: JavaScript reference
+sidebarTitle: JavaScript
+description: The parameters of the Apitally client library for Node.js.
+---
+
+## Middleware
+
+The following parameters apply when adding the Apitally middleware/plugin to your application.
+
+| Parameter | Description | Type |
+| :-------- | :---------- | :--- |
+| `clientId` | Client ID for your application. Find it on the _Setup instructions_ page for your app. | `string` |
+| `env` | Name of the environment, e.g. `prod` or `dev`. The environment will be automatically created in Apitally if it doesn't exist. Defaults to `dev`. | `string` |
+| `requestLoggingConfig` | Configuration for request logging. See table below. | `object` |
+| `openApiUrl` | Path to the API endpoint providing the OpenAPI specification, e.g. `/openapi.json`. Pre-configured for FastAPI.<div style={{ marginTop: "0.5rem" }}>[Learn more](/advanced#capturing-endpoint-descriptions)</div> | `string` |
+| `appVersion` | The current version of your application, e.g. `1.0.0`.<div style={{ marginTop: "0.5rem" }}>[Learn more](/advanced#reporting-app-versions)</div> | `string` |
+| `logger` | A custom logger instance. If not provided, a default logger is created automatically. | `object` |
+
+## Request logging config
+
+The following are the keys of the `requestLoggingConfig` object.
+
+| Parameter | Description | Type | Default |
+| :-------- | :---------- | :--- | :------ |
+| `enabled` | Whether request logging is enabled. | `boolean` | `false` |
+| `logQueryParams` | Whether to include query parameters in the logs. If disabled these will be stripped from the request URLs logged. | `boolean` | `true` |
+| `logRequestHeaders` | Whether to include request headers in the logs. Default masking for common sensitive headers (e.g. `Authorization`) applies. | `boolean` | `false` |
+| `logRequestBody` | Whether to include the request body in the logs. Only JSON and text are supported, up to 50 KB. | `boolean` | `false` |
+| `logResponseHeaders` | Whether to include response headers in the logs. | `boolean` | `true` |
+| `logResponseBody` | Whether to include the response body in the logs. Only JSON and text are supported, up to 50 KB. | `boolean` | `false` |
+| `maskQueryParams` | Array of regular expressions for matching query parameter names that should be masked. | `RegExp[]` | `[]` |
+| `maskHeaders` | Array of regular expressions for matching header names that should be masked. | `RegExp[]` | `[]` |
+| `maskRequestBodyCallback` | Callback function for masking the request body. Takes one parameter `request` and returns the request body as `Buffer` or `null`. | `Function` | - |
+| `maskResponseBodyCallback` | Callback function for masking the response body. Takes two parameters `request` and `response` and returns the response body as `Buffer` or `null`. | `Function` | - |
+| `excludePaths` | Array of regular expressions for matching paths to exclude from logging. | `RegExp[]` | `[]` |
+| `excludeCallback` | Callback function for excluding requests from logging. Takes two parameters `request` and `response` and returns a `true`, if the request should be excluded, or `false` otherwise. | `Function` | - |
+
+### Request object
+
+Below are the properties of the `request` objects that are passed to the user-provided callback functions.
+
+| Property | Description | Type |
+| :------- | :---------- | :--- |
+| `timestamp` | Unix timestamp of the request. | `number` |
+| `method` | HTTP method of the request. | `string` |
+| `path` | Path of the request. | `string` |
+| `url` | Full URL of the request. | `string` |
+| `headers` | Array of key-value pairs representing the request headers. | `[string, string][]` |
+| `size` | Size of the request body in bytes. | `number` |
+| `consumer` | Identifier of the consumer making the request. | `string` |
+| `body` | Raw request body as bytes. | `Buffer` |
+
+### Response object
+
+Below are the properties of the `response` objects that are passed to some of the user-provided callback functions.
+
+| Property | Description | Type |
+| :------- | :---------- | :--- |
+| `statusCode` | HTTP status code of the response. | `number` |
+| `responseTime` | Time taken to respond to the request in seconds. | `number` |
+| `headers` | Array of key-value pairs representing the response headers. | `[string, string][]` |
+| `size` | Size of the response body in bytes. | `number` |
+| `body` | Raw response body as bytes. | `Buffer` |
+
+### Default masking
+
+The below regular expressions are used to mask sensitive query parameters and headers.
+
+```javascript
+// Query parameters
+const MASK_QUERY_PARAM_PATTERNS = [
+  /auth/i,
+  /api-?key/i,
+  /secret/i,
+  /token/i,
+  /password/i,
+  /pwd/i,
+];
+```
+
+```javascript
+// Headers
+const MASK_HEADER_PATTERNS = [
+  /auth/i,
+  /api-?key/i,
+  /secret/i,
+  /token/i,
+  /cookie/i,
+];
+```
+
+### Default exclusions
+
+The below regular expressions are used to exclude common health check endpoints from logging.
+They are applied to the request path.
+
+```javascript
+// Common paths of health check endpoints
+const EXCLUDE_PATH_PATTERNS = [
+  /\/_?healthz?$/,
+  /\/_?health[_-]?checks?$/,
+  /\/_?heart[_-]?beats?$/,
+  /\/ping$/,
+  /\/ready$/,
+  /\/live$/,
+];
+```

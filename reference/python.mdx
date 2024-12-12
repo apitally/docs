@@ -1,0 +1,108 @@
+---
+title: Python reference
+sidebarTitle: Python
+description: The parameters of the Apitally client library for Python.
+---
+
+## Middleware
+
+The following parameters apply when adding the Apitally middleware to your application.
+
+| Parameter | Description | Type |
+| :-------- | :---------- | :--- |
+| `client_id` | *Required.* Client ID for your application. Find it on the _Setup instructions_ page for your app. | `string` |
+| `env` | Name of the environment, e.g. `prod` or `dev`. The environment will be automatically created in Apitally if it doesn't exist. Defaults to `dev`. | `string` |
+| `openapi_url` | Path to the API endpoint providing the OpenAPI specification, e.g. `/openapi.json`. Pre-configured for FastAPI.<div style={{ marginTop: "0.5rem" }}>[Learn more](/advanced#capturing-endpoint-descriptions)</div> | `string` |
+| `app_version` | The current version of your application, e.g. `1.0.0`.<div style={{ marginTop: "0.5rem" }}>[Learn more](/advanced#reporting-app-versions)</div> | `string` |
+| `proxy` | HTTP proxy to use for sending data to Apitally Hub. Useful in environments with no direct internet connectivity. | `string` |
+
+
+## Request logging config
+
+The following are the parameters of the `RequestLoggingConfig` dataclass.
+
+| Parameter | Description | Type | Default |
+| :-------- | :---------- | :--- | :------ |
+| `enabled` | Whether request logging is enabled. | `bool` | `False` |
+| `log_query_params` | Whether to include query parameters in the logs. If disabled these will be stripped from the request URLs logged. | `bool` | `True` |
+| `log_request_headers` | Whether to include request headers in the logs. Default masking for common sensitive headers (e.g. `Authorization`) applies. | `bool` | `False` |
+| `log_request_body` | Whether to include the request body in the logs. Only JSON and text are supported, up to 50 KB. | `bool` | `False` |
+| `log_response_headers` | Whether to include response headers in the logs. | `bool` | `True` |
+| `log_response_body` | Whether to include the response body in the logs. Only JSON and text are supported, up to 50 KB. | `bool` | `False` |
+| `mask_query_params` | List of regular expressions for matching query parameter names that should be masked. | `list[str]` | `[]` |
+| `mask_headers` | List of regular expressions for matching header names that should be masked. | `list[str]` | `[]` |
+| `mask_request_body_callback` | Callback function for masking the request body. Takes one parameter `request` and returns the request body as `bytes` or `None`. | `Callable` | `None` |
+| `mask_response_body_callback` | Callback function for masking the response body. Takes two parameters `request` and `response` and returns the response body as `bytes` or `None`. | `Callable` | `None` |
+| `exclude_paths` | List of regular expressions for matching paths to exclude from logging. | `list[str]` | `[]` |
+| `exclude_callback` | Callback function for excluding requests from logging. Takes two parameters `request` and `response` and returns a `True`, if the request should be excluded, or `False` otherwise. | `Callable` | `None` |
+
+### Request dict
+
+Below are the keys of the `request` dicts that are passed to the user-provided callback functions.
+
+| Key | Description | Type |
+| :-- | :---------- | :--- |
+| `timestamp` | Unix timestamp of the request. | `float` |
+| `method` | HTTP method of the request. | `str` |
+| `path` | Path of the request. | `str` |
+| `url` | Full URL of the request. | `str` |
+| `headers` | Array of key-value pairs representing the request headers. | `list[tuple[str, str]]` |
+| `size` | Size of the request body in bytes. | `int` |
+| `consumer` | Identifier of the consumer making the request. | `str` |
+| `body` | Raw request body. | `bytes` |
+
+### Response dict
+
+Below are the keys of the `response` dicts that are passed to some of the user-provided callback functions.
+
+| Key | Description | Type |
+| :-- | :---------- | :--- |
+| `status_code` | HTTP status code of the response. | `int` |
+| `response_time` | Time taken to respond to the request in seconds. | `float` |
+| `headers` | Array of key-value pairs representing the response headers. | `list[tuple[str, str]]` |
+| `size` | Size of the response body in bytes. | `int` |
+| `body` | Raw response body. | `bytes` |
+
+### Default masking
+
+The below regular expressions are used to mask sensitive query parameters and headers.
+
+```python
+# Query parameters
+MASK_QUERY_PARAM_PATTERNS = [
+    r"auth",
+    r"api-?key",
+    r"secret",
+    r"token",
+    r"password",
+    r"pwd",
+]
+```
+
+```python
+# Headers
+MASK_HEADER_PATTERNS = [
+    r"auth",
+    r"api-?key",
+    r"secret",
+    r"token",
+    r"cookie",
+]
+```
+
+### Default exclusions
+
+The below regular expressions are used to exclude common health check endpoints from logging.
+They are applied to the request path.
+
+```python
+# Common paths of health check endpoints
+EXCLUDE_PATH_PATTERNS = [
+    r"/_?healthz?$",
+    r"/_?health[_-]?checks?$",
+    r"/_?heart[_-]?beats?$",
+    r"/ping$",
+    r"/ready$",
+    r"/live$",
+]
+```
