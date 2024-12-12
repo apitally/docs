@@ -112,3 +112,58 @@ app.use(function (ctx, next) {
 ## Configure request logging
 
 <RequestLoggingConfigSnippet language="javascript" />
+
+<CodeGroup>
+```javascript Basic example
+import Koa from "koa";
+import { useApitally } from "apitally/koa";
+
+const app = new Koa();
+
+useApitally(app, {
+  clientId: "your-client-id",
+  env: "dev", // or "prod" etc.
+  requestLoggingConfig: {
+    enabled: true,
+    logQueryParams: true,
+    logRequestHeaders: true,
+    logRequestBody: true,
+    logResponseHeaders: true,
+    logResponseBody: true,
+  },
+});
+```
+
+```javascript Advanced example
+import Koa from "koa";
+import { useApitally } from "apitally/koa";
+
+const app = new Koa();
+
+useApitally(app, {
+  clientId: "your-client-id",
+  env: "dev", // or "prod" etc.
+  requestLoggingConfig: {
+    enabled: true,
+    logQueryParams: true,
+    logRequestHeaders: true,
+    logRequestBody: true,
+    logResponseHeaders: true,
+    logResponseBody: true,
+    // Mask some query parameters with sensitive information
+    maskQueryParams: [/^card_number$/i],
+    // Mask custom header with sensitive information (applied to both request and response headers)
+    // Common sensitive headers like `Authorization` are masked by default
+    maskHeaders: [/^X-Sensitive-Header$/i],
+    // Only log request body for some parts of the API
+    maskRequestBodyCallback: (request) => request.path?.startsWith("/api/v2") ? request.body : null,
+    // Only log response body for unsuccessful requests
+    maskResponseBodyCallback: (request, response) => response.statusCode >= 400 ? response.body : null,
+    // Exclude some paths from request logging (common health check paths are excluded by default)
+    excludePaths=[/\/metrics$/],
+    // Exclude requests from a specific consumer
+    excludeCallback: (request, response) => request.consumer == "some-consumer",
+  },
+});
+```
+</CodeGroup>
