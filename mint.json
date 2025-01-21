@@ -71,7 +71,7 @@
             "features/endpoint-insights",
             "features/request-log",
             "features/uptime-monitoring",
-            "features/alerting"
+            "features/custom-alerts"
           ]
         },
         "how-it-works",
@@ -120,8 +120,8 @@
       "destination": "/features/traffic-dashboard"
     },
     {
-      "source": "/features/custom-alerts",
-      "destination": "/features/alerting"
+      "source": "/features/alerting",
+      "destination": "/features/custom-alerts"
     }
   ],
   "footerSocials": {
