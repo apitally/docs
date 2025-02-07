@@ -35,6 +35,12 @@
   },
   "anchors": [
     {
+      "name": "API reference",
+      "openapi": "https://api.apitally.io/openapi.json",
+      "icon": "brackets-curly",
+      "url": "api-reference"
+    },
+    {
       "name": "Website",
       "icon": "globe",
       "url": "https://apitally.io"
