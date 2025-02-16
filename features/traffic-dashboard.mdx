@@ -43,7 +43,9 @@ The dashboard provides the following filtering options:
 
 - By environment (e.g. prod or dev)
 - By API consumer or consumer group
-- By endpoint group (a set of endpoints sharing a common path prefix)
+- By endpoint or endpoint group (a set of endpoints sharing a common path prefix)
+- By method (GET, POST, etc.)
+- By status code
 
 ## Endpoints table
 
@@ -64,3 +66,8 @@ If your application includes health check endpoints (or similar) that are called
 Simply select *Exclude Endpoint* from the dropdown menu in the endpoints table (the button with three vertical dots on the right).
 
 Endpoints marked as excluded are also hidden in the endpoints table, unless you select *Show excluded endpoints* at the bottom of the table.
+
+## Exporting data
+
+The traffic dashboard includes a button to export the underlying data to a CSV file.
+You can choose between hourly and daily aggregation intervals.
