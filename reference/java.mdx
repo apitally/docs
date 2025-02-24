@@ -1,0 +1,103 @@
+---
+title: Java reference
+sidebarTitle: Java
+description: The parameters of the Apitally client library for Java.
+---
+
+## Middleware
+
+The following parameters apply when configuring the Apitally client in your `application.yml` file.
+
+| Parameter | Description | Type | Default |
+| :-------- | :---------- | :--- | :------ |
+| <nobr>`client-id`</nobr> | Client ID for your application. Find it on the _Setup instructions_ page for your app. | `string` | - |
+| `env` | Name of the environment, e.g. `prod` or `dev`. The environment will be automatically created in Apitally if it doesn't exist. | `string` | `default` |
+| <nobr>`request-logging`</nobr> | Configuration for request logging. See table below. | `object` | - |
+
+## Request logging config
+
+The following are the properties of the `request-logging` configuration object.
+
+| Parameter | Description | Type | Default |
+| :-------- | :---------- | :--- | :------ |
+| `enabled` | Whether request logging is enabled. | `boolean` | `false` |
+| <nobr>`query-params-included`</nobr> | Whether to include query parameters in the logs. If disabled these will be stripped from the request URLs logged. | `boolean` | `true` |
+| <nobr>`request-headers-included`</nobr> | Whether to include request headers in the logs. Default masking for common sensitive headers (e.g. `Authorization`) applies. | `boolean` | `false` |
+| <nobr>`request-body-included`</nobr> | Whether to include the request body in the logs. Only JSON and text are supported, up to 50 KB. | `boolean` | `false` |
+| <nobr>`response-headers-included`</nobr> | Whether to include response headers in the logs. | `boolean` | `true` |
+| <nobr>`response-body-included`</nobr> | Whether to include the response body in the logs. Only JSON and text are supported, up to 50 KB. | `boolean` | `false` |
+| <nobr>`query-param-mask-patterns`</nobr> | List of regular expressions for matching query parameter names that should be masked. | `List<String>` | `[]` |
+| <nobr>`header-mask-patterns`</nobr> | List of regular expressions for matching header names that should be masked. | `List<String>` | `[]` |
+| <nobr>`path-exclude-patterns`</nobr> | List of regular expressions for matching paths to exclude from logging. | `List<String>` | `[]` |
+| <nobr>`callbacks-class`</nobr> | Fully qualified name of a class implementing `RequestLoggingCallbacks` for custom masking and exclusion logic. | `string` | - |
+
+### Request object
+
+Below are the properties of the `Request` objects that are passed to the callback methods.
+
+| Property | Description | Type |
+| :------- | :---------- | :--- |
+| `timestamp` | Unix timestamp of the request. | `double` |
+| `method` | HTTP method of the request. | `string` |
+| `path` | Path of the request. | `string` |
+| `url` | Full URL of the request. | `string` |
+| `headers` | Array of key-value pairs representing the request headers. | `Header[]` |
+| `size` | Size of the request body in bytes. | `long` |
+| `consumer` | Identifier of the consumer making the request. | `string` |
+| `body` | Raw request body as bytes. | `byte[]` |
+
+### Response object
+
+Below are the properties of the `Response` objects that are passed to some of the callback methods.
+
+| Property | Description | Type |
+| :------- | :---------- | :--- |
+| `statusCode` | HTTP status code of the response. | `int` |
+| `responseTime` | Time taken to respond to the request in seconds. | `double` |
+| `headers` | Array of key-value pairs representing the response headers. | `Header[]` |
+| `size` | Size of the response body in bytes. | `long` |
+| `body` | Raw response body as bytes. | `byte[]` |
+
+### Default masking
+
+The below regular expressions are used to mask sensitive query parameters and headers.
+
+```java
+// Query parameters
+List<String> MASK_QUERY_PARAM_PATTERNS = Arrays.asList(
+    "auth",
+    "api-?key",
+    "secret",
+    "token",
+    "password",
+    "pwd"
+);
+```
+
+```java
+// Headers
+List<String> MASK_HEADER_PATTERNS = Arrays.asList(
+    "auth",
+    "api-?key",
+    "secret",
+    "token",
+    "cookie"
+);
+```
+
+### Default exclusions
+
+The below regular expressions are used to exclude common health check endpoints from logging.
+They are applied to the request path.
+
+```java
+// Common paths of health check endpoints
+List<String> EXCLUDE_PATH_PATTERNS = Arrays.asList(
+    "/_?healthz?$",
+    "/_?health[_-]?checks?$",
+    "/_?heart[_-]?beats?$",
+    "/ping$",
+    "/ready$",
+    "/live$"
+);
+```

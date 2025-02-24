@@ -86,7 +86,8 @@
           "group": "Reference",
           "pages": [
             "reference/python",
-            "reference/javascript"
+            "reference/javascript",
+            "reference/java"
           ]
         }
       ]
@@ -104,6 +105,7 @@
         "frameworks/koa",
         "frameworks/litestar",
         "frameworks/nestjs",
+        "frameworks/spring-boot",
         "frameworks/starlette"
       ]
     }
