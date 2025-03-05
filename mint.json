@@ -95,6 +95,7 @@
     {
       "group": "Setup guides",
       "pages": [
+        "frameworks/aspnet-core",
         "frameworks/django-ninja",
         "frameworks/django-rest-framework",
         "frameworks/express",
