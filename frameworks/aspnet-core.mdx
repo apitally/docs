@@ -31,13 +31,22 @@ Next, install the [Apitally client library](https://www.nuget.org/packages/Apita
 dotnet add package Apitally
 ```
 
-Register the Apitally middleware and required services in your `Program.cs` file:
+Register the required services and middleware for Apitally in your `Program.cs` file and provide the `ClientId` for your app.
 
-```csharp Program.cs {4,7}
+You'll find the `ClientId` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
+
+You can also configure Apitally in your `appsettings.json` file, if you prefer.
+
+<CodeGroup>
+```csharp Program.cs
 using Apitally;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddApitally();
+builder.Services.AddApitally(options =>
+{
+    options.ClientId = "your-client-id";
+    options.Env = "dev"; // or "prod" etc.
+});
 
 var app = builder.Build();
 app.UseApitally();
@@ -45,31 +54,17 @@ app.UseApitally();
 // ... rest of your middleware configuration
 ```
 
-<div style={{ marginTop: "-0.5rem" }}>
-  <Snippet file="middleware-first-note.mdx" />
-</div>
-
-Then configure Apitally, either in your `appsettings.json` file or directly in your `Program.cs` file using `Configure`, and provide the client ID for your app.
-You'll find the client ID on the _Setup instructions_ page in the Apitally dashboard, which is displayed immediately after creating the app.
-
-<CodeGroup>
 ```json appsettings.json
 {
   "Apitally": {
     "ClientId": "your-client-id",
-    "Env": "dev" // or "prod" etc.
+    "Env": "dev"
   }
 }
 ```
-
-```csharp Program.cs
-builder.Services.Configure<ApitallyOptions>(options =>
-{
-    options.ClientId = "your-client-id";
-    options.Env = "dev"; // or "prod" etc.
-});
-```
 </CodeGroup>
+
+<Snippet file="middleware-first-note.mdx" />
 
 <Snippet file="add-middleware-check.mdx" />
 
@@ -82,7 +77,10 @@ To associate requests with consumers, set the `ApitallyConsumer` in the request 
 ```csharp
 app.Use(async (context, next) =>
 {
-    context.Items["ApitallyConsumer"] = "consumer-identifier";
+    if (context.User.Identity.IsAuthenticated)
+    {
+        context.Items["ApitallyConsumer"] = context.User.Identity.Name;
+    }
     await next();
 });
 ```
@@ -97,12 +95,15 @@ app.Use(async (context, next) =>
 ```csharp
 app.Use(async (context, next) =>
 {
-    context.Items["ApitallyConsumer"] = new ApitallyConsumer
+    if (context.User.Identity.IsAuthenticated)
     {
-        Identifier = "max",
-        Name = "Max Mustermann",
-        Group = "Testers"
-    };
+        context.Items["ApitallyConsumer"] = new ApitallyConsumer
+        {
+            Identifier = context.User.Identity.Name,
+            Name = context.User.FindFirst(ClaimTypes.Name)?.Value,
+            Group = context.User.FindFirst(ClaimTypes.Role)?.Value,
+        };
+    }
     await next();
 });
 ```
@@ -168,32 +169,17 @@ Check out the <a href="/reference/csharp#request-logging-config">reference page<
 ```
 
 ```csharp Callbacks example
-using Apitally;
-
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.Configure<ApitallyOptions>(options =>
+builder.Services.PostConfigure<ApitallyOptions>(options =>
 {
-    options.ClientId = "your-client-id";
-    options.Env = "dev";
-    options.RequestLogging = new RequestLoggingOptions
-    {
-        Enabled = true,
-        IncludeQueryParams = true,
-        IncludeRequestHeaders = true,
-        IncludeRequestBody = true,
-        IncludeResponseHeaders = true,
-        IncludeResponseBody = true,
-        // Only log request body for some parts of the API
-        MaskRequestBody = request =>
-            request.Path.StartsWith("/api/v2/") ? request.Body : null,
-        // Only log response body for unsuccessful requests
-        MaskResponseBody = (request, response) =>
-            response.StatusCode >= 400 ? response.Body : null,
-        // Exclude requests from a specific consumer
-        ShouldExclude = (request, response) =>
-            request.Consumer == "some-consumer"
-    };
+    // Only log request body for some parts of the API
+    options.RequestLogging.MaskRequestBody = request =>
+        request.Path.StartsWith("/api/v2/") ? request.Body : null,
+    // Only log response body for unsuccessful requests
+    options.RequestLogging.MaskResponseBody = (request, response) =>
+        response.StatusCode >= 400 ? response.Body : null,
+    // Exclude requests from a specific consumer
+    options.RequestLogging.ShouldExclude = (request, response) =>
+        request.Consumer == "some-consumer"
 });
 ```
 </CodeGroup>
