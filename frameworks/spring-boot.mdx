@@ -23,9 +23,9 @@ This page guides you through the steps of configuring your [Spring Boot](https:/
 
 <CreateAppSnippet2 />
 
-## Add dependency
+## Enable Apitally
 
-Add the [Apitally client library for Java](https://central.sonatype.com/artifact/io.apitally/apitally) to your project's dependencies.
+Add the [Apitally client library](https://central.sonatype.com/artifact/io.apitally/apitally) to your project's dependencies.
 
 <CodeGroup>
 ```xml Maven
@@ -43,13 +43,9 @@ dependencies {
 ```
 </CodeGroup>
 
-## Enable Apitally
+Next, add the `@UseApitally` annotation to your Spring Boot application class.
 
-Add the `@UseApitally` annotation to your Spring Boot application class and provide the client ID for your app in the configuration.
-You'll find the client ID on the _Setup instructions_ page in the Apitally dashboard, which is displayed immediately after creating the app.
-
-<CodeGroup>
-```java Application.java
+```java Application.java {6}
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -64,12 +60,14 @@ public class Application {
 }
 ```
 
+Then configure Apitally in your `application.yml` file and provide the client ID for your app.
+You'll find the client ID on the _Setup instructions_ page in the Apitally dashboard, which is displayed immediately after creating the app.
+
 ```yaml application.yml
 apitally:
   client-id: "your-client-id"
   env: "dev" # or "prod" etc.
 ```
-</CodeGroup>
 
 <Snippet file="add-middleware-check.mdx" />
 

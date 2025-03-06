@@ -1,0 +1,185 @@
+---
+title: "Setup guide for ASP.NET Core"
+sidebarTitle: "ASP.NET Core"
+description: "Just a few simple steps to get started with Apitally."
+---
+
+import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
+import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
+import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
+import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
+import ConsumerNameGroupSnippet from '/snippets/consumer-name-group.mdx';
+import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
+
+This page guides you through the steps of configuring your [ASP.NET Core](https://dotnet.microsoft.com/en-us/apps/aspnet) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
+
+<SetupGuideStartSnippet framework="ASP.NET Core" />
+
+## Create app
+
+<CreateAppSnippet1 framework="ASP.NET Core" />
+
+![Create app](https://assets.apitally.io/docs/create-app-aspnet-core.webp)
+
+<CreateAppSnippet2 />
+
+## Add middleware
+
+Next, install the [Apitally client library](https://www.nuget.org/packages/Apitally) in your project:
+
+```shell
+dotnet add package Apitally
+```
+
+Register the required services and middleware for Apitally in your `Program.cs` file and provide the `ClientId` for your app.
+
+You'll find the `ClientId` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
+
+You can also configure Apitally in your `appsettings.json` file, if you prefer.
+
+<CodeGroup>
+```csharp Program.cs
+using Apitally;
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddApitally(options =>
+{
+    options.ClientId = "your-client-id";
+    options.Env = "dev"; // or "prod" etc.
+});
+
+var app = builder.Build();
+app.UseApitally();
+
+// ... rest of your middleware configuration
+```
+
+```json appsettings.json
+{
+  "Apitally": {
+    "ClientId": "your-client-id",
+    "Env": "dev"
+  }
+}
+```
+</CodeGroup>
+
+<Snippet file="middleware-first-note.mdx" />
+
+<Snippet file="add-middleware-check.mdx" />
+
+## Identify consumers
+
+<Snippet file="identify-consumers.mdx" />
+
+To associate requests with consumers, set the `ApitallyConsumer` item in the request context. You can do this in middleware, for example:
+
+```csharp
+app.Use(async (context, next) =>
+{
+    if (context.User.Identity.IsAuthenticated)
+    {
+        context.Items["ApitallyConsumer"] = context.User.Identity.Name;
+    }
+    await next();
+});
+```
+<ConsumerIdentifierSnippet />
+
+<Snippet file="identify-consumers-check.mdx" />
+
+## Name and group consumers
+
+<ConsumerNameGroupSnippet language="csharp" />
+
+```csharp
+app.Use(async (context, next) =>
+{
+    if (context.User.Identity.IsAuthenticated)
+    {
+        context.Items["ApitallyConsumer"] = new ApitallyConsumer
+        {
+            Identifier = context.User.Identity.Name,
+            Name = context.User.FindFirst(ClaimTypes.Name)?.Value,
+            Group = context.User.FindFirst(ClaimTypes.Role)?.Value,
+        };
+    }
+    await next();
+});
+```
+
+## Configure request logging
+
+<Info>
+The request log is an opt-in feature available on our paid plans.
+</Info>
+
+Logging of individual requests and responses is disabled by default to protect potentially sensitive data.
+You can enable it in the `RequestLogging` options, which allow you to configure in detail what parts of the request and response should be logged.
+There are also options for masking sensitive information and excluding certain requests from logging.
+
+Check out the <a href="/reference/csharp#request-logging-config">reference page</a> to learn more about the request logging configuration options, and the default masking and exclusion rules.
+
+<CodeGroup>
+```json Basic example
+{
+  "Apitally": {
+    "ClientId": "your-client-id",
+    "Env": "dev",
+    "RequestLogging": {
+      "Enabled": true,
+      "IncludeQueryParams": true,
+      "IncludeRequestHeaders": true,
+      "IncludeRequestBody": true,
+      "IncludeResponseHeaders": true,
+      "IncludeResponseBody": true
+    }
+  }
+}
+```
+
+```json Advanced example
+{
+  "Apitally": {
+    "ClientId": "your-client-id",
+    "Env": "dev",
+    "RequestLogging": {
+      "Enabled": true,
+      "IncludeQueryParams": true,
+      "IncludeRequestHeaders": true,
+      "IncludeRequestBody": true,
+      "IncludeResponseHeaders": true,
+      "IncludeResponseBody": true,
+      // Mask some query parameters with sensitive information
+      "QueryParamMaskPatterns": [
+        "^card_number$"
+      ],
+      // Mask custom header with sensitive information (applied to both request and response headers)
+      // Common sensitive headers like `Authorization` are masked by default
+      "HeaderMaskPatterns": [
+        "^X-Sensitive-Header$"
+      ],
+      // Exclude some paths from request logging (common health check paths are excluded by default)
+      "PathExcludePatterns": [
+        "\\/metrics$"
+      ]
+    }
+  }
+}
+```
+
+```csharp Callbacks example
+builder.Services.PostConfigure<ApitallyOptions>(options =>
+{
+    // Only log request body for some parts of the API
+    options.RequestLogging.MaskRequestBody = request =>
+        request.Path.StartsWith("/api/v2/") ? request.Body : null,
+    // Only log response body for unsuccessful requests
+    options.RequestLogging.MaskResponseBody = (request, response) =>
+        response.StatusCode >= 400 ? response.Body : null,
+    // Exclude requests from a specific consumer
+    options.RequestLogging.ShouldExclude = (request, response) =>
+        request.Consumer == "some-consumer"
+});
+```
+</CodeGroup>
