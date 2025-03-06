@@ -72,7 +72,7 @@ app.UseApitally();
 
 <Snippet file="identify-consumers.mdx" />
 
-To associate requests with consumers, set the `ApitallyConsumer` in the request context. You can do this in middleware, for example:
+To associate requests with consumers, set the `ApitallyConsumer` item in the request context. You can do this in middleware, for example:
 
 ```csharp
 app.Use(async (context, next) =>
