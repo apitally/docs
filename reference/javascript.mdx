@@ -2,6 +2,7 @@
 title: JavaScript reference
 sidebarTitle: JavaScript
 description: The parameters of the Apitally client library for Node.js.
+mode: "wide"
 ---
 
 ## Middleware
@@ -43,12 +44,12 @@ Below are the properties of the `request` objects that are passed to the user-pr
 | Property | Description | Type |
 | :------- | :---------- | :--- |
 | `timestamp` | Unix timestamp of the request. | `number` |
+| `consumer` | Identifier of the consumer making the request. | `string` |
 | `method` | HTTP method of the request. | `string` |
 | `path` | Path of the request. | `string` |
 | `url` | Full URL of the request. | `string` |
 | `headers` | Array of key-value pairs representing the request headers. | `[string, string][]` |
 | `size` | Size of the request body in bytes. | `number` |
-| `consumer` | Identifier of the consumer making the request. | `string` |
 | `body` | Raw request body as bytes. | `Buffer` |
 
 ### Response object

@@ -85,9 +85,10 @@
         {
           "group": "Reference",
           "pages": [
-            "reference/python",
+            "reference/dotnet",
+            "reference/java",
             "reference/javascript",
-            "reference/java"
+            "reference/python"
           ]
         }
       ]
