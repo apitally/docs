@@ -25,7 +25,7 @@ This page guides you through the steps of configuring your [Express](https://exp
 
 ## Add middleware
 
-Next, install the [Apitally client library](https://www.npmjs.com/package/apitally) in your Express project.
+Next, install the [Apitally SDK](https://www.npmjs.com/package/apitally) in your Express project.
 
 <CodeGroup>
 ```shell npm
@@ -131,7 +131,7 @@ app.use(function (req, res, next) {
 
 ## Capture server errors
 
-The Apitally client library installs an error handler that captures server error details automatically.
+The Apitally SDK installs an error handler that captures server error details automatically.
 It is added to the bottom of the middleware stack.
 
 However, if your application already has custom error handlers that return a response and don't call `next(err)`, you need to add the following line of code for Apitally to capture server error details.

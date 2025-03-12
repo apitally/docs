@@ -3,13 +3,13 @@ title: "How it works"
 description: "A good look under the hood."
 ---
 
-## Client libraries
+## SDKs
 
-Apitally integrates directly with your application through one of our open-source client libraries, which is a small dependency to add to your project.
+Apitally integrates directly with your application through one of our open-source SDKs, which is a small dependency to add to your project.
 
-<CardGroup cols={2}>
+<CardGroup cols={4}>
   <Card
-    title="Client library for Python"
+    title="SDK for Python"
     icon="python"
     href="https://github.com/apitally/apitally-py"
     target="_blank"
@@ -17,31 +17,47 @@ Apitally integrates directly with your application through one of our open-sourc
     GitHub repository
   </Card>
   <Card
-    title="Client library for Node.js"
+    title="SDK for Node.js"
     icon="js"
     href="https://github.com/apitally/apitally-js"
     target="_blank"
   >
     GitHub repository
   </Card>
+  <Card
+    title="SDK for Java"
+    icon="java"
+    href="https://github.com/apitally/apitally-java"
+    target="_blank"
+  >
+    GitHub repository
+  </Card>
+  <Card
+    title="SDK for .NET"
+    icon="microsoft"
+    href="https://github.com/apitally/apitally-dotnet"
+    target="_blank"
+  >
+    GitHub repository
+  </Card>
 </CardGroup>
 
-The diagram below illustrates how the client libraries works.
+The diagram below illustrates how the SDKs works.
 
 <img
   className="block dark:hidden rounded-xl"
   style={{ border: "solid 1px #22222222" }}
   src="https://assets.apitally.io/docs/how-it-works-light.png"
-  alt="Diagram showing how the Apitally client library works"
+  alt="Diagram showing how the Apitally SDKs works"
 />
 <img
   className="hidden dark:block rounded-xl"
   style={{ border: "solid 1px #dddddd22" }}
   src="https://assets.apitally.io/docs/how-it-works-dark.png"
-  alt="Diagram showing how the Apitally client library works"
+  alt="Diagram showing how the Apitally SDKs works"
 />
 
-The client libraries include the following features:
+The SDKs include the following features:
 
 - Introspection of your application to capture metadata about endpoints.
 - Lightweight middleware for each supported framework, which captures request and response metadata.
