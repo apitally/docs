@@ -1,0 +1,198 @@
+---
+title: "Setup guide for AdonisJS"
+sidebarTitle: "AdonisJS"
+description: "Just a few simple steps to get started with Apitally."
+---
+
+import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
+import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
+import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
+import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
+import ConsumerNameGroupSnippet from '/snippets/consumer-name-group.mdx';
+import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
+
+This page guides you through the steps of configuring your [AdonisJS](https://adonisjs.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
+
+<SetupGuideStartSnippet framework="AdonisJS" />
+
+## Create app
+
+<CreateAppSnippet1 framework="AdonisJS" />
+
+![Create app](https://assets.apitally.io/docs/create-app-adonisjs.webp)
+
+<CreateAppSnippet2 />
+
+## Add middleware
+
+Install the [Apitally SDK](https://www.npmjs.com/package/apitally) in your AdonisJS project.
+
+<CodeGroup>
+```shell npm
+npm install apitally
+```
+
+```shell yarn
+yarn add apitally
+```
+</CodeGroup>
+
+Create a configuration file at `config/apitally.ts` and provide the `clientId` for your app.
+You'll find the `clientId` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
+
+```typescript
+import { defineConfig } from 'apitally/adonisjs';
+
+const apitallyConfig = defineConfig({
+  clientId: "your-client-id",
+  env: "dev", // or "prod" etc.
+});
+
+export default apitallyConfig;
+```
+
+Next, register the Apitally provider in your `adonisrc.ts` file:
+
+```typescript {7}
+import { defineConfig } from '@adonisjs/core/app'
+
+export default defineConfig({
+  // ... existing code ...
+  providers: [
+    // ... existing providers ...
+    () => import('apitally/adonisjs/provider'),
+  ],
+});
+```
+
+Then, register the Apitally middleware in your `start/kernel.ts` file:
+
+```typescript {4}
+import router from '@adonisjs/core/services/router'
+
+router.use([
+  () => import('apitally/adonisjs/middleware'),
+  // ... other middleware ...
+]);
+```
+
+Finally, to capture validation and server errors, modify your exception handler in `app/exceptions/handler.ts`:
+
+```typescript {2,6}
+import { ExceptionHandler, HttpContext } from '@adonisjs/core/http'
+import { captureError } from 'apitally/adonisjs'
+
+export default class HttpExceptionHandler extends ExceptionHandler {
+  async report(error: unknown, ctx: HttpContext) {
+    captureError(error, ctx)
+    return super.report(error, ctx)
+  }
+}
+```
+
+<div className="mt-4">
+  <Snippet file="add-middleware-check.mdx" />
+</div>
+
+## Identify consumers
+
+<Snippet file="identify-consumers.mdx" />
+
+To associate requests with consumers, set the `apitallyConsumer` property on the `ctx` object, for example in a [custom middleware](https://docs.adonisjs.com/guides/basics/middleware#creating-middleware).
+
+```typescript
+import { HttpContext } from '@adonisjs/core/http'
+import { NextFn } from '@adonisjs/core/types/http'
+
+export default class ApitallyConsumerMiddleware {
+  async handle(ctx: HttpContext, next: NextFn) {
+    if (ctx.auth.isAuthenticated) {
+      ctx.apitallyConsumer = ctx.auth.user!.email
+    }
+    await next()
+  }
+}
+```
+
+<ConsumerIdentifierSnippet />
+
+<Snippet file="identify-consumers-check.mdx" />
+
+## Name and group consumers
+
+<ConsumerNameGroupSnippet language="javascript" />
+
+```typescript
+import { HttpContext } from '@adonisjs/core/http'
+import { NextFn } from '@adonisjs/core/types/http'
+
+export default class ApitallyConsumerMiddleware {
+  async handle(ctx: HttpContext, next: NextFn) {
+    if (ctx.auth.isAuthenticated) {
+      ctx.apitallyConsumer = {
+        identifier: ctx.auth.user!.id,
+        name: ctx.auth.user!.fullName,
+        group: ctx.auth.user!.organization,
+      }
+    }
+    await next()
+  }
+}
+```
+
+## Configure request logging
+
+<RequestLoggingConfigSnippet language="javascript" />
+
+<CodeGroup>
+```typescript Basic example
+import { defineConfig } from 'apitally/adonisjs';
+
+const apitallyConfig = defineConfig({
+  clientId: "your-client-id",
+  env: "dev", // or "prod" etc.
+  requestLoggingConfig: {
+    enabled: true,
+    logQueryParams: true,
+    logRequestHeaders: true,
+    logRequestBody: true,
+    logResponseHeaders: true,
+    logResponseBody: true,
+  },
+});
+
+export default apitallyConfig;
+```
+
+```typescript Advanced example
+import { defineConfig } from 'apitally/adonisjs';
+
+const apitallyConfig = defineConfig({
+  clientId: "your-client-id",
+  env: "dev", // or "prod" etc.
+  requestLoggingConfig: {
+    enabled: true,
+    logQueryParams: true,
+    logRequestHeaders: true,
+    logRequestBody: true,
+    logResponseHeaders: true,
+    logResponseBody: true,
+    // Mask some query parameters with sensitive information
+    maskQueryParams: [/^card_number$/i],
+    // Mask custom header with sensitive information (applied to both request and response headers)
+    // Common sensitive headers like `Authorization` are masked by default
+    maskHeaders: [/^X-Sensitive-Header$/i],
+    // Only log request body for some parts of the API
+    maskRequestBodyCallback: (request) => request.url?.startsWith("/api/v2") ? request.body : null,
+    // Only log response body for unsuccessful requests
+    maskResponseBodyCallback: (request, response) => response.statusCode >= 400 ? response.body : null,
+    // Exclude some paths from request logging (common health check paths are excluded by default)
+    excludePaths: [/\/metrics$/],
+    // Exclude requests from a specific consumer
+    excludeCallback: (request, response) => request.consumer === "some-consumer",
+  },
+});
+
+export default apitallyConfig;
+```
+</CodeGroup>

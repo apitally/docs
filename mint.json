@@ -21,18 +21,10 @@
   "backgroundImage": "/images/background.webp",
   "topbarLinks": [
     {
-      "name": "Support",
-      "url": "/support"
-    },
-    {
       "name": "Log in",
       "url": "https://app.apitally.io"
     }
   ],
-  "topbarCtaButton": {
-    "name": "Sign up",
-    "url": "https://app.apitally.io/?signup"
-  },
   "anchors": [
     {
       "name": "API reference",
@@ -85,30 +77,52 @@
         {
           "group": "Reference",
           "pages": [
-            "reference/dotnet",
-            "reference/java",
+            "reference/python",
             "reference/javascript",
-            "reference/python"
+            "reference/java",
+            "reference/dotnet"
           ]
-        }
+        },
+        "support"
       ]
     },
     {
       "group": "Setup guides",
       "pages": [
-        "frameworks/aspnet-core",
-        "frameworks/django-ninja",
-        "frameworks/django-rest-framework",
-        "frameworks/express",
-        "frameworks/fastapi",
-        "frameworks/fastify",
-        "frameworks/flask",
-        "frameworks/hono",
-        "frameworks/koa",
-        "frameworks/litestar",
-        "frameworks/nestjs",
-        "frameworks/spring-boot",
-        "frameworks/starlette"
+        {
+          "group": "Python",
+          "pages": [
+            "frameworks/django-ninja",
+            "frameworks/django-rest-framework",
+            "frameworks/fastapi",
+            "frameworks/flask",
+            "frameworks/litestar",
+            "frameworks/starlette"
+          ]
+        },
+        {
+          "group": "JavaScript",
+          "pages": [
+            "frameworks/adonisjs",
+            "frameworks/express",
+            "frameworks/fastify",
+            "frameworks/hono",
+            "frameworks/koa",
+            "frameworks/nestjs"
+          ]
+        },
+        {
+          "group": "Java",
+          "pages": [
+            "frameworks/spring-boot"
+          ]
+        },
+        {
+          "group": ".NET",
+          "pages": [
+            "frameworks/aspnet-core"
+          ]
+        }
       ]
     }
   ],
