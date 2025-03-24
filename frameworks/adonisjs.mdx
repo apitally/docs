@@ -41,14 +41,14 @@ Create a configuration file at `config/apitally.ts` and provide the `clientId` f
 You'll find the `clientId` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
 
 ```typescript
-import { defineConfig } from 'apitally/adonisjs';
+import { defineConfig } from 'apitally/adonisjs'
 
 const apitallyConfig = defineConfig({
-  clientId: "your-client-id",
-  env: "dev", // or "prod" etc.
-});
+  clientId: 'your-client-id',
+  env: 'dev', // or 'prod' etc.
+})
 
-export default apitallyConfig;
+export default apitallyConfig
 ```
 
 Next, register the Apitally provider in your `adonisrc.ts` file:
@@ -62,7 +62,7 @@ export default defineConfig({
     // ... existing providers ...
     () => import('apitally/adonisjs/provider'),
   ],
-});
+})
 ```
 
 Then, register the Apitally middleware in your `start/kernel.ts` file:
@@ -73,7 +73,7 @@ import router from '@adonisjs/core/services/router'
 router.use([
   () => import('apitally/adonisjs/middleware'),
   // ... other middleware ...
-]);
+])
 ```
 
 Finally, to capture validation and server errors, modify your exception handler in `app/exceptions/handler.ts`:
@@ -146,11 +146,11 @@ export default class ApitallyConsumerMiddleware {
 
 <CodeGroup>
 ```typescript Basic example
-import { defineConfig } from 'apitally/adonisjs';
+import { defineConfig } from 'apitally/adonisjs'
 
 const apitallyConfig = defineConfig({
-  clientId: "your-client-id",
-  env: "dev", // or "prod" etc.
+  clientId: 'your-client-id',
+  env: 'dev', // or 'prod' etc.
   requestLoggingConfig: {
     enabled: true,
     logQueryParams: true,
@@ -159,17 +159,17 @@ const apitallyConfig = defineConfig({
     logResponseHeaders: true,
     logResponseBody: true,
   },
-});
+})
 
 export default apitallyConfig;
 ```
 
 ```typescript Advanced example
-import { defineConfig } from 'apitally/adonisjs';
+import { defineConfig } from 'apitally/adonisjs'
 
 const apitallyConfig = defineConfig({
-  clientId: "your-client-id",
-  env: "dev", // or "prod" etc.
+  clientId: 'your-client-id',
+  env: 'dev', // or 'prod' etc.
   requestLoggingConfig: {
     enabled: true,
     logQueryParams: true,
@@ -183,15 +183,15 @@ const apitallyConfig = defineConfig({
     // Common sensitive headers like `Authorization` are masked by default
     maskHeaders: [/^X-Sensitive-Header$/i],
     // Only log request body for some parts of the API
-    maskRequestBodyCallback: (request) => request.url?.startsWith("/api/v2") ? request.body : null,
+    maskRequestBodyCallback: (request) => request.url?.startsWith('/api/v2') ? request.body : null,
     // Only log response body for unsuccessful requests
     maskResponseBodyCallback: (request, response) => response.statusCode >= 400 ? response.body : null,
     // Exclude some paths from request logging (common health check paths are excluded by default)
     excludePaths: [/\/metrics$/],
     // Exclude requests from a specific consumer
-    excludeCallback: (request, response) => request.consumer === "some-consumer",
+    excludeCallback: (request, response) => request.consumer === 'some-consumer',
   },
-});
+})
 
 export default apitallyConfig;
 ```
