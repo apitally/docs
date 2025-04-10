@@ -1,0 +1,68 @@
+---
+title: "Setup guide for Gin"
+sidebarTitle: "Gin"
+description: "Just a few simple steps to get started with Apitally."
+---
+
+import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
+import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
+import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
+import AddMiddlewarePythonSnippet from '/snippets/add-middleware-python.mdx';
+import UWSGIWarning from '/snippets/uwsgi-warning.mdx';
+import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
+import ConsumerNameGroupSnippet from '/snippets/consumer-name-group.mdx';
+import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
+
+This page guides you through the steps of configuring your [Gin](https://gin-gonic.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
+
+<SetupGuideStartSnippet framework="Gin" />
+
+## Create app
+
+<CreateAppSnippet1 framework="Gin" />
+
+![Create app](https://assets.apitally.io/docs/create-app-gin.webp)
+
+<CreateAppSnippet2 />
+
+## Add middleware
+
+Add the [Apitally SDK](https://github.com/apitally/apitally-go) to the dependencies in your Gin project.
+
+```shell
+go get github.com/apitally/apitally-go/gin
+```
+
+Add the Apitally middleware to your Gin application and provide the `ClientId` for your app.
+You'll find the `ClientId` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
+
+```go
+package main
+
+import (
+  apitally "github.com/apitally/apitally-go/gin"
+  "github.com/gin-gonic/gin"
+)
+
+func main() {
+  r := gin.Default()
+
+  config := &apitally.ApitallyConfig{
+    ClientId: "your-client-id",
+    Env:      "dev", // or "prod" etc.
+  }
+  apitally.UseApitally(r, config)
+
+  // ... rest of your code ...
+}
+```
+
+<div style={{ marginTop: "-0.5rem" }}>
+  <Snippet file="middleware-first-note.mdx" />
+</div>
+
+<Snippet file="add-middleware-check.mdx" />
+
+## Identify consumers
+
+<Snippet file="identify-consumers.mdx" />
