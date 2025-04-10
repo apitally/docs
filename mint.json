@@ -80,6 +80,7 @@
             "reference/python",
             "reference/javascript",
             "reference/java",
+            "reference/go",
             "reference/dotnet"
           ]
         },
@@ -115,6 +116,12 @@
           "group": "Java",
           "pages": [
             "frameworks/spring-boot"
+          ]
+        },
+        {
+          "group": "Go",
+          "pages": [
+            "frameworks/gin"
           ]
         },
         {
