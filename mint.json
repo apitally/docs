@@ -80,6 +80,7 @@
             "reference/python",
             "reference/javascript",
             "reference/java",
+            "reference/go",
             "reference/dotnet"
           ]
         },

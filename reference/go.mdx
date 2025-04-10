@@ -1,0 +1,108 @@
+---
+title: Go reference
+sidebarTitle: Go
+description: The parameters of the Apitally SDK for Go.
+mode: "wide"
+---
+
+## Config
+
+The following are the fields of the `ApitallyConfig` struct.
+
+| Parameter | Description | Type |
+| :-------- | :---------- | :--- |
+| `ClientId` | Client ID for your application. Find it on the _Setup instructions_ page for your app. | `string` |
+| `Env` | Name of the environment, e.g. `prod` or `dev`. The environment will be automatically created in Apitally if it doesn't exist. | `string` |
+| `RequestLoggingConfig` | Configuration for request logging. See table below. | `*RequestLoggingConfig` |
+| `AppVersion` | The current version of your application, e.g. `1.0.0`.<div style={{ marginTop: "0.5rem" }}>[Learn more](/advanced#reporting-app-versions)</div> | `string` |
+
+## Request logging config
+
+The following are the fields of the `RequestLoggingConfig` struct.
+
+| Parameter | Description | Type | Default |
+| :-------- | :---------- | :--- | :------ |
+| `Enabled` | Whether request logging is enabled. | `bool` | `false` |
+| `LogQueryParams` | Whether to include query parameters in the logs. If disabled these will be stripped from the request URLs logged. | `bool` | `true` |
+| `LogRequestHeaders` | Whether to include request headers in the logs. Default masking for common sensitive headers (e.g. `Authorization`) applies. | `bool` | `false` |
+| `LogRequestBody` | Whether to include the request body in the logs. Only JSON and text are supported, up to 50 KB. | `bool` | `false` |
+| `LogResponseHeaders` | Whether to include response headers in the logs. | `bool` | `true` |
+| `LogResponseBody` | Whether to include the response body in the logs. Only JSON and text are supported, up to 50 KB. | `bool` | `false` |
+| `LogPanic` | Whether to log information when a panic occurs during request handling. | `bool` | `false` |
+| `MaskQueryParams` | List of regular expressions for matching query parameter names that should be masked. | `[]*regexp.Regexp` | `nil` |
+| `MaskHeaders` | List of regular expressions for matching header names that should be masked. | `[]*regexp.Regexp` | `nil` |
+| `MaskRequestBodyCallback` | Callback function for masking the request body. Takes one parameter `request` and returns the request body as `[]byte` or `nil`. | `func(request *Request) []byte` | `nil` |
+| `MaskResponseBodyCallback` | Callback function for masking the response body. Takes two parameters `request` and `response` and returns the response body as `[]byte` or `nil`. | `func(request *Request, response *Response) []byte` | `nil` |
+| `ExcludePaths` | List of regular expressions for matching paths to exclude from logging. | `[]*regexp.Regexp` | `nil` |
+| `ExcludeCallback` | Callback function for excluding requests from logging. Takes two parameters `request` and `response` and returns a `true`, if the request should be excluded, or `false` otherwise. | `func(request *Request, response *Response) bool` | `nil` |
+
+### Request struct
+
+Below are the fields of the `Request` struct.
+
+| Field | Description | Type |
+| :---- | :---------- | :--- |
+| `Timestamp` | Unix timestamp of the request. | `float64` |
+| `Method` | HTTP method of the request. | `string` |
+| `Path` | Path of the request. | `string` |
+| `URL` | Full URL of the request. | `string` |
+| `Headers` | Array of key-value pairs representing the request headers. | `[][2]string` |
+| `Size` | Size of the request body in bytes. | `int64` |
+| `Consumer` | Identifier of the consumer making the request. | `string` |
+| `Body` | Raw request body. | `[]byte` |
+
+### Response struct
+
+Below are the fields of the `Response` struct.
+
+| Field | Description | Type |
+| :---- | :---------- | :--- |
+| `StatusCode` | HTTP status code of the response. | `int` |
+| `ResponseTime` | Time taken to respond to the request in seconds. | `float64` |
+| `Headers` | Array of key-value pairs representing the response headers. | `[][2]string` |
+| `Size` | Size of the response body in bytes. | `int64` |
+| `Body` | Raw response body. | `[]byte` |
+
+### Default masking
+
+The below regular expressions are used to mask sensitive query parameters and headers.
+
+```go
+// Query parameters
+var DefaultMaskQueryParamPatterns = []*regexp.Regexp{
+	regexp.MustCompile(`(?i)auth`),
+	regexp.MustCompile(`(?i)api-?key`),
+	regexp.MustCompile(`(?i)secret`),
+	regexp.MustCompile(`(?i)token`),
+	regexp.MustCompile(`(?i)password`),
+	regexp.MustCompile(`(?i)pwd`),
+}
+```
+
+```go
+// Headers
+var DefaultMaskHeaderPatterns = []*regexp.Regexp{
+	regexp.MustCompile(`(?i)auth`),
+	regexp.MustCompile(`(?i)api-?key`),
+	regexp.MustCompile(`(?i)secret`),
+	regexp.MustCompile(`(?i)token`),
+	regexp.MustCompile(`(?i)cookie`),
+}
+```
+
+### Default exclusions
+
+The below regular expressions are used to exclude common health check endpoints from logging.
+They are applied to the request path.
+
+```go
+// Common paths of health check endpoints
+var DefaultExcludePathPatterns = []*regexp.Regexp{
+	regexp.MustCompile(`/_?healthz?$`),
+	regexp.MustCompile(`/_?health[_-]?checks?$`),
+	regexp.MustCompile(`/_?heart[_-]?beats?$`),
+	regexp.MustCompile(`/ping$`),
+	regexp.MustCompile(`/ready$`),
+	regexp.MustCompile(`/live$`),
+}
+```
