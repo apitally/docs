@@ -93,6 +93,7 @@
         {
           "group": "Python",
           "pages": [
+            "frameworks/blacksheep",
             "frameworks/django-ninja",
             "frameworks/django-rest-framework",
             "frameworks/fastapi",
