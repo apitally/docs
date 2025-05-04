@@ -9,7 +9,6 @@ import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import AddMiddlewarePythonSnippet from '/snippets/add-middleware-python.mdx';
 import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
-import ConsumerNameGroupSnippet from '/snippets/consumer-name-group.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
 
 This page guides you through the steps of configuring your [FastAPI](https://fastapi.tiangolo.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
@@ -70,7 +69,8 @@ app.add_middleware(
 To associate requests with consumers, set the `apitally_consumer` attribute on the [`request.state`](https://www.starlette.io/requests/#other-state) object.
 You could do this <Tooltip tip="See example below">in a dependency</Tooltip> or another middleware, for example.
 
-```python
+<CodeGroup>
+```python {14-17} Identifier only
 from typing import Annotated
 from fastapi import FastAPI, Depends, Request
 from fastapi.security import OAuth2PasswordBearer
@@ -90,15 +90,7 @@ def identify_consumer(request: Request, current_user: Annotated[User, Depends(ge
 app = FastAPI(dependencies=[Depends(identify_consumer)])
 ```
 
-<ConsumerIdentifierSnippet />
-
-<Snippet file="identify-consumers-check.mdx" />
-
-## Name and group consumers
-
-<ConsumerNameGroupSnippet language="python" />
-
-```python
+```python {17-24} With name and group
 from typing import Annotated
 from fastapi import FastAPI, Depends, Request
 from fastapi.security import OAuth2PasswordBearer
@@ -110,7 +102,6 @@ class User(BaseModel):
     user_id: str
     name: str
     group: str
-
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> User:
     user = fake_decode_token(token)
@@ -125,6 +116,10 @@ def identify_consumer(request: Request, current_user: Annotated[User, Depends(ge
 
 app = FastAPI(dependencies=[Depends(identify_consumer)])
 ```
+</CodeGroup>
+<ConsumerIdentifierSnippet />
+
+<Snippet file="identify-consumers-check.mdx" />
 
 ## Configure request logging
 

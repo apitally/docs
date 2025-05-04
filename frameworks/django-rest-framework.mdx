@@ -11,7 +11,6 @@ import AddMiddlewarePythonSnippet from '/snippets/add-middleware-python.mdx';
 import ConfigureDjangoMiddlewareSnippet from '/snippets/configure-django-middleware.mdx';
 import UWSGIWarning from '/snippets/uwsgi-warning.mdx';
 import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
-import ConsumerNameGroupSnippet from '/snippets/consumer-name-group.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
 
 This page guides you through the steps of configuring your [Django REST Framework](https://www.django-rest-framework.org) (DRF) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
@@ -67,15 +66,29 @@ APITALLY_MIDDLEWARE = {
 
 <Snippet file="identify-consumers.mdx" />
 
-To associate requests with consumers, provide a <Tooltip tip="See example below">callback function</Tooltip> to the `ApitallyMiddleware` that takes a [`HttpRequest`](https://docs.djangoproject.com/en/4.2/ref/request-response/#httprequest-objects) object as an argument and returns a consumer identifier or `None`.
+To associate requests with consumers, provide a <Tooltip tip="See example below">callback function</Tooltip> to the `ApitallyMiddleware` that takes a [`HttpRequest`](https://docs.djangoproject.com/en/4.2/ref/request-response/#httprequest-objects) object as an argument and returns a consumer identifier, an `ApitallyConsumer` object or `None`.
 
 <CodeGroup>
-```python Callback function definition
+```python Identifier only
 from django.http import HttpRequest
 
 def identify_consumer(request: HttpRequest) -> str | None:
     if request.user.is_authenticated:
         return request.user.username
+    return None
+```
+
+```python With name and group
+from django.http import HttpRequest
+from apitally.django import ApitallyConsumer
+
+def identify_consumer(request: HttpRequest) -> ApitallyConsumer | None:
+    if request.user.is_authenticated:
+        return ApitallyConsumer(
+            identifier=request.user.username,
+            name=f"{request.user.first_name} {request.user.last_name}",
+            group=request.user.groups.first().name,
+        )
     return None
 ```
 
@@ -91,24 +104,6 @@ APITALLY_MIDDLEWARE = {
 <ConsumerIdentifierSnippet />
 
 <Snippet file="identify-consumers-check.mdx" />
-
-## Name and group consumers
-
-<ConsumerNameGroupSnippet language="python" />
-
-```python
-from django.http import HttpRequest
-from apitally.django import ApitallyConsumer
-
-def identify_consumer(request: HttpRequest) -> ApitallyConsumer | None:
-    if request.user.is_authenticated:
-        return ApitallyConsumer(
-            identifier=request.user.username,
-            name=f"{request.user.first_name} {request.user.last_name}",
-            group=request.user.groups.first().name,
-        )
-    return None
-```
 
 ## Configure request logging
 

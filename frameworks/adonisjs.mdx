@@ -8,7 +8,6 @@ import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
 import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
-import ConsumerNameGroupSnippet from '/snippets/consumer-name-group.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
 
 This page guides you through the steps of configuring your [AdonisJS](https://adonisjs.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
@@ -100,7 +99,8 @@ export default class HttpExceptionHandler extends ExceptionHandler {
 
 To associate requests with consumers, set the `apitallyConsumer` property on the `ctx` object, for example in a [custom middleware](https://docs.adonisjs.com/guides/basics/middleware#creating-middleware).
 
-```typescript
+<CodeGroup>
+```typescript Identifier only
 import { HttpContext } from '@adonisjs/core/http'
 import { NextFn } from '@adonisjs/core/types/http'
 
@@ -114,15 +114,7 @@ export default class ApitallyConsumerMiddleware {
 }
 ```
 
-<ConsumerIdentifierSnippet />
-
-<Snippet file="identify-consumers-check.mdx" />
-
-## Name and group consumers
-
-<ConsumerNameGroupSnippet language="javascript" />
-
-```typescript
+```typescript With name and group
 import { HttpContext } from '@adonisjs/core/http'
 import { NextFn } from '@adonisjs/core/types/http'
 
@@ -139,6 +131,10 @@ export default class ApitallyConsumerMiddleware {
   }
 }
 ```
+</CodeGroup>
+<ConsumerIdentifierSnippet />
+
+<Snippet file="identify-consumers-check.mdx" />
 
 ## Configure request logging
 

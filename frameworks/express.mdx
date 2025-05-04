@@ -8,7 +8,6 @@ import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
 import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
-import ConsumerNameGroupSnippet from '/snippets/consumer-name-group.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
 
 This page guides you through the steps of configuring your [Express](https://expressjs.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
@@ -81,7 +80,7 @@ useApitally(app, {
 To associate requests with consumers, set the `apitallyConsumer` property on the [request object](https://expressjs.com/en/api.html#req) in a middleware.
 
 <CodeGroup>
-```javascript Example
+```javascript Identifier only
 app.use(function (req, res, next) {
   if (req.user) {
     req.apitallyConsumer = req.user.username
@@ -90,18 +89,36 @@ app.use(function (req, res, next) {
 })
 ```
 
-```javascript Example for TypeScript
+```javascript With name and group
+app.use(function (req, res, next) {
+  if (req.user) {
+    req.apitallyConsumer = {
+      identifier: req.user.username,
+      name: `${req.user.first_name} ${req.user.last_name}`, // optional
+      group: req.user.group, // optional
+    }
+  }
+  next()
+})
+```
+
+```javascript TypeScript
 import type { Request } from "express";
+import type { ApitallyConsumer } from "apitally/express";
 
 declare module "express" {
   interface Request {
-    apitallyConsumer?: string;
+    apitallyConsumer?: ApitallyConsumer | string;
   }
 }
 
 app.use(function (req: Request, res, next) {
   if (req.user) {
-    req.apitallyConsumer = req.user.username
+    req.apitallyConsumer = {
+      identifier: req.user.username,
+      name: `${req.user.first_name} ${req.user.last_name}`, // optional
+      group: req.user.group, // optional
+    }
   }
   next()
 })
@@ -111,23 +128,6 @@ app.use(function (req: Request, res, next) {
 <ConsumerIdentifierSnippet />
 
 <Snippet file="identify-consumers-check.mdx" />
-
-## Name and group consumers
-
-<ConsumerNameGroupSnippet language="javascript" />
-
-```javascript
-app.use(function (req, res, next) {
-  if (req.user) {
-    req.apitallyConsumer = {
-      identifier: req.user.username,
-      name: `${req.user.first_name} ${req.user.last_name}`,
-      group: req.user.group,
-    }
-  }
-  next()
-})
-```
 
 ## Capture server errors
 

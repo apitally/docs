@@ -8,7 +8,6 @@ import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
 import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
-import ConsumerNameGroupSnippet from '/snippets/consumer-name-group.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
 
 This page guides you through the steps of configuring your [Hono](https://hono.dev) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
@@ -66,7 +65,8 @@ useApitally(app, {
 
 To associate requests with consumers, set the `apitallyConsumer` key on the [`Context`](https://hono.dev/docs/api/context#set-get) object in a middleware.
 
-```javascript
+<CodeGroup>
+```javascript Identifier only
 app.use(async (c, next) => {
   const consumerIdentifier = c.get("jwtPayload")?.sub;
   c.set("apitallyConsumer", consumerIdentifier);
@@ -74,27 +74,24 @@ app.use(async (c, next) => {
 });
 ```
 
-<ConsumerIdentifierSnippet />
-
-<Snippet file="identify-consumers-check.mdx" />
-
-## Name and group consumers
-
-<ConsumerNameGroupSnippet language="javascript" />
-
-```javascript
+```javascript With name and group
 app.use(async (c, next) => {
   const payload = c.get("jwtPayload");
   if (payload) {
     c.set("apitallyConsumer", {
       identifier: payload.sub,
-      name: payload.name,
-      group: payload.group
+      name: payload.name, // optional
+      group: payload.group, // optional
     });
   }
   await next();
 });
 ```
+</CodeGroup>
+
+<ConsumerIdentifierSnippet />
+
+<Snippet file="identify-consumers-check.mdx" />
 
 ## Configure request logging
 

@@ -8,7 +8,6 @@ import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
 import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
-import ConsumerNameGroupSnippet from '/snippets/consumer-name-group.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
 
 This page guides you through the steps of configuring your [Koa](https://koajs.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
@@ -79,7 +78,8 @@ useApitally(app, {
 
 To associate requests with consumers, set the `apitallyConsumer` variable on the [`ctx.state`](https://koajs.com/#context) property in a middleware.
 
-```javascript
+<CodeGroup>
+```javascript Identifier only
 app.use(function (ctx, next) {
   if (ctx.isAuthenticated()) {
     ctx.state.apitallyConsumer = ctx.state.user.username
@@ -88,26 +88,23 @@ app.use(function (ctx, next) {
 })
 ```
 
-<ConsumerIdentifierSnippet />
-
-<Snippet file="identify-consumers-check.mdx" />
-
-## Name and group consumers
-
-<ConsumerNameGroupSnippet language="javascript" />
-
-```javascript
+```javascript With name and group
 app.use(function (ctx, next) {
   if (ctx.isAuthenticated()) {
     ctx.state.apitallyConsumer = {
       identifier: ctx.state.user.username,
-      name: `${ctx.state.user.firstName} ${ctx.state.user.lastName}`,
-      group: ctx.state.user.group
+      name: `${ctx.state.user.firstName} ${ctx.state.user.lastName}`, // optional
+      group: ctx.state.user.group, // optional
     }
   }
   next()
 })
 ```
+</CodeGroup>
+
+<ConsumerIdentifierSnippet />
+
+<Snippet file="identify-consumers-check.mdx" />
 
 ## Configure request logging
 

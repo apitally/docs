@@ -8,7 +8,6 @@ import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
 import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
-import ConsumerNameGroupSnippet from '/snippets/consumer-name-group.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
 
 This page guides you through the steps of configuring your [Spring Boot](https://spring.io/projects/spring-boot) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
@@ -77,7 +76,8 @@ apitally:
 
 To associate requests with consumers, set the `apitallyConsumer` attribute on the request. You could do this in a filter or interceptor, for example.
 
-```java
+<CodeGroup>
+```java Identifier only
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -94,15 +94,7 @@ public class ConsumerIdentificationFilter extends OncePerRequestFilter {
 }
 ```
 
-<ConsumerIdentifierSnippet />
-
-<Snippet file="identify-consumers-check.mdx" />
-
-## Name and group consumers
-
-<ConsumerNameGroupSnippet language="java" />
-
-```java
+```java With name and group
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -125,6 +117,11 @@ public class ConsumerIdentificationFilter extends OncePerRequestFilter {
     }
 }
 ```
+</CodeGroup>
+
+<ConsumerIdentifierSnippet />
+
+<Snippet file="identify-consumers-check.mdx" />
 
 ## Configure request logging
 
