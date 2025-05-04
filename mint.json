@@ -58,6 +58,7 @@
       "group": "Overview",
       "pages": [
         "introduction",
+        "how-it-works",
         {
           "group": "Features",
           "pages": [
@@ -72,8 +73,6 @@
             "features/custom-alerts"
           ]
         },
-        "how-it-works",
-        "advanced",
         {
           "group": "Reference",
           "pages": [

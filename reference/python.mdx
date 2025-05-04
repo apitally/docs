@@ -14,8 +14,7 @@ The following parameters apply when adding the Apitally middleware to your appli
 | `client_id` | Client ID for your application. Find it on the _Setup instructions_ page for your app. | `string` |
 | `env` | Name of the environment, e.g. `prod` or `dev`. The environment will be automatically created in Apitally if it doesn't exist. Defaults to `dev`. | `string` |
 | `request_logging_config` | Configuration for request logging. See table below. | `RequestLoggingConfig` |
-| `openapi_url` | Path to the API endpoint providing the OpenAPI specification, e.g. `/openapi.json`. Pre-configured for FastAPI.<div style={{ marginTop: "0.5rem" }}>[Learn more](/advanced#capturing-endpoint-descriptions)</div> | `string` |
-| `app_version` | The current version of your application, e.g. `1.0.0`.<div style={{ marginTop: "0.5rem" }}>[Learn more](/advanced#reporting-app-versions)</div> | `string` |
+| `app_version` | The current version of your application, e.g. `1.0.0`. | `string` |
 | `proxy` | HTTP proxy to use for sending data to Apitally Hub. Useful in environments with no direct internet connectivity. | `string` |
 
 ## Request logging config
