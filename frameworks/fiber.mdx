@@ -1,6 +1,6 @@
 ---
-title: "Setup guide for Gin"
-sidebarTitle: "Gin"
+title: "Setup guide for Fiber"
+sidebarTitle: "Fiber"
 description: "Just a few simple steps to get started with Apitally."
 ---
 
@@ -10,13 +10,13 @@ import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
 
-This page guides you through the steps of configuring your [Gin](https://gin-gonic.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
+This page guides you through the steps of configuring your [Fiber](https://gofiber.io) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
 
-<SetupGuideStartSnippet framework="Gin" />
+<SetupGuideStartSnippet framework="Fiber" />
 
 ## Create app
 
-<CreateAppSnippet1 framework="Gin" />
+<CreateAppSnippet1 framework="Fiber" />
 
 ![Create app](https://assets.apitally.io/docs/create-app-5.webp)
 
@@ -24,31 +24,31 @@ This page guides you through the steps of configuring your [Gin](https://gin-gon
 
 ## Add middleware
 
-Add the [Apitally SDK](https://github.com/apitally/apitally-go) to the dependencies in your Gin project.
+Add the [Apitally SDK](https://github.com/apitally/apitally-go) to the dependencies in your Fiber project.
 
 ```shell
-go get github.com/apitally/apitally-go/gin
+go get github.com/apitally/apitally-go/fiber
 ```
 
-Add the Apitally middleware to your Gin application and provide the `ClientId` for your app.
+Add the Apitally middleware to your Fiber application and provide the `ClientId` for your app.
 You'll find the `ClientId` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
 
 ```go
 package main
 
 import (
-  apitally "github.com/apitally/apitally-go/gin"
-  "github.com/gin-gonic/gin"
+  apitally "github.com/apitally/apitally-go/fiber"
+  "github.com/gofiber/fiber/v2"
 )
 
 func main() {
-  r := gin.Default()
+  app := fiber.New()
 
   config := &apitally.ApitallyConfig{
     ClientId: "your-client-id",
     Env:      "dev", // or "prod" etc.
   }
-  r.Use(apitally.ApitallyMiddleware(r, config))
+  app.Use(apitally.ApitallyMiddleware(app, config))
 
   // ... rest of your code ...
 }
@@ -64,40 +64,36 @@ func main() {
 
 <Snippet file="identify-consumers.mdx" />
 
-To associate requests with consumers, set the `ApitallyConsumer` value in the Gin context, for example in a middleware function.
+To associate requests with consumers, set the `ApitallyConsumer` value in the `Locals`, for example in a middleware function.
 
 <CodeGroup>
-```go {8} Identifier only
-func authMiddleware() gin.HandlerFunc {
-  return func(c *gin.Context) {
-    // Your authentication logic here
-    // ...
+```go {7} Identifier only
+func authMiddleware(c *fiber.Ctx) error {
+  // Your authentication logic here
+  // ...
 
-    if user.IsAuthenticated() {
-      // Use the authenticated identity as consumer identifier
-      c.Set("ApitallyConsumer", user.Identifier)
-    }
-    c.Next()
+  if user.IsAuthenticated() {
+    // Use the authenticated identity as consumer identifier
+    c.Locals("ApitallyConsumer", user.Identifier)
   }
+  return c.Next()
 }
 ```
 
-```go {7-12} With name and group
-func authMiddleware() gin.HandlerFunc {
-  return func(c *gin.Context) {
-    // Your authentication logic here
-    // ...
+```go {6-11} With name and group
+func authMiddleware(c *fiber.Ctx) error {
+  // Your authentication logic here
+  // ...
 
-    if user.IsAuthenticated() {
-      consumer := apitally.ApitallyConsumer{
-        Identifier: user.Email,
-        Name:       user.Name, // optional
-        Group:      user.Group, // optional
-      }
-      c.Set("ApitallyConsumer", consumer)
+  if user.IsAuthenticated() {
+    consumer := apitally.ApitallyConsumer{
+      Identifier: user.Email,
+      Name:       user.Name, // optional
+      Group:      user.Group, // optional
     }
-    c.Next()
+    c.Locals("ApitallyConsumer", consumer)
   }
+  return c.Next()
 }
 ```
 </CodeGroup>
@@ -110,29 +106,36 @@ func authMiddleware() gin.HandlerFunc {
 
 In order to get insights into validation errors returned by your API endpoints, you can capture them using the `CaptureValidationError` function.
 
-```go {18}
+```go {26}
 package main
 
 import (
-  apitally "github.com/apitally/apitally-go/gin"
-  "github.com/gin-gonic/gin"
+  apitally "github.com/apitally/apitally-go/fiber"
+  "github.com/gofiber/fiber/v2"
+  "github.com/go-playground/validator/v10"
 )
 
+type HelloRequest struct {
+  Name string `json:"name" validate:"required"`
+}
+
+var validate = validator.New()
+
 func main() {
-  r := gin.Default()
+  app := fiber.New()
 
   // ...
 
-  r.POST("/hello", func(c *gin.Context) {
-    var req struct {
-      Name string `json:"name" binding:"required"`
+  app.Post("/hello", func(c *fiber.Ctx) error {
+    var req HelloRequest
+    if err := c.BodyParser(&req); err != nil {
+      return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
     }
-    if err := c.BindJSON(&req); err != nil {
+    if err := validate.Struct(req); err != nil {
       apitally.CaptureValidationError(c, err)
-      c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-      return
+      return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
     }
-    c.JSON(http.StatusOK, gin.H{
+    return c.Status(fiber.StatusOK).JSON(fiber.Map{
       "message": "Hello, " + req.Name + "!",
     })
   })
@@ -150,12 +153,12 @@ func main() {
 package main
 
 import (
-  apitally "github.com/apitally/apitally-go/gin"
-  "github.com/gin-gonic/gin"
+  apitally "github.com/apitally/apitally-go/fiber"
+  "github.com/gofiber/fiber/v2"
 )
 
 func main() {
-  r := gin.Default()
+  app := fiber.New()
 
   config := &apitally.ApitallyConfig{
     ClientId: "your-client-id",
@@ -170,7 +173,7 @@ func main() {
       LogPanic:           true,
     },
   }
-  r.Use(apitally.ApitallyMiddleware(r, config))
+  app.Use(apitally.ApitallyMiddleware(app, config))
 
   // ... rest of your code ...
 }
@@ -183,12 +186,12 @@ import (
   "regexp"
   "strings"
 
-  apitally "github.com/apitally/apitally-go/gin"
-  "github.com/gin-gonic/gin"
+  apitally "github.com/apitally/apitally-go/fiber"
+  "github.com/gofiber/fiber/v2"
 )
 
 func main() {
-  r := gin.Default()
+  app := fiber.New()
 
   config := &apitally.ApitallyConfig{
     ClientId: "your-client-id",
@@ -228,7 +231,7 @@ func main() {
       },
     },
   }
-  r.Use(apitally.ApitallyMiddleware(r, config))
+  app.Use(apitally.ApitallyMiddleware(app, config))
 
   // ... rest of your code ...
 }

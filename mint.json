@@ -122,6 +122,7 @@
         {
           "group": "Go",
           "pages": [
+            "frameworks/fiber",
             "frameworks/gin"
           ]
         },
