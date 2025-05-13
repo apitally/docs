@@ -37,20 +37,20 @@ You'll find the `ClientId` on the _Setup instructions_ page for your app in the 
 package main
 
 import (
-  apitally "github.com/apitally/apitally-go/gin"
-  "github.com/gin-gonic/gin"
+    apitally "github.com/apitally/apitally-go/gin"
+    "github.com/gin-gonic/gin"
 )
 
 func main() {
-  r := gin.Default()
+    r := gin.Default()
 
-  config := &apitally.ApitallyConfig{
-    ClientId: "your-client-id",
-    Env:      "dev", // or "prod" etc.
-  }
-  r.Use(apitally.ApitallyMiddleware(r, config))
+    config := &apitally.ApitallyConfig{
+        ClientId: "your-client-id",
+        Env:      "dev", // or "prod" etc.
+    }
+    r.Use(apitally.ApitallyMiddleware(r, config))
 
-  // ... rest of your code ...
+    // ... rest of your code ...
 }
 ```
 
@@ -69,35 +69,35 @@ To associate requests with consumers, set the `ApitallyConsumer` value in the Gi
 <CodeGroup>
 ```go {8} Identifier only
 func authMiddleware() gin.HandlerFunc {
-  return func(c *gin.Context) {
-    // Your authentication logic here
-    // ...
+    return func(c *gin.Context) {
+        // Your authentication logic here
+        // ...
 
-    if user.IsAuthenticated() {
-      // Use the authenticated identity as consumer identifier
-      c.Set("ApitallyConsumer", user.Identifier)
+        if user.IsAuthenticated() {
+            // Use the authenticated identity as consumer identifier
+            c.Set("ApitallyConsumer", user.Identifier)
+        }
+        c.Next()
     }
-    c.Next()
-  }
 }
 ```
 
 ```go {7-12} With name and group
 func authMiddleware() gin.HandlerFunc {
-  return func(c *gin.Context) {
-    // Your authentication logic here
-    // ...
+    return func(c *gin.Context) {
+        // Your authentication logic here
+        // ...
 
-    if user.IsAuthenticated() {
-      consumer := apitally.ApitallyConsumer{
-        Identifier: user.Email,
-        Name:       user.Name, // optional
-        Group:      user.Group, // optional
-      }
-      c.Set("ApitallyConsumer", consumer)
+        if user.IsAuthenticated() {
+            consumer := apitally.ApitallyConsumer{
+                Identifier: user.Email,
+                Name:       user.Name, // optional
+                Group:      user.Group, // optional
+            }
+            c.Set("ApitallyConsumer", consumer)
+        }
+        c.Next()
     }
-    c.Next()
-  }
 }
 ```
 </CodeGroup>
@@ -114,30 +114,30 @@ In order to get insights into validation errors returned by your API endpoints, 
 package main
 
 import (
-  apitally "github.com/apitally/apitally-go/gin"
-  "github.com/gin-gonic/gin"
+    apitally "github.com/apitally/apitally-go/gin"
+    "github.com/gin-gonic/gin"
 )
 
 func main() {
-  r := gin.Default()
+    r := gin.Default()
 
-  // ...
+    // ...
 
-  r.POST("/hello", func(c *gin.Context) {
-    var req struct {
-      Name string `json:"name" binding:"required"`
-    }
-    if err := c.BindJSON(&req); err != nil {
-      apitally.CaptureValidationError(c, err)
-      c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-      return
-    }
-    c.JSON(http.StatusOK, gin.H{
-      "message": "Hello, " + req.Name + "!",
+    r.POST("/hello", func(c *gin.Context) {
+        var req struct {
+            Name string `json:"name" binding:"required"`
+        }
+        if err := c.BindJSON(&req); err != nil {
+            apitally.CaptureValidationError(c, err)
+            c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+            return
+        }
+        c.JSON(http.StatusOK, gin.H{
+            "message": "Hello, " + req.Name + "!",
+        })
     })
-  })
 
-  // ...
+    // ...
 }
 ```
 
@@ -150,29 +150,29 @@ func main() {
 package main
 
 import (
-  apitally "github.com/apitally/apitally-go/gin"
-  "github.com/gin-gonic/gin"
+    apitally "github.com/apitally/apitally-go/gin"
+    "github.com/gin-gonic/gin"
 )
 
 func main() {
-  r := gin.Default()
+    r := gin.Default()
 
-  config := &apitally.ApitallyConfig{
-    ClientId: "your-client-id",
-    Env:      "dev", // or "prod" etc.
-    RequestLoggingConfig: &apitally.RequestLoggingConfig{
-      Enabled:            true,
-      LogQueryParams:     true,
-      LogRequestHeaders:  true,
-      LogRequestBody:     true,
-      LogResponseHeaders: true,
-      LogResponseBody:    true,
-      LogPanic:           true,
-    },
-  }
-  r.Use(apitally.ApitallyMiddleware(r, config))
+    config := &apitally.ApitallyConfig{
+        ClientId: "your-client-id",
+        Env:      "dev", // or "prod" etc.
+        RequestLoggingConfig: &apitally.RequestLoggingConfig{
+            Enabled:            true,
+            LogQueryParams:     true,
+            LogRequestHeaders:  true,
+            LogRequestBody:     true,
+            LogResponseHeaders: true,
+            LogResponseBody:    true,
+            LogPanic:           true,
+        },
+    }
+    r.Use(apitally.ApitallyMiddleware(r, config))
 
-  // ... rest of your code ...
+    // ... rest of your code ...
 }
 ```
 
@@ -180,57 +180,57 @@ func main() {
 package main
 
 import (
-  "regexp"
-  "strings"
+    "regexp"
+    "strings"
 
-  apitally "github.com/apitally/apitally-go/gin"
-  "github.com/gin-gonic/gin"
+    apitally "github.com/apitally/apitally-go/gin"
+    "github.com/gin-gonic/gin"
 )
 
 func main() {
-  r := gin.Default()
+    r := gin.Default()
 
-  config := &apitally.ApitallyConfig{
-    ClientId: "your-client-id",
-    Env:      "dev", // or "prod" etc.
-    RequestLoggingConfig: &apitally.RequestLoggingConfig{
-      Enabled:            true,
-      LogQueryParams:     true,
-      LogRequestHeaders:  true,
-      LogRequestBody:     true,
-      LogResponseHeaders: true,
-      LogResponseBody:    true,
-      LogPanic:           true,
-      // Mask some query parameters with sensitive information
-      MaskQueryParams:    []*regexp.Regexp{regexp.MustCompile(`^card_number$`)},
-      // Mask custom header with sensitive information (applied to both request and response headers)
-      // Common sensitive headers like `Authorization` are masked by default
-      MaskHeaders:        []*regexp.Regexp{regexp.MustCompile(`^X-Sensitive-Header$`)},
-      // Exclude some paths from request logging (common health check paths are excluded by default)
-      ExcludePaths:       []*regexp.Regexp{regexp.MustCompile(`\/metrics$`)},
-      // Custom masking for request body
-      MaskRequestBodyCallback: func(request *apitally.Request) []byte {
-        if strings.HasPrefix(request.Path, "/api/v2") {
-          return nil // Don't log request body for this path
-        }
-        return request.Body
-      },
-      // Custom masking for response body based on status code
-      MaskResponseBodyCallback: func(request *apitally.Request, response *apitally.Response) []byte {
-        if response.StatusCode >= 400 {
-          return response.Body // Only log response body for error responses
-        }
-        return nil
-      },
-      // Exclude requests from a specific consumer
-      ExcludeCallback: func(request *apitally.Request, response *apitally.Response) bool {
-        return request.Consumer == "some-consumer"
-      },
-    },
-  }
-  r.Use(apitally.ApitallyMiddleware(r, config))
+    config := &apitally.ApitallyConfig{
+        ClientId: "your-client-id",
+        Env:      "dev", // or "prod" etc.
+        RequestLoggingConfig: &apitally.RequestLoggingConfig{
+            Enabled:            true,
+            LogQueryParams:     true,
+            LogRequestHeaders:  true,
+            LogRequestBody:     true,
+            LogResponseHeaders: true,
+            LogResponseBody:    true,
+            LogPanic:           true,
+            // Mask some query parameters with sensitive information
+            MaskQueryParams:    []*regexp.Regexp{regexp.MustCompile(`^card_number$`)},
+            // Mask custom header with sensitive information (applied to both request and response headers)
+            // Common sensitive headers like `Authorization` are masked by default
+            MaskHeaders:        []*regexp.Regexp{regexp.MustCompile(`^X-Sensitive-Header$`)},
+            // Exclude some paths from request logging (common health check paths are excluded by default)
+            ExcludePaths:       []*regexp.Regexp{regexp.MustCompile(`\/metrics$`)},
+            // Custom masking for request body
+            MaskRequestBodyCallback: func(request *apitally.Request) []byte {
+                if strings.HasPrefix(request.Path, "/api/v2") {
+                    return nil // Don't log request body for this path
+                }
+                return request.Body
+            },
+            // Custom masking for response body based on status code
+            MaskResponseBodyCallback: func(request *apitally.Request, response *apitally.Response) []byte {
+                if response.StatusCode >= 400 {
+                    return response.Body // Only log response body for error responses
+                }
+                return nil
+            },
+            // Exclude requests from a specific consumer
+            ExcludeCallback: func(request *apitally.Request, response *apitally.Response) bool {
+                return request.Consumer == "some-consumer"
+            },
+        },
+    }
+    r.Use(apitally.ApitallyMiddleware(r, config))
 
-  // ... rest of your code ...
+    // ... rest of your code ...
 }
 ```
 </CodeGroup>
