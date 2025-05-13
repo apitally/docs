@@ -158,6 +158,20 @@ APITALLY_MIDDLEWARE = {
 ```
 </CodeGroup>
 
+## Advanced settings
+
+- By default, only DRF endpoints are included in Apitally. To also include regular Django views you can set `include_django_views` to `True`. Useful if your API includes endpoints not implemented using DRF.
+- To limit Apitally to specific parts of a large monolithic application, set the `urlconfs` parameter to a list of Django URL configuration modules you'd like to include.
+
+```python
+APITALLY_MIDDLEWARE = {
+    "client_id": "your-client-id",
+    "env": "dev",  # or "prod" etc.
+    "include_django_views": True,
+    "urlconfs": ["your_project.api.urls"],
+}
+```
+
 ## Known issues
 
 - When running Django with Gunicorn, the option `preload_app` must be set to `False`. Otherwise, the Apitally client will not work correctly.
