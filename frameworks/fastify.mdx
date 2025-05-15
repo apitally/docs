@@ -164,7 +164,7 @@ await fastify.register(apitallyPlugin, {
     // Only log response body for unsuccessful requests
     maskResponseBodyCallback: (request, response) => response.statusCode >= 400 ? response.body : null,
     // Exclude some paths from request logging (common health check paths are excluded by default)
-    excludePaths=[/\/metrics$/],
+    excludePaths: [/\/metrics$/],
     // Exclude requests from a specific consumer
     excludeCallback: (request, response) => request.consumer == "some-consumer",
   },
