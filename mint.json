@@ -115,6 +115,7 @@
         {
           "group": "Go",
           "pages": [
+            "frameworks/chi",
             "frameworks/fiber",
             "frameworks/gin"
           ]
