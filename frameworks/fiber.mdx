@@ -44,11 +44,11 @@ import (
 func main() {
     app := fiber.New()
 
-    config := &apitally.ApitallyConfig{
+    config := &apitally.Config{
         ClientId: "your-client-id",
         Env:      "dev", // or "prod" etc.
     }
-    app.Use(apitally.ApitallyMiddleware(app, config))
+    app.Use(apitally.Middleware(app, config))
 
     // ... rest of your code ...
 }
@@ -64,7 +64,7 @@ func main() {
 
 <Snippet file="identify-consumers.mdx" />
 
-To associate requests with consumers, set the `ApitallyConsumer` value in the `Locals`, for example in a middleware function.
+To associate requests with consumers, use the `SetConsumerIdentifier` or `SetConsumer` function, for example in a middleware.
 
 <CodeGroup>
 ```go {7} Identifier only
@@ -74,24 +74,23 @@ func authMiddleware(c *fiber.Ctx) error {
 
     if user.IsAuthenticated() {
         // Use the authenticated identity as consumer identifier
-        c.Locals("ApitallyConsumer", user.Identifier)
+        apitally.SetConsumerIdentifier(c, user.Identifier)
     }
     return c.Next()
 }
 ```
 
-```go {6-11} With name and group
+```go {6-10} With name and group
 func authMiddleware(c *fiber.Ctx) error {
     // Your authentication logic here
     // ...
 
     if user.IsAuthenticated() {
-        consumer := apitally.ApitallyConsumer{
+        apitally.SetConsumer(c, apitally.Consumer{
             Identifier: user.Email,
             Name:       user.Name, // optional
             Group:      user.Group, // optional
-        }
-        c.Locals("ApitallyConsumer", consumer)
+        })
     }
     return c.Next()
 }
@@ -104,9 +103,10 @@ func authMiddleware(c *fiber.Ctx) error {
 
 ## Capture validation errors
 
-In order to get insights into validation errors returned by your API endpoints, you can capture them using the `CaptureValidationError` function.
+If you're using the `go-playground/validator/v10` package to validate incoming data, you can use the `CaptureValidationError` function to record validation errors.
+This gives you visibility into the validation errors returned by your API endpoints.
 
-```go {26}
+```go {23}
 package main
 
 import (
@@ -119,12 +119,9 @@ type HelloRequest struct {
     Name string `json:"name" validate:"required"`
 }
 
-var validate = validator.New()
-
 func main() {
     app := fiber.New()
-
-    // ...
+    validate := validator.New()
 
     app.Post("/hello", func(c *fiber.Ctx) error {
         var req HelloRequest
@@ -160,7 +157,7 @@ import (
 func main() {
     app := fiber.New()
 
-    config := &apitally.ApitallyConfig{
+    config := &apitally.Config{
         ClientId: "your-client-id",
         Env:      "dev", // or "prod" etc.
         RequestLoggingConfig: &apitally.RequestLoggingConfig{
@@ -173,7 +170,7 @@ func main() {
             LogPanic:           true,
         },
     }
-    app.Use(apitally.ApitallyMiddleware(app, config))
+    app.Use(apitally.Middleware(app, config))
 
     // ... rest of your code ...
 }
@@ -193,7 +190,7 @@ import (
 func main() {
     app := fiber.New()
 
-    config := &apitally.ApitallyConfig{
+    config := &apitally.Config{
         ClientId: "your-client-id",
         Env:      "dev", // or "prod" etc.
         RequestLoggingConfig: &apitally.RequestLoggingConfig{
@@ -231,7 +228,7 @@ func main() {
             },
         },
     }
-    app.Use(apitally.ApitallyMiddleware(app, config))
+    app.Use(apitally.Middleware(app, config))
 
     // ... rest of your code ...
 }

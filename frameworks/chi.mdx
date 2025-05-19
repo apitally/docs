@@ -1,6 +1,6 @@
 ---
-title: "Setup guide for Gin"
-sidebarTitle: "Gin"
+title: "Setup guide for Chi"
+sidebarTitle: "Chi"
 description: "Just a few simple steps to get started with Apitally."
 ---
 
@@ -10,13 +10,13 @@ import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
 
-This page guides you through the steps of configuring your [Gin](https://gin-gonic.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
+This page guides you through the steps of configuring your [Chi](https://go-chi.io) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
 
-<SetupGuideStartSnippet framework="Gin" />
+<SetupGuideStartSnippet framework="Chi" />
 
 ## Create app
 
-<CreateAppSnippet1 framework="Gin" />
+<CreateAppSnippet1 framework="Chi" />
 
 ![Create app](https://assets.apitally.io/docs/create-app-5.webp)
 
@@ -24,25 +24,25 @@ This page guides you through the steps of configuring your [Gin](https://gin-gon
 
 ## Add middleware
 
-Add the [Apitally SDK](https://github.com/apitally/apitally-go) to the dependencies in your Gin project.
+Add the [Apitally SDK](https://github.com/apitally/apitally-go) to the dependencies in your Chi project.
 
 ```shell
-go get github.com/apitally/apitally-go/gin
+go get github.com/apitally/apitally-go/chi
 ```
 
-Add the Apitally middleware to your Gin application and provide the `ClientId` for your app.
+Add the Apitally middleware to your Chi application and provide the `ClientId` for your app.
 You'll find the `ClientId` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
 
 ```go
 package main
 
 import (
-    apitally "github.com/apitally/apitally-go/gin"
-    "github.com/gin-gonic/gin"
+    apitally "github.com/apitally/apitally-go/chi"
+    "github.com/go-chi/chi/v5"
 )
 
 func main() {
-    r := gin.Default()
+    r := chi.NewRouter()
 
     config := &apitally.Config{
         ClientId: "your-client-id",
@@ -68,35 +68,35 @@ To associate requests with consumers, use the `SetConsumerIdentifier` or `SetCon
 
 <CodeGroup>
 ```go {8} Identifier only
-func authMiddleware() gin.HandlerFunc {
-    return func(c *gin.Context) {
+func authMiddleware(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         // Your authentication logic here
         // ...
 
         if user.IsAuthenticated() {
             // Use the authenticated identity as consumer identifier
-            apitally.SetConsumerIdentifier(c, user.Identifier)
+            apitally.SetConsumerIdentifier(r, user.Identifier)
         }
-        c.Next()
-    }
+        next.ServeHTTP(w, r)
+    })
 }
 ```
 
 ```go {7-11} With name and group
-func authMiddleware() gin.HandlerFunc {
-    return func(c *gin.Context) {
+func authMiddleware(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         // Your authentication logic here
         // ...
 
         if user.IsAuthenticated() {
-            apitally.SetConsumer(c, apitally.Consumer{
+            apitally.SetConsumer(r, apitally.Consumer{
                 Identifier: user.Email,
                 Name:       user.Name, // optional
                 Group:      user.Group, // optional
             })
         }
-        c.Next()
-    }
+        next.ServeHTTP(w, r)
+    })
 }
 ```
 </CodeGroup>
@@ -107,33 +107,41 @@ func authMiddleware() gin.HandlerFunc {
 
 ## Capture validation errors
 
-In order to get insights into validation errors returned by your API endpoints, you can capture them using the `CaptureValidationError` function.
+If you're using the `go-playground/validator/v10` package to validate incoming data, you can use the `CaptureValidationError` function to record validation errors.
+This gives you visibility into the validation errors returned by your API endpoints.
 
-```go {18}
+```go {27}
 package main
 
 import (
-    apitally "github.com/apitally/apitally-go/gin"
-    "github.com/gin-gonic/gin"
+    "encoding/json"
+    "net/http"
+
+    apitally "github.com/apitally/apitally-go/chi"
+    "github.com/go-chi/chi/v5"
+    "github.com/go-playground/validator/v10"
 )
 
+type HelloRequest struct {
+    Name string `json:"name" validate:"required"`
+}
+
 func main() {
-    r := gin.Default()
+    r := chi.NewRouter()
+    validate := validator.New()
 
-    // ...
-
-    r.POST("/hello", func(c *gin.Context) {
-        var req struct {
-            Name string `json:"name" binding:"required"`
-        }
-        if err := c.BindJSON(&req); err != nil {
-            apitally.CaptureValidationError(c, err)
-            c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+    r.Post("/hello", func(w http.ResponseWriter, r *http.Request) {
+        var req HelloRequest
+        if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+            http.Error(w, err.Error(), http.StatusBadRequest)
             return
         }
-        c.JSON(http.StatusOK, gin.H{
-            "message": "Hello, " + req.Name + "!",
-        })
+        if err := validate.Struct(req); err != nil {
+            apitally.CaptureValidationError(r, err)
+            http.Error(w, err.Error(), http.StatusBadRequest)
+            return
+        }
+        json.NewEncoder(w).Encode(map[string]string{"message": "Hello, " + req.Name + "!"})
     })
 
     // ...
@@ -149,12 +157,12 @@ func main() {
 package main
 
 import (
-    apitally "github.com/apitally/apitally-go/gin"
-    "github.com/gin-gonic/gin"
+    apitally "github.com/apitally/apitally-go/chi"
+    "github.com/go-chi/chi/v5"
 )
 
 func main() {
-    r := gin.Default()
+    r := chi.NewRouter()
 
     config := &apitally.Config{
         ClientId: "your-client-id",
@@ -182,12 +190,12 @@ import (
     "regexp"
     "strings"
 
-    apitally "github.com/apitally/apitally-go/gin"
-    "github.com/gin-gonic/gin"
+    apitally "github.com/apitally/apitally-go/chi"
+    "github.com/go-chi/chi/v5"
 )
 
 func main() {
-    r := gin.Default()
+    r := chi.NewRouter()
 
     config := &apitally.Config{
         ClientId: "your-client-id",
