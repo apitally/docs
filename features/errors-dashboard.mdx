@@ -4,43 +4,21 @@ sidebarTitle: Errors dashboard
 description: Understand the frequency, causes and impact of client and server errors.
 ---
 
-<Card>
-  <div style={{ margin: "-1.5rem" }}>
-    <img src="https://assets.apitally.io/docs/errors-3.webp" alt="Errors dashboard" />
-  </div>
-</Card>
+<img src="https://assets.apitally.io/docs/2025-05-21/errors.webp" alt="Errors dashboard" class="rounded-xl" />
 
-
-Monitoring API errors is crucial for maintaining a robust system.
-Server errors (`5xx`) usually signal underlying issues with your application, such as bugs in your code or networking problems.
-
-Paying attention to client errors (`4xx`) is equally important, even if some are anticipated and not indicative of API problems.
-Analyzing client errors can provide valuable insights into how systems interact with your API.
-It can uncover potential issues within those systems and aid in refining your API's design or documentation.
-
-The *Errors* dashboard in Apitally provides a comprehensive overview of the errors encountered by consumers of your API.
+The *Errors* dashboard provides a comprehensive overview of the error responses returned by your API.
 
 The bar chart at the top shows the distribution of errors over time, broken down by client and server errors.
 When you hover over the bars you'll see a tooltip with the number of occurrences of each error status code.
 
-The table below lists all error status codes returned by your API's endpoints and is sorted by the number of occurrences, so the most frequently occurring errors are at the top.
+The table below lists all error status codes returned by your endpoints and is sorted by the number of occurrences.
 
-## Error insights
+Clicking on a row in the table opens up a modal with further insights about that type of error.
 
-<CardGroup cols={2}>
-  <Card>
-    <div style={{ margin: "-1.5rem" }}>
-      <img src="https://assets.apitally.io/docs/error-occurrences-3.webp" alt="Error occurrences" />
-    </div>
-  </Card>
-  <Card>
-    <div style={{ margin: "-1.5rem" }}>
-      <img src="https://assets.apitally.io/docs/error-details-3.webp" alt="Error details" />
-    </div>
-  </Card>
-</CardGroup>
-
-Clicking on an error in this table opens up a modal with further insights about that error.
+<div className="flex flex-row justify-between gap-4" style={{ margin: "-1rem 0" }}>
+  <img src="https://assets.apitally.io/docs/2025-05-21/error-occurrences.webp" alt="Error occurrences" class="rounded-xl" />
+  <img src="https://assets.apitally.io/docs/2025-05-21/error-details.webp" alt="Error details" class="rounded-xl" />
+</div>
 
 This includes a summary with the total number of occurrences, the number of affected API consumers and the time of the last occurrence.
 
