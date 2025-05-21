@@ -1,11 +1,10 @@
 ---
 title: "How it works"
-description: "A good look under the hood."
+description: "Seamless integration with our open-source SDKs."
 ---
 
-## SDKs
-
-Apitally integrates directly with your application through one of our open-source SDKs, which is a small dependency to add to your project.
+Apitally integrates with your application through lightweight, open-source SDKs that are easy to add to your project.
+They send data directly to Apitally – no additional infrastructure or agents required.
 
 <CardGroup cols={3}>
   <Card
@@ -65,42 +64,43 @@ The diagram below illustrates how the SDKs works.
   alt="Diagram showing how the Apitally SDKs works"
 />
 
-The SDKs include the following features:
+The SDKs include the following functionality:
 
-- Introspection of your application to capture metadata about endpoints.
-- Lightweight middleware for each supported framework, which captures request and response metadata.
-- A non-blocking client that handles communication with the Apitally Hub.
+- Introspection of your application to capture metadata about available endpoints.
+- Lightweight middleware that captures request and response data.
+- Request logger that buffers log data in a compressed temporary file on disk (if enabled).
+- Non-blocking client that handles communication with Apitally.
 
 <Note>
-  The clients are designed to be resilient to temporary network failures
-  when communicating with the Apitally Hub and will retry sending data for up to
+  The client is designed to be resilient to temporary network failures
+  when communicating with Apitally and will retry sending data for up to
   1 hour.
 </Note>
 
-### On startup
+## On startup
 
-When your application starts running and the Apitally middleware is initialized, it introspects your application to capture metadata about all available endpoints.
-This metadata is then sent to the Apitally Hub in a once-off request.
+When your application starts and the Apitally middleware is initialized, it introspects your application to capture metadata about all available endpoints.
+This metadata is then sent to Apitally in a once-off request.
 
-### During runtime
+## During runtime
 
-When your application receives a request, the middleware times the invokation of the request handler and captures metadata about the request and response, such as the HTTP method, path and the HTTP status code.
+When your application handles a request, the middleware times the invokation of the request handler and captures metadata about the request and response, such as the HTTP method, matched route, and the HTTP status code.
 If the response is a validation error (status 400 or 422), the middleware inspects the response body for further details about the error.
 
 The captured metadata is then passed to the client which immediately aggregates it with previously received data.
-The client synchronizes the aggregated data with the Apitally Hub in one minute intervals.
+The client synchronizes the aggregated data with Apitally in one minute intervals.
 
 If request logging is enabled, the client writes the request and response data to a compressed temporary file on disk.
-During the next synchronization interval, the client reads the log file and sends the compressed data to the Apitally Hub.
+During the next synchronization interval, the client reads the log file and streams the compressed data to Apitally.
 
 <Note>
-  The communication with the Apitally Hub happens either asynchronously or in a
+  The communication with Apitally happens either asynchronously or in a
   separate thread, depending on your framework, which means that it doesn't
   interfere with your applications' handling of requests.
 </Note>
 
 ## Server side
 
-When the Apitally Hub receives data from your application, it puts it in a queue for asynchronous processing. The data should be processed and visible on the dashboard within a few seconds.
+When Apitally receives data from your application, it puts it in a queue for asynchronous processing. The data should be processed and visible on the dashboard within a few seconds.
 
 Data is retained at 1-minute granularity for 32 days and then aggregated to 30-minute intervals. We delete data completely after 13 months.
