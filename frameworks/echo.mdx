@@ -1,6 +1,6 @@
 ---
-title: "Setup guide for Chi"
-sidebarTitle: "Chi"
+title: "Setup guide for Echo"
+sidebarTitle: "Echo"
 description: "Just a few simple steps to get started with Apitally."
 ---
 
@@ -10,13 +10,13 @@ import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
 
-This page guides you through the steps of configuring your [Chi](https://go-chi.io) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
+This page guides you through the steps of configuring your [Echo](https://echo.labstack.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
 
-<SetupGuideStartSnippet framework="Chi" />
+<SetupGuideStartSnippet framework="Echo" />
 
 ## Create app
 
-<CreateAppSnippet1 framework="Chi" />
+<CreateAppSnippet1 framework="Echo" />
 
 <img src="https://assets.apitally.io/docs/2025-05-27/create-app.webp" alt="Create app" class="rounded-xl" />
 
@@ -24,31 +24,31 @@ This page guides you through the steps of configuring your [Chi](https://go-chi.
 
 ## Add middleware
 
-Add the [Apitally SDK](https://github.com/apitally/apitally-go) to the dependencies in your Chi project.
+Add the [Apitally SDK](https://github.com/apitally/apitally-go) to the dependencies in your Echo project.
 
 ```shell
-go get github.com/apitally/apitally-go/chi
+go get github.com/apitally/apitally-go/echo
 ```
 
-Add the Apitally middleware to your Chi application and provide the `ClientId` for your app.
+Add the Apitally middleware to your Echo application and provide the `ClientId` for your app.
 You'll find the `ClientId` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
 
 ```go
 package main
 
 import (
-    apitally "github.com/apitally/apitally-go/chi"
-    "github.com/go-chi/chi/v5"
+    apitally "github.com/apitally/apitally-go/echo"
+    "github.com/labstack/echo/v4"
 )
 
 func main() {
-    r := chi.NewRouter()
+    e := echo.New()
 
     config := &apitally.Config{
         ClientId: "your-client-id",
         Env:      "dev", // or "prod" etc.
     }
-    r.Use(apitally.Middleware(r, config))
+    e.Use(apitally.Middleware(e, config))
 
     // ... rest of your code ...
 }
@@ -68,35 +68,35 @@ To associate requests with consumers, use the `SetConsumerIdentifier` or `SetCon
 
 <CodeGroup>
 ```go {8} Identifier only
-func authMiddleware(next http.Handler) http.Handler {
-    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+func authMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
+    return func(c echo.Context) error {
         // Your authentication logic here
         // ...
 
         if user.IsAuthenticated() {
             // Use the authenticated identity as consumer identifier
-            apitally.SetConsumerIdentifier(r, user.Identifier)
+            apitally.SetConsumerIdentifier(c, user.Identifier)
         }
-        next.ServeHTTP(w, r)
-    })
+        return next(c)
+    }
 }
 ```
 
 ```go {7-11} With name and group
-func authMiddleware(next http.Handler) http.Handler {
-    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+func authMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
+    return func(c echo.Context) error {
         // Your authentication logic here
         // ...
 
         if user.IsAuthenticated() {
-            apitally.SetConsumer(r, apitally.Consumer{
+            apitally.SetConsumer(c, apitally.Consumer{
                 Identifier: user.Email,
                 Name:       user.Name, // optional
                 Group:      user.Group, // optional
             })
         }
-        next.ServeHTTP(w, r)
-    })
+        return next(c)
+    }
 }
 ```
 </CodeGroup>
@@ -110,15 +110,12 @@ func authMiddleware(next http.Handler) http.Handler {
 If you're using the `go-playground/validator/v10` package to validate incoming data, you can use the `CaptureValidationError` function to record validation errors.
 This gives you visibility into the validation errors returned by your API endpoints.
 
-```go {29}
+```go {25}
 package main
 
 import (
-    "encoding/json"
-    "net/http"
-
-    apitally "github.com/apitally/apitally-go/chi"
-    "github.com/go-chi/chi/v5"
+    apitally "github.com/apitally/apitally-go/echo"
+    "github.com/labstack/echo/v4"
     "github.com/go-playground/validator/v10"
 )
 
@@ -127,23 +124,21 @@ type HelloRequest struct {
 }
 
 func main() {
-    r := chi.NewRouter()
+    e := echo.New()
     validate := validator.New()
 
     // ...
 
-    r.Post("/hello", func(w http.ResponseWriter, r *http.Request) {
+    e.POST("/hello", func(c echo.Context) error {
         var req HelloRequest
-        if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-            http.Error(w, err.Error(), http.StatusBadRequest)
-            return
+        if err := c.Bind(&req); err != nil {
+            return c.JSON(400, map[string]string{"error": err.Error()})
         }
         if err := validate.Struct(req); err != nil {
-            apitally.CaptureValidationError(r, err)
-            http.Error(w, err.Error(), http.StatusBadRequest)
-            return
+            apitally.CaptureValidationError(c, err)
+            return c.JSON(400, map[string]string{"error": err.Error()})
         }
-        json.NewEncoder(w).Encode(map[string]string{"message": "Hello, " + req.Name + "!"})
+        return c.JSON(200, map[string]string{"message": "Hello, " + req.Name + "!"})
     })
 
     // ...
@@ -159,12 +154,12 @@ func main() {
 package main
 
 import (
-    apitally "github.com/apitally/apitally-go/chi"
-    "github.com/go-chi/chi/v5"
+    apitally "github.com/apitally/apitally-go/echo"
+    "github.com/labstack/echo/v4"
 )
 
 func main() {
-    r := chi.NewRouter()
+    e := echo.New()
 
     config := &apitally.Config{
         ClientId: "your-client-id",
@@ -179,7 +174,7 @@ func main() {
             LogPanic:           true,
         },
     }
-    r.Use(apitally.Middleware(r, config))
+    e.Use(apitally.Middleware(e, config))
 
     // ... rest of your code ...
 }
@@ -192,12 +187,12 @@ import (
     "regexp"
     "strings"
 
-    apitally "github.com/apitally/apitally-go/chi"
-    "github.com/go-chi/chi/v5"
+    apitally "github.com/apitally/apitally-go/echo"
+    "github.com/labstack/echo/v4"
 )
 
 func main() {
-    r := chi.NewRouter()
+    e := echo.New()
 
     config := &apitally.Config{
         ClientId: "your-client-id",
@@ -237,7 +232,7 @@ func main() {
             },
         },
     }
-    r.Use(apitally.Middleware(r, config))
+    e.Use(apitally.Middleware(e, config))
 
     // ... rest of your code ...
 }

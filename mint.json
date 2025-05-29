@@ -101,6 +101,7 @@
           "group": "Go",
           "pages": [
             "frameworks/chi",
+            "frameworks/echo",
             "frameworks/fiber",
             "frameworks/gin"
           ]
