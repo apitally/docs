@@ -92,6 +92,7 @@
             "frameworks/adonisjs",
             "frameworks/express",
             "frameworks/fastify",
+            "frameworks/h3",
             "frameworks/hono",
             "frameworks/koa",
             "frameworks/nestjs"
@@ -149,7 +150,7 @@
     "linkedin": "https://www.linkedin.com/company/apitally"
   },
   "feedback": {
-    "thumbsRating": false,
+    "thumbsRating": true,
     "suggestEdit": true,
     "raiseIssue": true
   },
