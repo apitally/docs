@@ -1,0 +1,170 @@
+---
+title: "Setup guide for H3 v2"
+sidebarTitle: "H3"
+description: "Just a few simple steps to get started with Apitally."
+---
+
+import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
+import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
+import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
+import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
+import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
+
+This page guides you through the steps of configuring your [H3](https://h3.dev) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
+
+<SetupGuideStartSnippet framework="H3" />
+
+<Note>Apitally only works with H3 v2 and currently doesn't support nested apps due to limitations in H3.</Note>
+<Warning>Apitally doesn't work on serverless platforms such as AWS Lambda or Cloudflare Workers.</Warning>
+
+## Create app
+
+<CreateAppSnippet1 framework="H3" />
+
+<img src="https://assets.apitally.io/docs/2025-05-27/create-app.webp" alt="Create app" class="rounded-xl" />
+
+<CreateAppSnippet2 />
+
+## Add middleware
+
+Next, install the [Apitally SDK](https://www.npmjs.com/package/apitally) in your H3 project.
+
+<CodeGroup>
+```shell npm
+npm install apitally
+```
+
+```shell yarn
+yarn add apitally
+```
+</CodeGroup>
+
+Register the Apitally plugin with your H3 application and provide the `clientId` for your app.
+You'll find the `clientId` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
+
+<CodeGroup>
+```javascript Using instance config
+import { H3 } from "h3";
+import { apitallyPlugin } from "apitally/h3";
+
+const app = new H3({
+  plugins: [
+    apitallyPlugin({
+      clientId: "your-client-id",
+      env: "dev", // or "prod" etc.
+    }),
+  ],
+});
+```
+
+```javascript Register later
+import { H3 } from "h3";
+import { apitallyPlugin } from "apitally/h3";
+
+const app = new H3();
+
+app.register(
+  apitallyPlugin({
+    clientId: "your-client-id",
+    env: "dev", // or "prod" etc.
+  })
+);
+```
+</CodeGroup>
+
+<Snippet file="add-middleware-check.mdx" />
+
+## Identify consumers
+
+<Snippet file="identify-consumers.mdx" />
+
+Use the `setConsumer` function to associate requests with consumers.
+
+<CodeGroup>
+```javascript Identifier only
+import { setConsumer } from "apitally/h3";
+
+app.use((event) => {
+  setConsumer(event, event.context.auth?.username);
+});
+```
+
+```javascript With name and group
+import { setConsumer } from "apitally/h3";
+
+app.use((event) => {
+  setConsumer(event, {
+    identifier: event.context.auth?.username,
+    name: event.context.auth?.fullname,
+    group: event.context.auth?.role,
+  });
+});
+```
+</CodeGroup>
+
+<ConsumerIdentifierSnippet />
+
+<Snippet file="identify-consumers-check.mdx" />
+
+## Configure request logging
+
+<RequestLoggingConfigSnippet language="javascript" />
+
+<CodeGroup>
+```javascript Basic example
+import { H3 } from "h3";
+import { apitallyPlugin } from "apitally/h3";
+
+const app = new H3({
+  plugins: [
+    apitallyPlugin({
+      clientId: "your-client-id",
+      env: "dev", // or "prod" etc.
+      requestLoggingConfig: {
+        enabled: true,
+        logQueryParams: true,
+        logRequestHeaders: true,
+        logRequestBody: true,
+        logResponseHeaders: true,
+        logResponseBody: true,
+      },
+    }),
+  ],
+});
+```
+
+```javascript Advanced example
+import { H3 } from "h3";
+import { apitallyPlugin } from "apitally/h3";
+
+const app = new H3({
+  plugins: [
+    apitallyPlugin({
+      clientId: "your-client-id",
+      env: "dev", // or "prod" etc.
+      requestLoggingConfig: {
+        enabled: true,
+        logQueryParams: true,
+        logRequestHeaders: true,
+        logRequestBody: true,
+        logResponseHeaders: true,
+        logResponseBody: true,
+        // Mask some query parameters with sensitive information
+        maskQueryParams: [/^card_number$/i],
+        // Mask custom header with sensitive information (applied to both request and response headers)
+        // Common sensitive headers like `Authorization` are masked by default
+        maskHeaders: [/^X-Sensitive-Header$/i],
+        // Only log request body for some parts of the API
+        maskRequestBodyCallback: (request) => request.path?.startsWith("/api/v2") ? request.body : null,
+        // Only log response body for unsuccessful requests
+        maskResponseBodyCallback: (request, response) => response.statusCode >= 400 ? response.body : null,
+        // Exclude some paths from request logging (common health check paths are excluded by default)
+        excludePaths: [/\/metrics$/],
+        // Exclude requests from a specific consumer
+        excludeCallback: (request, response) => request.consumer == "some-consumer",
+      },
+    }),
+  ],
+});
+```
+</CodeGroup>
