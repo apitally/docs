@@ -80,22 +80,26 @@ To associate requests with consumers, set the `apitallyConsumer` variable on the
 
 <CodeGroup>
 ```javascript Identifier only
+import { setConsumer } from "apitally/koa";
+
 app.use(function (ctx, next) {
   if (ctx.isAuthenticated()) {
-    ctx.state.apitallyConsumer = ctx.state.user.username
+    setConsumer(ctx, ctx.state.user.username);
   }
   next()
 })
 ```
 
 ```javascript With name and group
+import { setConsumer } from "apitally/koa";
+
 app.use(function (ctx, next) {
   if (ctx.isAuthenticated()) {
-    ctx.state.apitallyConsumer = {
+    setConsumer(ctx, {
       identifier: ctx.state.user.username,
       name: `${ctx.state.user.firstName} ${ctx.state.user.lastName}`, // optional
       group: ctx.state.user.group, // optional
-    }
+    });
   }
   next()
 })

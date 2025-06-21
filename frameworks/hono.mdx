@@ -67,18 +67,22 @@ To associate requests with consumers, set the `apitallyConsumer` key on the [`Co
 
 <CodeGroup>
 ```javascript Identifier only
+import { setConsumer } from "apitally/hono";
+
 app.use(async (c, next) => {
   const consumerIdentifier = c.get("jwtPayload")?.sub;
-  c.set("apitallyConsumer", consumerIdentifier);
+  setConsumer(c, consumerIdentifier);
   await next();
 });
 ```
 
 ```javascript With name and group
+import { setConsumer } from "apitally/hono";
+
 app.use(async (c, next) => {
   const payload = c.get("jwtPayload");
   if (payload) {
-    c.set("apitallyConsumer", {
+    setConsumer(c, {
       identifier: payload.sub,
       name: payload.name, // optional
       group: payload.group, // optional

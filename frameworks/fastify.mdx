@@ -83,10 +83,12 @@ To associate requests with consumers, set the `apitallyConsumer` property on the
 
 <CodeGroup>
 ```javascript Identifier only
+import { setConsumer } from "apitally/fastify";
+
 fastify.addHook("onRequest", async (request, reply) => {
   try {
     await request.jwtVerify(); // Assuming @fastify/jwt is used for authentication
-    request.apitallyConsumer = request.user.name;
+    setConsumer(request, request.user.name);
   } catch (err) {
     reply.send(err);
   }
@@ -94,14 +96,16 @@ fastify.addHook("onRequest", async (request, reply) => {
 ```
 
 ```javascript With name and group
+import { setConsumer } from "apitally/fastify";
+
 fastify.addHook("onRequest", async (request, reply) => {
   try {
     await request.jwtVerify(); // Assuming @fastify/jwt is used for authentication
-    request.apitallyConsumer = {
+    setConsumer(request, {
       identifier: request.user.id.toString(),
       name: request.user.name, // optional
       group: request.user.group, // optional
-    };
+    });
   } catch (err) {
     reply.send(err);
   }

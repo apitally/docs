@@ -81,22 +81,26 @@ To associate requests with consumers, set the `apitallyConsumer` property on the
 
 <CodeGroup>
 ```javascript Identifier only
+import { setConsumer } from "apitally/express";
+
 app.use(function (req, res, next) {
   if (req.user) {
-    req.apitallyConsumer = req.user.username
+    setConsumer(req, req.user.username);
   }
   next()
 })
 ```
 
 ```javascript With name and group
+import { setConsumer } from "apitally/express";
+
 app.use(function (req, res, next) {
   if (req.user) {
-    req.apitallyConsumer = {
+    setConsumer(req, {
       identifier: req.user.username,
       name: `${req.user.first_name} ${req.user.last_name}`, // optional
       group: req.user.group, // optional
-    }
+    });
   }
   next()
 })
