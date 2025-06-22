@@ -26,54 +26,25 @@ This page guides you through the steps of configuring your [AdonisJS](https://ad
 
 Install the [Apitally SDK](https://www.npmjs.com/package/apitally) in your AdonisJS project.
 
-<CodeGroup>
-```shell npm
+```shell
 npm install apitally
 ```
 
-```shell yarn
-yarn add apitally
-```
-</CodeGroup>
+Then configure Apitally by running the following Ace command:
 
-Create a configuration file at `config/apitally.ts` and provide the `clientId` for your app.
-You'll find the `clientId` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
-
-```typescript
-import { defineConfig } from 'apitally/adonisjs'
-
-const apitallyConfig = defineConfig({
-  clientId: 'your-client-id',
-  env: 'dev', // or 'prod' etc.
-})
-
-export default apitallyConfig
+```shell
+node ace configure apitally/adonisjs
 ```
 
-Next, register the Apitally provider in your `adonisrc.ts` file:
+This command will automatically:
 
-```typescript {7}
-import { defineConfig } from '@adonisjs/core/app'
+- Create a config file at `config/apitally.ts`
+- Register the Apitally provider in `adonisrc.ts`
+- Add the Apitally middleware to `start/kernel.ts`
+- Add environment variables to `.env` and `start/env.ts`
 
-export default defineConfig({
-  // ... existing code ...
-  providers: [
-    // ... existing providers ...
-    () => import('apitally/adonisjs/provider'),
-  ],
-})
-```
-
-Then, register the Apitally middleware in your `start/kernel.ts` file:
-
-```typescript {4}
-import router from '@adonisjs/core/services/router'
-
-router.use([
-  () => import('apitally/adonisjs/middleware'),
-  // ... other middleware ...
-])
-```
+After running the command, update the `.env` file with the correct `APITALLY_CLIENT_ID` and `APITALLY_ENV` values.
+You'll find the client ID on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
 
 Finally, to capture validation and server errors, modify your exception handler in `app/exceptions/handler.ts`:
 
