@@ -30,7 +30,8 @@ Install the [Apitally SDK](https://www.npmjs.com/package/apitally) in your Adoni
 npm install apitally
 ```
 
-Then configure Apitally by running the following Ace command:
+Then configure Apitally by running the below Ace command. You'll be prompted to enter the client ID for your app.
+You'll find it on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
 
 ```shell
 node ace configure apitally/adonisjs
@@ -42,9 +43,6 @@ This command will automatically:
 - Register the Apitally provider in `adonisrc.ts`
 - Add the Apitally middleware to `start/kernel.ts`
 - Add environment variables to `.env` and `start/env.ts`
-
-After running the command, update the `.env` file with the correct `APITALLY_CLIENT_ID` and `APITALLY_ENV` values.
-You'll find the client ID on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
 
 Finally, to capture validation and server errors, modify your exception handler in `app/exceptions/handler.ts`:
 
