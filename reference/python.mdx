@@ -34,7 +34,7 @@ The following are the parameters of the `RequestLoggingConfig` dataclass.
 | `mask_request_body_callback` | Callback function for masking the request body. Takes one parameter `request` and returns the request body as `bytes` or `None`. | `Callable` | `None` |
 | `mask_response_body_callback` | Callback function for masking the response body. Takes two parameters `request` and `response` and returns the response body as `bytes` or `None`. | `Callable` | `None` |
 | `exclude_paths` | List of regular expressions for matching paths to exclude from logging. | `list[str]` | `[]` |
-| `exclude_callback` | Callback function for excluding requests from logging. Takes two parameters `request` and `response` and returns a `True`, if the request should be excluded, or `False` otherwise. | `Callable` | `None` |
+| `exclude_callback` | Callback function for excluding requests from logging. Takes two parameters `request` and `response` and returns `True`, if the request should be excluded, or `False` otherwise. | `Callable` | `None` |
 
 ### Request dict
 

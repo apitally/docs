@@ -34,7 +34,7 @@ The following are the fields of the `RequestLoggingConfig` struct.
 | `MaskRequestBodyCallback` | Callback function for masking the request body. Takes one parameter `request` and returns the request body as `[]byte` or `nil`. | `func(request *Request) []byte` | `nil` |
 | `MaskResponseBodyCallback` | Callback function for masking the response body. Takes two parameters `request` and `response` and returns the response body as `[]byte` or `nil`. | `func(request *Request, response *Response) []byte` | `nil` |
 | `ExcludePaths` | List of regular expressions for matching paths to exclude from logging. | `[]*regexp.Regexp` | `nil` |
-| `ExcludeCallback` | Callback function for excluding requests from logging. Takes two parameters `request` and `response` and returns a `true`, if the request should be excluded, or `false` otherwise. | `func(request *Request, response *Response) bool` | `nil` |
+| `ExcludeCallback` | Callback function for excluding requests from logging. Takes two parameters `request` and `response` and returns `true`, if the request should be excluded, or `false` otherwise. | `func(request *Request, response *Response) bool` | `nil` |
 
 ### Request struct
 
