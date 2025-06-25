@@ -27,10 +27,10 @@ The following are the properties of the `RequestLoggingOptions` class.
 | `IncludeRequestBody` | Whether to include the request body in the logs. Only JSON and text are supported, up to 50 KB. | `bool` | `false` |
 | `IncludeResponseHeaders` | Whether to include response headers in the logs. | `bool` | `true` |
 | `IncludeResponseBody` | Whether to include the response body in the logs. Only JSON and text are supported, up to 50 KB. | `bool` | `false` |
-| `QueryParamMaskPatterns` | List of regular expression patterns for matching query parameter names that should be masked. These are in addition to the default masking patterns. | `List<string>` | `[]` |
-| `HeaderMaskPatterns` | List of regular expression patterns for matching header names that should be masked. These are in addition to the default masking patterns. | `List<string>` | `[]` |
-| `BodyFieldMaskPatterns` | List of regular expression patterns for matching request/response body fields that should be masked. These are in addition to the default masking patterns. | `List<string>` | `[]` |
-| `PathExcludePatterns` | List of regular expression patterns for matching paths to exclude from logging. | `List<string>` | `[]` |
+| `QueryParamMaskPatterns` | List of regular expressions for matching query parameters to mask. These are in addition to the default masking patterns. | `List<string>` | `[]` |
+| `HeaderMaskPatterns` | List of regular expressions for matching headers to mask. These are in addition to the default masking patterns. | `List<string>` | `[]` |
+| `BodyFieldMaskPatterns` | List of regular expressions for matching request/response body fields to mask. These are in addition to the default masking patterns. | `List<string>` | `[]` |
+| `PathExcludePatterns` | List of regular expressions for matching paths to exclude from logging. | `List<string>` | `[]` |
 | `MaskRequestBody` | Function to mask sensitive data in the request body. Return `null` to mask the whole body. | <nobr>`Func<Request, byte[]?>`</nobr> | - |
 | `MaskResponseBody` | Function to mask sensitive data in the response body. Return `null` to mask the whole body. | <nobr>`Func<Request, Response, byte[]?>`</nobr> | - |
 | `ShouldExclude` | Function to determine whether a request should be excluded from logging. Return `true` to exclude the request. | <nobr>`Func<Request, Response, bool>`</nobr> | - |
