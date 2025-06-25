@@ -156,6 +156,8 @@ useApitally(app, {
     // Mask custom header with sensitive information (applied to both request and response headers)
     // Common sensitive headers like `Authorization` are masked by default
     maskHeaders: [/^X-Sensitive-Header$/i],
+    // Mask request/response body fields with sensitive information
+    maskBodyFields: [/^sensitive_field$/i],
     // Only log request body for some parts of the API
     maskRequestBodyCallback: (request) => request.path?.startsWith("/api/v2") ? request.body : null,
     // Only log response body for unsuccessful requests

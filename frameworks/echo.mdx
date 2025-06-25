@@ -210,6 +210,8 @@ func main() {
             // Mask custom header with sensitive information (applied to both request and response headers)
             // Common sensitive headers like `Authorization` are masked by default
             MaskHeaders:        []*regexp.Regexp{regexp.MustCompile(`^X-Sensitive-Header$`)},
+            // Mask request/response body fields with sensitive information
+            MaskBodyFields:     []*regexp.Regexp{regexp.MustCompile(`^sensitive_field$`)},
             // Exclude some paths from request logging (common health check paths are excluded by default)
             ExcludePaths:       []*regexp.Regexp{regexp.MustCompile(`\/metrics$`)},
             // Custom masking for request body
