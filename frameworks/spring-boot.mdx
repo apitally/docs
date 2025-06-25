@@ -159,6 +159,9 @@ apitally:
     # Common sensitive headers like `Authorization` are masked by default
     header-mask-patterns:
       - "^X-Sensitive-Header$"
+    # Mask request/response body fields with sensitive information
+    body-field-mask-patterns:
+      - "^sensitive_field$"
     # Exclude some paths from request logging (common health check paths are excluded by default)
     path-exclude-patterns:
       - "\\/metrics$"

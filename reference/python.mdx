@@ -29,8 +29,9 @@ The following are the parameters of the `RequestLoggingConfig` dataclass.
 | `log_request_body` | Whether to include the request body in the logs. Only JSON and text are supported, up to 50 KB. | `bool` | `False` |
 | `log_response_headers` | Whether to include response headers in the logs. | `bool` | `True` |
 | `log_response_body` | Whether to include the response body in the logs. Only JSON and text are supported, up to 50 KB. | `bool` | `False` |
-| `mask_query_params` | List of regular expressions for matching query parameter names that should be masked. | `list[str]` | `[]` |
-| `mask_headers` | List of regular expressions for matching header names that should be masked. | `list[str]` | `[]` |
+| `mask_query_params` | List of regular expressions for matching query parameters to mask. These are in addition to the default masking patterns. | `list[str]` | `[]` |
+| `mask_headers` | List of regular expressions for matching headers to mask. These are in addition to the default masking patterns. | `list[str]` | `[]` |
+| `mask_body_fields` | List of regular expressions for matching request/response body fields to mask. These are in addition to the default masking patterns. | `list[str]` | `[]` |
 | `mask_request_body_callback` | Callback function for masking the request body. Takes one parameter `request` and returns the request body as `bytes` or `None`. | `Callable` | `None` |
 | `mask_response_body_callback` | Callback function for masking the response body. Takes two parameters `request` and `response` and returns the response body as `bytes` or `None`. | `Callable` | `None` |
 | `exclude_paths` | List of regular expressions for matching paths to exclude from logging. | `list[str]` | `[]` |
@@ -65,7 +66,7 @@ Below are the keys of the `response` dicts that are passed to some of the user-p
 
 ### Default masking
 
-The below regular expressions are used to mask sensitive query parameters and headers.
+The below regular expressions are used to mask sensitive query parameters, headers and request/response body fields.
 
 ```python
 # Query parameters
@@ -87,6 +88,20 @@ MASK_HEADER_PATTERNS = [
     r"secret",
     r"token",
     r"cookie",
+]
+```
+
+```python
+# Request/response body fields
+MASK_BODY_FIELD_PATTERNS = [
+    r"password",
+    r"pwd",
+    r"token",
+    r"secret",
+    r"auth",
+    r"card[-_ ]?number",
+    r"ccv",
+    r"ssn",
 ]
 ```
 

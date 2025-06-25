@@ -153,6 +153,10 @@ Check out the <a href="/reference/dotnet#request-logging-options">reference page
       "HeaderMaskPatterns": [
         "^X-Sensitive-Header$"
       ],
+      // Mask request/response body fields with sensitive information
+      "BodyFieldMaskPatterns": [
+        "^sensitive_field$"
+      ],
       // Exclude some paths from request logging (common health check paths are excluded by default)
       "PathExcludePatterns": [
         "\\/metrics$"

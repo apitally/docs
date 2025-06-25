@@ -27,8 +27,9 @@ The following are the properties of the `request-logging` configuration object.
 | <nobr>`request-body-included`</nobr> | Whether to include the request body in the logs. Only JSON and text are supported, up to 50 KB. | `boolean` | `false` |
 | <nobr>`response-headers-included`</nobr> | Whether to include response headers in the logs. | `boolean` | `true` |
 | <nobr>`response-body-included`</nobr> | Whether to include the response body in the logs. Only JSON and text are supported, up to 50 KB. | `boolean` | `false` |
-| <nobr>`query-param-mask-patterns`</nobr> | List of regular expressions for matching query parameter names that should be masked. | `List<String>` | `[]` |
-| <nobr>`header-mask-patterns`</nobr> | List of regular expressions for matching header names that should be masked. | `List<String>` | `[]` |
+| <nobr>`query-param-mask-patterns`</nobr> | List of regular expressions for matching query parameters to mask. These are in addition to the default masking patterns. | `List<String>` | `[]` |
+| <nobr>`header-mask-patterns`</nobr> | List of regular expressions for matching headers to mask. These are in addition to the default masking patterns. | `List<String>` | `[]` |
+| <nobr>`body-field-mask-patterns`</nobr> | List of regular expressions for matching request/response body fields to mask. These are in addition to the default masking patterns. | `List<String>` | `[]` |
 | <nobr>`path-exclude-patterns`</nobr> | List of regular expressions for matching paths to exclude from logging. | `List<String>` | `[]` |
 | <nobr>`callbacks-class`</nobr> | Fully qualified name of a class implementing `RequestLoggingCallbacks` for custom masking and exclusion logic. | `string` | - |
 
@@ -61,7 +62,7 @@ Below are the properties of the `Response` objects that are passed to some of th
 
 ### Default masking
 
-The below regular expressions are used to mask sensitive query parameters and headers.
+The below regular expressions are used to mask sensitive query parameters, headers and request/response body fields.
 
 ```java
 // Query parameters
@@ -83,6 +84,20 @@ List<String> MASK_HEADER_PATTERNS = Arrays.asList(
     "secret",
     "token",
     "cookie"
+);
+```
+
+```java
+// Request/response body fields
+List<String> MASK_BODY_FIELD_PATTERNS = Arrays.asList(
+    "password",
+    "pwd",
+    "token",
+    "secret",
+    "auth",
+    "card[-_ ]?number",
+    "ccv",
+    "ssn"
 );
 ```
 

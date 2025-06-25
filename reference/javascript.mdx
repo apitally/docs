@@ -29,8 +29,9 @@ The following are the keys of the `requestLoggingConfig` object.
 | `logRequestBody` | Whether to include the request body in the logs. Only JSON and text are supported, up to 50 KB. | `boolean` | `false` |
 | `logResponseHeaders` | Whether to include response headers in the logs. | `boolean` | `true` |
 | `logResponseBody` | Whether to include the response body in the logs. Only JSON and text are supported, up to 50 KB. | `boolean` | `false` |
-| `maskQueryParams` | Array of regular expressions for matching query parameter names that should be masked. | `RegExp[]` | `[]` |
-| `maskHeaders` | Array of regular expressions for matching header names that should be masked. | `RegExp[]` | `[]` |
+| `maskQueryParams` | Array of regular expressions for matching query parameters to mask. These are in addition to the default masking patterns. | `RegExp[]` | `[]` |
+| `maskHeaders` | Array of regular expressions for matching headers to mask. These are in addition to the default masking patterns. | `RegExp[]` | `[]` |
+| `maskBodyFields` | Array of regular expressions for matching request/response body fields to mask. These are in addition to the default masking patterns. | `RegExp[]` | `[]` |
 | `maskRequestBodyCallback` | Callback function for masking the request body. Takes one parameter `request` and returns the request body as `Buffer` or `null`. | `Function` | - |
 | `maskResponseBodyCallback` | Callback function for masking the response body. Takes two parameters `request` and `response` and returns the response body as `Buffer` or `null`. | `Function` | - |
 | `excludePaths` | Array of regular expressions for matching paths to exclude from logging. | `RegExp[]` | `[]` |
@@ -65,7 +66,7 @@ Below are the properties of the `response` objects that are passed to some of th
 
 ### Default masking
 
-The below regular expressions are used to mask sensitive query parameters and headers.
+The below regular expressions are used to mask sensitive query parameters, headers and request/response body fields.
 
 ```javascript
 // Query parameters
@@ -87,6 +88,20 @@ const MASK_HEADER_PATTERNS = [
   /secret/i,
   /token/i,
   /cookie/i,
+];
+```
+
+```javascript
+// Request/response body fields
+const MASK_BODY_FIELD_PATTERNS = [
+  /password/i,
+  /pwd/i,
+  /token/i,
+  /secret/i,
+  /auth/i,
+  /card[-_ ]?number/i,
+  /ccv/i,
+  /ssn/i,
 ];
 ```
 

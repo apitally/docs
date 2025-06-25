@@ -29,8 +29,9 @@ The following are the fields of the `RequestLoggingConfig` struct.
 | `LogResponseHeaders` | Whether to include response headers in the logs. | `bool` | `true` |
 | `LogResponseBody` | Whether to include the response body in the logs. Only JSON and text are supported, up to 50 KB. | `bool` | `false` |
 | `LogPanic` | Whether to log information when a panic occurs during request handling. | `bool` | `false` |
-| `MaskQueryParams` | List of regular expressions for matching query parameter names that should be masked. | `[]*regexp.Regexp` | `nil` |
-| `MaskHeaders` | List of regular expressions for matching header names that should be masked. | `[]*regexp.Regexp` | `nil` |
+| `MaskQueryParams` | List of regular expressions for matching query parameters to mask. These are in addition to the default masking patterns. | `[]*regexp.Regexp` | `nil` |
+| `MaskHeaders` | List of regular expressions for matching headers to mask. These are in addition to the default masking patterns. | `[]*regexp.Regexp` | `nil` |
+| `MaskBodyFields` | List of regular expressions for matching request/response body fields to mask. These are in addition to the default masking patterns. | `[]*regexp.Regexp` | `nil` |
 | `MaskRequestBodyCallback` | Callback function for masking the request body. Takes one parameter `request` and returns the request body as `[]byte` or `nil`. | `func(request *Request) []byte` | `nil` |
 | `MaskResponseBodyCallback` | Callback function for masking the response body. Takes two parameters `request` and `response` and returns the response body as `[]byte` or `nil`. | `func(request *Request, response *Response) []byte` | `nil` |
 | `ExcludePaths` | List of regular expressions for matching paths to exclude from logging. | `[]*regexp.Regexp` | `nil` |
@@ -65,7 +66,7 @@ Below are the fields of the `Response` struct.
 
 ### Default masking
 
-The below regular expressions are used to mask sensitive query parameters and headers.
+The below regular expressions are used to mask sensitive query parameters, headers and request/response body fields.
 
 ```go
 // Query parameters
@@ -87,6 +88,20 @@ var DefaultMaskHeaderPatterns = []*regexp.Regexp{
 	regexp.MustCompile(`(?i)secret`),
 	regexp.MustCompile(`(?i)token`),
 	regexp.MustCompile(`(?i)cookie`),
+}
+```
+
+```go
+// Request/response body fields
+var DefaultMaskBodyFieldPatterns = []*regexp.Regexp{
+	regexp.MustCompile(`(?i)password`),
+	regexp.MustCompile(`(?i)pwd`),
+	regexp.MustCompile(`(?i)token`),
+	regexp.MustCompile(`(?i)secret`),
+	regexp.MustCompile(`(?i)auth`),
+	regexp.MustCompile(`(?i)card[-_ ]?number`),
+	regexp.MustCompile(`(?i)ccv`),
+	regexp.MustCompile(`(?i)ssn`),
 }
 ```
 
