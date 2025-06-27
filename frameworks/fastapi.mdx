@@ -66,57 +66,44 @@ app.add_middleware(
 
 <Snippet file="identify-consumers.mdx" />
 
-To associate requests with consumers, set the `apitally_consumer` attribute on the [`request.state`](https://www.starlette.io/requests/#other-state) object.
-You could do this <Tooltip tip="See example below">in a dependency</Tooltip> or another middleware, for example.
+To associate requests with consumers, use the `set_consumer` function in a dependency, middleware or directly in your endpoint functions.
 
 <CodeGroup>
-```python {14-17} Identifier only
+```python Dependency
 from typing import Annotated
 from fastapi import FastAPI, Depends, Request
-from fastapi.security import OAuth2PasswordBearer
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-class User(BaseModel):
-    user_id: str
-
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> User:
-    user = fake_decode_token(token)
-    return user
+from apitally.fastapi import set_consumer
 
 def identify_consumer(request: Request, current_user: Annotated[User, Depends(get_current_user)]) -> None:
-    request.state.apitally_consumer = current_user.user_id
-
-app = FastAPI(dependencies=[Depends(identify_consumer)])
-```
-
-```python {17-24} With name and group
-from typing import Annotated
-from fastapi import FastAPI, Depends, Request
-from fastapi.security import OAuth2PasswordBearer
-from apitally.fastapi import ApitallyMiddleware, ApitallyConsumer
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-class User(BaseModel):
-    user_id: str
-    name: str
-    group: str
-
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> User:
-    user = fake_decode_token(token)
-    return user
-
-def identify_consumer(request: Request, current_user: Annotated[User, Depends(get_current_user)]) -> None:
-    request.state.apitally_consumer = ApitallyConsumer(
+    set_consumer(
+        request,
         identifier=current_user.user_id,
-        name=current_user.name,
-        group=current_user.group,
+        name=current_user.name,  # optional
+        group=current_user.group,  # optional
     )
 
 app = FastAPI(dependencies=[Depends(identify_consumer)])
 ```
+
+```python Endpoint function
+from typing import Annotated
+from fastapi import FastAPI, Depends, Request
+from apitally.fastapi import set_consumer
+
+app = FastAPI()
+
+@app.get("/items")
+async def list_items(request: Request, current_user: Annotated[User, Depends(get_current_user)]) -> list[str]:
+    set_consumer(
+        request,
+        identifier=current_user.user_id,
+        name=current_user.name,  # optional
+        group=current_user.group,  # optional
+    )
+    return ["item1"]
+```
 </CodeGroup>
+
 <ConsumerIdentifierSnippet />
 
 <Snippet file="identify-consumers-check.mdx" />

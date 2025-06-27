@@ -67,39 +67,21 @@ use_apitally(
 
 <Snippet file="identify-consumers.mdx" />
 
-To associate requests with consumers, provide a <Tooltip tip="See example below">callback function</Tooltip> that takes a [`Request`](https://www.neoteroi.dev/blacksheep/requests/#the-request-class) object as an argument and returns a consumer identifier, an `ApitallyConsumer` object or `None`.
+To associate requests with consumers, provide a callback function that takes a [`Request`](https://www.neoteroi.dev/blacksheep/requests/#the-request-class) object as an argument and returns a consumer identifier, an `ApitallyConsumer` object or `None`.
 
 Alternatively, you can set the `apitally_consumer` claim on the `request.identity` object, for example in your authentication handler.
 
 <CodeGroup>
-```python Identifier only
-from blacksheep import Application, Request
-from apitally.blacksheep import use_apitally
-
-def identify_consumer(request: Request) -> str | None:
-    if request.identity.is_authenticated:
-        return request.identity.sub
-    return None
-
-app = Application()
-use_apitally(
-    app,
-    client_id="your-client-id",
-    env="dev",  # or "prod" etc.
-    identify_consumer_callback=identify_consumer,
-)
-```
-
-```python With name and group
+```python Callback function
 from blacksheep import Application, Request
 from apitally.blacksheep import use_apitally, ApitallyConsumer
 
-def identify_consumer(request: Request) -> str | None:
+def get_consumer(request: Request) -> ApitallyConsumer | None:
     if request.identity.is_authenticated:
         return ApitallyConsumer(
             identifier=request.identity.sub,
-            name=request.identity.get("name"),
-            group="Customers",
+            name=request.identity.get("name"),  # optional
+            group=request.identity.get("role"),  # optional
         )
     return None
 
@@ -108,7 +90,7 @@ use_apitally(
     app,
     client_id="your-client-id",
     env="dev",  # or "prod" etc.
-    identify_consumer_callback=identify_consumer,
+    identify_consumer_callback=get_consumer,
 )
 ```
 

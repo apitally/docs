@@ -63,63 +63,49 @@ app = Litestar(route_handlers=[...], plugins=[apitally_plugin])
 
 <Snippet file="identify-consumers.mdx" />
 
-To associate requests with consumers, provide a <Tooltip tip="See examples below">callback function</Tooltip> to the `ApitallyPlugin` that takes a [`Request`](https://docs.litestar.dev/latest/reference/connection.html#litestar.connection.Request) object as an argument and returns a consumer identifier, an `ApitallyConsumer` object or `None`.
+To associate requests with consumers, use the `set_consumer` function, for example in a `before_request` life cycle hook or directly in your route handler functions.
 
-Alternatively, you can set the `apitally_consumer` attribute on the [`request.state`](https://docs.litestar.dev/latest/reference/datastructures/index.html#litestar.datastructures.State) object, for example in a `before_request` [life cycle hook](https://docs.litestar.dev/latest/usage/lifecycle-hooks.html#before-request) or directly in your route handler functions.
+Alternatively, provide a callback function to the `ApitallyPlugin` that takes a [`Request`](https://docs.litestar.dev/latest/reference/connection.html#litestar.connection.Request) object as an argument and returns a consumer identifier, an `ApitallyConsumer` object or `None`.
 
 <CodeGroup>
-```python Identifier only
+```python Life cycle hook
+from litestar import Litestar
 from litestar.connection import Request
-from apitally.litestar import ApitallyPlugin
+from apitally.litestar import set_consumer
 
-def identify_consumer(request: Request) -> str | None:
+async def before_request_handler(request: Request) -> None:
     if request.user.is_authenticated:
-        return request.user.identity
-    return None
+        set_consumer(
+            request,
+            identifier=request.user.identity,
+            name=request.user.name,  # optional
+            group=request.user.role,  # optional
+        )
 
-apitally_plugin = ApitallyPlugin(
-    client_id="your-client-id",
-    env="dev",  # or "prod" etc.
-    identify_consumer_callback=identify_consumer,
+app = Litestar(
+    route_handlers=[...],
+    before_request=before_request_handler,
+    plugins=[apitally_plugin]
 )
 ```
 
-```python With name and group
+```python Callback function
 from litestar.connection import Request
-from apitally.litestar import ApitallyConsumer
+from apitally.litestar import ApitallyPlugin, ApitallyConsumer
 
-def identify_consumer(request: Request) -> ApitallyConsumer | None:
+def get_consumer(request: Request) -> ApitallyConsumer | None:
     if request.user.is_authenticated:
         return ApitallyConsumer(
             identifier=request.user.identity,
-            name=request.user.name,
-            group=request.user.group,
+            name=request.user.name,  # optional
+            group=request.user.role,  # optional
         )
     return None
 
 apitally_plugin = ApitallyPlugin(
     client_id="your-client-id",
     env="dev",  # or "prod" etc.
-    identify_consumer_callback=identify_consumer,
-)
-```
-
-```python Life cycle hook
-from litestar import Litestar
-from litestar.connection import Request
-from apitally.litestar import ApitallyPlugin
-
-async def before_request_handler(request: Request) -> None:
-    request.state.apitally_consumer = "user-123"
-
-apitally_plugin = ApitallyPlugin(
-    client_id="your-client-id",
-    env="dev",  # or "prod" etc.
-)
-app = Litestar(
-    route_handlers=[...],
-    before_request=before_request_handler,
-    plugins=[apitally_plugin]
+    identify_consumer_callback=get_consumer,
 )
 ```
 </CodeGroup>

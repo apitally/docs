@@ -69,29 +69,36 @@ app.wsgi_app = ApitallyMiddleware(
 
 <Snippet file="identify-consumers.mdx" />
 
-To associate requests with consumers, set the `apitally_consumer` attribute on the [`g`](https://flask.palletsprojects.com/en/2.3.x/appcontext/#storing-data) object, for example in a [`before_request`](https://flask.palletsprojects.com/en/2.2.x/api/#flask.Flask.before_request) function.
+To associate requests with consumers, use the `set_consumer` function, for example within a [`before_request`](https://flask.palletsprojects.com/en/2.2.x/api/#flask.Flask.before_request) function or directly in your endpoint functions.
 
 <CodeGroup>
-```python Identifier only
-from flask import g, request
+```python Before request
+from flask import g
+from apitally.flask import set_consumer
 
 @app.before_request
 def identify_consumer():
-    """Identify consumer based on their IP address."""
-    g.apitally_consumer = request.remote_addr
+    if g.current_user:
+        set_consumer(
+            identifier=g.current_user["email"],
+            name=g.current_user["name"],  # optional
+            group=g.current_user["role"],  # optional
+        )
 ```
 
-```python With name and group
-from flask import g, request
-from apitally.flask import ApitallyConsumer
+```python Endpoint function
+from flask import g
+from apitally.flask import set_consumer
 
-@app.before_request
-def identify_consumer():
-    g.apitally_consumer = ApitallyConsumer(
-      identifier="john.doe@example.com",
-      name="John Doe",
-      group="Customers",
-    )
+@app.route("/items")
+def list_items():
+    if g.current_user:
+        set_consumer(
+            identifier=g.current_user["email"],
+            name=g.current_user["name"],  # optional
+            group=g.current_user["role"],  # optional
+        )
+    return ["item1"]
 ```
 </CodeGroup>
 

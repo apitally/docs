@@ -66,48 +66,45 @@ app.add_middleware(
 
 <Snippet file="identify-consumers.mdx" />
 
-To associate requests with consumers, provide a <Tooltip tip="See example below">callback function</Tooltip> to the `ApitallyMiddleware` that takes a [`Request`](https://www.starlette.io/requests/) object as an argument and returns a consumer identifier, an `ApitallyConsumer` object or `None`.
+To associate requests with consumers, you can use the `set_consumer` function in a middleware or directly in your endpoint functions.
 
-Alternatively, you can set the `apitally_consumer` attribute on the [`request.state`](https://www.starlette.io/requests/#other-state) object, for example in another middleware or directly in your endpoint functions.
+Alternatively, you can provide a callback function to the `ApitallyMiddleware` that takes a [`Request`](https://www.starlette.io/requests/) object as an argument and returns a consumer identifier, an `ApitallyConsumer` object or `None`.
 
 <CodeGroup>
-```python Identifier only
+```python Using set_consumer
 from starlette.requests import Request
+from apitally.starlette import set_consumer
 
-def identify_consumer(request: Request) -> str | None:
+def list_items(request: Request):
     if request.user.is_authenticated:
-        return request.user.identity
+        set_consumer(
+            request,
+            identifier=request.user.identity,
+            name=request.user.display_name,  # optional
+            group="Customers",  # optional
+        )
+    return ["item1"]
+```
+
+```python Callback function
+from starlette.requests import Request
+from apitally.starlette import ApitallyConsumer
+
+def get_consumer(request: Request) -> ApitallyConsumer | None:
+    if request.user.is_authenticated:
+        return ApitallyConsumer(
+            identifier=request.user.identity,
+            name=request.user.display_name,  # optional
+            group="Customers",  # optional
+        )
     return None
 
 app.add_middleware(
     ApitallyMiddleware,
     client_id="your-client-id",
     env="dev",  # or "prod" etc.
-    identify_consumer_callback=identify_consumer,
+    identify_consumer_callback=get_consumer,
 )
-```
-
-```python With name and group
-from starlette.requests import Request
-from apitally.starlette import ApitallyConsumer
-
-def identify_consumer(request: Request) -> ApitallyConsumer | None:
-    if request.user.is_authenticated:
-        return ApitallyConsumer(
-            identifier=request.user.identity,
-            name=request.user.display_name,
-            group="Customers",
-        )
-    return None
-```
-
-```python Set on state object
-from starlette.requests import Request
-
-def list_items(request: Request):
-    if request.user.is_authenticated:
-        request.state.apitally_consumer = request.user.identity
-    return ["item1"]
 ```
 </CodeGroup>
 
