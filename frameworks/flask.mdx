@@ -9,7 +9,6 @@ import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import AddMiddlewarePythonSnippet from '/snippets/add-middleware-python.mdx';
 import UWSGIWarning from '/snippets/uwsgi-warning.mdx';
-import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
 
 This page guides you through the steps of configuring your [Flask](https://flask.palletsprojects.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
@@ -69,7 +68,7 @@ app.wsgi_app = ApitallyMiddleware(
 
 <Snippet file="identify-consumers.mdx" />
 
-To associate requests with consumers, use the `set_consumer` function, for example within a [`before_request`](https://flask.palletsprojects.com/en/2.2.x/api/#flask.Flask.before_request) function or directly in your endpoint functions.
+Use the `set_consumer` function to associate requests with consumers, for example within a [`before_request`](https://flask.palletsprojects.com/en/2.2.x/api/#flask.Flask.before_request) function or directly in your endpoint functions.
 
 <CodeGroup>
 ```python Before request
@@ -101,8 +100,6 @@ def list_items():
     return ["item1"]
 ```
 </CodeGroup>
-
-<ConsumerIdentifierSnippet />
 
 <Snippet file="identify-consumers-check.mdx" />
 

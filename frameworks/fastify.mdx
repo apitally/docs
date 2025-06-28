@@ -7,7 +7,6 @@ description: "Just a few simple steps to get started with Apitally."
 import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
 import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
-import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
 
 This page guides you through the steps of configuring your [Fastify](https://fastify.dev) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
@@ -79,7 +78,7 @@ fastify.register((instance, opts, done) => {
 
 <Snippet file="identify-consumers.mdx" />
 
-To associate requests with consumers, set the `apitallyConsumer` property on the [`Request`](https://fastify.dev/docs/latest/Reference/Request/) object, for example in your authentication function.
+Use the `setConsumer` function to associate requests with consumers, for example in an `onRequest` hook.
 
 <CodeGroup>
 ```javascript Identifier only
@@ -112,8 +111,6 @@ fastify.addHook("onRequest", async (request, reply) => {
 });
 ```
 </CodeGroup>
-
-<ConsumerIdentifierSnippet />
 
 <Snippet file="identify-consumers-check.mdx" />
 

@@ -8,7 +8,6 @@ import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
 import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import AddMiddlewarePythonSnippet from '/snippets/add-middleware-python.mdx';
-import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
 
 This page guides you through the steps of configuring your [Starlette](https://www.starlette.io) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
@@ -66,7 +65,7 @@ app.add_middleware(
 
 <Snippet file="identify-consumers.mdx" />
 
-To associate requests with consumers, you can use the `set_consumer` function in a middleware or directly in your endpoint functions.
+Use the `set_consumer` function to associate requests with consumers, for example in a middleware or directly in your endpoint functions.
 
 Alternatively, you can provide a callback function to the `ApitallyMiddleware` that takes a [`Request`](https://www.starlette.io/requests/) object as an argument and returns a consumer identifier, an `ApitallyConsumer` object or `None`.
 
@@ -107,8 +106,6 @@ app.add_middleware(
 )
 ```
 </CodeGroup>
-
-<ConsumerIdentifierSnippet />
 
 <Snippet file="identify-consumers-check.mdx" />
 

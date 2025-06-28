@@ -1,6 +1,6 @@
-In order to analyze API traffic by consumers in Apitally, your application must
-identify which consumers requests are coming from.
+To analyze and filter API traffic by consumers, you can associate requests with consumer identifiers in your application.
 
-How you identify API consumers depends on your application and use case. If your
-application uses authentication, it would make sense to use the authenticated
-identity (e.g. username) as the consumer identifier.
+In most cases, use the authenticated identity to identify the consumer.
+The identifier should be a string, such as a username, email address, or any other unique identifier.
+
+Optionally, you can also provide a display name and group for each consumer.

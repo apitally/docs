@@ -7,7 +7,6 @@ description: "Just a few simple steps to get started with Apitally."
 import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
 import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
-import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
 
 This page guides you through the steps of configuring your [Chi](https://go-chi.io) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
@@ -100,8 +99,6 @@ func authMiddleware(next http.Handler) http.Handler {
 }
 ```
 </CodeGroup>
-
-<ConsumerIdentifierSnippet />
 
 <Snippet file="identify-consumers-check.mdx" />
 
