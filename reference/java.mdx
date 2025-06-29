@@ -22,7 +22,7 @@ The following are the properties of the `request-logging` configuration object.
 | Parameter | Description | Type | Default |
 | :-------- | :---------- | :--- | :------ |
 | `enabled` | Whether request logging is enabled. | `boolean` | `false` |
-| <nobr>`query-params-included`</nobr> | Whether to include query parameters in the logs. If disabled these will be stripped from the request URLs logged. | `boolean` | `true` |
+| <nobr>`query-params-included`</nobr> | Whether to include query parameters in the logs. If disabled, these will be stripped from the request URLs logged. | `boolean` | `true` |
 | <nobr>`request-headers-included`</nobr> | Whether to include request headers in the logs. Default masking for common sensitive headers (e.g. `Authorization`) applies. | `boolean` | `false` |
 | <nobr>`request-body-included`</nobr> | Whether to include the request body in the logs. Only JSON and text are supported, up to 50 KB. | `boolean` | `false` |
 | <nobr>`response-headers-included`</nobr> | Whether to include response headers in the logs. | `boolean` | `true` |

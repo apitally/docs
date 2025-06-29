@@ -23,7 +23,7 @@ The following are the fields of the `RequestLoggingConfig` struct.
 | Parameter | Description | Type | Default |
 | :-------- | :---------- | :--- | :------ |
 | `Enabled` | Whether request logging is enabled. | `bool` | `false` |
-| `LogQueryParams` | Whether to include query parameters in the logs. If disabled these will be stripped from the request URLs logged. | `bool` | `true` |
+| `LogQueryParams` | Whether to include query parameters in the logs. If disabled, these will be stripped from the request URLs logged. | `bool` | `true` |
 | `LogRequestHeaders` | Whether to include request headers in the logs. Default masking for common sensitive headers (e.g. `Authorization`) applies. | `bool` | `false` |
 | `LogRequestBody` | Whether to include the request body in the logs. Only JSON and text are supported, up to 50 KB. | `bool` | `false` |
 | `LogResponseHeaders` | Whether to include response headers in the logs. | `bool` | `true` |
