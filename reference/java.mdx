@@ -5,14 +5,14 @@ description: The parameters of the Apitally SDK for Java.
 mode: "wide"
 ---
 
-## Middleware
+## Configuration options
 
 The following parameters apply when configuring the Apitally client in your `application.yml` file.
 
 | Parameter | Description | Type |
 | :-------- | :---------- | :--- |
 | <nobr>`client-id`</nobr> | Client ID for your application. Find it on the _Setup instructions_ page for your app. | `string` |
-| `env` | Name of the environment, e.g. `prod` or `dev`. The environment will be automatically created in Apitally if it doesn't exist. | `string` |
+| `env` | Name of the environment, e.g. `prod` or `dev`. The environment will be automatically created if it doesn't exist. | `string` |
 | <nobr>`request-logging`</nobr> | Configuration for request logging. See table below. | `object` |
 
 ## Request logging config

@@ -5,14 +5,14 @@ description: The parameters of the Apitally SDK for Go.
 mode: "wide"
 ---
 
-## Config
+## Configuration options
 
 The following are the fields of the `ApitallyConfig` struct.
 
 | Parameter | Description | Type |
 | :-------- | :---------- | :--- |
 | `ClientId` | Client ID for your application. Find it on the _Setup instructions_ page for your app. | `string` |
-| `Env` | Name of the environment, e.g. `prod` or `dev`. The environment will be automatically created in Apitally if it doesn't exist. | `string` |
+| `Env` | Name of the environment, e.g. `prod` or `dev`. The environment will be automatically created if it doesn't exist. | `string` |
 | `RequestLoggingConfig` | Configuration for request logging. See table below. | `*RequestLoggingConfig` |
 | `AppVersion` | The current version of your application, e.g. `1.0.0`. | `string` |
 

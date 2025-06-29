@@ -5,30 +5,22 @@ description: The parameters of the Apitally SDK for Python.
 mode: "wide"
 ---
 
-## Middleware
+## Parameters
 
-The following parameters apply when adding the Apitally middleware to your application.
-
-| Parameter | Description | Type |
-| :-------- | :---------- | :--- |
-| `client_id` | Client ID for your application. Find it on the _Setup instructions_ page for your app. | `string` |
-| `env` | Name of the environment, e.g. `prod` or `dev`. The environment will be automatically created in Apitally if it doesn't exist. Defaults to `dev`. | `string` |
-| `request_logging_config` | Configuration for request logging. See table below. | `RequestLoggingConfig` |
-| `app_version` | The current version of your application, e.g. `1.0.0`. | `string` |
-| `proxy` | HTTP proxy to use for sending data to Apitally Hub. Useful in environments with no direct internet connectivity. | `string` |
-
-## Request logging config
-
-The following are the parameters of the `RequestLoggingConfig` dataclass.
+The following parameters apply for all integrations.
 
 | Parameter | Description | Type | Default |
 | :-------- | :---------- | :--- | :------ |
-| `enabled` | Whether request logging is enabled. | `bool` | `False` |
+| `client_id` | Client ID for your application. Find it on the _Setup instructions_ page for your app. | `string` |
+| `env` | Name of the environment, e.g. `prod` or `dev`. The environment will be automatically created if it doesn't exist. | `string` | `dev` |
+| `app_version` | The current version of your application, e.g. `1.0.0`. | `string` | `None` |
+| `enable_request_logging` | Whether request logging is enabled. | `bool` | `False` |
 | `log_query_params` | Whether to include query parameters in the logs. If disabled these will be stripped from the request URLs logged. | `bool` | `True` |
 | `log_request_headers` | Whether to include request headers in the logs. Default masking for common sensitive headers (e.g. `Authorization`) applies. | `bool` | `False` |
 | `log_request_body` | Whether to include the request body in the logs. Only JSON and text are supported, up to 50 KB. | `bool` | `False` |
 | `log_response_headers` | Whether to include response headers in the logs. | `bool` | `True` |
 | `log_response_body` | Whether to include the response body in the logs. Only JSON and text are supported, up to 50 KB. | `bool` | `False` |
+| `log_exception` | Whether to include exception details in the logs. | `bool` | `True` |
 | `mask_query_params` | List of regular expressions for matching query parameters to mask. These are in addition to the default masking patterns. | `list[str]` | `[]` |
 | `mask_headers` | List of regular expressions for matching headers to mask. These are in addition to the default masking patterns. | `list[str]` | `[]` |
 | `mask_body_fields` | List of regular expressions for matching request/response body fields to mask. These are in addition to the default masking patterns. | `list[str]` | `[]` |

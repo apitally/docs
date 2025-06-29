@@ -154,7 +154,7 @@ app.add_middleware(
     # Only log response body for unsuccessful requests
     mask_response_body_callback=lambda request, response: response["body"] if response["status_code"] >= 400 else None,
     # Exclude some paths from request logging (common health check paths are excluded by default)
-    exclude_paths=[r"\/metrics$"],
+    exclude_paths=[r"/metrics$"],
     # Exclude requests from a specific consumer
     exclude_callback=lambda request, response: request["consumer"] == "some-consumer",
 )
