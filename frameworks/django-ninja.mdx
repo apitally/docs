@@ -10,7 +10,6 @@ import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import AddMiddlewarePythonSnippet from '/snippets/add-middleware-python.mdx';
 import ConfigureDjangoMiddlewareSnippet from '/snippets/configure-django-middleware.mdx';
 import UWSGIWarning from '/snippets/uwsgi-warning.mdx';
-import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
 
 This page guides you through the steps of configuring your [Django Ninja](https://django-ninja.dev) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
@@ -67,10 +66,10 @@ APITALLY_MIDDLEWARE = {
 
 <Snippet file="identify-consumers.mdx" />
 
-To associate requests with consumers, provide a <Tooltip tip="See example below">callback function</Tooltip> to the `ApitallyMiddleware` that takes a [`HttpRequest`](https://docs.djangoproject.com/en/4.2/ref/request-response/#httprequest-objects) object as an argument and returns a consumer identifier, an `ApitallyConsumer` object or `None`.
+To associate requests with consumers, provide a callback function in the middleware settings that takes a [`HttpRequest`](https://docs.djangoproject.com/en/4.2/ref/request-response/#httprequest-objects) object as an argument and returns a consumer identifier, an `ApitallyConsumer` object or `None`.
 
 <CodeGroup>
-```python Identifier only
+```python Callback
 from django.http import HttpRequest
 
 def identify_consumer(request: HttpRequest) -> str | None:
@@ -79,7 +78,7 @@ def identify_consumer(request: HttpRequest) -> str | None:
     return None
 ```
 
-```python With name and group
+```python Callback (with name and group)
 from django.http import HttpRequest
 from apitally.django import ApitallyConsumer
 
@@ -101,8 +100,6 @@ APITALLY_MIDDLEWARE = {
 }
 ```
 </CodeGroup>
-
-<ConsumerIdentifierSnippet />
 
 <Snippet file="identify-consumers-check.mdx" />
 

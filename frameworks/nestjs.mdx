@@ -7,7 +7,6 @@ description: "Just a few simple steps to get started with Apitally."
 import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
 import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
-import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
 
 This page guides you through the steps of configuring your [NestJS](https://nestjs.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
@@ -79,11 +78,12 @@ useApitally(app, {
 
 <Snippet file="identify-consumers.mdx" />
 
-To associate requests with consumers, set the `apitallyConsumer` property on the [request object](https://expressjs.com/en/api.html#req), for example in an authorization guard.
+Use the `setConsumer` function to associate requests with consumers, for example in an authorization guard.
 
 <CodeGroup>
 ```javascript Identifier only
 import { Injectable } from '@nestjs/common';
+import { setConsumer } from "apitally/nestjs";
 
 @Injectable()
 export class AuthGuard {
@@ -91,7 +91,7 @@ export class AuthGuard {
     const request = context.switchToHttp().getRequest();
     const result = authenticateRequest(request); // assuming this sets request.user
     if (result && request.user) {
-      request.apitallyConsumer = request.user.username;
+      setConsumer(request, request.user.username);
     }
     return result;
   }
@@ -100,6 +100,7 @@ export class AuthGuard {
 
 ```javascript With name and group
 import { Injectable } from '@nestjs/common';
+import { setConsumer } from "apitally/nestjs";
 
 @Injectable()
 export class AuthGuard {
@@ -107,19 +108,17 @@ export class AuthGuard {
     const request = context.switchToHttp().getRequest();
     const result = authenticateRequest(request); // assuming this sets request.user
     if (result && request.user) {
-      request.apitallyConsumer = {
+      setConsumer(request, {
         identifier: request.user.username,
         name: request.user.fullName, // optional
         group: request.user.role, // optional
-      };
+      });
     }
     return result;
   }
 }
 ```
 </CodeGroup>
-
-<ConsumerIdentifierSnippet />
 
 <Snippet file="identify-consumers-check.mdx" />
 

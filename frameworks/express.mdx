@@ -7,7 +7,6 @@ description: "Just a few simple steps to get started with Apitally."
 import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
 import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
-import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
 
 This page guides you through the steps of configuring your [Express](https://expressjs.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
@@ -77,7 +76,7 @@ useApitally(app, {
 
 <Snippet file="identify-consumers.mdx" />
 
-To associate requests with consumers, set the `apitallyConsumer` property on the [request object](https://expressjs.com/en/api.html#req) in a middleware.
+Use the `setConsumer` function to associate requests with consumers, for example in a middleware.
 
 <CodeGroup>
 ```javascript Identifier only
@@ -105,31 +104,7 @@ app.use(function (req, res, next) {
   next()
 })
 ```
-
-```javascript TypeScript
-import type { Request } from "express";
-import type { ApitallyConsumer } from "apitally/express";
-
-declare module "express" {
-  interface Request {
-    apitallyConsumer?: ApitallyConsumer | string;
-  }
-}
-
-app.use(function (req: Request, res, next) {
-  if (req.user) {
-    req.apitallyConsumer = {
-      identifier: req.user.username,
-      name: `${req.user.first_name} ${req.user.last_name}`, // optional
-      group: req.user.group, // optional
-    }
-  }
-  next()
-})
-```
 </CodeGroup>
-
-<ConsumerIdentifierSnippet />
 
 <Snippet file="identify-consumers-check.mdx" />
 

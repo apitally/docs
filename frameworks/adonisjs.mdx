@@ -7,7 +7,6 @@ description: "Just a few simple steps to get started with Apitally."
 import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
 import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
-import ConsumerIdentifierSnippet from '/snippets/consumer-identifier.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
 
 This page guides you through the steps of configuring your [AdonisJS](https://adonisjs.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
@@ -66,17 +65,18 @@ export default class HttpExceptionHandler extends ExceptionHandler {
 
 <Snippet file="identify-consumers.mdx" />
 
-To associate requests with consumers, set the `apitallyConsumer` property on the `ctx` object, for example in a [custom middleware](https://docs.adonisjs.com/guides/basics/middleware#creating-middleware).
+Use the `setConsumer` function to associate requests with consumers, for example in a [custom middleware](https://docs.adonisjs.com/guides/basics/middleware#creating-middleware).
 
 <CodeGroup>
 ```typescript Identifier only
 import { HttpContext } from '@adonisjs/core/http'
 import { NextFn } from '@adonisjs/core/types/http'
+import { setConsumer } from 'apitally/adonisjs'
 
 export default class ApitallyConsumerMiddleware {
   async handle(ctx: HttpContext, next: NextFn) {
     if (ctx.auth.isAuthenticated) {
-      ctx.apitallyConsumer = ctx.auth.user!.email
+      setConsumer(ctx, ctx.auth.user!.email)
     }
     await next()
   }
@@ -86,22 +86,22 @@ export default class ApitallyConsumerMiddleware {
 ```typescript With name and group
 import { HttpContext } from '@adonisjs/core/http'
 import { NextFn } from '@adonisjs/core/types/http'
+import { setConsumer } from 'apitally/adonisjs'
 
 export default class ApitallyConsumerMiddleware {
   async handle(ctx: HttpContext, next: NextFn) {
     if (ctx.auth.isAuthenticated) {
-      ctx.apitallyConsumer = {
-        identifier: ctx.auth.user!.id,
-        name: ctx.auth.user!.fullName,
-        group: ctx.auth.user!.organization,
-      }
+      setConsumer(ctx, {
+        identifier: String(ctx.auth.user!.id),
+        name: ctx.auth.user!.fullName, // optional
+        group: ctx.auth.user!.organization, // optional
+      })
     }
     await next()
   }
 }
 ```
 </CodeGroup>
-<ConsumerIdentifierSnippet />
 
 <Snippet file="identify-consumers-check.mdx" />
 
