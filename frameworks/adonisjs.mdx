@@ -76,7 +76,7 @@ import { setConsumer } from 'apitally/adonisjs'
 export default class ApitallyConsumerMiddleware {
   async handle(ctx: HttpContext, next: NextFn) {
     if (ctx.auth.isAuthenticated) {
-      setConsumer(ctx, ctx.auth.user?.email)
+      setConsumer(ctx, ctx.auth.user!.email)
     }
     await next()
   }
@@ -92,9 +92,9 @@ export default class ApitallyConsumerMiddleware {
   async handle(ctx: HttpContext, next: NextFn) {
     if (ctx.auth.isAuthenticated) {
       setConsumer(ctx, {
-        identifier: String(ctx.auth.user?.id),
-        name: ctx.auth.user?.fullName, // optional
-        group: ctx.auth.user?.organization, // optional
+        identifier: String(ctx.auth.user!.id),
+        name: ctx.auth.user!.fullName, // optional
+        group: ctx.auth.user!.organization, // optional
       })
     }
     await next()
