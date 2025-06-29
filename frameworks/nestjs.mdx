@@ -78,11 +78,12 @@ useApitally(app, {
 
 <Snippet file="identify-consumers.mdx" />
 
-To associate requests with consumers, set the `apitallyConsumer` property on the [request object](https://expressjs.com/en/api.html#req), for example in an authorization guard.
+Use the `setConsumer` function to associate requests with consumers, for example in an authorization guard.
 
 <CodeGroup>
 ```javascript Identifier only
 import { Injectable } from '@nestjs/common';
+import { setConsumer } from "apitally/nestjs";
 
 @Injectable()
 export class AuthGuard {
@@ -90,7 +91,7 @@ export class AuthGuard {
     const request = context.switchToHttp().getRequest();
     const result = authenticateRequest(request); // assuming this sets request.user
     if (result && request.user) {
-      request.apitallyConsumer = request.user.username;
+      setConsumer(request, request.user.username);
     }
     return result;
   }
@@ -99,6 +100,7 @@ export class AuthGuard {
 
 ```javascript With name and group
 import { Injectable } from '@nestjs/common';
+import { setConsumer } from "apitally/nestjs";
 
 @Injectable()
 export class AuthGuard {
@@ -106,11 +108,11 @@ export class AuthGuard {
     const request = context.switchToHttp().getRequest();
     const result = authenticateRequest(request); // assuming this sets request.user
     if (result && request.user) {
-      request.apitallyConsumer = {
+      setConsumer(request, {
         identifier: request.user.username,
         name: request.user.fullName, // optional
         group: request.user.role, // optional
-      };
+      });
     }
     return result;
   }
