@@ -109,51 +109,42 @@ APITALLY_MIDDLEWARE = {
 
 <CodeGroup>
 ```python Basic example
-from apitally.django import RequestLoggingConfig
-
 APITALLY_MIDDLEWARE = {
     "client_id": "your-client-id",
     "env": "dev",  # or "prod" etc.
-    "request_logging_config": RequestLoggingConfig(
-        enabled=True,
-        log_query_params=True,
-        log_request_headers=True,
-        log_request_body=True,
-        log_response_headers=True,
-        log_response_body=True,
-    ),
+    "enable_request_logging": True,
+    "log_request_headers": True,
+    "log_request_body": True,
+    "log_response_body": True,
 }
 ```
 
 ```python Advanced example
-from apitally.django import RequestLoggingConfig
-
 APITALLY_MIDDLEWARE = {
     "client_id": "your-client-id",
     "env": "dev",  # or "prod" etc.
-    "request_logging_config": RequestLoggingConfig(
-        enabled=True,
-        log_query_params=True,
-        log_request_headers=True,
-        log_request_body=True,
-        log_response_headers=True,
-        log_response_body=True,
-        # Mask some query parameters with sensitive information
-        mask_query_params=[r"^card_number$"],
-        # Mask custom header with sensitive information (applied to both request and response headers)
-        # Common sensitive headers like `Authorization` are masked by default
-        mask_headers=[r"^X-Sensitive-Header$"],
-        # Mask request/response body fields with sensitive information
-        mask_body_fields=[r"^sensitive_field$"],
-        # Only log request body for some parts of the API
-        mask_request_body_callback=lambda request: request["body"] if request["path"].startswith("/api/v2/") else None,
-        # Only log response body for unsuccessful requests
-        mask_response_body_callback=lambda request, response: response["body"] if response["status_code"] >= 400 else None,
-        # Exclude some paths from request logging (common health check paths are excluded by default)
-        exclude_paths=[r"\/metrics$"],
-        # Exclude requests from a specific consumer
-        exclude_callback=lambda request, response: request["consumer"] == "some-consumer",
-    ),
+    "enable_request_logging": True,
+    "log_query_params": True,
+    "log_request_headers": True,
+    "log_request_body": True,
+    "log_response_headers": True,
+    "log_response_body": True,
+    "log_exception": True,
+    # Mask some query parameters with sensitive information
+    "mask_query_params": [r"^card_number$"],
+    # Mask custom header with sensitive information (applied to both request and response headers)
+    # Common sensitive headers like `Authorization` are masked by default
+    "mask_headers": [r"^X-Sensitive-Header$"],
+    # Mask request/response body fields with sensitive information
+    "mask_body_fields": [r"^sensitive_field$"],
+    # Only log request body for some parts of the API
+    "mask_request_body_callback": lambda request: request["body"] if request["path"].startswith("/api/v2/") else None,
+    # Only log response body for unsuccessful requests
+    "mask_response_body_callback": lambda request, response: response["body"] if response["status_code"] >= 400 else None,
+    # Exclude some paths from request logging (common health check paths are excluded by default)
+    "exclude_paths": [r"\/metrics$"],
+    # Exclude requests from a specific consumer
+    "exclude_callback": lambda request, response: request["consumer"] == "some-consumer",
 }
 ```
 </CodeGroup>
