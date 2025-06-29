@@ -104,7 +104,7 @@ def get_consumer(request: Request) -> ApitallyConsumer | None:
 apitally_plugin = ApitallyPlugin(
     client_id="your-client-id",
     env="dev",  # or "prod" etc.
-    identify_consumer_callback=get_consumer,
+    consumer_callback=get_consumer,
 )
 ```
 </CodeGroup>

@@ -96,7 +96,7 @@ def identify_consumer(request: HttpRequest) -> ApitallyConsumer | None:
 APITALLY_MIDDLEWARE = {
     "client_id": "your-client-id",
     "env": "dev",  # or "prod" etc.
-    "identify_consumer_callback": "your_project.api.utils.identify_consumer",
+    "consumer_callback": "your_project.api.utils.identify_consumer",
 }
 ```
 </CodeGroup>
