@@ -107,9 +107,7 @@ app.Use(async (context, next) =>
 
 ## Configure request logging
 
-Logging of individual requests and responses is disabled by default to protect potentially sensitive data.
-You can enable it in the `RequestLogging` options, which allow you to configure in detail what parts of the request and response should be logged.
-There are also options for masking sensitive information and excluding certain requests from logging.
+<RequestLoggingConfigSnippet language="csharp" />
 
 Check out the <a href="/reference/dotnet#request-logging-options">reference page</a> to learn more about the request logging configuration options, and the default masking and exclusion rules.
 
