@@ -204,7 +204,7 @@ func main() {
             // Mask request/response body fields using regex
             MaskBodyFields:     []*regexp.Regexp{regexp.MustCompile(`^sensitive_field$`)},
             // Exclude paths from request logging using regex (common health check paths are excluded by default)
-            ExcludePaths:       []*regexp.Regexp{regexp.MustCompile(`\/metrics$`)},
+            ExcludePaths:       []*regexp.Regexp{regexp.MustCompile(`/metrics$`)},
             // Mask request/response body with custom logic via callbacks (e.g. for admin endpoints)
             // The callback should return nil to mask the whole body, or return the (modified) raw body
             MaskRequestBodyCallback: func(request *apitally.Request) []byte {

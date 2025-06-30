@@ -160,7 +160,7 @@ apitally:
       - "^sensitive_field$"
     # Exclude paths from request logging using regex (common health check paths are excluded by default)
     path-exclude-patterns:
-      - "\\/metrics$"
+      - "/metrics$"
     # Use callbacks for advanced masking and exclusion logic
     callbacks-class: "com.example.MyRequestLoggingCallbacks"
 ```
