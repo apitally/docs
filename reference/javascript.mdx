@@ -13,13 +13,13 @@ The following parameters apply for all integrations.
 | :-------- | :---------- | :--- | :------ |
 | `clientId` | Client ID for your application. Find it on the _Setup instructions_ page for your app. | `string` |
 | `env` | Name of the environment, e.g. `prod` or `dev`. The environment will be automatically created if it doesn't exist. | `string` | `dev` |
-| `requestLoggingConfig` | Configuration for request logging. See table below. | `object` |
+| `requestLogging` | Configuration options for request logging. See table below. | `object` |
 | `appVersion` | The current version of your application, e.g. `1.0.0`. | `string` |
 | `logger` | A custom logger instance. If not provided, a default logger is created automatically. | `object` |
 
 ## Request logging config
 
-The following are the keys of the `requestLoggingConfig` object.
+The following are the keys of the `requestLogging` object.
 
 | Parameter | Description | Type | Default |
 | :-------- | :---------- | :--- | :------ |
@@ -29,6 +29,7 @@ The following are the keys of the `requestLoggingConfig` object.
 | `logRequestBody` | Whether to include the request body in the logs. Only JSON and text are supported, up to 50 KB. | `boolean` | `false` |
 | `logResponseHeaders` | Whether to include response headers in the logs. | `boolean` | `true` |
 | `logResponseBody` | Whether to include the response body in the logs. Only JSON and text are supported, up to 50 KB. | `boolean` | `false` |
+| `logException` | Whether to include exception details in the logs. | `boolean` | `true` |
 | `maskQueryParams` | Array of regular expressions for matching query parameters to mask. These are in addition to the default masking patterns. | `RegExp[]` | `[]` |
 | `maskHeaders` | Array of regular expressions for matching headers to mask. These are in addition to the default masking patterns. | `RegExp[]` | `[]` |
 | `maskBodyFields` | Array of regular expressions for matching request/response body fields to mask. These are in addition to the default masking patterns. | `RegExp[]` | `[]` |
