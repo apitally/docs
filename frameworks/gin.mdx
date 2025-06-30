@@ -197,30 +197,30 @@ func main() {
             LogResponseHeaders: true,
             LogResponseBody:    true,
             LogPanic:           true,
-            // Mask some query parameters with sensitive information
+            // Mask query parameters using regex
             MaskQueryParams:    []*regexp.Regexp{regexp.MustCompile(`^card_number$`)},
-            // Mask custom header with sensitive information (applied to both request and response headers)
-            // Common sensitive headers like `Authorization` are masked by default
+            // Mask headers using regex
             MaskHeaders:        []*regexp.Regexp{regexp.MustCompile(`^X-Sensitive-Header$`)},
-            // Mask request/response body fields with sensitive information
+            // Mask request/response body fields using regex
             MaskBodyFields:     []*regexp.Regexp{regexp.MustCompile(`^sensitive_field$`)},
-            // Exclude some paths from request logging (common health check paths are excluded by default)
+            // Exclude paths from request logging using regex (common health check paths are excluded by default)
             ExcludePaths:       []*regexp.Regexp{regexp.MustCompile(`\/metrics$`)},
-            // Custom masking for request body
+            // Mask request/response body with custom logic via callbacks (e.g. for admin endpoints)
+            // The callback should return nil to mask the whole body, or return the (modified) raw body
             MaskRequestBodyCallback: func(request *apitally.Request) []byte {
-                if strings.HasPrefix(request.Path, "/api/v2") {
-                    return nil // Don't log request body for this path
+                if strings.HasPrefix(request.Path, "/admin/") {
+                    return nil // Mask the whole body for admin endpoints
                 }
                 return request.Body
             },
-            // Custom masking for response body based on status code
             MaskResponseBodyCallback: func(request *apitally.Request, response *apitally.Response) []byte {
-                if response.StatusCode >= 400 {
-                    return response.Body // Only log response body for error responses
+                if strings.HasPrefix(request.Path, "/admin/") {
+                    return nil // Mask the whole body for admin endpoints
                 }
-                return nil
+                return response.Body
             },
-            // Exclude requests from a specific consumer
+            // Exclude requests from logging with custom logic via callback (e.g. exclude requests from a specific consumer)
+            // The callback should return true to exclude the request
             ExcludeCallback: func(request *apitally.Request, response *apitally.Response) bool {
                 return request.Consumer == "some-consumer"
             },
