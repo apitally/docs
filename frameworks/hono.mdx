@@ -108,12 +108,10 @@ const app = new Hono();
 useApitally(app, {
   clientId: "your-client-id",
   env: "dev", // or "prod" etc.
-  requestLoggingConfig: {
+  requestLogging: {
     enabled: true,
-    logQueryParams: true,
     logRequestHeaders: true,
     logRequestBody: true,
-    logResponseHeaders: true,
     logResponseBody: true,
   },
 });
@@ -128,13 +126,14 @@ const app = new Hono();
 useApitally(app, {
   clientId: "your-client-id",
   env: "dev", // or "prod" etc.
-  requestLoggingConfig: {
+  requestLogging: {
     enabled: true,
     logQueryParams: true,
     logRequestHeaders: true,
     logRequestBody: true,
     logResponseHeaders: true,
     logResponseBody: true,
+    logExceptions: true,
     // Mask query parameters using regex
     maskQueryParams: [/^card_number$/i],
     // Mask headers using regex
