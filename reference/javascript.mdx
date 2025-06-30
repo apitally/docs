@@ -5,14 +5,14 @@ description: The parameters of the Apitally SDK for Node.js.
 mode: "wide"
 ---
 
-## Middleware
+## Parameters
 
-The following parameters apply when adding the Apitally middleware/plugin to your application.
+The following parameters apply for all integrations.
 
-| Parameter | Description | Type |
-| :-------- | :---------- | :--- |
+| Parameter | Description | Type | Default |
+| :-------- | :---------- | :--- | :------ |
 | `clientId` | Client ID for your application. Find it on the _Setup instructions_ page for your app. | `string` |
-| `env` | Name of the environment, e.g. `prod` or `dev`. The environment will be automatically created in Apitally if it doesn't exist. Defaults to `dev`. | `string` |
+| `env` | Name of the environment, e.g. `prod` or `dev`. The environment will be automatically created if it doesn't exist. | `string` | `dev` |
 | `requestLoggingConfig` | Configuration for request logging. See table below. | `object` |
 | `appVersion` | The current version of your application, e.g. `1.0.0`. | `string` |
 | `logger` | A custom logger instance. If not provided, a default logger is created automatically. | `object` |
@@ -24,7 +24,7 @@ The following are the keys of the `requestLoggingConfig` object.
 | Parameter | Description | Type | Default |
 | :-------- | :---------- | :--- | :------ |
 | `enabled` | Whether request logging is enabled. | `boolean` | `false` |
-| `logQueryParams` | Whether to include query parameters in the logs. If disabled these will be stripped from the request URLs logged. | `boolean` | `true` |
+| `logQueryParams` | Whether to include query parameters in the logs. If disabled, these will be stripped from the request URLs logged. | `boolean` | `true` |
 | `logRequestHeaders` | Whether to include request headers in the logs. Default masking for common sensitive headers (e.g. `Authorization`) applies. | `boolean` | `false` |
 | `logRequestBody` | Whether to include the request body in the logs. Only JSON and text are supported, up to 50 KB. | `boolean` | `false` |
 | `logResponseHeaders` | Whether to include response headers in the logs. | `boolean` | `true` |

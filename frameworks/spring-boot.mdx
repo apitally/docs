@@ -80,10 +80,15 @@ To associate requests with consumers, set the `apitallyConsumer` attribute on th
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class ConsumerIdentificationFilter extends OncePerRequestFilter {
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated()) {
             request.setAttribute("apitallyConsumer", auth.getName());
@@ -97,12 +102,17 @@ public class ConsumerIdentificationFilter extends OncePerRequestFilter {
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import io.apitally.spring.ApitallyConsumer;
 
 public class ConsumerIdentificationFilter extends OncePerRequestFilter {
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated()) {
             User user = (User) auth.getPrincipal();
@@ -123,6 +133,8 @@ public class ConsumerIdentificationFilter extends OncePerRequestFilter {
 ## Configure request logging
 
 <RequestLoggingConfigSnippet language="java" />
+
+Check out the <a href="/reference/java#request-logging-config">reference page</a> to learn more about the request logging configuration options, and the default masking and exclusion rules.
 
 <CodeGroup>
 ```yaml Basic example
@@ -149,19 +161,18 @@ apitally:
     request-body-included: true
     response-headers-included: true
     response-body-included: true
-    # Mask some query parameters with sensitive information
+    # Mask query parameters using regex
     query-param-mask-patterns:
       - "^card_number$"
-    # Mask custom header with sensitive information (applied to both request and response headers)
-    # Common sensitive headers like `Authorization` are masked by default
+    # Mask headers using regex
     header-mask-patterns:
       - "^X-Sensitive-Header$"
-    # Mask request/response body fields with sensitive information
+    # Mask request/response body fields using regex
     body-field-mask-patterns:
       - "^sensitive_field$"
-    # Exclude some paths from request logging (common health check paths are excluded by default)
+    # Exclude paths from request logging using regex (common health check paths are excluded by default)
     path-exclude-patterns:
-      - "\\/metrics$"
+      - "/metrics$"
     # Use callbacks for advanced masking and exclusion logic
     callbacks-class: "com.example.MyRequestLoggingCallbacks"
 ```
@@ -174,25 +185,26 @@ import io.apitally.common.dto.Response;
 public class MyRequestLoggingCallbacks implements RequestLoggingCallbacks {
     @Override
     public byte[] maskRequestBody(Request request) {
-        // Only log request body for some parts of the API
-        if (request.getPath().startsWith("/api/v2/")) {
-            return request.getBody();
+        // Mask request/response body with custom logic via callbacks (e.g. for admin endpoints)
+        // The callback should return null to mask the whole body, or return the (modified) raw body
+        if (request.getPath().startsWith("/admin/")) {
+            return null; // Mask the whole body for admin endpoints
         }
-        return null;
+        return request.getBody();
     }
 
     @Override
     public byte[] maskResponseBody(Request request, Response response) {
-        // Only log response body for unsuccessful requests
-        if (response.getStatusCode() >= 400) {
-            return response.getBody();
+        if (request.getPath().startsWith("/admin/")) {
+            return null; // Mask the whole body for admin endpoints
         }
-        return null;
+        return response.getBody();
     }
 
     @Override
     public boolean shouldExclude(Request request, Response response) {
-        // Exclude requests from a specific consumer
+        // Exclude requests from logging with custom logic via callback (e.g. exclude requests from a specific consumer)
+        // The callback should return true to exclude the request
         return "some-consumer".equals(request.getConsumer());
     }
 }

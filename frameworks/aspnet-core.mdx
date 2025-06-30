@@ -85,6 +85,8 @@ app.Use(async (context, next) =>
 ```
 
 ```csharp With name and group
+using System.Security.Claims;
+
 app.Use(async (context, next) =>
 {
     if (context.User.Identity.IsAuthenticated)
@@ -105,9 +107,7 @@ app.Use(async (context, next) =>
 
 ## Configure request logging
 
-Logging of individual requests and responses is disabled by default to protect potentially sensitive data.
-You can enable it in the `RequestLogging` options, which allow you to configure in detail what parts of the request and response should be logged.
-There are also options for masking sensitive information and excluding certain requests from logging.
+<RequestLoggingConfigSnippet language="csharp" />
 
 Check out the <a href="/reference/dotnet#request-logging-options">reference page</a> to learn more about the request logging configuration options, and the default masking and exclusion rules.
 
@@ -141,22 +141,21 @@ Check out the <a href="/reference/dotnet#request-logging-options">reference page
       "IncludeRequestBody": true,
       "IncludeResponseHeaders": true,
       "IncludeResponseBody": true,
-      // Mask some query parameters with sensitive information
+      // Mask query parameters using regex
       "QueryParamMaskPatterns": [
         "^card_number$"
       ],
-      // Mask custom header with sensitive information (applied to both request and response headers)
-      // Common sensitive headers like `Authorization` are masked by default
+      // Mask headers using regex
       "HeaderMaskPatterns": [
         "^X-Sensitive-Header$"
       ],
-      // Mask request/response body fields with sensitive information
+      // Mask request/response body fields using regex
       "BodyFieldMaskPatterns": [
         "^sensitive_field$"
       ],
-      // Exclude some paths from request logging (common health check paths are excluded by default)
+      // Exclude paths from request logging using regex (common health check paths are excluded by default)
       "PathExcludePatterns": [
-        "\\/metrics$"
+        "/metrics$"
       ]
     }
   }
@@ -166,15 +165,16 @@ Check out the <a href="/reference/dotnet#request-logging-options">reference page
 ```csharp Callbacks example
 builder.Services.PostConfigure<ApitallyOptions>(options =>
 {
-    // Only log request body for some parts of the API
+    // Mask request/response body with custom logic via callbacks (e.g. for admin endpoints)
+    // The callback should return null to mask the whole body, or return the (modified) raw body
     options.RequestLogging.MaskRequestBody = request =>
-        request.Path.StartsWith("/api/v2/") ? request.Body : null,
-    // Only log response body for unsuccessful requests
+        request.Path.StartsWith("/admin/") ? null : request.Body;
     options.RequestLogging.MaskResponseBody = (request, response) =>
-        response.StatusCode >= 400 ? response.Body : null,
-    // Exclude requests from a specific consumer
+        request.Path.StartsWith("/admin/") ? null : response.Body;
+    // Exclude requests from logging with custom logic via callback (e.g. exclude requests from a specific consumer)
+    // The callback should return true to exclude the request
     options.RequestLogging.ShouldExclude = (request, response) =>
-        request.Consumer == "some-consumer"
+        request.Consumer == "some-consumer";
 });
 ```
 </CodeGroup>

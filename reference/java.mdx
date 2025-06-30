@@ -5,14 +5,14 @@ description: The parameters of the Apitally SDK for Java.
 mode: "wide"
 ---
 
-## Middleware
+## Configuration options
 
 The following parameters apply when configuring the Apitally client in your `application.yml` file.
 
 | Parameter | Description | Type |
 | :-------- | :---------- | :--- |
 | <nobr>`client-id`</nobr> | Client ID for your application. Find it on the _Setup instructions_ page for your app. | `string` |
-| `env` | Name of the environment, e.g. `prod` or `dev`. The environment will be automatically created in Apitally if it doesn't exist. | `string` |
+| `env` | Name of the environment, e.g. `prod` or `dev`. The environment will be automatically created if it doesn't exist. | `string` |
 | <nobr>`request-logging`</nobr> | Configuration for request logging. See table below. | `object` |
 
 ## Request logging config
@@ -22,7 +22,7 @@ The following are the properties of the `request-logging` configuration object.
 | Parameter | Description | Type | Default |
 | :-------- | :---------- | :--- | :------ |
 | `enabled` | Whether request logging is enabled. | `boolean` | `false` |
-| <nobr>`query-params-included`</nobr> | Whether to include query parameters in the logs. If disabled these will be stripped from the request URLs logged. | `boolean` | `true` |
+| <nobr>`query-params-included`</nobr> | Whether to include query parameters in the logs. If disabled, these will be stripped from the request URLs logged. | `boolean` | `true` |
 | <nobr>`request-headers-included`</nobr> | Whether to include request headers in the logs. Default masking for common sensitive headers (e.g. `Authorization`) applies. | `boolean` | `false` |
 | <nobr>`request-body-included`</nobr> | Whether to include the request body in the logs. Only JSON and text are supported, up to 50 KB. | `boolean` | `false` |
 | <nobr>`response-headers-included`</nobr> | Whether to include response headers in the logs. | `boolean` | `true` |

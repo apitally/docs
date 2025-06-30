@@ -1,8 +1,9 @@
 Logging of individual requests and responses is disabled by default to protect potentially sensitive data.
-You can enable it by providing a `RequestLoggingConfig` object, which allows you to configure in detail what parts of the request and response should be logged.
-There are also options for masking sensitive information and excluding certain requests from logging.
+If you enable it, you can configure in detail what parts of the request and response should be logged.
+You can also mask sensitive information (e.g. in headers) and exclude certain requests from logging.
 
-{language == "python" && <p>Check out the <a href="/reference/python#request-logging-config">reference page</a> to learn more about the request logging configuration options, and the default masking and exclusion rules.</p>}
-{language == "javascript" && <p>Check out the <a href="/reference/javascript#request-logging-config">reference page</a> to learn more about the request logging configuration options, and the default masking and exclusion rules.</p>}
-{language == "java" && <p>Check out the <a href="/reference/java#request-logging-config">reference page</a> to learn more about the request logging configuration options, and the default masking and exclusion rules.</p>}
-{language == "go" && <p>Check out the <a href="/reference/go#request-logging-config">reference page</a> to learn more about the request logging configuration options, and the default masking and exclusion rules.</p>}
+The SDK applies default masking rules for common sensitive headers, query parameters and request/response body fields.
+
+{language == "python" && <p>Check out the <a href="/reference/python">reference page</a> to learn more about the request logging configuration options, and the default masking and exclusion rules.</p>}
+{language == "javascript" && <p>Check out the <a href="/reference/javascript">reference page</a> to learn more about the request logging configuration options, and the default masking and exclusion rules.</p>}
+{language == "go" && <p>Check out the <a href="/reference/go">reference page</a> to learn more about the request logging configuration options, and the default masking and exclusion rules.</p>}
