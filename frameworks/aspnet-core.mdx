@@ -85,6 +85,8 @@ app.Use(async (context, next) =>
 ```
 
 ```csharp With name and group
+using System.Security.Claims;
+
 app.Use(async (context, next) =>
 {
     if (context.User.Identity.IsAuthenticated)
