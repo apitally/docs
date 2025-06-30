@@ -168,13 +168,13 @@ builder.Services.PostConfigure<ApitallyOptions>(options =>
     // Mask request/response body with custom logic via callbacks (e.g. for admin endpoints)
     // The callback should return null to mask the whole body, or return the (modified) raw body
     options.RequestLogging.MaskRequestBody = request =>
-        request.Path.StartsWith("/admin/") ? null : request.Body,
+        request.Path.StartsWith("/admin/") ? null : request.Body;
     options.RequestLogging.MaskResponseBody = (request, response) =>
-        request.Path.StartsWith("/admin/") ? null : response.Body,
+        request.Path.StartsWith("/admin/") ? null : response.Body;
     // Exclude requests from logging with custom logic via callback (e.g. exclude requests from a specific consumer)
     // The callback should return true to exclude the request
     options.RequestLogging.ShouldExclude = (request, response) =>
-        request.Consumer == "some-consumer"
+        request.Consumer == "some-consumer";
 });
 ```
 </CodeGroup>
