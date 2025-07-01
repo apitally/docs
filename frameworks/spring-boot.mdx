@@ -143,10 +143,8 @@ apitally:
   env: "dev" # or "prod" etc.
   request-logging:
     enabled: true
-    query-params-included: true
     request-headers-included: true
     request-body-included: true
-    response-headers-included: true
     response-body-included: true
 ```
 
@@ -161,6 +159,7 @@ apitally:
     request-body-included: true
     response-headers-included: true
     response-body-included: true
+    exception-included: true
     # Mask query parameters using regex
     query-param-mask-patterns:
       - "^card_number$"
