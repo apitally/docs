@@ -43,10 +43,9 @@ import (
 func main() {
     e := echo.New()
 
-    config := &apitally.Config{
-        ClientId: "your-client-id",
-        Env:      "dev", // or "prod" etc.
-    }
+    config := apitally.NewConfig("your-client-id")
+    config.Env = "dev" // or "prod" etc.
+
     e.Use(apitally.Middleware(e, config))
 
     // ... rest of your code ...
@@ -158,19 +157,13 @@ import (
 func main() {
     e := echo.New()
 
-    config := &apitally.Config{
-        ClientId: "your-client-id",
-        Env:      "dev", // or "prod" etc.
-        RequestLoggingConfig: &apitally.RequestLoggingConfig{
-            Enabled:            true,
-            LogQueryParams:     true,
-            LogRequestHeaders:  true,
-            LogRequestBody:     true,
-            LogResponseHeaders: true,
-            LogResponseBody:    true,
-            LogPanic:           true,
-        },
-    }
+    config := apitally.NewConfig("your-client-id")
+    config.Env = "dev" // or "prod" etc.
+    config.RequestLogging.Enabled = true
+    config.RequestLogging.LogRequestHeaders = true
+    config.RequestLogging.LogRequestBody = true
+    config.RequestLogging.LogResponseBody = true
+
     e.Use(apitally.Middleware(e, config))
 
     // ... rest of your code ...
@@ -191,46 +184,43 @@ import (
 func main() {
     e := echo.New()
 
-    config := &apitally.Config{
-        ClientId: "your-client-id",
-        Env:      "dev", // or "prod" etc.
-        RequestLoggingConfig: &apitally.RequestLoggingConfig{
-            Enabled:            true,
-            LogQueryParams:     true,
-            LogRequestHeaders:  true,
-            LogRequestBody:     true,
-            LogResponseHeaders: true,
-            LogResponseBody:    true,
-            LogPanic:           true,
-            // Mask query parameters using regex
-            MaskQueryParams:    []*regexp.Regexp{regexp.MustCompile(`^card_number$`)},
-            // Mask headers using regex
-            MaskHeaders:        []*regexp.Regexp{regexp.MustCompile(`^X-Sensitive-Header$`)},
-            // Mask request/response body fields using regex
-            MaskBodyFields:     []*regexp.Regexp{regexp.MustCompile(`^sensitive_field$`)},
-            // Exclude paths from request logging using regex (common health check paths are excluded by default)
-            ExcludePaths:       []*regexp.Regexp{regexp.MustCompile(`/metrics$`)},
-            // Mask request/response body with custom logic via callbacks (e.g. for admin endpoints)
-            // The callback should return nil to mask the whole body, or return the (modified) raw body
-            MaskRequestBodyCallback: func(request *apitally.Request) []byte {
-                if strings.HasPrefix(request.Path, "/admin/") {
-                    return nil // Mask the whole body for admin endpoints
-                }
-                return request.Body
-            },
-            MaskResponseBodyCallback: func(request *apitally.Request, response *apitally.Response) []byte {
-                if strings.HasPrefix(request.Path, "/admin/") {
-                    return nil // Mask the whole body for admin endpoints
-                }
-                return response.Body
-            },
-            // Exclude requests from logging with custom logic via callback (e.g. exclude requests from a specific consumer)
-            // The callback should return true to exclude the request
-            ExcludeCallback: func(request *apitally.Request, response *apitally.Response) bool {
-                return request.Consumer == "some-consumer"
-            },
-        },
+    config := apitally.NewConfig("your-client-id")
+    config.Env = "dev" // or "prod" etc.
+    config.RequestLogging.Enabled = true
+    config.RequestLogging.LogQueryParams = true
+    config.RequestLogging.LogRequestHeaders = true
+    config.RequestLogging.LogRequestBody = true
+    config.RequestLogging.LogResponseHeaders = true
+    config.RequestLogging.LogResponseBody = true
+    config.RequestLogging.LogPanic = true
+    // Mask query parameters using regex
+    config.RequestLogging.MaskQueryParams = []*regexp.Regexp{regexp.MustCompile(`^card_number$`)}
+    // Mask headers using regex
+    config.RequestLogging.MaskHeaders = []*regexp.Regexp{regexp.MustCompile(`^X-Sensitive-Header$`)}
+    // Mask request/response body fields using regex
+    config.RequestLogging.MaskBodyFields = []*regexp.Regexp{regexp.MustCompile(`^sensitive_field$`)}
+    // Exclude paths from request logging using regex (common health check paths are excluded by default)
+    config.RequestLogging.ExcludePaths = []*regexp.Regexp{regexp.MustCompile(`/metrics$`)}
+    // Mask request/response body with custom logic via callbacks (e.g. for admin endpoints)
+    // The callback should return nil to mask the whole body, or return the (modified) raw body
+    config.RequestLogging.MaskRequestBodyCallback = func(request *apitally.Request) []byte {
+        if strings.HasPrefix(request.Path, "/admin/") {
+            return nil // Mask the whole body for admin endpoints
+        }
+        return request.Body
     }
+    config.RequestLogging.MaskResponseBodyCallback = func(request *apitally.Request, response *apitally.Response) []byte {
+        if strings.HasPrefix(request.Path, "/admin/") {
+            return nil // Mask the whole body for admin endpoints
+        }
+        return response.Body
+    }
+    // Exclude requests from logging with custom logic via callback (e.g. exclude requests from a specific consumer)
+    // The callback should return true to exclude the request
+    config.RequestLogging.ExcludeCallback = func(request *apitally.Request, response *apitally.Response) bool {
+        return request.Consumer == "some-consumer"
+    }
+
     e.Use(apitally.Middleware(e, config))
 
     // ... rest of your code ...
