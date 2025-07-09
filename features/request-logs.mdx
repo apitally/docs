@@ -10,12 +10,12 @@ The request logs allow you to see a chronological list of all requests made to y
 
 Clicking on the timeline graph at the top allows you to quickly jump to a specific time point.
 
-<Tip>Hold down the Cmd/Alt key and drag on the chart to zoom to a time range.</Tip>
+<Tip>Hold down the Cmd/Alt key and drag on the chart to zoom into a specific time range.</Tip>
 
 ## Enable logging
 
 By default, our SDKs do not send request logs to Apitally.
-You must explicitly enable logging in your application, and configure which aspects of the request and response you want to include.
+You must explicitly enable request logging in your application, and configure what should be included in the logs.
 There are also various options for excluding or masking sensitive data.
 
 Learn more in the setup guide for your specific framework.
@@ -46,4 +46,5 @@ Clicking on a request in the log opens a modal with more detailed information, i
 
 ## Exporting data
 
-The request logs include a button to export logged requests to a CSV file. The exported file can include up to 1 million requests.
+The request logs include a button to export logged requests to a CSV file. The current dashboard filters are applied automatically.
+The exported file can include up to 1 million requests.
