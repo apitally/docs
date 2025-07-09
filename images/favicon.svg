@@ -1,15 +1,10 @@
-<svg width="65" height="65" viewBox="0 0 65 65" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_8_15)">
-<rect width="65" height="65" rx="10" fill="#212121"/>
-<rect x="14" y="19" width="7" height="36" rx="3" fill="white"/>
-<rect x="24" y="14" width="7" height="41" rx="3" fill="white"/>
-<rect x="44" y="12" width="7" height="43" rx="3" fill="white"/>
-<rect x="34" y="9" width="7" height="46" rx="3" fill="white"/>
-<rect x="56.7603" y="23.3174" width="5.42938" height="54.5398" rx="2.71469" transform="rotate(67.9075 56.7603 23.3174)" fill="white"/>
-</g>
-<defs>
-<clipPath id="clip0_8_15">
-<rect width="65" height="65" rx="10" fill="white"/>
-</clipPath>
-</defs>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="65" height="65"><svg width="65" height="65" viewBox="0 0 65 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="65" height="65" fill="#0F4040"></rect>
+<rect x="14" y="19" width="7" height="36" rx="3" fill="white"></rect>
+<rect x="24" y="14" width="7" height="41" rx="3" fill="white"></rect>
+<rect x="44" y="12" width="7" height="43" rx="3" fill="white"></rect>
+<rect x="34" y="9" width="7" height="46" rx="3" fill="white"></rect>
+<rect x="56.7603" y="23.3174" width="5.42938" height="54.5398" rx="2.71469" transform="rotate(67.9075 56.7603 23.3174)" fill="white"></rect>
+</svg><style>@media (prefers-color-scheme: light) { :root { filter: none; } }
+@media (prefers-color-scheme: dark) { :root { filter: none; } }
+</style></svg>
