@@ -1,38 +1,37 @@
 ---
 title: Apps overview
-description: The entrypoint of your Apitally dashboard and where you manage apps.
+description: Key API metrics for all your apps at a glance.
 ---
 
-<img src="https://assets.apitally.io/docs/2025-05-27/apps.webp" alt="Apps overview with sparklines" class="rounded-xl" />
+<img src="https://assets.apitally.io/docs/2025-07-08/apps.webp" alt="Apps overview with sparklines" className="rounded-xl" />
 
-When you open the Apitally dashboard you first land on the *Apps* page.
-Here you see an overview of your applications and you can create, edit and delete apps.
+When you open the Apitally dashboard, you first land on the *Apps* page.
+Here you see an overview of key API metrics for all your applications, including sparkline graphs that help you quickly identify unexpected spikes or drops.
+Clicking on a metric or graph takes you to the relevant dashboard with more details.
 
-The overview includes sparkline graphs of requests for a quick overview of API traffic patterns across apps.
-This can help to quickly identify unexpected spikes or drops in traffic for any of your apps.
-Clicking on a graph takes you to the [traffic dashboard](/features/traffic-dashboard).
-
-## Creating an app
-
-<div className="flex flex-row justify-between gap-4" style={{ margin: "-1rem 0" }}>
-  <img src="https://assets.apitally.io/docs/2025-05-27/create-app.webp" alt="Create app modal" class="rounded" />
-  <img src="https://assets.apitally.io/docs/2025-05-27/app-setup-instructions.webp" alt="App setup instructions" class="rounded" />
-</div>
-
-Adding a new app to Apitally is very straightforward. Simply specify a name, select the framework used by your app and hit *Submit*.
-You can optionally add or remove [environments](#environments) as appropriate for your app.
-
-After submitting, you will see tailored instructions on how to set up your application with one of our SDKs.
+You can also create, edit and delete apps on this screen.
 
 ## Environments
 
-Apitally allows multiple environments for each app, which means you can track API metrics across different production and non-production environments.
-A green environment badge in the app overview indicates an environment that is currently online and sending data.
+Each app in Apitally can have multiple environments, allowing you to track API metrics separately for production, staging, development, etc.
 
 You can manage environments when creating or editing an app. You can also reorder environments so they're always displayed in an order that makes sense to you, e.g. `production` > `staging` > `development`.
 
-When Apitally starts receiving data from a new environment that doesn't exist yet, it is created automatically.
+If Apitally receives data from a new environment that doesn't exist yet, it is created automatically.
 
-## Sentry integration
+## Creating apps
 
-If you have a [Sentry](https://sentry.io) account and are using the Sentry SDK in your application, you can provide the organization slug and project name, so Apitally can link captured server errors to issues created in Sentry.
+<div className="flex flex-row justify-between gap-4" style={{ margin: "-1rem 0" }}>
+  <img src="https://assets.apitally.io/docs/2025-07-08/create-app.webp" alt="Create app modal" className="rounded" loading="lazy" />
+  <img src="https://assets.apitally.io/docs/2025-07-08/app-setup-instructions.webp" alt="App setup instructions" className="rounded" loading="lazy" />
+</div>
+
+Adding a new app to Apitally is very straightforward. Simply specify a name, select the framework used by your app and hit *Submit*.
+You can optionally add or remove environments as appropriate for your app.
+
+<Tip>
+If you're using the Sentry SDK in your application, you can provide your organization slug and project name, so Apitally can link captured server errors to issues created in Sentry.
+</Tip>
+
+
+After submitting, you will see tailored setup instructions for your specific framework. These include code snippets you can copy and paste into your application code.

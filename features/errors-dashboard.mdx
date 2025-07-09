@@ -4,20 +4,20 @@ sidebarTitle: Errors dashboard
 description: Understand the frequency, causes and impact of client and server errors.
 ---
 
-<img src="https://assets.apitally.io/docs/2025-05-27/errors.webp" alt="Errors dashboard" class="rounded-xl" />
+<img src="https://assets.apitally.io/docs/2025-07-08/errors.webp" alt="Errors dashboard" className="rounded-xl" />
 
-The *Errors* dashboard provides a comprehensive overview of the error responses returned by your API.
+The *Errors* dashboard provides an overview of the error responses returned by your API.
 
 The bar chart at the top shows the distribution of errors over time, broken down by client and server errors.
-When you hover over the bars you'll see a tooltip with the number of occurrences of each error status code.
+When you hover over the bars, you'll see a tooltip with the number of occurrences of each specific status code.
 
-The table below lists all error status codes returned by your endpoints and is sorted by the number of occurrences.
+The table below lists all `4xx` and `5xx` status codes returned by your endpoints and is sorted by the number of occurrences.
 
-Clicking on a row in the table opens up a modal with further insights about that type of error.
+Clicking on a row opens up a modal with further insights about that type of error.
 
 <div className="flex flex-row justify-between gap-4" style={{ margin: "-1rem 0" }}>
-  <img src="https://assets.apitally.io/docs/2025-05-27/error-occurrences.webp" alt="Error occurrences" class="rounded" />
-  <img src="https://assets.apitally.io/docs/2025-05-27/error-details.webp" alt="Error details" class="rounded" />
+  <img src="https://assets.apitally.io/docs/2025-07-08/error-occurrences.webp" alt="Error occurrences" className="rounded" loading="lazy" />
+  <img src="https://assets.apitally.io/docs/2025-07-08/error-details.webp" alt="Error details" className="rounded" loading="lazy" />
 </div>
 
 This includes a summary with the total number of occurrences, the number of affected API consumers and the time of the last occurrence.
@@ -26,14 +26,14 @@ A bar chart shows the frequency of the error over time and a second, horizontal 
 
 For validation and server errors, the modal includes a *Details* tab that provides additional information about the error.
 
-### Validation errors
+## Validation errors
 
-Validating incoming requests is a fundamental task for API developers and frameworks.
-Many frameworks offer built-in validation capabilities, or are compatible with third-party validation libraries.
+Many frameworks offer built-in validation for incoming requests, or are compatible with third-party validation libraries.
 
-Apitally captures specific validation error messages encountered by your API consumers, which can help you refine validation rules or reveal issues on the consumer side.
+Apitally detects commonly used libraries and automatically captures validation error details.
+This can help you refine validation rules or reveal issues on the consumer side.
 
-This feature is currently supported for the following frameworks:
+This is currently supported for the following frameworks:
 
 - FastAPI (using pydantic)
 - Django Ninja (using pydantic)
@@ -43,21 +43,24 @@ This feature is currently supported for the following frameworks:
 - NestJS (using class-validator)
 - Hono (using Zod)
 - AdonisJS (using VineJS)
+- Chi (using validator)
+- Echo (using validator)
 - Fiber (using validator)
 - Gin (using validator)
 
-### Server errors
+## Server errors
 
-If a `500 Internal Server Error` response is caused by an unhandled exception in your code, Apitally captures details about the exception, such as the stack trace and the error message, and includes those in the *Details* tab of the error modal.
+If a `500 Internal Server Error` response is caused by an unhandled exception in your code, Apitally automatically captures the error message and stack trace.
+You can then review those in the *Details* tab of the error modal.
 
 If you have enabled the Sentry integration for your app, you will also see a link to the Sentry issue that was created for the exception.
 
 ## Expected errors
 
-In certain applications or use cases, some client errors may be part of normal operation.
+In some applications, certain client errors are just part of normal operation.
 You might not want these errors included in error rate metrics or combined with other failed requests.
 
-Apitally enables you to mark specific client error status codes as expected for certain API endpoints.
+Apitally enables you to mark specific 4xx status codes as expected for certain API endpoints.
 This prevents them from being counted as errors in error rate calculations, and requests with these response status codes are considered successful.
 
-To do this, simply select *Mark as expected* from the dropdown menu in the errors table, which is opened by clicking on the button with three vertical dots on the right.
+To do this, simply select *Mark as expected* from the dropdown menu in the errors table.

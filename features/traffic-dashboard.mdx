@@ -1,17 +1,17 @@
 ---
 title: API traffic dashboard
 sidebarTitle: Traffic dashboard
-description: Keep track of key API metrics and understand API usage.
+description: Understand API usage and request volume patterns.
 ---
 
-<img src="https://assets.apitally.io/docs/2025-05-27/traffic.webp" alt="Traffic dashboard" class="rounded-xl" />
+<img src="https://assets.apitally.io/docs/2025-07-08/traffic.webp" alt="Traffic dashboard" className="rounded-xl" />
 
 Apitally keeps track of all requests handled by your API and provides insights into the overall traffic as well as the usage of each endpoint.
-On the *Traffic* dashboard you can analyze requests for various time ranges, from just the last hour up to the last 12 months.
+On the *Traffic* dashboard, you can analyze requests for various time ranges, from just the last hour up to the last 12 months.
 
-## Key API metrics
+## Traffic metrics
 
-The following key metrics are presented on the traffic dashboard:
+The following API traffic metrics are presented on the dashboard:
 
 - Number of successful and failed requests
 - Requests per minute (RPM)
@@ -22,15 +22,15 @@ By clicking on the metrics at the top you can toggle between different charts sh
 
 ## Filtering options
 
-<img src="https://assets.apitally.io/docs/2025-05-27/traffic-filters.webp" alt="Traffic dashboard filtering options" class="rounded-xl" />
+<img src="https://assets.apitally.io/docs/2025-07-08/traffic-filters.webp" alt="Traffic dashboard filtering options" className="rounded-xl" loading="lazy" />
 
 The dashboard provides the following filtering options:
 
 - By environment (e.g. prod or dev)
-- By API consumer or consumer group
-- By endpoint
 - By method (GET, POST, etc.)
+- By endpoint
 - By status code
+- By API consumer or consumer group
 
 ## Endpoints table
 
@@ -44,15 +44,13 @@ A red triangle with an exclamation mark next to the error rate indicates that se
 
 Clicking on an endpoint in this table opens up a modal with further [endpoint insights](/features/endpoint-insights).
 
-### Excluding endpoints
+## Excluding endpoints
 
 If your application includes health check endpoints (or similar) that are called automatically and frequently, you may want to exclude all those requests from API metric calculations, as they can mask insights about traffic from real API consumers.
 
-Simply select *Exclude Endpoint* from the dropdown menu in the endpoints table (the button with three vertical dots on the right).
-
-Endpoints marked as excluded are also hidden in the endpoints table, unless you select *Show excluded endpoints* at the bottom of the table.
+You can do so by opening the *Endpoint settings* from the dropdown menu in the endpoints table and toggling on *Exclude requests*.
 
 ## Exporting data
 
 The traffic dashboard includes a button to export the underlying data to a CSV file.
-You can choose between hourly and daily aggregation intervals.
+Current dashboard filters are applied automatically, and you can choose between hourly and daily aggregation intervals.
