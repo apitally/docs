@@ -13,8 +13,6 @@ This page guides you through the steps of configuring your [NestJS](https://nest
 
 <SetupGuideStartSnippet framework="NestJS" />
 
-<Warning>Apitally currently only works with NestJS applications that use Express as the underlying HTTP server, which is the default.</Warning>
-
 ## Create app
 
 <CreateAppSnippet1 framework="NestJS" />
@@ -46,12 +44,18 @@ import { NestFactory } from "@nestjs/core";
 import { useApitally } from "apitally/nestjs";
 import { AppModule } from "./app.module";
 
-const app = await NestFactory.create(AppModule);
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
 
-useApitally(app, {
-  clientId: "your-client-id",
-  env: "dev", // or "prod" etc.
-});
+  await useApitally(app, {
+    clientId: "your-client-id",
+    env: "dev", // or "prod" etc.
+  });
+
+  // ...
+}
+
+bootstrap();
 ```
 
 ```javascript CommonJS
@@ -59,12 +63,18 @@ const { NestFactory } = require("@nestjs/core");
 const { useApitally } = require("apitally/nestjs");
 const { AppModule } = require("./app.module");
 
-const app = await NestFactory.create(AppModule);
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
 
-useApitally(app, {
-  clientId: "your-client-id",
-  env: "dev", // or "prod" etc.
-});
+  await useApitally(app, {
+    clientId: "your-client-id",
+    env: "dev", // or "prod" etc.
+  });
+
+  // ...
+}
+
+bootstrap();
 ```
 </CodeGroup>
 
@@ -132,18 +142,24 @@ import { NestFactory } from "@nestjs/core";
 import { useApitally } from "apitally/nestjs";
 import { AppModule } from "./app.module";
 
-const app = await NestFactory.create(AppModule);
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
 
-useApitally(app, {
-  clientId: "your-client-id",
-  env: "dev", // or "prod" etc.
-  requestLogging: {
-    enabled: true,
-    logRequestHeaders: true,
-    logRequestBody: true,
-    logResponseBody: true,
-  },
-});
+  await useApitally(app, {
+    clientId: "your-client-id",
+    env: "dev", // or "prod" etc.
+    requestLogging: {
+      enabled: true,
+      logRequestHeaders: true,
+      logRequestBody: true,
+      logResponseBody: true,
+    },
+  });
+
+  // ...
+}
+
+bootstrap();
 ```
 
 ```javascript Advanced example
@@ -151,35 +167,41 @@ import { NestFactory } from "@nestjs/core";
 import { useApitally } from "apitally/nestjs";
 import { AppModule } from "./app.module";
 
-const app = await NestFactory.create(AppModule);
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
 
-useApitally(app, {
-  clientId: "your-client-id",
-  env: "dev", // or "prod" etc.
-  requestLogging: {
-    enabled: true,
-    logQueryParams: true,
-    logRequestHeaders: true,
-    logRequestBody: true,
-    logResponseHeaders: true,
-    logResponseBody: true,
-    logException: true,
-    // Mask query parameters using regex
-    maskQueryParams: [/^card_number$/i],
-    // Mask headers using regex
-    maskHeaders: [/^X-Sensitive-Header$/i],
-    // Mask request/response body fields using regex
-    maskBodyFields: [/^sensitive_field$/i],
-    // Mask request/response body with custom logic via callbacks (e.g. for admin endpoints)
-    // The callback should return null to mask the whole body, or return the (modified) raw body
-    maskRequestBodyCallback: (request) => request.path?.startsWith("/admin/") ? null : request.body,
-    maskResponseBodyCallback: (request, response) => request.path?.startsWith("/admin/") ? null : response.body,
-    // Exclude paths from request logging using regex (common health check paths are excluded by default)
-    excludePaths: [/\/metrics$/],
-    // Exclude requests from logging with custom logic via callback (e.g. exclude requests from a specific consumer)
-    // The callback should return true to exclude the request
-    excludeCallback: (request, response) => request.consumer == "some-consumer",
-  },
-});
+  await useApitally(app, {
+    clientId: "your-client-id",
+    env: "dev", // or "prod" etc.
+    requestLogging: {
+      enabled: true,
+      logQueryParams: true,
+      logRequestHeaders: true,
+      logRequestBody: true,
+      logResponseHeaders: true,
+      logResponseBody: true,
+      logException: true,
+      // Mask query parameters using regex
+      maskQueryParams: [/^card_number$/i],
+      // Mask headers using regex
+      maskHeaders: [/^X-Sensitive-Header$/i],
+      // Mask request/response body fields using regex
+      maskBodyFields: [/^sensitive_field$/i],
+      // Mask request/response body with custom logic via callbacks (e.g. for admin endpoints)
+      // The callback should return null to mask the whole body, or return the (modified) raw body
+      maskRequestBodyCallback: (request) => request.path?.startsWith("/admin/") ? null : request.body,
+      maskResponseBodyCallback: (request, response) => request.path?.startsWith("/admin/") ? null : response.body,
+      // Exclude paths from request logging using regex (common health check paths are excluded by default)
+      excludePaths: [/\/metrics$/],
+      // Exclude requests from logging with custom logic via callback (e.g. exclude requests from a specific consumer)
+      // The callback should return true to exclude the request
+      excludeCallback: (request, response) => request.consumer == "some-consumer",
+    },
+  });
+
+  // ...
+}
+
+bootstrap();
 ```
 </CodeGroup>
