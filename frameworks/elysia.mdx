@@ -134,7 +134,7 @@ const app = new Elysia()
         excludePaths: [/\/metrics$/],
         // Exclude requests from logging with custom logic via callback (e.g. exclude requests from a specific consumer)
         // The callback should return true to exclude the request
-        excludeCallback: (request, response) => request.consumer == "some-consumer",
+        excludeCallback: (request, response) => request.consumer === "some-consumer",
       },
     }),
   )
