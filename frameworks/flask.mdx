@@ -161,6 +161,8 @@ app.wsgi_app = ApitallyMiddleware(
 ```
 </CodeGroup>
 
+<Snippet file="configure-request-logging-check.mdx" />
+
 ## Known issues
 
 - When running Flask with Gunicorn, the option `preload_app` must be set to `False`. Otherwise, the Apitally client will not work correctly.

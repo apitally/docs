@@ -1,6 +1,6 @@
 ---
-title: "Setup guide for H3 v2"
-sidebarTitle: "H3"
+title: "Setup guide for Elysia"
+sidebarTitle: "Elysia"
 description: "Just a few simple steps to get started with Apitally."
 ---
 
@@ -9,16 +9,13 @@ import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
 
-This page guides you through the steps of configuring your [H3](https://h3.dev) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
+This page guides you through the steps of configuring your [Elysia](https://elysiajs.com/) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
 
-<SetupGuideStartSnippet framework="H3" />
-
-<Note>Apitally only works with H3 v2 (currently in beta).</Note>
-<Warning>Apitally doesn't work on serverless platforms such as AWS Lambda or Cloudflare Workers.</Warning>
+<SetupGuideStartSnippet framework="Elysia" />
 
 ## Create app
 
-<CreateAppSnippet1 framework="H3" />
+<CreateAppSnippet1 framework="Elysia" />
 
 <img src="https://assets.apitally.io/docs/2025-07-08/create-app.webp" alt="Create app" className="rounded-xl" />
 
@@ -26,50 +23,28 @@ This page guides you through the steps of configuring your [H3](https://h3.dev) 
 
 ## Add middleware
 
-Next, install the [Apitally SDK](https://www.npmjs.com/package/apitally) in your H3 project.
+Next, install the [Apitally SDK](https://www.npmjs.com/package/apitally) in your Elysia project.
 
-<CodeGroup>
-```shell npm
-npm install apitally
+```shell
+bun add apitally
 ```
 
-```shell yarn
-yarn add apitally
-```
-</CodeGroup>
-
-Register the Apitally plugin with your H3 application and provide the `clientId` for your app.
+Add the Apitally plugin to your Elysia application and provide the `clientId` for your app.
 You'll find the `clientId` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
 
-<CodeGroup>
-```javascript Using instance config
-import { H3 } from "h3";
-import { apitallyPlugin } from "apitally/h3";
+```javascript
+import { Elysia } from "elysia";
+import { apitallyPlugin } from "apitally/elysia";
 
-const app = new H3({
-  plugins: [
+const app = new Elysia()
+  .use(
     apitallyPlugin({
       clientId: "your-client-id",
       env: "dev", // or "prod" etc.
     }),
-  ],
-});
+  )
+  .get("/", () => "hello");
 ```
-
-```javascript Register later
-import { H3 } from "h3";
-import { apitallyPlugin } from "apitally/h3";
-
-const app = new H3();
-
-app.register(
-  apitallyPlugin({
-    clientId: "your-client-id",
-    env: "dev", // or "prod" etc.
-  })
-);
-```
-</CodeGroup>
 
 <Snippet file="add-middleware-check.mdx" />
 
@@ -77,26 +52,24 @@ app.register(
 
 <Snippet file="identify-consumers.mdx" />
 
-Use the `setConsumer` function to associate requests with consumers, for example in a middleware.
+Set the `apitally.consumer` property to associate requests with consumers, for example in a `derive` lifecycle function.
 
 <CodeGroup>
 ```javascript Identifier only
-import { setConsumer } from "apitally/h3";
-
-app.use((event) => {
-  setConsumer(event, event.context.auth?.username);
+app.derive(async ({ apitally, jwt, cookie: { auth } }) => {
+  const profile = await jwt.verify(auth);
+  apitally.consumer = profile.name;
 });
 ```
 
 ```javascript With name and group
-import { setConsumer } from "apitally/h3";
-
-app.use((event) => {
-  setConsumer(event, {
-    identifier: event.context.auth?.username,
-    name: event.context.auth?.fullname,
-    group: event.context.auth?.role,
-  });
+app.derive(async ({ apitally, jwt, cookie: { auth } }) => {
+  const profile = await jwt.verify(auth);
+  apitally.consumer = {
+    identifier: profile.id,
+    name: profile.name,
+    group: profile.role,
+  };
 });
 ```
 </CodeGroup>
@@ -109,11 +82,11 @@ app.use((event) => {
 
 <CodeGroup>
 ```javascript Basic example
-import { H3 } from "h3";
-import { apitallyPlugin } from "apitally/h3";
+import { Elysia } from "elysia";
+import { apitallyPlugin } from "apitally/elysia";
 
-const app = new H3({
-  plugins: [
+const app = new Elysia()
+  .use(
     apitallyPlugin({
       clientId: "your-client-id",
       env: "dev", // or "prod" etc.
@@ -125,16 +98,16 @@ const app = new H3({
         captureLogs: true,
       },
     }),
-  ],
-});
+  )
+  .get("/", () => "hello");
 ```
 
 ```javascript Advanced example
-import { H3 } from "h3";
-import { apitallyPlugin } from "apitally/h3";
+import { Elysia } from "elysia";
+import { apitallyPlugin } from "apitally/elysia";
 
-const app = new H3({
-  plugins: [
+const app = new Elysia()
+  .use(
     apitallyPlugin({
       clientId: "your-client-id",
       env: "dev", // or "prod" etc.
@@ -164,8 +137,8 @@ const app = new H3({
         excludeCallback: (request, response) => request.consumer === "some-consumer",
       },
     }),
-  ],
-});
+  )
+  .get("/", () => "hello");
 ```
 </CodeGroup>
 

@@ -90,6 +90,7 @@
           "group": "JavaScript",
           "pages": [
             "frameworks/adonisjs",
+            "frameworks/elysia",
             "frameworks/express",
             "frameworks/fastify",
             "frameworks/h3",
