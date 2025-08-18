@@ -1,0 +1,143 @@
+---
+title: "Setup guide for Elysia"
+sidebarTitle: "Elysia"
+description: "Just a few simple steps to get started with Apitally."
+---
+
+import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
+import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
+import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
+import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
+
+This page guides you through the steps of configuring your [Elysia](https://elysiajs.com/) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
+
+<SetupGuideStartSnippet framework="Elysia" />
+
+## Create app
+
+<CreateAppSnippet1 framework="Elysia" />
+
+<img src="https://assets.apitally.io/docs/2025-07-08/create-app.webp" alt="Create app" className="rounded-xl" />
+
+<CreateAppSnippet2 />
+
+## Add middleware
+
+Next, install the [Apitally SDK](https://www.npmjs.com/package/apitally) in your Elysia project.
+
+```shell
+bun add apitally
+```
+
+Add the Apitally plugin to your Elysia application and provide the `clientId` for your app.
+You'll find the `clientId` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
+
+```javascript
+import { Elysia } from "elysia";
+import { apitallyPlugin } from "apitally/elysia";
+
+const app = new Elysia()
+  .use(
+    apitallyPlugin({
+      clientId: "your-client-id",
+      env: "dev", // or "prod" etc.
+    }),
+  )
+  .get("/", () => "hello");
+```
+
+<Snippet file="add-middleware-check.mdx" />
+
+## Identify consumers
+
+<Snippet file="identify-consumers.mdx" />
+
+Set the `apitally.consumer` property to associate requests with consumers, for example in a `derive` lifecycle function.
+
+<CodeGroup>
+```javascript Identifier only
+app.derive(async ({ apitally, jwt, cookie: { auth } }) => {
+  const profile = await jwt.verify(auth);
+  apitally.consumer = profile.name;
+});
+```
+
+```javascript With name and group
+app.derive(async ({ apitally, jwt, cookie: { auth } }) => {
+  const profile = await jwt.verify(auth);
+  apitally.consumer = {
+    identifier: profile.id,
+    name: profile.name,
+    group: profile.role,
+  };
+});
+```
+</CodeGroup>
+
+<Snippet file="identify-consumers-check.mdx" />
+
+## Configure request logging
+
+<RequestLoggingConfigSnippet language="javascript" />
+
+<CodeGroup>
+```javascript Basic example
+import { Elysia } from "elysia";
+import { apitallyPlugin } from "apitally/elysia";
+
+const app = new Elysia()
+  .use(
+    apitallyPlugin({
+      clientId: "your-client-id",
+      env: "dev", // or "prod" etc.
+      requestLogging: {
+        enabled: true,
+        logRequestHeaders: true,
+        logRequestBody: true,
+        logResponseBody: true,
+        captureLogs: true,
+      },
+    }),
+  )
+  .get("/", () => "hello");
+```
+
+```javascript Advanced example
+import { Elysia } from "elysia";
+import { apitallyPlugin } from "apitally/elysia";
+
+const app = new Elysia()
+  .use(
+    apitallyPlugin({
+      clientId: "your-client-id",
+      env: "dev", // or "prod" etc.
+      requestLogging: {
+        enabled: true,
+        logQueryParams: true,
+        logRequestHeaders: true,
+        logRequestBody: true,
+        logResponseHeaders: true,
+        logResponseBody: true,
+        logException: true,
+        captureLogs: true,
+        // Mask query parameters using regex
+        maskQueryParams: [/^card_number$/i],
+        // Mask headers using regex
+        maskHeaders: [/^X-Sensitive-Header$/i],
+        // Mask request/response body fields using regex
+        maskBodyFields: [/^sensitive_field$/i],
+        // Mask request/response body with custom logic via callbacks (e.g. for admin endpoints)
+        // The callback should return null to mask the whole body, or return the (modified) raw body
+        maskRequestBodyCallback: (request) => request.path?.startsWith("/admin/") ? null : request.body,
+        maskResponseBodyCallback: (request, response) => request.path?.startsWith("/admin/") ? null : response.body,
+        // Exclude paths from request logging using regex (common health check paths are excluded by default)
+        excludePaths: [/\/metrics$/],
+        // Exclude requests from logging with custom logic via callback (e.g. exclude requests from a specific consumer)
+        // The callback should return true to exclude the request
+        excludeCallback: (request, response) => request.consumer == "some-consumer",
+      },
+    }),
+  )
+  .get("/", () => "hello");
+```
+</CodeGroup>
