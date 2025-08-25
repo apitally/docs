@@ -1,7 +1,7 @@
 ---
 title: Custom alerts
 sidebarTitle: Custom alerts
-description: Set thresholds for various API metrics, get notified when they are breached.
+description: Set thresholds for API metrics, get notified when they are breached.
 ---
 
 Apitally allows you to automatically monitor API metrics and get notified when they breach a configured threshold.
@@ -9,7 +9,7 @@ This eliminates the need to manually check the dashboard and provides a first li
 
 <img src="https://assets.apitally.io/docs/2025-07-08/alert-details.webp" alt="Custom alert details" className="rounded-xl" />
 
-## Creating alerts
+## Create alerts
 
 You can create a new custom alert in these simple steps:
 
@@ -39,7 +39,7 @@ There are additional options available for more complex alerting needs, such as 
 - Response time p95
 - Apdex score
 
-### Filtering options
+### Filter options
 
 You can narrow down the scope of your alerts using the following filters:
 
@@ -49,7 +49,7 @@ You can narrow down the scope of your alerts using the following filters:
 
 These filters can be found under *Additional filters* when creating or editing an alert.
 
-### Cron scheduling
+### Cron schedule
 
 While the default check frequency is set using the *Check every* field, you can define more complex schedules using [cron expressions](https://en.wikipedia.org/wiki/Cron#Cron_expression) under the *Advanced options* section.
 The cron schedule will override the basic check frequency when specified.
@@ -62,7 +62,7 @@ Examples of cron expressions:
 
 <Tip>You can write and test your cron expressions on [crontab guru](https://crontab.guru/).</Tip>
 
-### Tuning notifications
+### Tune notifications
 
 Apitally provides several options for controlling the frequency and timing of alert notifications:
 
