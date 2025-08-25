@@ -120,11 +120,10 @@ Check out the <a href="/reference/dotnet#request-logging-options">reference page
     "Env": "dev",
     "RequestLogging": {
       "Enabled": true,
-      "IncludeQueryParams": true,
       "IncludeRequestHeaders": true,
       "IncludeRequestBody": true,
-      "IncludeResponseHeaders": true,
-      "IncludeResponseBody": true
+      "IncludeResponseBody": true,
+      "CaptureLogs": true
     }
   }
 }
@@ -142,6 +141,8 @@ Check out the <a href="/reference/dotnet#request-logging-options">reference page
       "IncludeRequestBody": true,
       "IncludeResponseHeaders": true,
       "IncludeResponseBody": true,
+      "IncludeException": true,
+      "CaptureLogs": true,
       // Mask query parameters using regex
       "QueryParamMaskPatterns": [
         "^card_number$"
