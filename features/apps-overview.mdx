@@ -11,22 +11,14 @@ Clicking on a metric or graph takes you to the relevant dashboard with more deta
 
 You can also create, edit and delete apps on this screen.
 
-## Environments
-
-Each app in Apitally can have multiple environments, allowing you to track API metrics separately for production, staging, development, etc.
-
-You can manage environments when creating or editing an app. You can also reorder environments so they're always displayed in an order that makes sense to you, e.g. `production` > `staging` > `development`.
-
-If Apitally receives data from a new environment that doesn't exist yet, it is created automatically.
-
-## Create apps
+## Create app
 
 <div className="flex flex-row justify-between gap-4" style={{ margin: "-1rem 0" }}>
   <img src="https://assets.apitally.io/docs/2025-07-08/create-app.webp" alt="Create app modal" className="rounded" loading="lazy" />
   <img src="https://assets.apitally.io/docs/2025-07-08/app-setup-instructions.webp" alt="App setup instructions" className="rounded" loading="lazy" />
 </div>
 
-Adding a new app to Apitally is very straightforward. Simply specify a name, select the framework used by your app and hit *Submit*.
+To create a new app in Apitally, simply specify a name, select your framework and hit *Submit*.
 You can optionally add or remove environments as appropriate for your app.
 
 <Tip>
@@ -34,4 +26,12 @@ If you're using the Sentry SDK in your application, you can provide your organiz
 </Tip>
 
 
-After submitting, you will see tailored setup instructions for your specific framework. These include code snippets you can copy and paste into your application code.
+After submitting, you will see tailored setup instructions for your specific framework. These include code snippets you can copy and paste into your project.
+
+## Environments
+
+Each app in Apitally can have multiple environments, allowing you to track API metrics separately for production, staging, development, etc.
+
+You can manage environments when creating or editing an app. You can also reorder environments so they're always displayed in an order that makes sense to you, e.g. `production` > `staging` > `development`.
+
+If Apitally receives data from a new environment that doesn't exist yet, it is created automatically.
