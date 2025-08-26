@@ -54,6 +54,7 @@
             "features/consumer-insights",
             "features/endpoint-insights",
             "features/request-logs",
+            "features/application-logs",
             "features/uptime-monitoring",
             "features/custom-alerts"
           ]
