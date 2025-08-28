@@ -12,3 +12,14 @@ Log capture must be explicitly enabled alongside request logging. See the setup 
 <img src="https://assets.apitally.io/docs/2025-08-26/request-log-item-logs.webp" alt="Application logs" className="rounded-xl" />
 
 <Tip>Click on a log entry to see the full message, in case it is truncated.</Tip>
+
+## Supported loggers
+
+For Python and .NET, the Apitally SDKs instrument the standard logging libraries.
+
+For JavaScript, the following loggers are instrumented:
+
+- `console`
+- Pino
+- Winston
+- NestJS's `Logger`
