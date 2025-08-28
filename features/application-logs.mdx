@@ -7,11 +7,11 @@ description: View application logs in the context of handled API requests.
 The Apitally SDKs can instrument various logging libraries to automatically capture logs emitted by your application during request handling.
 These are associated with the corresponding request and displayed in the details modal of the request logs.
 
-Log capture must be explicitly enabled alongside request logging. See the setup guide for your framework for details.
+Log capture must be explicitly enabled alongside request logging. See example in the setup guide for your framework.
 
 <img src="https://assets.apitally.io/docs/2025-08-26/request-log-item-logs.webp" alt="Application logs" className="rounded-xl" />
 
-<Tip>Click on a log entry to see the full message, in case it is truncated.</Tip>
+<Tip>Click on a log entry to see the full message, in case it's truncated.</Tip>
 
 ## Supported loggers
 
@@ -19,7 +19,7 @@ For Python and .NET, the Apitally SDKs instrument the standard logging libraries
 
 For JavaScript, the following loggers are instrumented:
 
-- `console`
+- console
 - Pino
 - Winston
-- NestJS's `Logger`
+- Logger in NestJS
