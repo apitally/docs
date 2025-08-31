@@ -1,0 +1,12 @@
+{
+    "editor.formatOnSave": true,
+    "files.insertFinalNewline": true,
+    "[mdx]": {
+        "editor.tabSize": 2,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": false,
+        "editor.wordWrap": "bounded",
+        "editor.wordWrapColumn": 80,
+        "editor.wrappingIndent": "same"
+    }
+}

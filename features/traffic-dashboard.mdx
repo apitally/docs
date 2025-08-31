@@ -1,60 +1,74 @@
 ---
 title: API traffic dashboard
 sidebarTitle: Traffic dashboard
-description: Understand API usage and request volume patterns.
+description: Track usage metrics for your whole API and per endpoint.
 ---
 
 <img src="https://assets.apitally.io/docs/2025-08-26/traffic.webp" alt="Traffic dashboard" className="rounded-xl" />
 
-Apitally keeps track of all requests handled by your API and provides insights into the overall traffic as well as the usage of each endpoint.
-On the *Traffic* dashboard, you can analyze requests for various time ranges, from just the last hour up to the last 12 months.
+The Traffic dashboard provides insights into the overall traffic to your API as well as usage of each API endpoint.
 
 ## Traffic metrics
 
-The following API traffic metrics are presented on the dashboard:
+The top section of the dashboard focuses on the following API metrics:
 
-- Number of successful and failed requests
+- Total requests (broken down by response status code on hover)
 - Requests per minute (RPM)
 - Error rate
 - Data transferred (received and sent)
 
-By clicking on the metrics at the top you can toggle between different charts showing how each metric has been trending over time.
-
-## Filter options
-
-<img src="https://assets.apitally.io/docs/2025-08-26/traffic-filters.webp" alt="Traffic dashboard filtering options" className="rounded-xl" loading="lazy" />
-
-The dashboard supports the following filters:
-
-- Environment (e.g. prod or dev)
-- HTTP method (GET, POST, etc.)
-- Endpoint path
-- Response status code
-- API consumer or consumer group
-
-Filters apply globally across all dashboards.
-
-You can also save filters to quickly switch between different views. Saved filters can be shared with other team members.
+Clicking on the metrics toggles between different charts showing trends over time.
 
 ## Endpoints table
 
-The traffic dashboard includes a table showing all endpoints of your API along with the above mentioned metrics specific to each endpoint.
-This allows you to get a quick overview of the usage of each endpoint.
+The table lists all endpoints of your API along with their traffic metrics. The Apitally SDKs use introspection to discover all endpoints defined in your application, even if they haven't been called yet.
 
-The table is ordered by the number of requests by default, so the most frequently used endpoint is at the top.
-You can search and sort the table by any of the other metrics too.
+By default, the table is ordered by request count, with the most used endpoint at the top. It can be searched and sorted by any of the other metrics too.
 
-A red triangle with an exclamation mark next to the error rate indicates that server errors have occurred in that endpoint.
+Clicking on an endpoint in this table opens a modal with detailed [endpoint insights](/features/endpoint-insights).
 
-Clicking on an endpoint in this table opens up a modal with further [endpoint insights](/features/endpoint-insights).
+<Tip>A red triangle with an exclamation mark next to the error rate indicates that server errors have occurred on that endpoint.</Tip>
+
+## Filters
+
+The dashboard includes a range of filters to help you focus on the data most relevant to you.
+
+<Tip>Applied filters are persistent, so they will remain active when you navigate to another dashboard.</Tip>
+
+### Time period
+
+You can view data for a specific time period using several methods:
+
+- Select a standard period (e.g. *24 hours* or *30 days*) from the dropdown menu.
+- Click and drag across the chart to select a custom range.
+- Click a single bar on the chart to focus on that interval.
+- Choose *Custom* from the dropdown to manually enter a start and end date.
+
+### Environment
+
+By default, the dashboard displays metrics from all environments. To view data for a specific environment, select it from the environment filter dropdown.
+
+### Filter pane
+
+<img src="https://assets.apitally.io/docs/2025-08-26/traffic-filters.webp" alt="Traffic dashboard filtering options" className="rounded-xl" loading="lazy" />
+
+Clicking the *Filter* button opens a side pane with additional filtering options:
+
+- HTTP method (e.g. `GET`, `POST`)
+- Endpoint path (supports wildcards)
+- Response status code (e.g. `200`, `4xx`)
+- API consumer or consumer group
+
+### Save filters
+
+You can save filters to quickly switch between different views. Saved filters can be shared with other team members.
+
 
 ## Exclude endpoints
 
-If your application includes health check endpoints (or similar) that are called automatically and frequently, you may want to exclude all those requests from API metric calculations, as they can mask insights about traffic from real API consumers.
-
-You can do so by opening the *Endpoint settings* from the dropdown menu in the endpoints table and toggling on *Exclude requests*.
+Endpoints that are called frequently by automated services, such as health checks, can skew your metrics and hide important insights from real API consumers. You can exclude these endpoints from metrics calculations by opening the *Endpoint settings* from the dropdown menu in the endpoints table and toggling on *Exclude requests*.
 
 ## Export data
 
-The traffic dashboard includes a button to export the underlying data to a CSV file.
-Current dashboard filters are applied automatically, and you can choose between hourly and daily aggregation intervals.
+The dashboard includes a button to export the underlying data to a CSV file.
+Current filters are applied automatically. Data can be aggregated in hourly or daily intervals.

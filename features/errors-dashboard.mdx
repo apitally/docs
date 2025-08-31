@@ -43,6 +43,7 @@ This is currently supported for the following frameworks:
 - NestJS (using class-validator)
 - Hono (using Zod)
 - AdonisJS (using VineJS)
+- Elysia
 - Chi (using validator)
 - Echo (using validator)
 - Fiber (using validator)
@@ -60,7 +61,7 @@ If you have enabled the Sentry integration for your app, you will also see a lin
 In some applications, certain client errors are just part of normal operation.
 You might not want these errors included in error rate metrics or combined with other failed requests.
 
-Apitally enables you to mark specific 4xx status codes as expected for certain API endpoints.
+Apitally allows you to mark specific `4xx` status codes as expected for certain API endpoints.
 This prevents them from being counted as errors in error rate calculations, and requests with these response status codes are considered successful.
 
 To do this, simply select *Mark as expected* from the dropdown menu in the errors table.
