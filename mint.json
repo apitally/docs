@@ -95,6 +95,7 @@
             "frameworks/express",
             "frameworks/fastify",
             "frameworks/h3",
+            "frameworks/hapi",
             "frameworks/hono",
             "frameworks/koa",
             "frameworks/nestjs"
