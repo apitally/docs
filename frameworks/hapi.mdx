@@ -1,0 +1,204 @@
+---
+title: "Setup guide for Hapi"
+sidebarTitle: "Hapi"
+description: "Just a few simple steps to get started with Apitally."
+---
+
+import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
+import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
+import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
+import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
+
+This page guides you through the steps of configuring your [Hapi](https://hapi.dev) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
+
+<SetupGuideStartSnippet framework="Hapi" />
+
+## Create app
+
+<CreateAppSnippet1 framework="Hapi" />
+
+<img src="https://assets.apitally.io/docs/2025-08-26/create-app.webp" alt="Create app" className="rounded-xl" />
+
+<CreateAppSnippet2 />
+
+## Register plugin
+
+Next, install the [Apitally SDK](https://www.npmjs.com/package/apitally) in your Hapi project.
+
+<CodeGroup>
+```shell npm
+npm install apitally
+```
+
+```shell yarn
+yarn add apitally
+```
+</CodeGroup>
+
+Register the Apitally plugin with your Hapi application and provide the `clientId` for your app.
+You'll find the `clientId` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
+
+<CodeGroup>
+```javascript ESM
+import Hapi from "@hapi/hapi";
+import { apitallyPlugin } from "apitally/hapi";
+
+const init = async () => {
+  const server = Hapi.server({
+    port: 3000,
+    host: "localhost",
+  });
+
+  await server.register({
+    plugin: apitallyPlugin({
+      clientId: "your-client-id",
+      env: "dev", // or "prod" etc.
+    }),
+  });
+};
+
+init();
+```
+
+```javascript CommonJS
+const Hapi = require("@hapi/hapi");
+const { apitallyPlugin } = require("apitally/hapi");
+
+const init = async () => {
+  const server = Hapi.server({
+    port: 3000,
+    host: "localhost",
+  });
+
+  await server.register({
+    plugin: apitallyPlugin({
+      clientId: "your-client-id",
+      env: "dev", // or "prod" etc.
+    }),
+  });
+};
+
+init();
+```
+</CodeGroup>
+
+<Snippet file="add-middleware-check.mdx" />
+
+## Identify consumers
+
+<Snippet file="identify-consumers.mdx" />
+
+Use the `setConsumer` function to associate requests with consumers, for example in an `onPostAuth` lifecycle method.
+
+<CodeGroup>
+```javascript Identifier only
+import { setConsumer } from "apitally/hapi";
+
+server.ext("onPostAuth", (request, h) => {
+  if (request.auth.isAuthenticated) {
+    setConsumer(request, request.auth.credentials.user);
+  }
+  return h.continue;
+});
+```
+
+```javascript With name and group
+import { setConsumer } from "apitally/hapi";
+
+server.ext("onPostAuth", (request, h) => {
+  if (request.auth.isAuthenticated) {
+    const credentials = request.auth.credentials;
+    setConsumer(request, {
+      identifier: credentials.id,
+      name: credentials.name, // optional
+      group: credentials.group, // optional
+    });
+  }
+  return h.continue;
+});
+```
+</CodeGroup>
+
+<Snippet file="identify-consumers-check.mdx" />
+
+## Configure request logging
+
+<RequestLoggingConfigSnippet language="javascript" />
+
+<CodeGroup>
+```javascript Basic example
+import Hapi from "@hapi/hapi";
+import { apitallyPlugin } from "apitally/hapi";
+
+const init = async () => {
+  const server = Hapi.server({
+    port: 3000,
+    host: "localhost",
+  });
+
+  await server.register({
+    plugin: apitallyPlugin({
+      clientId: "your-client-id",
+      env: "dev", // or "prod" etc.
+      requestLogging: {
+        enabled: true,
+        logRequestHeaders: true,
+        logRequestBody: true,
+        logResponseBody: true,
+        captureLogs: true,
+      },
+    }),
+  });
+};
+
+init();
+```
+
+```javascript Advanced example
+import Hapi from "@hapi/hapi";
+import { apitallyPlugin } from "apitally/hapi";
+
+const init = async () => {
+  const server = Hapi.server({
+    port: 3000,
+    host: "localhost",
+  });
+
+  await server.register({
+    plugin: apitallyPlugin({
+      clientId: "your-client-id",
+      env: "dev", // or "prod" etc.
+      requestLogging: {
+        enabled: true,
+        logQueryParams: true,
+        logRequestHeaders: true,
+        logRequestBody: true,
+        logResponseHeaders: true,
+        logResponseBody: true,
+        logException: true,
+        captureLogs: true,
+        // Mask query parameters using regex
+        maskQueryParams: [/^card_number$/i],
+        // Mask headers using regex
+        maskHeaders: [/^X-Sensitive-Header$/i],
+        // Mask request/response body fields using regex
+        maskBodyFields: [/^sensitive_field$/i],
+        // Mask request/response body with custom logic via callbacks (e.g. for admin endpoints)
+        // The callback should return null to mask the whole body, or return the (modified) raw body
+        maskRequestBodyCallback: (request) => request.path?.startsWith("/admin/") ? null : request.body,
+        maskResponseBodyCallback: (request, response) => request.path?.startsWith("/admin/") ? null : response.body,
+        // Exclude paths from request logging using regex (common health check paths are excluded by default)
+        excludePaths: [/\/metrics$/],
+        // Exclude requests from logging with custom logic via callback (e.g. exclude requests from a specific consumer)
+        // The callback should return true to exclude the request
+        excludeCallback: (request, response) => request.consumer === "some-consumer",
+      },
+    }),
+  });
+};
+
+init();
+```
+</CodeGroup>
+
+<Snippet file="configure-request-logging-check.mdx" />
