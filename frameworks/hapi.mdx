@@ -1,5 +1,5 @@
 ---
-title: "Setup guide for Hapi"
+title: "Setup guide for hapi"
 sidebarTitle: "Hapi"
 description: "Just a few simple steps to get started with Apitally."
 ---
@@ -9,13 +9,13 @@ import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
 
-This page guides you through the steps of configuring your [Hapi](https://hapi.dev) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
+This page guides you through the steps of configuring your [hapi](https://hapi.dev) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
 
-<SetupGuideStartSnippet framework="Hapi" />
+<SetupGuideStartSnippet framework="hapi" />
 
 ## Create app
 
-<CreateAppSnippet1 framework="Hapi" />
+<CreateAppSnippet1 framework="hapi" />
 
 <img src="https://assets.apitally.io/docs/2025-08-26/create-app.webp" alt="Create app" className="rounded-xl" />
 
@@ -23,7 +23,7 @@ This page guides you through the steps of configuring your [Hapi](https://hapi.d
 
 ## Register plugin
 
-Next, install the [Apitally SDK](https://www.npmjs.com/package/apitally) in your Hapi project.
+Next, install the [Apitally SDK](https://www.npmjs.com/package/apitally) in your hapi project.
 
 <CodeGroup>
 ```shell npm
@@ -35,7 +35,7 @@ yarn add apitally
 ```
 </CodeGroup>
 
-Register the Apitally plugin with your Hapi application and provide the `clientId` for your app.
+Register the Apitally plugin with your hapi application and provide the `clientId` for your app.
 You'll find the `clientId` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
 
 <CodeGroup>
