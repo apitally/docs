@@ -31,9 +31,7 @@ Clicking on an endpoint in this table opens a modal with detailed [endpoint insi
 
 ## Filters
 
-The dashboard includes a range of filters to help you focus on the data most relevant to you.
-
-<Tip>Applied filters are persistent, so they will remain active when you navigate to another dashboard.</Tip>
+The dashboard includes a range of filtering options. These are persistent and will remain active when you navigate to another dashboard.
 
 ### Time period
 
@@ -54,19 +52,18 @@ By default, the dashboard displays metrics from all environments. To view data f
 
 Clicking the *Filter* button opens a side pane with additional filtering options:
 
+- API consumer or consumer group
 - HTTP method (e.g. `GET`, `POST`)
 - Endpoint path (supports wildcards)
 - Response status code (e.g. `200`, `4xx`)
-- API consumer or consumer group
 
 ### Save filters
 
 You can save filters to quickly switch between different views. Saved filters can be shared with other team members.
 
-
 ## Exclude endpoints
 
-Endpoints that are called frequently by automated services, such as health checks, can skew your metrics and hide important insights from real API consumers. You can exclude these endpoints from metrics calculations by opening the *Endpoint settings* from the dropdown menu in the endpoints table and toggling on *Exclude requests*.
+Traffic from automated services, such as health checks, can skew your metrics and hide important insights. You can exclude affected endpoints (e.g. `/health`) from metrics by opening the *Endpoint settings* from the dropdown menu in the endpoints table and enabling the *Exclude requests* toggle.
 
 ## Export data
 
