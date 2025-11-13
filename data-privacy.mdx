@@ -1,0 +1,43 @@
+---
+title: "Data privacy"
+description: "Learn what data Apitally collects and how you can control it."
+---
+
+Apitally is built with a strong focus on data privacy. We hold ourselves accountable to the following principles:
+
+- Only collect required data and nothing more
+- Features with the potential to collect sensitive data need explicit user opt-in
+- Provide extensive configuration options to control data collection, masking, and filtering
+- Full transparency about what data is collected and how it's handled
+
+## Data collection
+
+### Metrics & analytics
+
+...
+
+### Request logs
+
+...
+
+## Data transit
+
+Apitally uses HTTPS and TLS to send data from your application, running the Apitally SDK, to our servers.
+
+## Data storage
+
+Apitally stores data in a ClickHouse database hosted on <a href="https://www.digitalocean.com/" target="_blank">DigitalOcean</a> in the US. The underlying block storage volume is encrypted at rest.
+
+Database backups are created hourly and are stored in a private <a href="https://www.digitalocean.com/products/spaces" target="_blank">Spaces</a> bucket. Data in Spaces is also encrypted at rest.
+
+## Data retention
+
+Apitally retains aggregated metrics for 13 months, allowing users to analyze long-term trends. Request and application log data is retained for 15 days.
+
+When an app is deleted in the Apitally dashboard, all associated data is deleted from the database, but is still included in previously created backups.
+
+Database backups are kept for 7 days.
+
+## Certifications
+
+...

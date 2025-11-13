@@ -59,6 +59,7 @@
             "features/custom-alerts"
           ]
         },
+        "data-privacy",
         {
           "group": "Reference",
           "pages": [
@@ -112,15 +113,11 @@
         },
         {
           "group": "Java",
-          "pages": [
-            "frameworks/spring-boot"
-          ]
+          "pages": ["frameworks/spring-boot"]
         },
         {
           "group": ".NET",
-          "pages": [
-            "frameworks/aspnet-core"
-          ]
+          "pages": ["frameworks/aspnet-core"]
         }
       ]
     }
