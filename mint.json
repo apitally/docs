@@ -44,6 +44,7 @@
       "pages": [
         "introduction",
         "how-it-works",
+        "data-privacy",
         {
           "group": "Features",
           "pages": [
@@ -59,7 +60,6 @@
             "features/custom-alerts"
           ]
         },
-        "data-privacy",
         {
           "group": "Reference",
           "pages": [
