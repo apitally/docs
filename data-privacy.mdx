@@ -14,11 +14,13 @@ Because all Apitally SDKs are open-source, you can also verify yourself how they
 
 ## Data collection
 
-This is a complete overview of the data points collected by Apitally.
+This is a complete overview of the data collected by Apitally.
 
 <Tip>
   The configuration options mentioned throughout this page are in `snake_case` notation, as used in Python.
   Check out the [reference](/reference/python) for your language to see the equivalent parameter names.
+
+  The setup guide for each framework also includes configuration examples.
 </Tip>
 
 <span style={{ position: "relative", top: -2 }}><Icon icon="shield" /></span> *= Potentially sensitive and not collected by default.*
@@ -290,11 +292,11 @@ ccv
 ssn
 ```
 
-You can add additional patterns via the `mask_body_fields` option.
+You can add additional patterns via the `mask_body_fields` option. For more granular control you can also specify callback functions via `mask_request_body_callback` and `mask_response_body_callback`.
 
 ## Data filtering
 
-The Apitally SDK automatically excludes requests to common health check endpoints from the logs using the patterns below. They are applied to the request path.
+The Apitally SDK automatically excludes requests to common health check endpoints from the request logs (not metrics) using the patterns below. They are applied to the request path.
 
 ```
 /_?healthz?$
@@ -306,6 +308,10 @@ The Apitally SDK automatically excludes requests to common health check endpoint
 ```
 
 You can add additional patterns for exclusion via the `exclude_paths` option. For more granular control you can also provide a callback function via `exclude_callbacks`.
+
+<Note>
+  These exclusions don't impact metrics. If you'd like to exclude certain endpoints from metrics, you can mark them as excluded in the dashboard. See [here](/features/traffic-dashboard#exclude-endpoints) for details.
+</Note>
 
 ## Data transit
 
