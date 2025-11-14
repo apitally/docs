@@ -2,7 +2,7 @@
 title: Python reference
 sidebarTitle: Python
 description: The parameters of the Apitally SDK for Python.
-mode: "wide"
+mode: wide
 ---
 
 ## Parameters
@@ -56,61 +56,3 @@ Below are the keys of the `response` dicts that are passed to some of the user-p
 | `headers` | Array of key-value pairs representing the response headers. | `list[tuple[str, str]]` |
 | `size` | Size of the response body in bytes. | `int` |
 | `body` | Raw response body. | `bytes` |
-
-### Default masking
-
-The below regular expressions are used to mask sensitive query parameters, headers and request/response body fields.
-
-```python
-# Query parameters
-MASK_QUERY_PARAM_PATTERNS = [
-    r"auth",
-    r"api-?key",
-    r"secret",
-    r"token",
-    r"password",
-    r"pwd",
-]
-```
-
-```python
-# Headers
-MASK_HEADER_PATTERNS = [
-    r"auth",
-    r"api-?key",
-    r"secret",
-    r"token",
-    r"cookie",
-]
-```
-
-```python
-# Request/response body fields
-MASK_BODY_FIELD_PATTERNS = [
-    r"password",
-    r"pwd",
-    r"token",
-    r"secret",
-    r"auth",
-    r"card[-_ ]?number",
-    r"ccv",
-    r"ssn",
-]
-```
-
-### Default exclusions
-
-The below regular expressions are used to exclude common health check endpoints from logging.
-They are applied to the request path.
-
-```python
-# Common paths of health check endpoints
-EXCLUDE_PATH_PATTERNS = [
-    r"/_?healthz?$",
-    r"/_?health[_-]?checks?$",
-    r"/_?heart[_-]?beats?$",
-    r"/ping$",
-    r"/ready$",
-    r"/live$",
-]
-```
