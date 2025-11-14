@@ -44,6 +44,7 @@
       "pages": [
         "introduction",
         "how-it-works",
+        "data-privacy",
         {
           "group": "Features",
           "pages": [
@@ -112,15 +113,11 @@
         },
         {
           "group": "Java",
-          "pages": [
-            "frameworks/spring-boot"
-          ]
+          "pages": ["frameworks/spring-boot"]
         },
         {
           "group": ".NET",
-          "pages": [
-            "frameworks/aspnet-core"
-          ]
+          "pages": ["frameworks/aspnet-core"]
         }
       ]
     }

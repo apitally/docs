@@ -2,7 +2,7 @@
 title: JavaScript reference
 sidebarTitle: JavaScript
 description: The parameters of the Apitally SDK for Node.js.
-mode: "wide"
+mode: wide
 ---
 
 ## Parameters
@@ -65,61 +65,3 @@ Below are the properties of the `response` objects that are passed to some of th
 | `headers` | Array of key-value pairs representing the response headers. | `[string, string][]` |
 | `size` | Size of the response body in bytes. | `number` |
 | `body` | Raw response body as bytes. | `Buffer` |
-
-### Default masking
-
-The below regular expressions are used to mask sensitive query parameters, headers and request/response body fields.
-
-```javascript
-// Query parameters
-const MASK_QUERY_PARAM_PATTERNS = [
-  /auth/i,
-  /api-?key/i,
-  /secret/i,
-  /token/i,
-  /password/i,
-  /pwd/i,
-];
-```
-
-```javascript
-// Headers
-const MASK_HEADER_PATTERNS = [
-  /auth/i,
-  /api-?key/i,
-  /secret/i,
-  /token/i,
-  /cookie/i,
-];
-```
-
-```javascript
-// Request/response body fields
-const MASK_BODY_FIELD_PATTERNS = [
-  /password/i,
-  /pwd/i,
-  /token/i,
-  /secret/i,
-  /auth/i,
-  /card[-_ ]?number/i,
-  /ccv/i,
-  /ssn/i,
-];
-```
-
-### Default exclusions
-
-The below regular expressions are used to exclude common health check endpoints from logging.
-They are applied to the request path.
-
-```javascript
-// Common paths of health check endpoints
-const EXCLUDE_PATH_PATTERNS = [
-  /\/_?healthz?$/,
-  /\/_?health[_-]?checks?$/,
-  /\/_?heart[_-]?beats?$/,
-  /\/ping$/,
-  /\/ready$/,
-  /\/live$/,
-];
-```
