@@ -1,0 +1,172 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Apitally Docs",
+  "colors": {
+    "primary": "#0b9797",
+    "light": "#0b9797",
+    "dark": "#0b9797"
+  },
+  "favicon": "/images/favicon.svg",
+  "logo": {
+    "light": "/images/logo-light.svg",
+    "dark": "/images/logo-dark.svg"
+  },
+  "background": {
+    "image": "/images/background.webp",
+    "color": {
+      "dark": "#0e1515"
+    }
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Log in",
+        "href": "https://app.apitally.io"
+      }
+    ]
+  },
+  "navigation": {
+    "anchors": [
+      {
+        "anchor": "Documentation",
+        "icon": "book-open",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "introduction",
+              "how-it-works",
+              "data-privacy",
+              {
+                "group": "Features",
+                "pages": [
+                  "features/apps-overview",
+                  "features/traffic-dashboard",
+                  "features/errors-dashboard",
+                  "features/performance-dashboard",
+                  "features/consumer-insights",
+                  "features/endpoint-insights",
+                  "features/request-logs",
+                  "features/application-logs",
+                  "features/uptime-monitoring",
+                  "features/custom-alerts"
+                ]
+              },
+              {
+                "group": "Reference",
+                "pages": [
+                  "reference/python",
+                  "reference/javascript",
+                  "reference/java",
+                  "reference/go",
+                  "reference/dotnet"
+                ]
+              },
+              "support"
+            ]
+          },
+          {
+            "group": "Setup guides",
+            "pages": [
+              {
+                "group": "Python",
+                "pages": [
+                  "frameworks/blacksheep",
+                  "frameworks/django-ninja",
+                  "frameworks/django-rest-framework",
+                  "frameworks/fastapi",
+                  "frameworks/flask",
+                  "frameworks/litestar",
+                  "frameworks/starlette"
+                ]
+              },
+              {
+                "group": "JavaScript",
+                "pages": [
+                  "frameworks/adonisjs",
+                  "frameworks/elysia",
+                  "frameworks/express",
+                  "frameworks/fastify",
+                  "frameworks/h3",
+                  "frameworks/hapi",
+                  "frameworks/hono",
+                  "frameworks/koa",
+                  "frameworks/nestjs"
+                ]
+              },
+              {
+                "group": "Go",
+                "pages": [
+                  "frameworks/chi",
+                  "frameworks/echo",
+                  "frameworks/fiber",
+                  "frameworks/gin"
+                ]
+              },
+              {
+                "group": "Java",
+                "pages": ["frameworks/spring-boot"]
+              },
+              {
+                "group": ".NET",
+                "pages": ["frameworks/aspnet-core"]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "anchor": "API reference",
+        "openapi": {
+          "source": "https://api.apitally.io/openapi.json",
+          "directory": "api-reference"
+        },
+        "icon": "brackets-curly"
+      },
+      {
+        "anchor": "Website",
+        "href": "https://apitally.io",
+        "icon": "globe"
+      }
+    ]
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/apitally",
+      "twitter": "https://twitter.com/apitally_io",
+      "linkedin": "https://www.linkedin.com/company/apitally"
+    }
+  },
+  "integrations": {
+    "plausible": {
+      "domain": "docs.apitally.io"
+    }
+  },
+  "redirects": [
+    {
+      "source": "/quickstart",
+      "destination": "/introduction"
+    },
+    {
+      "source": "/features/api-monitoring",
+      "destination": "/features/traffic-dashboard"
+    },
+    {
+      "source": "/features/api-traffic-monitoring",
+      "destination": "/features/traffic-dashboard"
+    },
+    {
+      "source": "/features/api-metrics-insights",
+      "destination": "/features/traffic-dashboard"
+    },
+    {
+      "source": "/features/request-log",
+      "destination": "/features/request-logs"
+    },
+    {
+      "source": "/features/alerting",
+      "destination": "/features/custom-alerts"
+    }
+  ]
+}
