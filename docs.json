@@ -24,7 +24,12 @@
         "label": "Log in",
         "href": "https://app.apitally.io"
       }
-    ]
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Sign up",
+      "href": "https://app.apitally.io?signup"
+    }
   },
   "navigation": {
     "anchors": [
