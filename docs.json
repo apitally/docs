@@ -77,45 +77,45 @@
               {
                 "group": "Python",
                 "pages": [
-                  "frameworks/blacksheep",
-                  "frameworks/django-ninja",
-                  "frameworks/django-rest-framework",
-                  "frameworks/fastapi",
-                  "frameworks/flask",
-                  "frameworks/litestar",
-                  "frameworks/starlette"
+                  "setup-guides/blacksheep",
+                  "setup-guides/django-ninja",
+                  "setup-guides/django-rest-framework",
+                  "setup-guides/fastapi",
+                  "setup-guides/flask",
+                  "setup-guides/litestar",
+                  "setup-guides/starlette"
                 ]
               },
               {
                 "group": "JavaScript",
                 "pages": [
-                  "frameworks/adonisjs",
-                  "frameworks/elysia",
-                  "frameworks/express",
-                  "frameworks/fastify",
-                  "frameworks/h3",
-                  "frameworks/hapi",
-                  "frameworks/hono",
-                  "frameworks/koa",
-                  "frameworks/nestjs"
+                  "setup-guides/adonisjs",
+                  "setup-guides/elysia",
+                  "setup-guides/express",
+                  "setup-guides/fastify",
+                  "setup-guides/h3",
+                  "setup-guides/hapi",
+                  "setup-guides/hono",
+                  "setup-guides/koa",
+                  "setup-guides/nestjs"
                 ]
               },
               {
                 "group": "Go",
                 "pages": [
-                  "frameworks/chi",
-                  "frameworks/echo",
-                  "frameworks/fiber",
-                  "frameworks/gin"
+                  "setup-guides/chi",
+                  "setup-guides/echo",
+                  "setup-guides/fiber",
+                  "setup-guides/gin"
                 ]
               },
               {
                 "group": "Java",
-                "pages": ["frameworks/spring-boot"]
+                "pages": ["setup-guides/spring-boot"]
               },
               {
                 "group": ".NET",
-                "pages": ["frameworks/aspnet-core"]
+                "pages": ["setup-guides/aspnet-core"]
               }
             ]
           }
@@ -172,6 +172,94 @@
     {
       "source": "/features/alerting",
       "destination": "/features/custom-alerts"
+    },
+    {
+      "source": "/frameworks/blacksheep",
+      "destination": "/setup-guides/blacksheep"
+    },
+    {
+      "source": "/frameworks/django-ninja",
+      "destination": "/setup-guides/django-ninja"
+    },
+    {
+      "source": "/frameworks/django-rest-framework",
+      "destination": "/setup-guides/django-rest-framework"
+    },
+    {
+      "source": "/frameworks/fastapi",
+      "destination": "/setup-guides/fastapi"
+    },
+    {
+      "source": "/frameworks/flask",
+      "destination": "/setup-guides/flask"
+    },
+    {
+      "source": "/frameworks/litestar",
+      "destination": "/setup-guides/litestar"
+    },
+    {
+      "source": "/frameworks/starlette",
+      "destination": "/setup-guides/starlette"
+    },
+    {
+      "source": "/frameworks/adonisjs",
+      "destination": "/setup-guides/adonisjs"
+    },
+    {
+      "source": "/frameworks/elysia",
+      "destination": "/setup-guides/elysia"
+    },
+    {
+      "source": "/frameworks/express",
+      "destination": "/setup-guides/express"
+    },
+    {
+      "source": "/frameworks/fastify",
+      "destination": "/setup-guides/fastify"
+    },
+    {
+      "source": "/frameworks/h3",
+      "destination": "/setup-guides/h3"
+    },
+    {
+      "source": "/frameworks/hapi",
+      "destination": "/setup-guides/hapi"
+    },
+    {
+      "source": "/frameworks/hono",
+      "destination": "/setup-guides/hono"
+    },
+    {
+      "source": "/frameworks/koa",
+      "destination": "/setup-guides/koa"
+    },
+    {
+      "source": "/frameworks/nestjs",
+      "destination": "/setup-guides/nestjs"
+    },
+    {
+      "source": "/frameworks/chi",
+      "destination": "/setup-guides/chi"
+    },
+    {
+      "source": "/frameworks/echo",
+      "destination": "/setup-guides/echo"
+    },
+    {
+      "source": "/frameworks/fiber",
+      "destination": "/setup-guides/fiber"
+    },
+    {
+      "source": "/frameworks/gin",
+      "destination": "/setup-guides/gin"
+    },
+    {
+      "source": "/frameworks/spring-boot",
+      "destination": "/setup-guides/spring-boot"
+    },
+    {
+      "source": "/frameworks/aspnet-core",
+      "destination": "/setup-guides/aspnet-core"
     }
   ]
 }
