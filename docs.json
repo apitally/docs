@@ -145,7 +145,8 @@
   },
   "integrations": {
     "plausible": {
-      "domain": "docs.apitally.io"
+      "domain": "docs.apitally.io",
+      "server": "plsbl.apitally.io"
     },
     "posthog": {
       "apiKey": "phc_kOKUlIHUZPLsz5a6Bqix8h7uy5zl7SaMWSDlXhLVZka",
