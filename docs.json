@@ -39,40 +39,41 @@
         "groups": [
           {
             "group": "Overview",
+            "icon": "map",
+            "pages": ["introduction", "how-it-works", "data-privacy", "support"]
+          },
+          {
+            "group": "Features",
+            "icon": "list-check",
             "pages": [
-              "introduction",
-              "how-it-works",
-              "data-privacy",
               {
-                "group": "Features",
+                "group": "API analytics",
                 "pages": [
                   "features/apps-overview",
                   "features/traffic-dashboard",
                   "features/errors-dashboard",
                   "features/performance-dashboard",
                   "features/consumer-insights",
-                  "features/endpoint-insights",
-                  "features/request-logs",
-                  "features/application-logs",
-                  "features/uptime-monitoring",
-                  "features/custom-alerts"
+                  "features/endpoint-insights"
                 ]
               },
               {
-                "group": "Reference",
-                "pages": [
-                  "reference/python",
-                  "reference/javascript",
-                  "reference/java",
-                  "reference/go",
-                  "reference/dotnet"
-                ]
+                "group": "API logging",
+                "pages": ["features/request-logs", "features/application-logs"]
               },
-              "support"
+              {
+                "group": "API monitoring",
+                "pages": [
+                  "features/resources-dashboard",
+                  "features/uptime-monitoring",
+                  "features/custom-alerts"
+                ]
+              }
             ]
           },
           {
             "group": "Setup guides",
+            "icon": "rocket",
             "pages": [
               {
                 "group": "Python",
@@ -117,6 +118,23 @@
                 "group": ".NET",
                 "pages": ["setup-guides/aspnet-core"]
               }
+            ]
+          }
+        ]
+      },
+      {
+        "anchor": "SDK reference",
+        "icon": "box-isometric",
+        "groups": [
+          {
+            "group": "SDKs",
+            "icon": "box-isometric",
+            "pages": [
+              "sdk-reference/python",
+              "sdk-reference/javascript",
+              "sdk-reference/java",
+              "sdk-reference/go",
+              "sdk-reference/dotnet"
             ]
           }
         ]
@@ -265,6 +283,30 @@
     {
       "source": "/frameworks/aspnet-core",
       "destination": "/setup-guides/aspnet-core"
+    },
+    {
+      "source": "/reference",
+      "destination": "/sdk-reference"
+    },
+    {
+      "source": "/reference/python",
+      "destination": "/sdk-reference/python"
+    },
+    {
+      "source": "/reference/javascript",
+      "destination": "/sdk-reference/javascript"
+    },
+    {
+      "source": "/reference/java",
+      "destination": "/sdk-reference/java"
+    },
+    {
+      "source": "/reference/go",
+      "destination": "/sdk-reference/go"
+    },
+    {
+      "source": "/reference/dotnet",
+      "destination": "/sdk-reference/dotnet"
     }
   ]
 }

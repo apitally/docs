@@ -1,0 +1,27 @@
+---
+title: Resources dashboard
+sidebarTitle: Resources dashboard
+description: Monitor your application's CPU and memory usage, correlate it with API traffic.
+---
+
+<img src="https://assets.apitally.io/docs/2025-12-08/resources.webp" alt="Resources dashboard" className="rounded-xl" />
+
+The *Resources* dashboard displays your application's CPU and memory usage over time.
+This data is collected automatically by the Apitally SDK and aggregated across all running instances within each environment.
+
+Each chart displays the average value as a line and the range between minimum and maximum values as a shaded area.
+The current average and maximum values are shown in the top-right corner of each chart.
+
+## CPU utilization
+
+The CPU utilization chart shows the percentage of CPU time used by your application process.
+Since this is measured per-process and not relative to available cores, the value can exceed 100% for multi-threaded applications utilizing multiple CPU cores.
+
+## Memory usage
+
+The memory usage chart displays the resident set size (RSS) of your application process, which represents the actual physical memory being used.
+
+## Overlay traffic
+
+Toggle *Overlay traffic* to display a requests per minute area chart overlaid on the resource charts.
+This helps you identify how spikes in API traffic affect CPU and memory usage.
