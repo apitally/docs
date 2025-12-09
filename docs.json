@@ -130,11 +130,11 @@
             "group": "SDKs",
             "icon": "box-isometric",
             "pages": [
-              "reference/python",
-              "reference/javascript",
-              "reference/java",
-              "reference/go",
-              "reference/dotnet"
+              "sdk-reference/python",
+              "sdk-reference/javascript",
+              "sdk-reference/java",
+              "sdk-reference/go",
+              "sdk-reference/dotnet"
             ]
           }
         ]
@@ -283,6 +283,30 @@
     {
       "source": "/frameworks/aspnet-core",
       "destination": "/setup-guides/aspnet-core"
+    },
+    {
+      "source": "/reference",
+      "destination": "/sdk-reference"
+    },
+    {
+      "source": "/reference/python",
+      "destination": "/sdk-reference/python"
+    },
+    {
+      "source": "/reference/javascript",
+      "destination": "/sdk-reference/javascript"
+    },
+    {
+      "source": "/reference/java",
+      "destination": "/sdk-reference/java"
+    },
+    {
+      "source": "/reference/go",
+      "destination": "/sdk-reference/go"
+    },
+    {
+      "source": "/reference/dotnet",
+      "destination": "/sdk-reference/dotnet"
     }
   ]
 }
