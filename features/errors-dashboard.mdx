@@ -52,9 +52,7 @@ This is currently supported for the following frameworks:
 ## Server errors
 
 If a `500 Internal Server Error` response is caused by an unhandled exception in your code, Apitally automatically captures the error message and stack trace.
-You can then review those in the *Details* tab of the error modal.
-
-If you have enabled the Sentry integration for your app, you will also see a link to the Sentry issue that was created for the exception.
+You can review those in the *Details* tab of the error modal.
 
 ## Expected errors
 
@@ -65,3 +63,7 @@ Apitally allows you to mark specific `4xx` status codes as expected for certain 
 This prevents them from being counted as errors in error rate calculations, and requests with these response status codes are considered successful.
 
 To do this, simply select *Mark as expected* from the dropdown menu in the errors table.
+
+## Sentry integration
+
+If your team has set up the Sentry integration under *Settings > Integrations*, links to the Sentry issues created for captured exceptions will appear in the server error details.
