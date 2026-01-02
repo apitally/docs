@@ -82,6 +82,7 @@
                   "setup-guides/django-ninja",
                   "setup-guides/django-rest-framework",
                   "setup-guides/fastapi",
+                  "setup-guides/fastapi-cloudflare-workers",
                   "setup-guides/flask",
                   "setup-guides/litestar",
                   "setup-guides/starlette"
@@ -97,6 +98,7 @@
                   "setup-guides/h3",
                   "setup-guides/hapi",
                   "setup-guides/hono",
+                  "setup-guides/hono-cloudflare-workers",
                   "setup-guides/koa",
                   "setup-guides/nestjs"
                 ]
@@ -307,6 +309,14 @@
     {
       "source": "/reference/dotnet",
       "destination": "/sdk-reference/dotnet"
+    },
+    {
+      "source": "/setup-guides/fastapi-serverless",
+      "destination": "/setup-guides/fastapi-cloudflare-workers"
+    },
+    {
+      "source": "/setup-guides/hono-serverless",
+      "destination": "/setup-guides/hono-cloudflare-workers"
     }
   ]
 }

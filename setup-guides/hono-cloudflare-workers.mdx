@@ -1,0 +1,163 @@
+---
+title: "Setup guide for Hono on Cloudflare Workers"
+sidebarTitle: "Hono (Cloudflare Workers)"
+description: "Just a few simple steps to get started with Apitally."
+---
+
+import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
+import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
+import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
+import CloudflareLogpushJobSnippet from '/snippets/cloudflare-logpush-job.mdx';
+import CloudflareWorkerConfigSnippet from '/snippets/cloudflare-worker-config.mdx';
+
+This page guides you through the steps of configuring your [Hono](https://hono.dev) application running on [Cloudflare Workers](https://developers.cloudflare.com/workers/) to work with Apitally.
+If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
+
+<SetupGuideStartSnippet framework="Hono" />
+
+## Create app
+
+<CreateAppSnippet1 framework="Hono (Cloudflare Workers)" />
+
+<img src="https://assets.apitally.io/docs/2025-12-08/create-app.webp" alt="Create app" className="rounded-xl" />
+
+<CreateAppSnippet2 />
+
+## Add middleware
+
+Next, install the [Apitally Serverless SDK](https://www.npmjs.com/package/@apitally/serverless) in your project.
+
+<CodeGroup>
+```shell npm
+npm install @apitally/serverless
+```
+
+```shell yarn
+yarn add @apitally/serverless
+```
+</CodeGroup>
+
+Add the Apitally middleware to your Hono application using the `useApitally` function.
+
+```javascript
+import { Hono } from "hono";
+import { useApitally } from "@apitally/serverless/hono";
+
+const app = new Hono();
+
+useApitally(app);
+
+// Ensure route handlers are registered after useApitally()
+```
+
+<div>
+  <Snippet file="middleware-first-note.mdx" />
+</div>
+
+## Create Logpush job
+
+<CloudflareLogpushJobSnippet />
+
+## Configure Worker
+
+<CloudflareWorkerConfigSnippet />
+
+Then, deploy your application to Cloudflare Workers.
+
+```shell
+wrangler deploy
+```
+
+<Check>
+  At this point the basic setup for your application is complete and you will start seeing data in the Apitally dashboard after the first request is handled.
+</Check>
+
+<Note>
+  It can take 2-3 minutes for requests to show up in Apitally due to how Cloudflare Logpush batches log data before sending it.
+</Note>
+
+<Note>
+  Cloudflare Logpush doesn't include requests from local development environments, so you won't see them in
+  the Apitally dashboard.
+</Note>
+
+## Identify consumers
+
+<Snippet file="identify-consumers.mdx" />
+
+Use the `setConsumer` function to associate requests with consumers, for example in a middleware.
+
+<CodeGroup>
+```javascript Identifier only
+import { setConsumer } from "@apitally/serverless/hono";
+
+app.use(async (c, next) => {
+  const consumerIdentifier = c.get("jwtPayload")?.sub;
+  setConsumer(c, consumerIdentifier);
+  await next();
+});
+```
+
+```javascript With name and group
+import { setConsumer } from "@apitally/serverless/hono";
+
+app.use(async (c, next) => {
+  const payload = c.get("jwtPayload");
+  if (payload) {
+    setConsumer(c, {
+      identifier: payload.sub,
+      name: payload.name, // optional
+      group: payload.group, // optional
+    });
+  }
+  await next();
+});
+```
+</CodeGroup>
+
+<Snippet file="identify-consumers-check.mdx" />
+
+## Configure request logging
+
+With the serverless SDK, request logging is enabled by default, however request headers and request/response bodies are not included unless explicitly enabled.
+
+The SDK automatically applies [default masking rules](/data-privacy#data-masking) for common sensitive headers and request/response body fields. You can configure additional masking rules and exclude certain requests from logging.
+
+<CodeGroup>
+```javascript Basic example
+import { Hono } from "hono";
+import { useApitally } from "@apitally/serverless/hono";
+
+const app = new Hono();
+
+useApitally(app, {
+  logRequestHeaders: true,
+  logRequestBody: true,
+  logResponseBody: true,
+});
+```
+
+```javascript Advanced example
+import { Hono } from "hono";
+import { useApitally } from "@apitally/serverless/hono";
+
+const app = new Hono();
+
+useApitally(app, {
+  logRequestHeaders: true,
+  logRequestBody: true,
+  logResponseHeaders: true,
+  logResponseBody: true,
+  // Mask headers using regex
+  maskHeaders: [/^X-Sensitive-Header$/i],
+  // Mask request/response body fields using regex
+  maskBodyFields: [/^sensitive_field$/i],
+  // Exclude paths from request logging using regex
+  excludePaths: [/\/health$/, /\/metrics$/],
+});
+```
+</CodeGroup>
+
+<Check>
+  The _Request logs_ dashboard now shows individual requests handled by your application, including headers and payloads, if enabled. You can filter, search, and inspect them in detail.
+</Check>
