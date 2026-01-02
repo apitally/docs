@@ -1,0 +1,156 @@
+---
+title: "Setup guide for FastAPI on Cloudflare Workers"
+sidebarTitle: "FastAPI"
+description: "Just a few simple steps to get started with Apitally."
+---
+
+import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
+import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
+import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
+import CloudflareLogpushJobSnippet from '/snippets/cloudflare-logpush-job.mdx';
+import CloudflareWorkerConfigSnippet from '/snippets/cloudflare-worker-config.mdx';
+import CloudflareLogpushNoteSnippet from '/snippets/cloudflare-logpush-note.mdx';
+
+This page guides you through the steps of configuring your [FastAPI](https://fastapi.tiangolo.com) application running on [Cloudflare Workers](https://developers.cloudflare.com/workers/languages/python/) to work with Apitally.
+If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
+
+<SetupGuideStartSnippet framework="FastAPI" />
+
+## Create app
+
+<CreateAppSnippet1 framework="FastAPI (Cloudflare Workers)" />
+
+<img src="https://assets.apitally.io/docs/2025-12-08/create-app.webp" alt="Create app" className="rounded-xl" />
+
+<CreateAppSnippet2 />
+
+## Create Logpush job
+
+<CloudflareLogpushJobSnippet />
+
+## Add middleware
+
+Next, install the [Apitally Serverless SDK](/sdk-reference/python-serverless) in your project.
+
+```shell
+uv add apitally-serverless
+```
+
+Add the Apitally middleware to your FastAPI application.
+
+```python
+from fastapi import FastAPI
+from apitally_serverless.fastapi import ApitallyMiddleware
+
+app = FastAPI()
+app.add_middleware(ApitallyMiddleware)
+```
+
+<div style={{ marginTop: "-0.5rem" }}>
+  <Snippet file="middleware-last-note.mdx" />
+</div>
+
+## Configure Worker
+
+<CloudflareWorkerConfigSnippet />
+
+Then, deploy your application to Cloudflare Workers.
+
+```shell
+uv run pywrangler deploy
+```
+
+<Check>
+  At this point the basic setup for your application is complete and you will start seeing data in the Apitally dashboard after the first request is handled.
+</Check>
+
+<CloudflareLogpushNoteSnippet />
+
+## Identify consumers
+
+<Snippet file="identify-consumers.mdx" />
+
+Use the `set_consumer` function to associate requests with consumers, for example in a dependency, middleware or directly in your endpoint functions.
+
+<CodeGroup>
+```python Dependency
+from typing import Annotated
+from fastapi import FastAPI, Depends, Request
+from apitally_serverless.fastapi import set_consumer
+
+def identify_consumer(request: Request, current_user: Annotated[User, Depends(get_current_user)]) -> None:
+    set_consumer(
+        request,
+        identifier=current_user.user_id,
+        name=current_user.name,  # optional
+        group=current_user.group,  # optional
+    )
+
+app = FastAPI(dependencies=[Depends(identify_consumer)])
+```
+
+```python Endpoint function
+from typing import Annotated
+from fastapi import FastAPI, Depends, Request
+from apitally_serverless.fastapi import set_consumer
+
+app = FastAPI()
+
+@app.get("/items")
+async def list_items(request: Request, current_user: Annotated[User, Depends(get_current_user)]) -> list[str]:
+    set_consumer(
+        request,
+        identifier=current_user.user_id,
+        name=current_user.name,  # optional
+        group=current_user.group,  # optional
+    )
+    return ["item1"]
+```
+</CodeGroup>
+
+<Snippet file="identify-consumers-check.mdx" />
+
+## Configure request logging
+
+With the serverless SDK, request logging is enabled by default, however request headers and request/response bodies are not included unless explicitly enabled.
+
+The SDK automatically applies [default masking rules](/data-privacy#data-masking) for common sensitive headers and request/response body fields. You can configure additional masking rules and exclude certain requests from logging.
+
+<CodeGroup>
+```python Basic example
+from fastapi import FastAPI
+from apitally_serverless.fastapi import ApitallyMiddleware
+
+app = FastAPI()
+app.add_middleware(
+    ApitallyMiddleware,
+    log_request_headers=True,
+    log_request_body=True,
+    log_response_body=True,
+)
+```
+
+```python Advanced example
+from fastapi import FastAPI
+from apitally_serverless.fastapi import ApitallyMiddleware
+
+app = FastAPI()
+app.add_middleware(
+    ApitallyMiddleware,
+    log_request_headers=True,
+    log_request_body=True,
+    log_response_headers=True,
+    log_response_body=True,
+    # Mask headers using regex
+    mask_headers=[r"^X-Sensitive-Header$"],
+    # Mask request/response body fields using regex
+    mask_body_fields=[r"^sensitive_field$"],
+    # Exclude paths from request logging using regex
+    exclude_paths=[r"/health$", r"/metrics$"],
+)
+```
+</CodeGroup>
+
+<Check>
+  The _Request logs_ dashboard now shows individual requests handled by your application, including headers and payloads, if enabled. You can filter, search, and inspect them in detail.
+</Check>

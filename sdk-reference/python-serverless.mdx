@@ -1,0 +1,52 @@
+---
+title: Python Serverless SDK reference
+sidebarTitle: Python
+description: The parameters of the Apitally Serverless SDK for Python.
+mode: wide
+---
+
+import SetupGuidesPythonServerless from '/snippets/setup-guides-python-serverless.mdx';
+
+<CardGroup cols={2}>
+  <Card
+    title="GitHub repository"
+    icon="github"
+    href="https://github.com/apitally/apitally-py-serverless"
+    target="_blank"
+  >
+    apitally/apitally-py-serverless
+  </Card>
+  <Card
+    title="PyPI package"
+    icon="python"
+    href="https://pypi.org/project/apitally-serverless/"
+    target="_blank"
+  >
+    apitally-serverless
+  </Card>
+</CardGroup>
+
+## Installation
+
+```shell
+uv add apitally-serverless
+```
+
+## Supported frameworks
+
+<SetupGuidesPythonServerless />
+
+## Parameters
+
+The following parameters apply for all integrations.
+
+| Parameter | Description | Type | Default |
+| :-------- | :---------- | :--- | :------ |
+| `enabled` | Whether to enable the Apitally integration. | `bool` | `True` |
+| `log_request_headers` | Whether to include request headers in the logs. Default masking for common sensitive headers (e.g. `Authorization`) applies. | `bool` | `False` |
+| `log_request_body` | Whether to include the request body in the logs. Only JSON and text are supported, up to 10 KB. | `bool` | `False` |
+| `log_response_headers` | Whether to include response headers in the logs. | `bool` | `True` |
+| `log_response_body` | Whether to include the response body in the logs. Only JSON and text are supported, up to 10 KB. | `bool` | `False` |
+| `mask_headers` | List of regular expressions for matching headers to mask. These are in addition to the default masking patterns. | `list[str]` | `[]` |
+| `mask_body_fields` | List of regular expressions for matching request/response body fields to mask. These are in addition to the default masking patterns. | `list[str]` | `[]` |
+| `exclude_paths` | List of regular expressions for matching paths to exclude from logging. | `list[str]` | `[]` |

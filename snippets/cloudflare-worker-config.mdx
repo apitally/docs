@@ -1,0 +1,27 @@
+Enable [Workers Logs](https://developers.cloudflare.com/workers/observability/logs/workers-logs/) and [Logpush](https://developers.cloudflare.com/workers/observability/logs/logpush/) in your Wrangler configuration file.
+
+<CodeGroup>
+```toml wrangler.toml
+logpush = true
+
+[observability]
+enabled = true
+head_sampling_rate = 1
+
+[observability.logs]
+invocation_logs = true
+```
+
+```json wrangler.json
+{
+  "logpush": true,
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1,
+    "logs": {
+      "invocation_logs": true
+    }
+  }
+}
+```
+</CodeGroup>
