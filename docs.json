@@ -119,6 +119,10 @@
               {
                 "group": ".NET",
                 "pages": ["setup-guides/aspnet-core"]
+              },
+              {
+                "group": "Serverless",
+                "pages": ["setup-guides/cloudflare-workers"]
               }
             ]
           }
@@ -129,7 +133,7 @@
         "icon": "box-isometric",
         "groups": [
           {
-            "group": "SDKs",
+            "group": "Standard SDKs",
             "icon": "box-isometric",
             "pages": [
               "sdk-reference/python",
@@ -137,6 +141,14 @@
               "sdk-reference/java",
               "sdk-reference/go",
               "sdk-reference/dotnet"
+            ]
+          },
+          {
+            "group": "Serverless SDKs",
+            "icon": "box-isometric",
+            "pages": [
+              "sdk-reference/python-serverless",
+              "sdk-reference/javascript-serverless"
             ]
           }
         ]

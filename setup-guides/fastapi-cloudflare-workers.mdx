@@ -9,6 +9,7 @@ import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import CloudflareLogpushJobSnippet from '/snippets/cloudflare-logpush-job.mdx';
 import CloudflareWorkerConfigSnippet from '/snippets/cloudflare-worker-config.mdx';
+import CloudflareLogpushNoteSnippet from '/snippets/cloudflare-logpush-note.mdx';
 
 This page guides you through the steps of configuring your [FastAPI](https://fastapi.tiangolo.com) application running on [Cloudflare Workers](https://developers.cloudflare.com/workers/languages/python/) to work with Apitally.
 If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
@@ -22,6 +23,10 @@ If you don't have an account yet, now would be a good time to [sign up](https://
 <img src="https://assets.apitally.io/docs/2025-12-08/create-app.webp" alt="Create app" className="rounded-xl" />
 
 <CreateAppSnippet2 />
+
+## Create Logpush job
+
+<CloudflareLogpushJobSnippet />
 
 ## Add middleware
 
@@ -45,10 +50,6 @@ app.add_middleware(ApitallyMiddleware)
   <Snippet file="middleware-last-note.mdx" />
 </div>
 
-## Create Logpush job
-
-<CloudflareLogpushJobSnippet />
-
 ## Configure Worker
 
 <CloudflareWorkerConfigSnippet />
@@ -63,14 +64,7 @@ uv run pywrangler deploy
   At this point the basic setup for your application is complete and you will start seeing data in the Apitally dashboard after the first request is handled.
 </Check>
 
-<Note>
-  It can take 2-3 minutes for requests to show up in Apitally due to how Cloudflare Logpush batches log data before sending it.
-</Note>
-
-<Note>
-  Cloudflare Logpush doesn't include requests from local development environments, so you won't see them in
-  the Apitally dashboard.
-</Note>
+<CloudflareLogpushNoteSnippet />
 
 ## Identify consumers
 
