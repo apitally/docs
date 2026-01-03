@@ -139,8 +139,8 @@
             "pages": [
               "sdk-reference/python",
               "sdk-reference/javascript",
-              "sdk-reference/java",
               "sdk-reference/go",
+              "sdk-reference/java",
               "sdk-reference/dotnet"
             ]
           },
