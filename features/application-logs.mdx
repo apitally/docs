@@ -5,7 +5,7 @@ description: View application logs in the context of handled API requests.
 ---
 
 The Apitally SDKs can instrument various logging libraries to automatically capture logs emitted by your application during request handling.
-These are associated with the corresponding request and displayed in the details modal of the request logs.
+These are associated with the corresponding request and displayed in the request details in the request logs.
 
 Log capture must be explicitly enabled alongside request logging. See example in the [setup guide](/setup-guides) for your framework.
 
@@ -15,12 +15,18 @@ Log capture must be explicitly enabled alongside request logging. See example in
 
 ## Supported loggers
 
-For Python and .NET, the Apitally SDKs instrument the standard logging libraries.
+The following loggers are instrumented automatically if present in your application:
 
-For JavaScript, the following loggers are instrumented:
-
-- console
-- Pino
-- Winston
-- Logger in NestJS
-- Built-in logging methods in hapi
+- Python
+  - logging (standard library)
+  - loguru
+- JavaScript
+  - console
+  - Pino
+  - Winston
+  - Logger in NestJS
+  - Built-in logging methods in hapi
+- Go
+  - slog (standard library)
+- .NET
+  - Microsoft.Extensions.Logging (standard library)
