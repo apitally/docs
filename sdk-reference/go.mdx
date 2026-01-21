@@ -46,6 +46,7 @@ The following are the fields of the `RequestLoggingConfig` struct.
 | `LogResponseHeaders` | Whether to include response headers in the logs. | `bool` | `true` |
 | `LogResponseBody` | Whether to include the response body in the logs. Only JSON and text are supported, up to 50 KB. | `bool` | `false` |
 | `LogPanic` | Whether to log information when a panic occurs during request handling. | `bool` | `false` |
+| `CaptureLogs` | Whether to capture application logs emitted during request handling. | `bool` | `false` |
 | `MaskQueryParams` | List of regular expressions for matching query parameters to mask. These are in addition to the default masking patterns. | `[]*regexp.Regexp` | `nil` |
 | `MaskHeaders` | List of regular expressions for matching headers to mask. These are in addition to the default masking patterns. | `[]*regexp.Regexp` | `nil` |
 | `MaskBodyFields` | List of regular expressions for matching request/response body fields to mask. These are in addition to the default masking patterns. | `[]*regexp.Regexp` | `nil` |

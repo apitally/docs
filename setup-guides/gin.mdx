@@ -160,6 +160,7 @@ func main() {
     config.RequestLogging.LogRequestHeaders = true
     config.RequestLogging.LogRequestBody = true
     config.RequestLogging.LogResponseBody = true
+    config.RequestLogging.CaptureLogs = true
 
     r.Use(apitally.Middleware(r, config))
 
@@ -190,6 +191,7 @@ func main() {
     config.RequestLogging.LogResponseHeaders = true
     config.RequestLogging.LogResponseBody = true
     config.RequestLogging.LogPanic = true
+    config.RequestLogging.CaptureLogs = true
     // Mask query parameters using regex
     config.RequestLogging.MaskQueryParams = []*regexp.Regexp{regexp.MustCompile(`^card_number$`)}
     // Mask headers using regex
