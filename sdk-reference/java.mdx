@@ -52,6 +52,8 @@ The following are the properties of the `request-logging` configuration object.
 | <nobr>`request-body-included`</nobr> | Whether to include the request body in the logs. Only JSON and text are supported, up to 50 KB. | `boolean` | `false` |
 | <nobr>`response-headers-included`</nobr> | Whether to include response headers in the logs. | `boolean` | `true` |
 | <nobr>`response-body-included`</nobr> | Whether to include the response body in the logs. Only JSON and text are supported, up to 50 KB. | `boolean` | `false` |
+| <nobr>`log-capture-enabled`</nobr> | Whether to capture application logs emitted during request handling. | `boolean` | `false` |
+| <nobr>`tracing-enabled`</nobr> | Whether to enable tracing with OpenTelemetry. | `boolean` | `false` |
 | <nobr>`query-param-mask-patterns`</nobr> | List of regular expressions for matching query parameters to mask. These are in addition to the default masking patterns. | `List<String>` | `[]` |
 | <nobr>`header-mask-patterns`</nobr> | List of regular expressions for matching headers to mask. These are in addition to the default masking patterns. | `List<String>` | `[]` |
 | <nobr>`body-field-mask-patterns`</nobr> | List of regular expressions for matching request/response body fields to mask. These are in addition to the default masking patterns. | `List<String>` | `[]` |
