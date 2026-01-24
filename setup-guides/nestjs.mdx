@@ -154,6 +154,7 @@ async function bootstrap() {
       logRequestBody: true,
       logResponseBody: true,
       captureLogs: true,
+      captureTraces: true,
     },
   });
 
@@ -183,6 +184,7 @@ async function bootstrap() {
       logResponseBody: true,
       logException: true,
       captureLogs: true,
+      captureTraces: true,
       // Mask query parameters using regex
       maskQueryParams: [/^card_number$/i],
       // Mask headers using regex

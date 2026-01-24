@@ -96,6 +96,7 @@ const app = new Elysia()
         logRequestBody: true,
         logResponseBody: true,
         captureLogs: true,
+        captureTraces: true,
       },
     }),
   )
@@ -120,6 +121,7 @@ const app = new Elysia()
         logResponseBody: true,
         logException: true,
         captureLogs: true,
+        captureTraces: true,
         // Mask query parameters using regex
         maskQueryParams: [/^card_number$/i],
         // Mask headers using regex

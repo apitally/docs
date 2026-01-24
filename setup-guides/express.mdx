@@ -143,6 +143,7 @@ useApitally(app, {
     logRequestBody: true,
     logResponseBody: true,
     captureLogs: true,
+    captureTraces: true,
   },
 });
 ```
@@ -166,6 +167,7 @@ useApitally(app, {
     logResponseBody: true,
     logException: true,
     captureLogs: true,
+    captureTraces: true,
     // Mask query parameters using regex
     maskQueryParams: [/^card_number$/i],
     // Mask headers using regex

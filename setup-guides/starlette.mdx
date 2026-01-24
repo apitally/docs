@@ -128,6 +128,7 @@ app.add_middleware(
     log_request_body=True,
     log_response_body=True,
     capture_logs=True,
+    capture_traces=True,
 )
 ```
 
@@ -148,6 +149,7 @@ app.add_middleware(
     log_response_body=True,
     log_exception=True,
     capture_logs=True,
+    capture_traces=True,
     # Mask query parameters using regex
     mask_query_params=[r"^card_number$"],
     # Mask headers using regex
