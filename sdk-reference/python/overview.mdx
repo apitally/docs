@@ -1,0 +1,63 @@
+---
+title: Python SDK reference
+sidebarTitle: Overview
+description: Overview of the Apitally SDK for Python.
+mode: wide
+---
+
+import SetupGuidesPython from '/snippets/setup-guides-python.mdx';
+
+<CardGroup cols={2}>
+  <Card
+    title="GitHub repository"
+    icon="github"
+    href="https://github.com/apitally/apitally-py"
+    target="_blank"
+  >
+    apitally/apitally-py
+  </Card>
+  <Card
+    title="PyPI package"
+    icon="python"
+    href="https://pypi.org/project/apitally/"
+    target="_blank"
+  >
+    apitally
+  </Card>
+</CardGroup>
+
+<Tip>Running your app on Cloudflare Workers? Use our [Serverless SDK](/sdk-reference/python-serverless) instead.</Tip>
+
+## Installation
+
+<CodeGroup>
+```shell pip
+pip install "apitally[<framework_name>]"
+```
+
+```shell uv
+uv add "apitally[<framework_name>]"
+```
+
+```shell poetry
+poetry add "apitally[<your_framework>]"
+```
+</CodeGroup>
+
+Replace the `<your_framework>` placeholder with the extra for your framework. The options are:
+
+- `blacksheep`
+- `django_ninja`
+- `django_rest_framework`
+- `fastapi`
+- `flask`
+- `litestar`
+- `starlette`
+
+## Supported frameworks
+
+The Python SDK currently supports the web frameworks listed below. If your framework is not listed, please [let us know](/support) and we'll consider adding support for it.
+
+Click on a framework for a detailed setup guide.
+
+<SetupGuidesPython />

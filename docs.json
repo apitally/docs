@@ -137,19 +137,66 @@
             "group": "Standard SDKs",
             "icon": "box-isometric",
             "pages": [
-              "sdk-reference/python",
-              "sdk-reference/javascript",
-              "sdk-reference/go",
-              "sdk-reference/java",
-              "sdk-reference/dotnet"
+              {
+                "group": "Python",
+                "pages": [
+                  "sdk-reference/python/overview",
+                  "sdk-reference/python/parameters",
+                  "sdk-reference/python/tracing"
+                ]
+              },
+              {
+                "group": "JavaScript",
+                "pages": [
+                  "sdk-reference/javascript/overview",
+                  "sdk-reference/javascript/parameters",
+                  "sdk-reference/javascript/tracing"
+                ]
+              },
+              {
+                "group": "Go",
+                "pages": [
+                  "sdk-reference/go/overview",
+                  "sdk-reference/go/parameters",
+                  "sdk-reference/go/tracing"
+                ]
+              },
+              {
+                "group": "Java",
+                "pages": [
+                  "sdk-reference/java/overview",
+                  "sdk-reference/java/parameters",
+                  "sdk-reference/java/tracing"
+                ]
+              },
+              {
+                "group": ".NET",
+                "pages": [
+                  "sdk-reference/dotnet/overview",
+                  "sdk-reference/dotnet/parameters",
+                  "sdk-reference/dotnet/tracing"
+                ]
+              }
             ]
           },
           {
             "group": "Serverless SDKs",
             "icon": "box-isometric",
             "pages": [
-              "sdk-reference/python-serverless",
-              "sdk-reference/javascript-serverless"
+              {
+                "group": "Python",
+                "pages": [
+                  "sdk-reference/python-serverless/overview",
+                  "sdk-reference/python-serverless/parameters"
+                ]
+              },
+              {
+                "group": "JavaScript",
+                "pages": [
+                  "sdk-reference/javascript-serverless/overview",
+                  "sdk-reference/javascript-serverless/parameters"
+                ]
+              }
             ]
           }
         ]
@@ -214,6 +261,10 @@
     {
       "source": "/frameworks/blacksheep",
       "destination": "/setup-guides/blacksheep"
+    },
+    {
+      "source": "/frameworks/django",
+      "destination": "/setup-guides/django"
     },
     {
       "source": "/frameworks/django-ninja",
