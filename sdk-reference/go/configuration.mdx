@@ -1,9 +1,93 @@
 ---
-title: Go SDK parameters
-sidebarTitle: Parameters
-description: The parameters of the Apitally SDK for Go.
+title: Go SDK configuration
+sidebarTitle: Configuration
+description: How to configure the Apitally SDK for Go.
 mode: wide
 ---
+
+## Configuration
+
+<CodeGroup>
+  ```go Chi {10-12}
+  package main
+
+  import (
+      apitally "github.com/apitally/apitally-go/chi"
+      "github.com/go-chi/chi/v5"
+  )
+
+  func main() {
+      r := chi.NewRouter()
+
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      // other configuration ...
+
+      r.Use(apitally.Middleware(r, config))
+  }
+  ```
+
+  ```go Echo {10-12}
+  package main
+
+  import (
+      apitally "github.com/apitally/apitally-go/echo"
+      "github.com/labstack/echo/v4"
+  )
+
+  func main() {
+      e := echo.New()
+
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      // other configuration ...
+
+      e.Use(apitally.Middleware(e, config))
+  }
+  ```
+
+  ```go Fiber {10-12}
+  package main
+
+  import (
+      apitally "github.com/apitally/apitally-go/fiber"
+      "github.com/gofiber/fiber/v2"
+  )
+
+  func main() {
+      app := fiber.New()
+
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      // other configuration ...
+
+      app.Use(apitally.Middleware(app, config))
+  }
+  ```
+
+  ```go Gin {10-12}
+  package main
+
+  import (
+      apitally "github.com/apitally/apitally-go/gin"
+      "github.com/gin-gonic/gin"
+  )
+
+  func main() {
+      r := gin.Default()
+
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      // other configuration ...
+
+      r.Use(apitally.Middleware(r, config))
+  }
+  ```
+</CodeGroup>
+
+See the [setup guides](/setup-guides#go) for more examples.
+
+## Parameters
 
 The following are the fields of the `Config` struct.
 
@@ -14,9 +98,7 @@ The following are the fields of the `Config` struct.
 | `RequestLogging` | Configuration options for request logging. See table below. | `*RequestLoggingConfig` |
 | `AppVersion` | The current version of your application, e.g. `1.0.0`. | `string` |
 
-## Request logging config
-
-The following are the fields of the `RequestLoggingConfig` struct.
+The `RequestLogging` field is a pointer to a `RequestLoggingConfig` struct with the following fields:
 
 | Parameter | Description | Type | Default |
 | :-------- | :---------- | :--- | :------ |
@@ -37,9 +119,9 @@ The following are the fields of the `RequestLoggingConfig` struct.
 | `ExcludePaths` | List of regular expressions for matching paths to exclude from logging. | `[]*regexp.Regexp` | `nil` |
 | `ExcludeCallback` | Callback function for excluding requests from logging. Takes two parameters `request` and `response` and returns `true`, if the request should be excluded, or `false` otherwise. | `func(request *Request, response *Response) bool` | `nil` |
 
-### Request struct
+## Callback arguments
 
-Below are the fields of the `Request` struct.
+The `MaskRequestBodyCallback`, `MaskResponseBodyCallback` and `ExcludeCallback` fields accept a callback function that takes a `Request` struct as the first argument. This struct has the following fields:
 
 | Field | Description | Type |
 | :---- | :---------- | :--- |
@@ -52,9 +134,7 @@ Below are the fields of the `Request` struct.
 | `Consumer` | Identifier of the consumer making the request. | `string` |
 | `Body` | Raw request body. | `[]byte` |
 
-### Response struct
-
-Below are the fields of the `Response` struct.
+The `MaskResponseBodyCallback` and `ExcludeCallback` callback functions also take a `Response` struct as the second argument. This struct has the following fields:
 
 | Field | Description | Type |
 | :---- | :---------- | :--- |

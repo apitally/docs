@@ -1,11 +1,75 @@
 ---
-title: JavaScript SDK parameters
-sidebarTitle: Parameters
-description: The parameters of the Apitally SDK for JavaScript.
+title: JavaScript SDK configuration
+sidebarTitle: Configuration
+description: How to configure the Apitally SDK for JavaScript.
 mode: wide
 ---
 
-The following parameters apply for all integrations.
+## Configuration
+
+<CodeGroup>
+  ```javascript Hono {7-9}
+  import { Hono } from "hono";
+  import { useApitally } from "apitally/hono";
+
+  const app = new Hono();
+
+  useApitally(app, {
+    clientId: "your-client-id",
+    env: "dev",
+    // other parameters ...
+  });
+  ```
+
+  ```javascript NestJS {9-11}
+  import { NestFactory } from "@nestjs/core";
+  import { useApitally } from "apitally/nestjs";
+  import { AppModule } from "./app.module";
+
+  async function bootstrap() {
+    const app = await NestFactory.create(AppModule);
+
+    await useApitally(app, {
+      clientId: "your-client-id",
+      env: "dev",
+      // other parameters ...
+    });
+  }
+  ```
+
+  ```javascript Express {7-9}
+  import express from "express";
+  import { useApitally } from "apitally/express";
+
+  const app = express();
+
+  useApitally(app, {
+    clientId: "your-client-id",
+    env: "dev",
+    // other parameters ...
+  });
+  ```
+
+  ```javascript Fastify {7-9}
+  import Fastify from "fastify";
+  import { apitallyPlugin } from "apitally/fastify";
+
+  const fastify = Fastify({ logger: true });
+
+  await fastify.register(apitallyPlugin, {
+    clientId: "your-client-id",
+    env: "dev",
+    // other parameters ...
+  });
+  ```
+</CodeGroup>
+
+See the [setup guides](/setup-guides#javascript) for more examples.
+
+## Parameters
+
+The following configuration parameters are available.
+Only `clientId` and `env` are required.
 
 | Parameter | Description | Type | Default |
 | :-------- | :---------- | :--- | :------ |
@@ -15,9 +79,7 @@ The following parameters apply for all integrations.
 | `appVersion` | The current version of your application, e.g. `1.0.0`. | `string` |
 | `logger` | A custom logger instance. If not provided, a default logger is created automatically. | `object` |
 
-## Request logging config
-
-The following are the keys of the `requestLogging` object.
+The `requestLogging` parameter is an object with the following properties:
 
 | Parameter | Description | Type | Default |
 | :-------- | :---------- | :--- | :------ |
@@ -38,9 +100,9 @@ The following are the keys of the `requestLogging` object.
 | `excludePaths` | Array of regular expressions for matching paths to exclude from logging. | `RegExp[]` | `[]` |
 | `excludeCallback` | Callback function for excluding requests from logging. Takes two parameters `request` and `response` and returns `true`, if the request should be excluded, or `false` otherwise. | `Function` | - |
 
-### Request object
+## Callback arguments
 
-Below are the properties of the `request` objects that are passed to the user-provided callback functions.
+The `maskRequestBodyCallback`, `maskResponseBodyCallback` and `excludeCallback` parameters accept a callback function that takes a `request` object as the first argument. This object has the following properties:
 
 | Property | Description | Type |
 | :------- | :---------- | :--- |
@@ -53,9 +115,7 @@ Below are the properties of the `request` objects that are passed to the user-pr
 | `size` | Size of the request body in bytes. | `number` |
 | `body` | Raw request body as bytes. | `Buffer` |
 
-### Response object
-
-Below are the properties of the `response` objects that are passed to some of the user-provided callback functions.
+The `maskResponseBodyCallback` and `excludeCallback` callback functions also take a `response` object as the second argument. This object has the following properties:
 
 | Property | Description | Type |
 | :------- | :---------- | :--- |

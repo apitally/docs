@@ -1,11 +1,29 @@
 ---
-title: JavaScript Serverless SDK parameters
-sidebarTitle: Parameters
-description: The parameters of the Apitally Serverless SDK for JavaScript.
+title: JavaScript Serverless SDK configuration
+sidebarTitle: Configuration
+description: How to configure the Apitally Serverless SDK for JavaScript.
 mode: wide
 ---
 
-The following parameters apply for all integrations.
+## Configuration
+
+```javascript Hono {7-10}
+import { Hono } from "hono";
+import { useApitally } from "@apitally/serverless/hono";
+
+const app = new Hono();
+
+useApitally(app, {
+  logRequestHeaders: true,
+  logRequestBody: true,
+  logResponseBody: true,
+  // other parameters ...
+});
+```
+
+## Parameters
+
+The following configuration parameters are available.
 
 | Parameter | Description | Type | Default |
 | :-------- | :---------- | :--- | :------ |

@@ -1,9 +1,40 @@
 ---
-title: .NET SDK parameters
-sidebarTitle: Parameters
-description: The parameters of the Apitally SDK for .NET.
+title: .NET SDK configuration
+sidebarTitle: Configuration
+description: How to configure the Apitally SDK for .NET.
 mode: wide
 ---
+
+## Configuration
+
+<CodeGroup>
+  ```csharp Program.cs {6-8}
+  using Apitally;
+
+  var builder = WebApplication.CreateBuilder(args);
+  builder.Services.AddApitally(options =>
+  {
+      options.ClientId = "your-client-id";
+      options.Env = "dev";
+      // other parameters ...
+  });
+
+  var app = builder.Build();
+  app.UseApitally();
+  ```
+
+  ```json appsettings.json {3-5}
+  {
+    "Apitally": {
+      "ClientId": "your-client-id",
+      "Env": "dev"
+      // other parameters ...
+    }
+  }
+  ```
+</CodeGroup>
+
+## Parameters
 
 The following parameters apply when configuring Apitally options for your ASP.NET Core application.
 
@@ -13,9 +44,7 @@ The following parameters apply when configuring Apitally options for your ASP.NE
 | `Env` | Name of the environment, e.g. `prod` or `dev`. The environment will be automatically created if it doesn't exist. | `string` |
 | `RequestLogging` | Configuration for request logging. See table below. | `RequestLoggingOptions` |
 
-## Request logging options
-
-The following are the properties of the `RequestLoggingOptions` class.
+The `RequestLogging` parameter is an object with the following properties:
 
 | Parameter | Description | Type | Default |
 | :-------- | :---------- | :--- | :------ |
@@ -36,9 +65,9 @@ The following are the properties of the `RequestLoggingOptions` class.
 | `MaskResponseBody` | Function to mask sensitive data in the response body. Return `null` to mask the whole body. | <nobr>`Func<Request, Response, byte[]?>`</nobr> | - |
 | `ShouldExclude` | Function to determine whether a request should be excluded from logging. Return `true` to exclude the request. | <nobr>`Func<Request, Response, bool>`</nobr> | - |
 
-### Request object
+## Callback arguments
 
-Below are the properties of the `Request` objects that are passed to the user-provided callback functions.
+The `MaskRequestBody`, `MaskResponseBody` and `ShouldExclude` parameters accept a callback function that takes a `Request` object as the first argument. This object has the following properties:
 
 | Property | Description | Type |
 | :------- | :---------- | :--- |
@@ -51,9 +80,7 @@ Below are the properties of the `Request` objects that are passed to the user-pr
 | `Size` | Size of the request body in bytes. | `int` |
 | `Body` | Raw request body as bytes. | `byte[]` |
 
-### Response object
-
-Below are the properties of the `Response` objects that are passed to some of the user-provided callback functions.
+The `MaskResponseBody` and `ShouldExclude` callback functions also take a `Response` object as the second argument. This object has the following properties:
 
 | Property | Description | Type |
 | :------- | :---------- | :--- |

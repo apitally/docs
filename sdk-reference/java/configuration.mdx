@@ -1,9 +1,20 @@
 ---
-title: Java SDK parameters
-sidebarTitle: Parameters
-description: The parameters of the Apitally SDK for Java.
+title: Java SDK configuration
+sidebarTitle: Configuration
+description: How to configure the Apitally SDK for Java.
 mode: wide
 ---
+
+## Configuration
+
+```yaml application.yml {2-4}
+apitally:
+  client-id: "your-client-id"
+  env: "dev"
+  # other parameters ...
+```
+
+## Parameters
 
 The following parameters apply when configuring the Apitally client in your `application.yml` file.
 
@@ -13,9 +24,7 @@ The following parameters apply when configuring the Apitally client in your `app
 | `env` | Name of the environment, e.g. `prod` or `dev`. The environment will be automatically created if it doesn't exist. | `string` |
 | <nobr>`request-logging`</nobr> | Configuration for request logging. See table below. | `object` |
 
-## Request logging config
-
-The following are the properties of the `request-logging` configuration object.
+The `request-logging` parameter is an object with the following properties:
 
 | Parameter | Description | Type | Default |
 | :-------- | :---------- | :--- | :------ |
@@ -33,9 +42,9 @@ The following are the properties of the `request-logging` configuration object.
 | <nobr>`path-exclude-patterns`</nobr> | List of regular expressions for matching paths to exclude from logging. | `List<String>` | `[]` |
 | <nobr>`callbacks-class`</nobr> | Fully qualified name of a class implementing `RequestLoggingCallbacks` for custom masking and exclusion logic. | `string` | - |
 
-### Request object
+## Callback arguments
 
-Below are the properties of the `Request` objects that are passed to the callback methods.
+The `RequestLoggingCallbacks` interface defines callback methods that take a `Request` object as the first argument. This object has the following properties:
 
 | Property | Description | Type |
 | :------- | :---------- | :--- |
@@ -48,9 +57,7 @@ Below are the properties of the `Request` objects that are passed to the callbac
 | `consumer` | Identifier of the consumer making the request. | `string` |
 | `body` | Raw request body as bytes. | `byte[]` |
 
-### Response object
-
-Below are the properties of the `Response` objects that are passed to some of the callback methods.
+The `maskResponseBody` and `shouldExclude` callback methods also take a `Response` object as the second argument. This object has the following properties:
 
 | Property | Description | Type |
 | :------- | :---------- | :--- |

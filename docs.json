@@ -141,7 +141,7 @@
                 "group": "Python",
                 "pages": [
                   "sdk-reference/python/overview",
-                  "sdk-reference/python/parameters",
+                  "sdk-reference/python/configuration",
                   "sdk-reference/python/tracing"
                 ]
               },
@@ -149,7 +149,7 @@
                 "group": "JavaScript",
                 "pages": [
                   "sdk-reference/javascript/overview",
-                  "sdk-reference/javascript/parameters",
+                  "sdk-reference/javascript/configuration",
                   "sdk-reference/javascript/tracing"
                 ]
               },
@@ -157,7 +157,7 @@
                 "group": "Go",
                 "pages": [
                   "sdk-reference/go/overview",
-                  "sdk-reference/go/parameters",
+                  "sdk-reference/go/configuration",
                   "sdk-reference/go/tracing"
                 ]
               },
@@ -165,7 +165,7 @@
                 "group": "Java",
                 "pages": [
                   "sdk-reference/java/overview",
-                  "sdk-reference/java/parameters",
+                  "sdk-reference/java/configuration",
                   "sdk-reference/java/tracing"
                 ]
               },
@@ -173,7 +173,7 @@
                 "group": ".NET",
                 "pages": [
                   "sdk-reference/dotnet/overview",
-                  "sdk-reference/dotnet/parameters",
+                  "sdk-reference/dotnet/configuration",
                   "sdk-reference/dotnet/tracing"
                 ]
               }
@@ -187,14 +187,14 @@
                 "group": "Python",
                 "pages": [
                   "sdk-reference/python-serverless/overview",
-                  "sdk-reference/python-serverless/parameters"
+                  "sdk-reference/python-serverless/configuration"
                 ]
               },
               {
                 "group": "JavaScript",
                 "pages": [
                   "sdk-reference/javascript-serverless/overview",
-                  "sdk-reference/javascript-serverless/parameters"
+                  "sdk-reference/javascript-serverless/configuration"
                 ]
               }
             ]

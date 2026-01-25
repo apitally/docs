@@ -1,11 +1,29 @@
 ---
-title: Python Serverless SDK parameters
-sidebarTitle: Parameters
-description: The parameters of the Apitally Serverless SDK for Python.
+title: Python Serverless SDK configuration
+sidebarTitle: Configuration
+description: How to configure the Apitally Serverless SDK for Python.
 mode: wide
 ---
 
-The following parameters apply for all integrations.
+## Configuration
+
+```python FastAPI {7-10}
+from fastapi import FastAPI
+from apitally_serverless.fastapi import ApitallyMiddleware
+
+app = FastAPI()
+app.add_middleware(
+    ApitallyMiddleware,
+    log_request_headers=True,
+    log_request_body=True,
+    log_response_body=True,
+    # other parameters ...
+)
+```
+
+## Parameters
+
+The following configuration parameters are available.
 
 | Parameter | Description | Type | Default |
 | :-------- | :---------- | :--- | :------ |

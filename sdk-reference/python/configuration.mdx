@@ -1,11 +1,54 @@
 ---
-title: Python SDK parameters
-sidebarTitle: Parameters
-description: The parameters of the Apitally SDK for Python.
+title: Python SDK configuration
+sidebarTitle: Configuration
+description: How to configure the Apitally SDK for Python.
 mode: wide
 ---
 
-The following parameters apply for all integrations.
+## Configuration
+
+<CodeGroup>
+  ```python FastAPI {7-9}
+  from fastapi import FastAPI
+  from apitally.fastapi import ApitallyMiddleware
+
+  app = FastAPI()
+  app.add_middleware(
+      ApitallyMiddleware,
+      client_id="your-client-id",
+      env="dev",
+      # other parameters ...
+  )
+  ```
+
+  ```python Django {2-4}
+  APITALLY_MIDDLEWARE = {
+      "client_id": "your-client-id",
+      "env": "dev",
+      # other parameters ...
+  }
+  ```
+
+  ```python Flask {7-9}
+  from flask import Flask
+  from apitally.flask import ApitallyMiddleware
+
+  app = Flask(__name__)
+  app.wsgi_app = ApitallyMiddleware(
+      app,
+      client_id="your-client-id",
+      env="dev",
+      # other parameters ...
+  )
+  ```
+</CodeGroup>
+
+See the [setup guides](/setup-guides#python) for more examples.
+
+## Parameters
+
+The following configuration parameters are available.
+Only `client_id` and `env` are required.
 
 | Parameter | Description | Type | Default |
 | :-------- | :---------- | :--- | :------ |
@@ -29,9 +72,9 @@ The following parameters apply for all integrations.
 | `exclude_paths` | List of regular expressions for matching paths to exclude from logging. | `list[str]` | `[]` |
 | `exclude_callback` | Callback function for excluding requests from logging. Takes two parameters `request` and `response` and returns `True`, if the request should be excluded, or `False` otherwise. | `Callable` | `None` |
 
-### Request dict
+## Callback arguments
 
-Below are the keys of the `request` dicts that are passed to the user-provided callback functions.
+The `mask_request_body_callback`, `mask_response_body_callback` and `exclude_callback` parameters accept a callback function that takes a `request` object as the first argument. This is a `dict` with the following keys:
 
 | Key | Description | Type |
 | :-- | :---------- | :--- |
@@ -44,9 +87,7 @@ Below are the keys of the `request` dicts that are passed to the user-provided c
 | `consumer` | Identifier of the consumer making the request. | `str` |
 | `body` | Raw request body. | `bytes` |
 
-### Response dict
-
-Below are the keys of the `response` dicts that are passed to some of the user-provided callback functions.
+The `mask_response_body_callback` and `exclude_callback` callback functions also take a `response` object as the second argument. This is a `dict` with the following keys:
 
 | Key | Description | Type |
 | :-- | :---------- | :--- |
