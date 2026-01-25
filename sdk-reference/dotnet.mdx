@@ -60,7 +60,7 @@ The following are the properties of the `RequestLoggingOptions` class.
 | `IncludeResponseBody` | Whether to include the response body in the logs. Only JSON and text are supported, up to 50 KB. | `bool` | `false` |
 | `IncludeException` | Whether to include exception details in the logs. | `bool` | `true` |
 | `CaptureLogs` | Whether to capture application logs emitted during request handling. | `bool` | `false` |
-| `CaptureTraces` | Whether to enable tracing with OpenTelemetry. | `bool` | `false` |
+| `CaptureTraces` | Whether to enable tracing using `System.Diagnostics`. | `bool` | `false` |
 | `QueryParamMaskPatterns` | List of regular expressions for matching query parameters to mask. These are in addition to the default masking patterns. | `List<string>` | `[]` |
 | `HeaderMaskPatterns` | List of regular expressions for matching headers to mask. These are in addition to the default masking patterns. | `List<string>` | `[]` |
 | `BodyFieldMaskPatterns` | List of regular expressions for matching request/response body fields to mask. These are in addition to the default masking patterns. | `List<string>` | `[]` |
