@@ -7,8 +7,10 @@ mode: wide
 
 ## Configuration
 
+You can configure Apitally when registering the service in your `Program.cs` file or in your `appsettings.json` file.
+
 <CodeGroup>
-  ```csharp Program.cs {6-8}
+  ```csharp Program.cs {6-9}
   using Apitally;
 
   var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +18,7 @@ mode: wide
   {
       options.ClientId = "your-client-id";
       options.Env = "dev";
+      options.RequestLogging.Enabled = true;
       // other parameters ...
   });
 
@@ -23,12 +26,15 @@ mode: wide
   app.UseApitally();
   ```
 
-  ```json appsettings.json {3-5}
+  ```json appsettings.json {3-8}
   {
     "Apitally": {
       "ClientId": "your-client-id",
-      "Env": "dev"
-      // other parameters ...
+      "Env": "dev",
+      "RequestLogging": {
+        "Enabled": true,
+        // other parameters ...
+      }
     }
   }
   ```
@@ -36,7 +42,7 @@ mode: wide
 
 ## Parameters
 
-The following parameters apply when configuring Apitally options for your ASP.NET Core application.
+The following configuration parameters are available. Only `ClientId` and `Env` are required.
 
 | Parameter | Description | Type |
 | :-------- | :---------- | :--- |

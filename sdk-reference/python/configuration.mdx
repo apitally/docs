@@ -8,7 +8,7 @@ mode: wide
 ## Configuration
 
 <CodeGroup>
-  ```python FastAPI {7-9}
+  ```python FastAPI {7-10}
   from fastapi import FastAPI
   from apitally.fastapi import ApitallyMiddleware
 
@@ -17,19 +17,21 @@ mode: wide
       ApitallyMiddleware,
       client_id="your-client-id",
       env="dev",
+      enable_request_logging=True,
       # other parameters ...
   )
   ```
 
-  ```python Django {2-4}
+  ```python Django {2-5}
   APITALLY_MIDDLEWARE = {
       "client_id": "your-client-id",
       "env": "dev",
+      "enable_request_logging": True,
       # other parameters ...
   }
   ```
 
-  ```python Flask {7-9}
+  ```python Flask {7-10}
   from flask import Flask
   from apitally.flask import ApitallyMiddleware
 
@@ -38,6 +40,7 @@ mode: wide
       app,
       client_id="your-client-id",
       env="dev",
+      enable_request_logging=True,
       # other parameters ...
   )
   ```
@@ -47,8 +50,7 @@ See the [setup guides](/setup-guides#python) for more examples.
 
 ## Parameters
 
-The following configuration parameters are available.
-Only `client_id` and `env` are required.
+The following configuration parameters are available. Only `client_id` and `env` are required.
 
 | Parameter | Description | Type | Default |
 | :-------- | :---------- | :--- | :------ |

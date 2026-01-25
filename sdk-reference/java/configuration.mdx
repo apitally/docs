@@ -7,16 +7,20 @@ mode: wide
 
 ## Configuration
 
-```yaml application.yml {2-4}
+You can configure Apitally in your `application.yml` file.
+
+```yaml application.yml {2-6}
 apitally:
   client-id: "your-client-id"
   env: "dev"
-  # other parameters ...
+  request-logging:
+    enabled: true
+    # other parameters ...
 ```
 
 ## Parameters
 
-The following parameters apply when configuring the Apitally client in your `application.yml` file.
+The following configuration parameters are available. Only `client-id` and `env` are required.
 
 | Parameter | Description | Type |
 | :-------- | :---------- | :--- |

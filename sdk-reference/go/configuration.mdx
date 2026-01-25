@@ -7,8 +7,10 @@ mode: wide
 
 ## Configuration
 
+You can configure Apitally using the `Config` struct passed to the `Middleware` function.
+
 <CodeGroup>
-  ```go Chi {10-12}
+  ```go Chi {10-14}
   package main
 
   import (
@@ -21,13 +23,14 @@ mode: wide
 
       config := apitally.NewConfig("your-client-id")
       config.Env = "dev"
-      // other configuration ...
+      config.RequestLogging.Enabled = true
+      // other parameters ...
 
       r.Use(apitally.Middleware(r, config))
   }
   ```
 
-  ```go Echo {10-12}
+  ```go Echo {10-14}
   package main
 
   import (
@@ -40,13 +43,14 @@ mode: wide
 
       config := apitally.NewConfig("your-client-id")
       config.Env = "dev"
-      // other configuration ...
+      config.RequestLogging.Enabled = true
+      // other parameters ...
 
       e.Use(apitally.Middleware(e, config))
   }
   ```
 
-  ```go Fiber {10-12}
+  ```go Fiber {10-14}
   package main
 
   import (
@@ -59,13 +63,14 @@ mode: wide
 
       config := apitally.NewConfig("your-client-id")
       config.Env = "dev"
-      // other configuration ...
+      config.RequestLogging.Enabled = true
+      // other parameters ...
 
       app.Use(apitally.Middleware(app, config))
   }
   ```
 
-  ```go Gin {10-12}
+  ```go Gin {10-14}
   package main
 
   import (
@@ -78,7 +83,8 @@ mode: wide
 
       config := apitally.NewConfig("your-client-id")
       config.Env = "dev"
-      // other configuration ...
+      config.RequestLogging.Enabled = true
+      // other parameters ...
 
       r.Use(apitally.Middleware(r, config))
   }

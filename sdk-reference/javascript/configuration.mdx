@@ -7,8 +7,10 @@ mode: wide
 
 ## Configuration
 
+You can configure Apitally via a configuration object.
+
 <CodeGroup>
-  ```javascript Hono {7-9}
+  ```javascript Hono {7-12}
   import { Hono } from "hono";
   import { useApitally } from "apitally/hono";
 
@@ -17,11 +19,14 @@ mode: wide
   useApitally(app, {
     clientId: "your-client-id",
     env: "dev",
-    // other parameters ...
+    requestLogging: {
+      enabled: true,
+      // other parameters ...
+    },
   });
   ```
 
-  ```javascript NestJS {9-11}
+  ```javascript NestJS {9-14}
   import { NestFactory } from "@nestjs/core";
   import { useApitally } from "apitally/nestjs";
   import { AppModule } from "./app.module";
@@ -32,12 +37,15 @@ mode: wide
     await useApitally(app, {
       clientId: "your-client-id",
       env: "dev",
-      // other parameters ...
+      requestLogging: {
+        enabled: true,
+        // other parameters ...
+      },
     });
   }
   ```
 
-  ```javascript Express {7-9}
+  ```javascript Express {7-12}
   import express from "express";
   import { useApitally } from "apitally/express";
 
@@ -46,11 +54,14 @@ mode: wide
   useApitally(app, {
     clientId: "your-client-id",
     env: "dev",
-    // other parameters ...
+    requestLogging: {
+      enabled: true,
+      // other parameters ...
+    },
   });
   ```
 
-  ```javascript Fastify {7-9}
+  ```javascript Fastify {7-12}
   import Fastify from "fastify";
   import { apitallyPlugin } from "apitally/fastify";
 
@@ -59,7 +70,10 @@ mode: wide
   await fastify.register(apitallyPlugin, {
     clientId: "your-client-id",
     env: "dev",
-    // other parameters ...
+    requestLogging: {
+      enabled: true,
+      // other parameters ...
+    },
   });
   ```
 </CodeGroup>
@@ -68,8 +82,7 @@ See the [setup guides](/setup-guides#javascript) for more examples.
 
 ## Parameters
 
-The following configuration parameters are available.
-Only `clientId` and `env` are required.
+The following configuration parameters are available. Only `clientId` and `env` are required.
 
 | Parameter | Description | Type | Default |
 | :-------- | :---------- | :--- | :------ |
