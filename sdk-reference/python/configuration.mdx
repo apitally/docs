@@ -70,28 +70,3 @@ The following configuration parameters are available. Only `client_id` and `env`
 | `mask_response_body_callback` | Callback function for masking the response body. Takes two parameters `request` and `response` and returns the response body as `bytes` or `None`. | `Callable` | `None` |
 | `exclude_paths` | List of regular expressions for matching paths to exclude from logging. | `list[str]` | `[]` |
 | `exclude_callback` | Callback function for excluding requests from logging. Takes two parameters `request` and `response` and returns `True`, if the request should be excluded, or `False` otherwise. | `Callable` | `None` |
-
-## Callback arguments
-
-The `mask_request_body_callback`, `mask_response_body_callback` and `exclude_callback` parameters accept a callback function that takes a `request` object as the first argument. This is a `dict` with the following keys:
-
-| Key | Description | Type |
-| :-- | :---------- | :--- |
-| `timestamp` | Unix timestamp of the request. | `float` |
-| `method` | HTTP method of the request. | `str` |
-| `path` | Path of the request. | `str` |
-| `url` | Full URL of the request. | `str` |
-| `headers` | Array of key-value pairs representing the request headers. | `list[tuple[str, str]]` |
-| `size` | Size of the request body in bytes. | `int` |
-| `consumer` | Identifier of the consumer making the request. | `str` |
-| `body` | Raw request body. | `bytes` |
-
-The `mask_response_body_callback` and `exclude_callback` callback functions also take a `response` object as the second argument. This is a `dict` with the following keys:
-
-| Key | Description | Type |
-| :-- | :---------- | :--- |
-| `status_code` | HTTP status code of the response. | `int` |
-| `response_time` | Time taken to respond to the request in seconds. | `float` |
-| `headers` | Array of key-value pairs representing the response headers. | `list[tuple[str, str]]` |
-| `size` | Size of the response body in bytes. | `int` |
-| `body` | Raw response body. | `bytes` |

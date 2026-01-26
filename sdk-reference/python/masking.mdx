@@ -1,6 +1,119 @@
 ---
 title: Masking and filtering
 sidebarTitle: Masking
-description: How to mask or filter out sensitive data with the Apitally SDK for Python.
+description: How to mask or exclude sensitive data with the Apitally SDK for Python.
 mode: wide
 ---
+
+When request logging is enabled, the SDK captures details about each request and response handled by your application. To protect sensitive data and reduce noise, the SDK provides mechanisms for masking and filtering out requests you don't want to log.
+
+
+## Default masking
+
+The SDK automatically masks common sensitive data in query parameters, headers and request/response body fields based on built-in patterns. For example, fields named `password`, `token`, `secret`, or headers like `Authorization` are masked by default.
+
+See the [data privacy](/data-privacy#data-masking) page for a complete list of default masking patterns.
+
+## Custom masking
+
+You can extend the default masking rules by providing additional regular expressions via the `mask_query_params`, `mask_headers`, and `mask_body_fields` parameters. Patterns are case-insensitive and match anywhere within the name. Use `^` and `$` anchors for exact matches.
+
+For more control over request and response body masking, you can provide callback functions via the `mask_request_body_callback` and `mask_response_body_callback` parameters. These receive the captured request and response data as arguments (see [callback arguments](#callback-arguments) below) and should return the masked body as `bytes`, or `None` to mask the entire body.
+
+```python Configuration example
+# Mask specific query parameters, headers and body fields
+mask_query_params=[r"^card_number$", r"^account_id$"],
+mask_headers=[r"^X-Custom-Key$", r"^X-Internal-"],
+mask_body_fields=[r"^credit_card$", r"social_security"],
+# Mask request and response body using custom logic (see example below)
+mask_request_body_callback=mask_request_body,
+mask_response_body_callback=mask_response_body,
+# ...
+```
+
+```python Callback function examples
+def mask_request_body(request: dict) -> bytes | None:
+    # Mask entire request body for admin endpoints
+    if request["path"].startswith("/admin/"):
+        return None
+    # Otherwise, return the original request body
+    return request["body"]
+
+
+def mask_response_body(request: dict, response: dict) -> bytes | None:
+    # Mask entire response body for admin endpoints
+    if request["path"].startswith("/admin/"):
+        return None
+    # Mask specific fields in user profile responses
+    if request["path"].startswith("/users/") and response["body"]:
+        try:
+            data = json.loads(response["body"])
+            if isinstance(data, dict):
+                if "email" in data:
+                    data["email"] = "******"
+                if "phone" in data:
+                    data["phone"] = "******"
+                return json.dumps(data).encode()
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            pass
+    # Otherwise, return the original response body
+    return response["body"]
+```
+
+<Note>
+  Callbacks are applied before pattern-based field masking. Any body returned by a callback will still have the default and custom `mask_body_fields` patterns applied to it.
+</Note>
+
+## Excluding requests
+
+You can exclude requests from logging using path patterns (regular expressions) via `exclude_paths` or custom logic via `exclude_callback`. As above, patterns are case-insensitive and match anywhere within the path. Use `^` and `$` anchors for exact matches.
+
+Common health check paths are excluded by default. See the [data privacy](/data-privacy#data-filtering) page for a list of default exclusion patterns.
+
+```python Configuration example
+# Exclude paths matching these patterns
+exclude_paths=[r"/admin/", r"/internal/"],
+# Exclude requests using custom logic (see example below)
+exclude_callback=exclude_request,
+# ...
+```
+
+```python Callback function example
+def exclude_request(request: dict, response: dict) -> bool:
+    # Exclude requests from a specific consumer
+    if request["consumer"] == "internal-service":
+        return True
+    # Only log failed requests
+    if response["status_code"] < 400:
+        return True
+    return False
+```
+
+<Note>
+  Excluded requests are not logged, but still counted in metrics. To exclude endpoints from metrics, you can mark them as excluded in the [dashboard](/features/traffic-dashboard#exclude-endpoints).
+</Note>
+
+## Callback arguments
+
+The `request` dict passed to callback functions has the following keys:
+
+| Key | Description | Type |
+| :-- | :---------- | :--- |
+| `timestamp` | Unix timestamp of the request. | `float` |
+| `method` | HTTP method of the request. | `str` |
+| `path` | Path of the request. | `str \| None` |
+| `url` | Full URL of the request. | `str` |
+| `headers` | Array of key-value pairs representing the request headers. | `list[tuple[str, str]]` |
+| `size` | Size of the request body in bytes. | `int \| None` |
+| `consumer` | Identifier of the consumer making the request. | `str \| None` |
+| `body` | Raw request body. | `bytes \| None` |
+
+The `response` dict passed to `mask_response_body_callback` and `exclude_callback` has the following keys:
+
+| Key | Description | Type |
+| :-- | :---------- | :--- |
+| `status_code` | HTTP status code of the response. | `int` |
+| `response_time` | Time taken to respond to the request in seconds. | `float` |
+| `headers` | Array of key-value pairs representing the response headers. | `list[tuple[str, str]]` |
+| `size` | Size of the response body in bytes. | `int \| None` |
+| `body` | Raw response body. | `bytes \| None` |
