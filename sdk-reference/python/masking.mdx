@@ -5,20 +5,22 @@ description: How to mask or exclude sensitive data with the Apitally SDK for Pyt
 mode: wide
 ---
 
-When request logging is enabled, the SDK captures details about each request and response handled by your application. To protect sensitive data and reduce noise, the SDK provides mechanisms for masking and filtering out requests you don't want to log.
+When request logging is enabled, the Apitally SDK captures details about each request and response handled by your application. To protect sensitive data and reduce noise, the SDK provides mechanisms for masking and filtering out requests you don't want to log.
 
 
-## Default masking
+## Default masking and exclusion
 
 The SDK automatically masks common sensitive data in query parameters, headers and request/response body fields based on built-in patterns. For example, fields named `password`, `token`, `secret`, or headers like `Authorization` are masked by default.
 
-See the [data privacy](/data-privacy#data-masking) page for a complete list of default masking patterns.
+To reduce noise, the SDK also automatically excludes common static assets and health check endpoints, such as `/robots.txt` or `/healthz`.
 
-## Custom masking
+See the [data privacy](/data-privacy#data-masking) page for complete lists of default masking and exclusion patterns.
+
+## Masking sensitive data
 
 You can extend the default masking rules by providing additional regular expressions via the `mask_query_params`, `mask_headers`, and `mask_body_fields` parameters. Patterns are case-insensitive and match anywhere within the name. Use `^` and `$` anchors for exact matches.
 
-For more control over request and response body masking, you can provide callback functions via the `mask_request_body_callback` and `mask_response_body_callback` parameters. These receive the captured request and response data as arguments (see [callback arguments](#callback-arguments) below) and should return the masked body as `bytes`, or `None` to mask the entire body.
+For more control over request and response body masking, you can provide callback functions via the `mask_request_body_callback` and `mask_response_body_callback` parameters. The functions receive the captured request and response data as arguments (see [callback arguments](#callback-arguments) below) and should return the masked body as `bytes`, or `None` to mask the entire body.
 
 ```python Configuration example
 # Mask specific query parameters, headers and body fields
@@ -66,9 +68,9 @@ def mask_response_body(request: dict, response: dict) -> bytes | None:
 
 ## Excluding requests
 
-You can exclude requests from logging using path patterns (regular expressions) via `exclude_paths` or custom logic via `exclude_callback`. As above, patterns are case-insensitive and match anywhere within the path. Use `^` and `$` anchors for exact matches.
+You can exclude requests from logging using path patterns (regular expressions) via the `exclude_paths` parameter. Like the masking patterns, these are case-insensitive and match anywhere within the request path. Use `^` and `$` anchors for exact matches.
 
-Common health check paths are excluded by default. See the [data privacy](/data-privacy#data-filtering) page for a list of default exclusion patterns.
+Alternatively, you can provide a callback function with custom exclusion logic via the `exclude_callback` parameter. The function receives the captured request and response data as arguments (see [callback arguments](#callback-arguments) below) and should return `True` to exclude the request from logging, or `False` to include it.
 
 ```python Configuration example
 # Exclude paths matching these patterns
