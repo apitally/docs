@@ -117,7 +117,7 @@ APITALLY_MIDDLEWARE = {
     "log_request_body": True,
     "log_response_body": True,
     "capture_logs": True,
-    "capture_traces": True,
+    "capture_traces": False,  # requires instrumentation
 }
 ```
 
@@ -133,7 +133,7 @@ APITALLY_MIDDLEWARE = {
     "log_response_body": True,
     "log_exception": True,
     "capture_logs": True,
-    "capture_traces": True,
+    "capture_traces": False,  # requires instrumentation
     # Mask query parameters using regex
     "mask_query_params": [r"^card_number$"],
     # Mask headers using regex

@@ -124,7 +124,7 @@ Check out the <a href="/sdk-reference/dotnet/configuration">SDK reference</a> to
       "IncludeRequestBody": true,
       "IncludeResponseBody": true,
       "CaptureLogs": true,
-      "CaptureTraces": true
+      "CaptureTraces": false // requires instrumentation
     }
   }
 }
@@ -144,7 +144,7 @@ Check out the <a href="/sdk-reference/dotnet/configuration">SDK reference</a> to
       "IncludeResponseBody": true,
       "IncludeException": true,
       "CaptureLogs": true,
-      "CaptureTraces": true,
+      "CaptureTraces": false // requires instrumentation,
       // Mask query parameters using regex
       "QueryParamMaskPatterns": [
         "^card_number$"

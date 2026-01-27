@@ -122,7 +122,7 @@ const app = new H3({
         logRequestBody: true,
         logResponseBody: true,
         captureLogs: true,
-        captureTraces: true,
+        captureTraces: false, // requires instrumentation
       },
     }),
   ],
@@ -147,7 +147,7 @@ const app = new H3({
         logResponseBody: true,
         logException: true,
         captureLogs: true,
-        captureTraces: true,
+        captureTraces: false, // requires instrumentation
         // Mask query parameters using regex
         maskQueryParams: [/^card_number$/i],
         // Mask headers using regex
