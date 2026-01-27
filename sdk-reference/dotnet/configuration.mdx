@@ -67,28 +67,3 @@ The `RequestLogging` parameter is an object with the following properties:
 | `MaskRequestBody` | Function to mask sensitive data in the request body. Return `null` to mask the whole body. | <nobr>`Func<Request, byte[]?>`</nobr> | - |
 | `MaskResponseBody` | Function to mask sensitive data in the response body. Return `null` to mask the whole body. | <nobr>`Func<Request, Response, byte[]?>`</nobr> | - |
 | `ShouldExclude` | Function to determine whether a request should be excluded from logging. Return `true` to exclude the request. | <nobr>`Func<Request, Response, bool>`</nobr> | - |
-
-## Callback arguments
-
-The `MaskRequestBody`, `MaskResponseBody` and `ShouldExclude` parameters accept a callback function that takes a `Request` object as the first argument. This object has the following properties:
-
-| Property | Description | Type |
-| :------- | :---------- | :--- |
-| `Timestamp` | Unix timestamp of the request. | `long` |
-| `Consumer` | Identifier of the consumer making the request. | `string` |
-| `Method` | HTTP method of the request. | `string` |
-| `Path` | Path of the request. | `string` |
-| `Url` | Full URL of the request. | `string` |
-| `Headers` | Array of key-value pairs representing the request headers. | `Header[]` |
-| `Size` | Size of the request body in bytes. | `int` |
-| `Body` | Raw request body as bytes. | `byte[]` |
-
-The `MaskResponseBody` and `ShouldExclude` callback functions also take a `Response` object as the second argument. This object has the following properties:
-
-| Property | Description | Type |
-| :------- | :---------- | :--- |
-| `StatusCode` | HTTP status code of the response. | `int` |
-| `ResponseTime` | Time taken to respond to the request in seconds. | `double` |
-| `Headers` | Array of key-value pairs representing the response headers. | `Header[]` |
-| `Size` | Size of the response body in bytes. | `int` |
-| `Body` | Raw response body as bytes. | `byte[]` |

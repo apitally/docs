@@ -1,6 +1,210 @@
 ---
 title: Masking and filtering
 sidebarTitle: Masking & filtering
-description: How to mask or exclude sensitive data with the Apitally SDK for .NET.
-mode: wide
+description: Learn how to mask sensitive data and exclude requests from logging with the Apitally SDK for .NET.
 ---
+
+import DefaultMaskingAndExclusion from '/snippets/default-masking-and-exclusion.mdx';
+
+When request logging is enabled, the Apitally SDK captures details about each request and response handled by your application. To protect sensitive data and reduce noise, the SDK provides mechanisms for masking data and filtering out requests you don't want to log.
+
+
+## Default masking and exclusion
+
+<DefaultMaskingAndExclusion />
+
+## Masking sensitive data
+
+You can extend the default masking rules by providing additional regular expressions via the `QueryParamMaskPatterns`, `HeaderMaskPatterns`, and `BodyFieldMaskPatterns` properties. Patterns are case-insensitive and match anywhere within the name. Use `^` and `$` anchors for exact matches.
+
+For more control over request and response body masking, you can provide callback functions via the `MaskRequestBody` and `MaskResponseBody` properties. The functions receive the captured request and response data as arguments (see [callback arguments](#callback-arguments) below) and should return the masked body as `byte[]`, or `null` to mask the entire body.
+
+<CodeGroup>
+  ```csharp Program.cs example {12-18}
+  using Apitally;
+
+  var builder = WebApplication.CreateBuilder(args);
+  builder.Services.AddApitally(options =>
+  {
+      options.ClientId = "your-client-id";
+      options.Env = "dev";
+      options.RequestLogging.Enabled = true;
+      options.RequestLogging.IncludeRequestHeaders = true;
+      options.RequestLogging.IncludeRequestBody = true;
+      options.RequestLogging.IncludeResponseBody = true;
+      // Mask specific query parameters, headers and body fields
+      options.RequestLogging.QueryParamMaskPatterns = ["^card_number$", "^account_id$"];
+      options.RequestLogging.HeaderMaskPatterns = ["^X-Custom-Key$", "^X-Internal-"];
+      options.RequestLogging.BodyFieldMaskPatterns = ["^credit_card$", "social_security"];
+      // Mask request and response body using custom logic (see examples below)
+      options.RequestLogging.MaskRequestBody = MaskRequestBody;
+      options.RequestLogging.MaskResponseBody = MaskResponseBody;
+  });
+
+  var app = builder.Build();
+  app.UseApitally();
+  ```
+
+  ```json appsettings.json example {10-12}
+  {
+    "Apitally": {
+      "ClientId": "your-client-id",
+      "Env": "dev",
+      "RequestLogging": {
+        "Enabled": true,
+        "IncludeRequestHeaders": true,
+        "IncludeRequestBody": true,
+        "IncludeResponseBody": true,
+        "QueryParamMaskPatterns": ["^card_number$", "^account_id$"],
+        "HeaderMaskPatterns": ["^X-Custom-Key$", "^X-Internal-"],
+        "BodyFieldMaskPatterns": ["^credit_card$", "social_security"]
+      }
+    }
+  }
+  ```
+</CodeGroup>
+
+```csharp Callback function examples
+using System.Text;
+using System.Text.Json;
+using Apitally.Models;
+
+byte[]? MaskRequestBody(Request request)
+{
+    // Mask entire request body for admin endpoints
+    if (request.Path?.StartsWith("/admin/") == true)
+    {
+        return null;
+    }
+    // Otherwise, return the original request body
+    return request.Body;
+}
+
+byte[]? MaskResponseBody(Request request, Response response)
+{
+    // Mask entire response body for admin endpoints
+    if (request.Path?.StartsWith("/admin/") == true)
+    {
+        return null;
+    }
+    // Mask specific fields in user profile responses
+    if (request.Path?.StartsWith("/users/") == true && response.Body != null)
+    {
+        try
+        {
+            var json = Encoding.UTF8.GetString(response.Body);
+            var data = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
+            if (data != null)
+            {
+                if (data.ContainsKey("email"))
+                {
+                    data["email"] = "******";
+                }
+                if (data.ContainsKey("phone"))
+                {
+                    data["phone"] = "******";
+                }
+                return Encoding.UTF8.GetBytes(JsonSerializer.Serialize(data));
+            }
+        }
+        catch (JsonException)
+        {
+            // If parsing fails, return original body
+        }
+    }
+    // Otherwise, return the original response body
+    return response.Body;
+}
+```
+
+<Note>
+  Callbacks are applied before pattern-based field masking. The returned body is still masked using the default and custom `BodyFieldMaskPatterns` patterns.
+</Note>
+
+## Excluding requests
+
+You can exclude requests from logging using path patterns (regular expressions) via the `PathExcludePatterns` property. Like the masking patterns, these are case-insensitive and match anywhere within the request path. Use `^` and `$` anchors for exact matches.
+
+Alternatively, you can provide a callback function with custom exclusion logic via the `ShouldExclude` property. The function receives the captured request and response data as arguments (see [callback arguments](#callback-arguments) below) and should return `true` to exclude the request from logging, or `false` to include it.
+
+<CodeGroup>
+  ```csharp Program.cs example {9-12}
+  using Apitally;
+
+  var builder = WebApplication.CreateBuilder(args);
+  builder.Services.AddApitally(options =>
+  {
+      options.ClientId = "your-client-id";
+      options.Env = "dev";
+      options.RequestLogging.Enabled = true;
+      // Exclude paths matching certain patterns
+      options.RequestLogging.PathExcludePatterns = ["/admin/", "/internal/"];
+      // Exclude requests using custom logic (see example below)
+      options.RequestLogging.ShouldExclude = ShouldExcludeRequest;
+  });
+
+  var app = builder.Build();
+  app.UseApitally();
+  ```
+
+  ```json appsettings.json example {7}
+  {
+    "Apitally": {
+      "ClientId": "your-client-id",
+      "Env": "dev",
+      "RequestLogging": {
+        "Enabled": true,
+        "PathExcludePatterns": ["/admin/", "/internal/"]
+      }
+    }
+  }
+  ```
+</CodeGroup>
+
+```csharp Callback function example
+using Apitally.Models;
+
+bool ShouldExcludeRequest(Request request, Response response)
+{
+    // Exclude requests from a specific consumer
+    if (request.Consumer == "internal-service")
+    {
+        return true;
+    }
+    // Exclude successful requests (only log failures)
+    if (response.StatusCode < 400)
+    {
+        return true;
+    }
+    return false;
+}
+```
+
+<Note>
+  Excluded requests won't be logged, but are still counted in metrics. To exclude endpoints from metrics, you can mark them as excluded in the [dashboard](/features/traffic-dashboard#exclude-endpoints).
+</Note>
+
+## Callback arguments
+
+The `Request` object passed to callback functions has the following properties:
+
+| Property | Description | Type |
+| :------- | :---------- | :--- |
+| `Timestamp` | Unix timestamp of the request. | `double` |
+| `Method` | HTTP method of the request. | `string` |
+| `Path` | Path of the matched endpoint, if applicable. | `string?` |
+| `Url` | Full URL of the request. | `string` |
+| `Headers` | Array of key-value pairs representing the request headers. | `Header[]` |
+| `Size` | Size of the request body in bytes. | `long?` |
+| `Consumer` | Identifier of the consumer making the request. | `string?` |
+| `Body` | Raw request body. | `byte[]?` |
+
+The `Response` object passed to `MaskResponseBody` and `ShouldExclude` has the following properties:
+
+| Property | Description | Type |
+| :------- | :---------- | :--- |
+| `StatusCode` | HTTP status code of the response. | `int` |
+| `ResponseTime` | Time taken to respond to the request in seconds. | `double` |
+| `Headers` | Array of key-value pairs representing the response headers. | `Header[]` |
+| `Size` | Size of the response body in bytes. | `long?` |
+| `Body` | Raw response body. | `byte[]?` |
