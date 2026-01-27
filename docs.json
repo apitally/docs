@@ -142,7 +142,7 @@
                 "pages": [
                   "sdk-reference/python/overview",
                   "sdk-reference/python/configuration",
-                  "sdk-reference/python/masking",
+                  "sdk-reference/python/masking-filtering",
                   "sdk-reference/python/tracing"
                 ]
               },
@@ -151,7 +151,7 @@
                 "pages": [
                   "sdk-reference/javascript/overview",
                   "sdk-reference/javascript/configuration",
-                  "sdk-reference/javascript/masking",
+                  "sdk-reference/javascript/masking-filtering",
                   "sdk-reference/javascript/tracing"
                 ]
               },
@@ -160,7 +160,7 @@
                 "pages": [
                   "sdk-reference/go/overview",
                   "sdk-reference/go/configuration",
-                  "sdk-reference/go/masking",
+                  "sdk-reference/go/masking-filtering",
                   "sdk-reference/go/tracing"
                 ]
               },
@@ -169,7 +169,7 @@
                 "pages": [
                   "sdk-reference/java/overview",
                   "sdk-reference/java/configuration",
-                  "sdk-reference/java/masking",
+                  "sdk-reference/java/masking-filtering",
                   "sdk-reference/java/tracing"
                 ]
               },
@@ -178,7 +178,7 @@
                 "pages": [
                   "sdk-reference/dotnet/overview",
                   "sdk-reference/dotnet/configuration",
-                  "sdk-reference/dotnet/masking",
+                  "sdk-reference/dotnet/masking-filtering",
                   "sdk-reference/dotnet/tracing"
                 ]
               }
@@ -193,7 +193,7 @@
                 "pages": [
                   "sdk-reference/python-serverless/overview",
                   "sdk-reference/python-serverless/configuration",
-                  "sdk-reference/python-serverless/masking"
+                  "sdk-reference/python-serverless/masking-filtering"
                 ]
               },
               {
@@ -201,7 +201,7 @@
                 "pages": [
                   "sdk-reference/javascript-serverless/overview",
                   "sdk-reference/javascript-serverless/configuration",
-                  "sdk-reference/javascript-serverless/masking"
+                  "sdk-reference/javascript-serverless/masking-filtering"
                 ]
               }
             ]
