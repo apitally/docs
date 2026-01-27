@@ -111,28 +111,3 @@ The `requestLogging` parameter is an object with the following properties:
 | `maskResponseBodyCallback` | Callback function for masking the response body. Takes two parameters `request` and `response` and returns the response body as `Buffer` or `null`. | `Function` | - |
 | `excludePaths` | Array of regular expressions for matching paths to exclude from logging. | `RegExp[]` | `[]` |
 | `excludeCallback` | Callback function for excluding requests from logging. Takes two parameters `request` and `response` and returns `true`, if the request should be excluded, or `false` otherwise. | `Function` | - |
-
-## Callback arguments
-
-The `maskRequestBodyCallback`, `maskResponseBodyCallback` and `excludeCallback` parameters accept a callback function that takes a `request` object as the first argument. This object has the following properties:
-
-| Property | Description | Type |
-| :------- | :---------- | :--- |
-| `timestamp` | Unix timestamp of the request. | `number` |
-| `consumer` | Identifier of the consumer making the request. | `string` |
-| `method` | HTTP method of the request. | `string` |
-| `path` | Path of the request. | `string` |
-| `url` | Full URL of the request. | `string` |
-| `headers` | Array of key-value pairs representing the request headers. | `[string, string][]` |
-| `size` | Size of the request body in bytes. | `number` |
-| `body` | Raw request body as bytes. | `Buffer` |
-
-The `maskResponseBodyCallback` and `excludeCallback` callback functions also take a `response` object as the second argument. This object has the following properties:
-
-| Property | Description | Type |
-| :------- | :---------- | :--- |
-| `statusCode` | HTTP status code of the response. | `number` |
-| `responseTime` | Time taken to respond to the request in seconds. | `number` |
-| `headers` | Array of key-value pairs representing the response headers. | `[string, string][]` |
-| `size` | Size of the response body in bytes. | `number` |
-| `body` | Raw response body as bytes. | `Buffer` |
