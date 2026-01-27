@@ -42,28 +42,3 @@ The `request-logging` parameter is an object with the following properties:
 | <nobr>`body-field-mask-patterns`</nobr> | List of regular expressions for matching request/response body fields to mask. These are in addition to the default masking patterns. | `List<String>` | `[]` |
 | <nobr>`path-exclude-patterns`</nobr> | List of regular expressions for matching paths to exclude from logging. | `List<String>` | `[]` |
 | <nobr>`callbacks-class`</nobr> | Fully qualified name of a class implementing `RequestLoggingCallbacks` for custom masking and exclusion logic. | `string` | - |
-
-## Callback arguments
-
-The `RequestLoggingCallbacks` interface defines callback methods that take a `Request` object as the first argument. This object has the following properties:
-
-| Property | Description | Type |
-| :------- | :---------- | :--- |
-| `timestamp` | Unix timestamp of the request. | `double` |
-| `method` | HTTP method of the request. | `string` |
-| `path` | Path of the request. | `string` |
-| `url` | Full URL of the request. | `string` |
-| `headers` | Array of key-value pairs representing the request headers. | `Header[]` |
-| `size` | Size of the request body in bytes. | `long` |
-| `consumer` | Identifier of the consumer making the request. | `string` |
-| `body` | Raw request body as bytes. | `byte[]` |
-
-The `maskResponseBody` and `shouldExclude` callback methods also take a `Response` object as the second argument. This object has the following properties:
-
-| Property | Description | Type |
-| :------- | :---------- | :--- |
-| `statusCode` | HTTP status code of the response. | `int` |
-| `responseTime` | Time taken to respond to the request in seconds. | `double` |
-| `headers` | Array of key-value pairs representing the response headers. | `Header[]` |
-| `size` | Size of the response body in bytes. | `long` |
-| `body` | Raw response body as bytes. | `byte[]` |

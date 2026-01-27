@@ -1,6 +1,166 @@
 ---
 title: Masking and filtering
 sidebarTitle: Masking & filtering
-description: How to mask or exclude sensitive data with the Apitally SDK for Java.
-mode: wide
+description: Learn how to mask sensitive data and exclude requests from logging with the Apitally SDK for Java.
 ---
+
+import DefaultMaskingAndExclusion from '/snippets/default-masking-and-exclusion.mdx';
+
+When request logging is enabled, the Apitally SDK captures details about each request and response handled by your application. To protect sensitive data and reduce noise, the SDK provides mechanisms for masking data and filtering out requests you don't want to log.
+
+
+## Default masking and exclusion
+
+<DefaultMaskingAndExclusion />
+
+## Masking sensitive data
+
+You can extend the default masking rules by providing additional regular expressions via the `query-param-mask-patterns`, `header-mask-patterns`, and `body-field-mask-patterns` properties. Patterns are case-insensitive and match anywhere within the name. Use `^` and `$` anchors for exact matches.
+
+For more control over request and response body masking, you can implement the `RequestLoggingCallbacks` interface and specify the class name via the `callbacks-class` property. The callback methods receive the captured request and response data as arguments (see [callback arguments](#callback-arguments) below) and should return the masked body as `byte[]`, or `null` to mask the entire body.
+
+```yaml Configuration example {9-20}
+apitally:
+  client-id: "your-client-id"
+  env: "dev"
+  request-logging:
+    enabled: true
+    request-headers-included: true
+    request-body-included: true
+    response-body-included: true
+    # Mask specific query parameters, headers and body fields
+    query-param-mask-patterns:
+      - "^card_number$"
+      - "^account_id$"
+    header-mask-patterns:
+      - "^X-Custom-Key$"
+      - "^X-Internal-"
+    body-field-mask-patterns:
+      - "^credit_card$"
+      - "social_security"
+    # Mask request and response body using custom logic (see example below)
+    callbacks-class: "com.example.MyRequestLoggingCallbacks"
+```
+
+```java Callbacks class example
+import io.apitally.common.RequestLoggingCallbacks;
+import io.apitally.common.dto.Request;
+import io.apitally.common.dto.Response;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.HashMap;
+
+public class MyRequestLoggingCallbacks implements RequestLoggingCallbacks {
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Override
+    public byte[] maskRequestBody(Request request) {
+        // Mask entire request body for admin endpoints
+        if (request.getPath() != null && request.getPath().startsWith("/admin/")) {
+            return null;
+        }
+        // Otherwise, return the original request body
+        return request.getBody();
+    }
+
+    @Override
+    public byte[] maskResponseBody(Request request, Response response) {
+        // Mask entire response body for admin endpoints
+        if (request.getPath() != null && request.getPath().startsWith("/admin/")) {
+            return null;
+        }
+        // Mask specific fields in user profile responses
+        if (request.getPath() != null && request.getPath().startsWith("/users/") && response.getBody() != null) {
+            try {
+                @SuppressWarnings("unchecked")
+                HashMap<String, Object> data = objectMapper.readValue(response.getBody(), HashMap.class);
+                if (data.containsKey("email")) {
+                    data.put("email", "******");
+                }
+                if (data.containsKey("phone")) {
+                    data.put("phone", "******");
+                }
+                return objectMapper.writeValueAsBytes(data);
+            } catch (Exception e) {
+                // If parsing fails, return original body
+            }
+        }
+        // Otherwise, return the original response body
+        return response.getBody();
+    }
+}
+```
+
+<Note>
+  Callbacks are applied before pattern-based field masking. The returned body is still masked using the default and custom `body-field-mask-patterns` patterns.
+</Note>
+
+## Excluding requests
+
+You can exclude requests from logging using path patterns (regular expressions) via the `path-exclude-patterns` property. Like the masking patterns, these are case-insensitive and match anywhere within the request path. Use `^` and `$` anchors for exact matches.
+
+Alternatively, you can implement the `shouldExclude` method in your `RequestLoggingCallbacks` class with custom exclusion logic. The method receives the captured request and response data as arguments (see [callback arguments](#callback-arguments) below) and should return `true` to exclude the request from logging, or `false` to include it.
+
+```yaml Configuration example {6-11}
+apitally:
+  client-id: "your-client-id"
+  env: "dev"
+  request-logging:
+    enabled: true
+    # Exclude paths matching certain patterns
+    path-exclude-patterns:
+      - "/admin/"
+      - "/internal/"
+    # Exclude requests using custom logic (see example below)
+    callbacks-class: "com.example.MyRequestLoggingCallbacks"
+```
+
+```java Callbacks class example
+import io.apitally.common.RequestLoggingCallbacks;
+import io.apitally.common.dto.Request;
+import io.apitally.common.dto.Response;
+
+public class MyRequestLoggingCallbacks implements RequestLoggingCallbacks {
+    @Override
+    public boolean shouldExclude(Request request, Response response) {
+        // Exclude requests from a specific consumer
+        if ("internal-service".equals(request.getConsumer())) {
+            return true;
+        }
+        // Exclude successful requests (only log failures)
+        if (response.getStatusCode() < 400) {
+            return true;
+        }
+        return false;
+    }
+}
+```
+
+<Note>
+  Excluded requests won't be logged, but are still counted in metrics. To exclude endpoints from metrics, you can mark them as excluded in the [dashboard](/features/traffic-dashboard#exclude-endpoints).
+</Note>
+
+## Callback arguments
+
+The `Request` object passed to callback methods has the following properties:
+
+| Property | Description | Type |
+| :------- | :---------- | :--- |
+| `getTimestamp()` | Unix timestamp of the request. | `double` |
+| `getMethod()` | HTTP method of the request. | `String` |
+| `getPath()` | Path of the matched endpoint, if applicable. | `String` |
+| `getUrl()` | Full URL of the request. | `String` |
+| `getHeaders()` | Array of key-value pairs representing the request headers. | `Header[]` |
+| `getSize()` | Size of the request body in bytes. | `Long` |
+| `getConsumer()` | Identifier of the consumer making the request. | `String` |
+| `getBody()` | Raw request body. | `byte[]` |
+
+The `Response` object passed to `maskResponseBody` and `shouldExclude` has the following properties:
+
+| Property | Description | Type |
+| :------- | :---------- | :--- |
+| `getStatusCode()` | HTTP status code of the response. | `int` |
+| `getResponseTime()` | Time taken to respond to the request in seconds. | `double` |
+| `getHeaders()` | Array of key-value pairs representing the response headers. | `Header[]` |
+| `getSize()` | Size of the response body in bytes. | `Long` |
+| `getBody()` | Raw response body. | `byte[]` |
