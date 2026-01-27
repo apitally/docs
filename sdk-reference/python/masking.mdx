@@ -10,7 +10,7 @@ When request logging is enabled, the Apitally SDK captures details about each re
 
 ## Default masking and exclusion
 
-The SDK automatically masks common sensitive data in query parameters, headers and request/response body fields based on built-in patterns. For example, fields named `password`, `token`, `secret`, or headers like `Authorization` are masked by default.
+The SDK automatically masks common sensitive data in query parameters, headers, and request/response body fields based on built-in patterns. For example, fields named `password`, `token`, `secret`, or headers like `Authorization` are masked by default.
 
 To reduce noise, the SDK also automatically excludes common static assets and health check endpoints, such as `/robots.txt` or `/healthz`.
 
@@ -27,16 +27,18 @@ For more control over request and response body masking, you can provide callbac
 mask_query_params=[r"^card_number$", r"^account_id$"],
 mask_headers=[r"^X-Custom-Key$", r"^X-Internal-"],
 mask_body_fields=[r"^credit_card$", r"social_security"],
-# Mask request and response body using custom logic (see example below)
+# Mask request and response body using custom logic (see examples below)
 mask_request_body_callback=mask_request_body,
 mask_response_body_callback=mask_response_body,
 # ...
 ```
 
+<Info>See the [configuration page](/sdk-reference/python/configuration) for how to apply these parameters (framework-specific).</Info>
+
 ```python Callback function examples
 def mask_request_body(request: dict) -> bytes | None:
     # Mask entire request body for admin endpoints
-    if request["path"].startswith("/admin/"):
+    if request["path"] and request["path"].startswith("/admin/"):
         return None
     # Otherwise, return the original request body
     return request["body"]
@@ -44,10 +46,10 @@ def mask_request_body(request: dict) -> bytes | None:
 
 def mask_response_body(request: dict, response: dict) -> bytes | None:
     # Mask entire response body for admin endpoints
-    if request["path"].startswith("/admin/"):
+    if request["path"] and request["path"].startswith("/admin/"):
         return None
     # Mask specific fields in user profile responses
-    if request["path"].startswith("/users/") and response["body"]:
+    if request["path"] and request["path"].startswith("/users/") and response["body"]:
         try:
             data = json.loads(response["body"])
             if isinstance(data, dict):
@@ -63,7 +65,7 @@ def mask_response_body(request: dict, response: dict) -> bytes | None:
 ```
 
 <Note>
-  Callbacks are applied before pattern-based field masking. Any body returned by a callback will still have the default and custom `mask_body_fields` patterns applied to it.
+  Callbacks are applied before pattern-based field masking. The returned body is still masked using the default and custom `mask_body_fields` patterns.
 </Note>
 
 ## Excluding requests
@@ -80,19 +82,21 @@ exclude_callback=exclude_request,
 # ...
 ```
 
+<Info>See the [configuration page](/sdk-reference/python/configuration) for how to apply these parameters (framework-specific).</Info>
+
 ```python Callback function example
 def exclude_request(request: dict, response: dict) -> bool:
     # Exclude requests from a specific consumer
     if request["consumer"] == "internal-service":
         return True
-    # Only log failed requests
+    # Exclude successful requests (only log failures)
     if response["status_code"] < 400:
         return True
     return False
 ```
 
 <Note>
-  Excluded requests are not logged, but still counted in metrics. To exclude endpoints from metrics, you can mark them as excluded in the [dashboard](/features/traffic-dashboard#exclude-endpoints).
+  Excluded requests won't be logged, but are still counted in metrics. To exclude endpoints from metrics, you can mark them as excluded in the [dashboard](/features/traffic-dashboard#exclude-endpoints).
 </Note>
 
 ## Callback arguments
@@ -103,9 +107,9 @@ The `request` dict passed to callback functions has the following keys:
 | :-- | :---------- | :--- |
 | `timestamp` | Unix timestamp of the request. | `float` |
 | `method` | HTTP method of the request. | `str` |
-| `path` | Path of the request. | `str \| None` |
+| `path` | Path of the matched endpoint, if applicable. | `str \| None` |
 | `url` | Full URL of the request. | `str` |
-| `headers` | Array of key-value pairs representing the request headers. | `list[tuple[str, str]]` |
+| `headers` | List of key-value pairs representing the request headers. | `list[tuple[str, str]]` |
 | `size` | Size of the request body in bytes. | `int \| None` |
 | `consumer` | Identifier of the consumer making the request. | `str \| None` |
 | `body` | Raw request body. | `bytes \| None` |
@@ -116,6 +120,6 @@ The `response` dict passed to `mask_response_body_callback` and `exclude_callbac
 | :-- | :---------- | :--- |
 | `status_code` | HTTP status code of the response. | `int` |
 | `response_time` | Time taken to respond to the request in seconds. | `float` |
-| `headers` | Array of key-value pairs representing the response headers. | `list[tuple[str, str]]` |
+| `headers` | List of key-value pairs representing the response headers. | `list[tuple[str, str]]` |
 | `size` | Size of the response body in bytes. | `int \| None` |
 | `body` | Raw response body. | `bytes \| None` |
