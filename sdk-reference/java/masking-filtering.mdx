@@ -142,9 +142,9 @@ public class MyRequestLoggingCallbacks implements RequestLoggingCallbacks {
 
 ## Callback arguments
 
-The `Request` object passed to callback methods has the following properties:
+The `Request` object passed to callback methods has the following getter methods:
 
-| Property | Description | Type |
+| Method | Description | Type |
 | :------- | :---------- | :--- |
 | `getTimestamp()` | Unix timestamp of the request. | `double` |
 | `getMethod()` | HTTP method of the request. | `String` |
@@ -155,9 +155,9 @@ The `Request` object passed to callback methods has the following properties:
 | `getConsumer()` | Identifier of the consumer making the request. | `String` |
 | `getBody()` | Raw request body. | `byte[]` |
 
-The `Response` object passed to `maskResponseBody` and `shouldExclude` has the following properties:
+The `Response` object passed to `maskResponseBody` and `shouldExclude` has the following getter methods:
 
-| Property | Description | Type |
+| Method | Description | Type |
 | :------- | :---------- | :--- |
 | `getStatusCode()` | HTTP status code of the response. | `int` |
 | `getResponseTime()` | Time taken to respond to the request in seconds. | `double` |
