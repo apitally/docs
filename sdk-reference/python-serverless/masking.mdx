@@ -15,9 +15,9 @@ The Apitally Serverless SDK captures details about each request and response han
 
 ## Masking sensitive data
 
-You can extend the default masking rules by providing additional regular expressions via the `mask_query_params`, `mask_headers`, and `mask_body_fields` parameters. Patterns are case-insensitive and match anywhere within the name. Use `^` and `$` anchors for exact matches.
+You can extend the default masking rules by providing additional regular expressions via the `mask_headers` and `mask_body_fields` parameters. Patterns are case-insensitive and match anywhere within the name. Use `^` and `$` anchors for exact matches.
 
-```python Configuration example {10-13}
+```python Configuration example {10-12}
 from fastapi import FastAPI
 from apitally_serverless.fastapi import ApitallyMiddleware
 
@@ -27,8 +27,7 @@ app.add_middleware(
     log_request_headers=True,
     log_request_body=True,
     log_response_body=True,
-    # Mask specific query parameters, headers and body fields
-    mask_query_params=[r"^card_number$", r"^account_id$"],
+    # Mask specific headers and body fields
     mask_headers=[r"^X-Custom-Key$", r"^X-Internal-"],
     mask_body_fields=[r"^credit_card$", r"social_security"],
 )
@@ -38,16 +37,13 @@ app.add_middleware(
 
 You can exclude requests from logging using path patterns (regular expressions) via the `exclude_paths` parameter. Like the masking patterns, these are case-insensitive and match anywhere within the request path. Use `^` and `$` anchors for exact matches.
 
-```python Configuration example {10-11}
+```python Configuration example {7-8}
 from fastapi import FastAPI
 from apitally_serverless.fastapi import ApitallyMiddleware
 
 app = FastAPI()
 app.add_middleware(
     ApitallyMiddleware,
-    log_request_headers=True,
-    log_request_body=True,
-    log_response_body=True,
     # Exclude paths matching certain patterns
     exclude_paths=[r"/admin/", r"/internal/"],
 )
