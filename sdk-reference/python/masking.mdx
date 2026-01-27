@@ -10,7 +10,7 @@ When request logging is enabled, the Apitally SDK captures details about each re
 
 ## Default masking and exclusion
 
-The SDK automatically masks common sensitive data in query parameters, headers, and request/response body fields based on built-in patterns. For example, fields named `password`, `token`, `secret`, or headers like `Authorization` are masked by default.
+The SDK automatically masks common sensitive query parameters, headers, and request/response body fields based on built-in patterns. For example, fields named `password`, `token`, `secret`, or headers like `Authorization` are masked by default.
 
 To reduce noise, the SDK also automatically excludes common static assets and health check endpoints, such as `/robots.txt` or `/healthz`.
 
@@ -75,7 +75,7 @@ You can exclude requests from logging using path patterns (regular expressions) 
 Alternatively, you can provide a callback function with custom exclusion logic via the `exclude_callback` parameter. The function receives the captured request and response data as arguments (see [callback arguments](#callback-arguments) below) and should return `True` to exclude the request from logging, or `False` to include it.
 
 ```python Configuration example
-# Exclude paths matching these patterns
+# Exclude paths matching certain patterns
 exclude_paths=[r"/admin/", r"/internal/"],
 # Exclude requests using custom logic (see example below)
 exclude_callback=exclude_request,
