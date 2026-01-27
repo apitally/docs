@@ -1,0 +1,5 @@
+The SDK automatically masks common sensitive query parameters, headers, and request/response body fields based on built-in patterns. For example, fields named `password`, `token`, `secret`, or headers like `Authorization` are masked by default.
+
+To reduce noise, the SDK also automatically excludes common static assets and health check endpoints, such as `/robots.txt` or `/healthz`.
+
+See the [data privacy](/data-privacy#data-masking) page for complete lists of default masking and exclusion patterns.

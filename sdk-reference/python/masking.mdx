@@ -1,20 +1,17 @@
 ---
 title: Masking and filtering
 sidebarTitle: Masking & filtering
-description: How to mask or exclude sensitive data with the Apitally SDK for Python.
-mode: wide
+description: Learn how to mask sensitive data and exclude requests from logging with the Apitally SDK for Python.
 ---
 
-When request logging is enabled, the Apitally SDK captures details about each request and response handled by your application. To protect sensitive data and reduce noise, the SDK provides mechanisms for masking and filtering out requests you don't want to log.
+import DefaultMaskingAndExclusion from '/snippets/default-masking-and-exclusion.mdx';
+
+When request logging is enabled, the Apitally SDK captures details about each request and response handled by your application. To protect sensitive data and reduce noise, the SDK provides mechanisms for masking data and filtering out requests you don't want to log.
 
 
 ## Default masking and exclusion
 
-The SDK automatically masks common sensitive query parameters, headers, and request/response body fields based on built-in patterns. For example, fields named `password`, `token`, `secret`, or headers like `Authorization` are masked by default.
-
-To reduce noise, the SDK also automatically excludes common static assets and health check endpoints, such as `/robots.txt` or `/healthz`.
-
-See the [data privacy](/data-privacy#data-masking) page for complete lists of default masking and exclusion patterns.
+<DefaultMaskingAndExclusion />
 
 ## Masking sensitive data
 
