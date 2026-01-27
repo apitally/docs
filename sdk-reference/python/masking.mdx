@@ -22,20 +22,75 @@ You can extend the default masking rules by providing additional regular express
 
 For more control over request and response body masking, you can provide callback functions via the `mask_request_body_callback` and `mask_response_body_callback` parameters. The functions receive the captured request and response data as arguments (see [callback arguments](#callback-arguments) below) and should return the masked body as `bytes`, or `None` to mask the entire body.
 
-```python Configuration example
-# Mask specific query parameters, headers and body fields
-mask_query_params=[r"^card_number$", r"^account_id$"],
-mask_headers=[r"^X-Custom-Key$", r"^X-Internal-"],
-mask_body_fields=[r"^credit_card$", r"social_security"],
-# Mask request and response body using custom logic (see examples below)
-mask_request_body_callback=mask_request_body,
-mask_response_body_callback=mask_response_body,
-# ...
-```
+<CodeGroup>
+  ```python FastAPI example {13-19}
+  from fastapi import FastAPI
+  from apitally.fastapi import ApitallyMiddleware
 
-<Info>See the [configuration page](/sdk-reference/python/configuration) for how to apply these parameters (framework-specific).</Info>
+  app = FastAPI()
+  app.add_middleware(
+      ApitallyMiddleware,
+      client_id="your-client-id",
+      env="dev",
+      enable_request_logging=True,
+      log_request_headers=True,
+      log_request_body=True,
+      log_response_body=True,
+      # Mask specific query parameters, headers and body fields
+      mask_query_params=[r"^card_number$", r"^account_id$"],
+      mask_headers=[r"^X-Custom-Key$", r"^X-Internal-"],
+      mask_body_fields=[r"^credit_card$", r"social_security"],
+      # Mask request and response body using custom logic (see examples below)
+      mask_request_body_callback=mask_request_body,
+      mask_response_body_callback=mask_response_body,
+  )
+  ```
+
+  ```python Django example {8-14}
+  APITALLY_MIDDLEWARE = {
+      "client_id": "your-client-id",
+      "env": "dev",
+      "enable_request_logging": True,
+      "log_request_headers": True,
+      "log_request_body": True,
+      "log_response_body": True,
+      # Mask specific query parameters, headers and body fields
+      "mask_query_params": [r"^card_number$", r"^account_id$"],
+      "mask_headers": [r"^X-Custom-Key$", r"^X-Internal-"],
+      "mask_body_fields": [r"^credit_card$", r"social_security"],
+      # Mask request and response body using custom logic (see examples below)
+      "mask_request_body_callback": mask_request_body,
+      "mask_response_body_callback": mask_response_body,
+  }
+  ```
+
+  ```python Flask example {13-19}
+  from flask import Flask
+  from apitally.flask import ApitallyMiddleware
+
+  app = Flask(__name__)
+  app.wsgi_app = ApitallyMiddleware(
+      app,
+      client_id="your-client-id",
+      env="dev",
+      enable_request_logging=True,
+      log_request_headers=True,
+      log_request_body=True,
+      log_response_body=True,
+      # Mask specific query parameters, headers and body fields
+      mask_query_params=[r"^card_number$", r"^account_id$"],
+      mask_headers=[r"^X-Custom-Key$", r"^X-Internal-"],
+      mask_body_fields=[r"^credit_card$", r"social_security"],
+      # Mask request and response body using custom logic (see examples below)
+      mask_request_body_callback=mask_request_body,
+      mask_response_body_callback=mask_response_body,
+  )
+  ```
+</CodeGroup>
 
 ```python Callback function examples
+import json
+
 def mask_request_body(request: dict) -> bytes | None:
     # Mask entire request body for admin endpoints
     if request["path"] and request["path"].startswith("/admin/"):
@@ -74,15 +129,53 @@ You can exclude requests from logging using path patterns (regular expressions) 
 
 Alternatively, you can provide a callback function with custom exclusion logic via the `exclude_callback` parameter. The function receives the captured request and response data as arguments (see [callback arguments](#callback-arguments) below) and should return `True` to exclude the request from logging, or `False` to include it.
 
-```python Configuration example
-# Exclude paths matching certain patterns
-exclude_paths=[r"/admin/", r"/internal/"],
-# Exclude requests using custom logic (see example below)
-exclude_callback=exclude_request,
-# ...
-```
+<CodeGroup>
+  ```python FastAPI example {10-13}
+  from fastapi import FastAPI
+  from apitally.fastapi import ApitallyMiddleware
 
-<Info>See the [configuration page](/sdk-reference/python/configuration) for how to apply these parameters (framework-specific).</Info>
+  app = FastAPI()
+  app.add_middleware(
+      ApitallyMiddleware,
+      client_id="your-client-id",
+      env="dev",
+      enable_request_logging=True,
+      # Exclude paths matching certain patterns
+      exclude_paths=[r"/admin/", r"/internal/"],
+      # Exclude requests using custom logic (see example below)
+      exclude_callback=exclude_request,
+  )
+  ```
+
+  ```python Django example {5-8}
+  APITALLY_MIDDLEWARE = {
+      "client_id": "your-client-id",
+      "env": "dev",
+      "enable_request_logging": True,
+      # Exclude paths matching certain patterns
+      "exclude_paths": [r"/admin/", r"/internal/"],
+      # Exclude requests using custom logic (see example below)
+      "exclude_callback": exclude_request,
+  }
+  ```
+
+  ```python Flask example {10-13}
+  from flask import Flask
+  from apitally.flask import ApitallyMiddleware
+
+  app = Flask(__name__)
+  app.wsgi_app = ApitallyMiddleware(
+      app,
+      client_id="your-client-id",
+      env="dev",
+      enable_request_logging=True,
+      # Exclude paths matching certain patterns
+      exclude_paths=[r"/admin/", r"/internal/"],
+      # Exclude requests using custom logic (see example below)
+      exclude_callback=exclude_request,
+  )
+  ```
+</CodeGroup>
 
 ```python Callback function example
 def exclude_request(request: dict, response: dict) -> bool:
