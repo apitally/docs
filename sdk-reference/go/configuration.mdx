@@ -121,28 +121,3 @@ The `RequestLogging` field is a pointer to a `RequestLoggingConfig` struct with 
 | `MaskResponseBodyCallback` | Callback function for masking the response body. Takes two parameters `request` and `response` and returns the response body as `[]byte` or `nil`. | `func(request *Request, response *Response) []byte` | `nil` |
 | `ExcludePaths` | List of regular expressions for matching paths to exclude from logging. | `[]*regexp.Regexp` | `nil` |
 | `ExcludeCallback` | Callback function for excluding requests from logging. Takes two parameters `request` and `response` and returns `true`, if the request should be excluded, or `false` otherwise. | `func(request *Request, response *Response) bool` | `nil` |
-
-## Callback arguments
-
-The `MaskRequestBodyCallback`, `MaskResponseBodyCallback` and `ExcludeCallback` fields accept a callback function that takes a `Request` struct as the first argument. This struct has the following fields:
-
-| Field | Description | Type |
-| :---- | :---------- | :--- |
-| `Timestamp` | Unix timestamp of the request. | `float64` |
-| `Method` | HTTP method of the request. | `string` |
-| `Path` | Path of the request. | `string` |
-| `URL` | Full URL of the request. | `string` |
-| `Headers` | Array of key-value pairs representing the request headers. | `[][2]string` |
-| `Size` | Size of the request body in bytes. | `int64` |
-| `Consumer` | Identifier of the consumer making the request. | `string` |
-| `Body` | Raw request body. | `[]byte` |
-
-The `MaskResponseBodyCallback` and `ExcludeCallback` callback functions also take a `Response` struct as the second argument. This struct has the following fields:
-
-| Field | Description | Type |
-| :---- | :---------- | :--- |
-| `StatusCode` | HTTP status code of the response. | `int` |
-| `ResponseTime` | Time taken to respond to the request in seconds. | `float64` |
-| `Headers` | Array of key-value pairs representing the response headers. | `[][2]string` |
-| `Size` | Size of the response body in bytes. | `int64` |
-| `Body` | Raw response body. | `[]byte` |
