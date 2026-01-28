@@ -95,7 +95,6 @@ def mask_request_body(request: dict) -> bytes | None:
     # Otherwise, return the original request body
     return request["body"]
 
-
 def mask_response_body(request: dict, response: dict) -> bytes | None:
     # Mask entire response body for admin endpoints
     if request["path"] and request["path"].startswith("/admin/"):
