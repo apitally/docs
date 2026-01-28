@@ -68,7 +68,7 @@ The SDK provides helper functions in `apitally.otel` to instrument popular libra
 | PyMongo | `instrument_pymongo()` | `opentelemetry-instrumentation-pymongo` |
 | botocore (AWS SDK) | `instrument_botocore()` | `opentelemetry-instrumentation-botocore` |
 
-Install the required packages for the libraries you want to instrument:
+To get started, first install the required packages for the libraries you want to instrument. For example, to instrument `httpx` and `sqlalchemy`:
 
 <CodeGroup>
 ```shell pip
@@ -84,7 +84,7 @@ poetry add opentelemetry-instrumentation-httpx opentelemetry-instrumentation-sql
 ```
 </CodeGroup>
 
-Call the instrumentation functions once at application startup:
+Then call the instrumentation functions at application startup:
 
 ```python
 from apitally.otel import instrument_httpx, instrument_sqlalchemy
