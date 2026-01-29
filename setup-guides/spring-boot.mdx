@@ -147,7 +147,6 @@ apitally:
     request-body-included: true
     response-body-included: true
     log-capture-enabled: true
-    tracing-enabled: false # requires instrumentation
 ```
 
 ```yaml Advanced example
@@ -163,7 +162,6 @@ apitally:
     response-body-included: true
     exception-included: true
     log-capture-enabled: true
-    tracing-enabled: false # requires instrumentation
     # Mask query parameters using regex
     query-param-mask-patterns:
       - "^card_number$"
