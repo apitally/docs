@@ -169,8 +169,7 @@
                 "pages": [
                   "sdk-reference/java/overview",
                   "sdk-reference/java/configuration",
-                  "sdk-reference/java/masking-filtering",
-                  "sdk-reference/java/tracing"
+                  "sdk-reference/java/masking-filtering"
                 ]
               },
               {
