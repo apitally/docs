@@ -6,7 +6,7 @@ description: How to instrument your Python application with OpenTelemetry for tr
 
 When tracing is enabled, the Apitally SDK captures [OpenTelemetry](https://opentelemetry.io/docs/languages/python/) spans during request handling and attaches them to request logs. This allows you to see exactly what happened during each request, including database queries, HTTP calls to external services, and custom operations.
 
-The SDK provides helper functions to simplify instrumenting popular libraries and creating custom spans, and integrates seamlessly with existing OpenTelemetry setups.
+If you have an existing OpenTelemetry setup, the SDK automatically registers itself as a span processor with the global `TracerProvider`. Otherwise, it creates its own. Any spans created using the standard OpenTelemetry API or by instrumentation libraries will be captured.
 
 ## Enabling tracing
 
@@ -84,7 +84,7 @@ poetry add opentelemetry-instrumentation-httpx opentelemetry-instrumentation-sql
 ```
 </CodeGroup>
 
-Then call the instrumentation functions at application startup:
+Then call the instrumentation functions at application startup.  Some functions accept an optional client, connection or engine argument to instrument a specific instance instead of all instances globally.
 
 ```python
 from apitally.otel import instrument_httpx, instrument_sqlalchemy
@@ -93,18 +93,9 @@ instrument_httpx()
 instrument_sqlalchemy(engine)
 ```
 
-Some functions accept an optional client, connection or engine argument to instrument a specific instance instead of all instances globally:
-
-```python
-from apitally.otel import instrument_httpx
-
-client = httpx.Client()
-instrument_httpx(client)
-```
-
 ## Creating custom spans
 
-For custom operations that aren't covered by library instrumentation, you can create spans manually using the helpers provided by the SDK.
+For custom operations that aren't covered by library instrumentation, you can create spans manually using the helpers provided by the SDK. These are thin wrappers around the standard OpenTelemetry API, which you can also use directly.
 
 ### `@instrument` decorator
 
@@ -114,21 +105,13 @@ Use the `@instrument` decorator to automatically create a span for a function. I
 from apitally.otel import instrument
 
 @instrument
-def fetch_user_data(user_id: int) -> dict:
-    # This function will be traced automatically
-    ...
-
-@instrument
-async def process_order(order_id: int) -> None:
-    # Async functions are also supported
+def process_order(order_id: int) -> None:
     ...
 ```
 
-The span name is derived from the function name, and the span attributes include the file path and function location.
-
 ### `span()` context manager
 
-Use the `span()` context manager to trace specific code blocks within a function:
+Use the `span()` context manager to trace code blocks within a function:
 
 ```python
 from apitally.otel import span
@@ -141,21 +124,5 @@ def checkout(cart_id: int) -> None:
 
     with span("process_payment"):
         # Payment logic here
-        ...
-```
-
-## Using OpenTelemetry directly
-
-If you have an existing OpenTelemetry setup, Apitally's span collector integrates seamlessly. The SDK registers itself as a span processor with the existing global `TracerProvider`, so any spans created using the standard OpenTelemetry API or any other instrumentation library will be captured automatically.
-
-```python
-from opentelemetry import trace
-
-tracer = trace.get_tracer("my-app")
-
-def my_function():
-    with tracer.start_as_current_span("my-operation") as span:
-        span.set_attribute("key", "value")
-        # Your code here
         ...
 ```
