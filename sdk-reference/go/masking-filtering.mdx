@@ -13,7 +13,7 @@ When request logging is enabled, the Apitally SDK captures details about each re
 
 <DefaultMaskingAndExclusion />
 
-## Masking sensitive data
+## Mask sensitive data
 
 You can extend the default masking rules by providing additional regular expressions via the `MaskQueryParams`, `MaskHeaders`, and `MaskBodyFields` fields. Patterns match anywhere within the name. Use `^` and `$` anchors for exact matches, and the `(?i)` flag for case-insensitive matching.
 
@@ -227,7 +227,7 @@ func maskResponseBody(request *apitally.Request, response *apitally.Response) []
   Callbacks are applied before pattern-based field masking. The returned body is still masked using the default and custom `MaskBodyFields` patterns.
 </Note>
 
-## Excluding requests
+## Exclude requests
 
 You can exclude requests from logging using path patterns (regular expressions) via the `ExcludePaths` field. Like the masking patterns, these match anywhere within the request path. Use `^` and `$` anchors for exact matches, and the `(?i)` flag for case-insensitive matching.
 

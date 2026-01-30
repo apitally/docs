@@ -13,7 +13,7 @@ When request logging is enabled, the Apitally SDK captures details about each re
 
 <DefaultMaskingAndExclusion />
 
-## Masking sensitive data
+## Mask sensitive data
 
 You can extend the default masking rules by providing additional regular expressions via the `query-param-mask-patterns`, `header-mask-patterns`, and `body-field-mask-patterns` properties. Patterns are case-insensitive and match anywhere within the name. Use `^` and `$` anchors for exact matches.
 
@@ -95,7 +95,7 @@ public class MyRequestLoggingCallbacks implements RequestLoggingCallbacks {
   Callbacks are applied before pattern-based field masking. The returned body is still masked using the default and custom `body-field-mask-patterns` patterns.
 </Note>
 
-## Excluding requests
+## Exclude requests
 
 You can exclude requests from logging using path patterns (regular expressions) via the `path-exclude-patterns` property. Like the masking patterns, these are case-insensitive and match anywhere within the request path. Use `^` and `$` anchors for exact matches.
 

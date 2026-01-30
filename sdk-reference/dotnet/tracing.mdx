@@ -8,7 +8,7 @@ When tracing is enabled, the Apitally SDK captures [Activities](https://learn.mi
 
 The SDK uses the native `System.Diagnostics.Activity` API, which is the same API that [OpenTelemetry for .NET](https://opentelemetry.io/docs/languages/dotnet/) is built on. This means OpenTelemetry is not required, but any existing OpenTelemetry instrumentation will work seamlessly.
 
-## Enabling tracing
+## Enable tracing
 
 To enable tracing, set `CaptureTraces` to `true` in your request logging configuration:
 
@@ -37,7 +37,7 @@ To enable tracing, set `CaptureTraces` to `true` in your request logging configu
   ```
 </CodeGroup>
 
-## Instrumenting libraries
+## Instrument libraries
 
 `HttpClient` and some other .NET libraries include built-in Activity instrumentation, so they generate spans automatically without any additional setup.
 
@@ -52,7 +52,7 @@ Other libraries require OpenTelemetry instrumentation packages. For example:
 
 See the [OpenTelemetry registry](https://opentelemetry.io/ecosystem/registry/?language=dotnet&component=instrumentation) for more instrumentation packages.
 
-## Creating custom spans
+## Create custom spans
 
 For custom operations that aren't covered by library instrumentation, you can create spans manually using the `System.Diagnostics` API.
 

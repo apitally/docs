@@ -13,7 +13,7 @@ When request logging is enabled, the Apitally SDK captures details about each re
 
 <DefaultMaskingAndExclusion />
 
-## Masking sensitive data
+## Mask sensitive data
 
 You can extend the default masking rules by providing additional regular expressions via the `mask_query_params`, `mask_headers`, and `mask_body_fields` parameters. Patterns are case-insensitive and match anywhere within the name. Use `^` and `$` anchors for exact matches.
 
@@ -119,7 +119,7 @@ def mask_response_body(request: dict, response: dict) -> bytes | None:
   Callbacks are applied before pattern-based field masking. The returned body is still masked using the default and custom `mask_body_fields` patterns.
 </Note>
 
-## Excluding requests
+## Exclude requests
 
 You can exclude requests from logging using path patterns (regular expressions) via the `exclude_paths` parameter. Like the masking patterns, these are case-insensitive and match anywhere within the request path. Use `^` and `$` anchors for exact matches.
 

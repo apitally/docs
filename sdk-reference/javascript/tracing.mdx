@@ -6,7 +6,7 @@ description: How to instrument your JavaScript application with OpenTelemetry fo
 
 When tracing is enabled, the Apitally SDK captures [OpenTelemetry](https://opentelemetry.io/docs/languages/js/) spans during request handling and attaches them to request logs. This allows you to see exactly what happened during each request, including database queries, HTTP calls to external services, and custom operations.
 
-## Enabling tracing
+## Enable tracing
 
 To enable tracing, set `captureTraces` to `true` in your request logging configuration:
 
@@ -79,7 +79,7 @@ To enable tracing, set `captureTraces` to `true` in your request logging configu
   ```
 </CodeGroup>
 
-## Setting up OpenTelemetry
+## Set up OpenTelemetry
 
 To capture spans from libraries like HTTP clients and database drivers, you need to set up OpenTelemetry instrumentation.
 
@@ -122,7 +122,7 @@ node --import ./instrumentation.mjs app.js
 
 See the official [OpenTelemetry guide for Node.js](https://opentelemetry.io/docs/languages/js/getting-started/nodejs/) for more details.
 
-## Creating custom spans
+## Create custom spans
 
 For custom operations that aren't covered by library instrumentation, you can [create spans](https://opentelemetry.io/docs/languages/js/instrumentation/#create-spans) manually using the `startActiveSpan` method from the standard OpenTelemetry API.
 

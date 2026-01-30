@@ -8,7 +8,7 @@ When tracing is enabled, the Apitally SDK captures [OpenTelemetry](https://opent
 
 If you have an existing OpenTelemetry setup, the SDK automatically registers itself as a span processor with the global `TracerProvider`. Otherwise, it creates its own. Any spans created using the standard OpenTelemetry API or by instrumentation libraries will be captured.
 
-## Enabling tracing
+## Enable tracing
 
 To enable tracing, set `capture_traces` to `True` in your middleware configuration:
 
@@ -51,7 +51,7 @@ To enable tracing, set `capture_traces` to `True` in your middleware configurati
   ```
 </CodeGroup>
 
-## Instrumenting libraries
+## Instrument libraries
 
 The SDK provides helper functions in `apitally.otel` to instrument popular libraries. These are thin wrappers around the official OpenTelemetry instrumentation packages, which need to be installed separately.
 
@@ -93,7 +93,7 @@ instrument_httpx()
 instrument_sqlalchemy(engine)
 ```
 
-## Creating custom spans
+## Create custom spans
 
 For custom operations that aren't covered by library instrumentation, you can create spans manually using the helpers provided by the SDK. These are thin wrappers around the standard OpenTelemetry API, which you can also use directly.
 

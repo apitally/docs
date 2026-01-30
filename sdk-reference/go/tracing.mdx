@@ -8,7 +8,7 @@ When tracing is enabled, the Apitally SDK captures [OpenTelemetry](https://opent
 
 If you have an existing OpenTelemetry setup, the SDK automatically registers itself as a span processor with the global `TracerProvider`. Otherwise, it creates its own. Any spans created using the standard OpenTelemetry API or by instrumentation libraries will be captured.
 
-## Enabling tracing
+## Enable tracing
 
 To enable tracing, set `CaptureTraces` to `true` in your middleware configuration:
 
@@ -102,7 +102,7 @@ To enable tracing, set `CaptureTraces` to `true` in your middleware configuratio
   ```
 </CodeGroup>
 
-## Instrumenting libraries
+## Instrument libraries
 
 To capture spans from HTTP clients, database drivers, and other libraries, use the corresponding OpenTelemetry instrumentation libraries.
 
@@ -126,7 +126,7 @@ client := &http.Client{
 
 See the [OpenTelemetry registry](https://opentelemetry.io/ecosystem/registry/?language=go&component=instrumentation) for a complete list of available instrumentation libraries.
 
-## Creating custom spans
+## Create custom spans
 
 For custom operations that aren't covered by library instrumentation, you can create spans manually using the standard OpenTelemetry API:
 

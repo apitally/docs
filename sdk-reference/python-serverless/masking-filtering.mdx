@@ -13,7 +13,7 @@ The Apitally Serverless SDK captures details about each request and response han
 
 <DefaultMaskingAndExclusion />
 
-## Masking sensitive data
+## Mask sensitive data
 
 You can extend the default masking rules by providing additional regular expressions via the `mask_headers` and `mask_body_fields` parameters. Patterns are case-insensitive and match anywhere within the name. Use `^` and `$` anchors for exact matches.
 
@@ -33,7 +33,7 @@ app.add_middleware(
 )
 ```
 
-## Excluding requests
+## Exclude requests
 
 You can exclude requests from logging using path patterns (regular expressions) via the `exclude_paths` parameter. Like the masking patterns, these are case-insensitive and match anywhere within the request path. Use `^` and `$` anchors for exact matches.
 
