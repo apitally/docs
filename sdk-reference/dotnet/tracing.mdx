@@ -2,5 +2,79 @@
 title: Tracing instrumentation
 sidebarTitle: Tracing
 description: How to instrument your .NET application for tracing in Apitally.
-mode: wide
 ---
+
+When tracing is enabled, the Apitally SDK captures [Activities](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing-concepts) during request handling and attaches them to request logs. This allows you to see exactly what happened during each request, including database queries, HTTP calls to external services, and custom operations.
+
+The SDK uses the native `System.Diagnostics.Activity` API, which is the same API that [OpenTelemetry for .NET](https://opentelemetry.io/docs/languages/dotnet/) is built on. This means OpenTelemetry is not required, but any existing OpenTelemetry instrumentation will work seamlessly.
+
+## Enabling tracing
+
+To enable tracing, set `CaptureTraces` to `true` in your request logging configuration:
+
+<CodeGroup>
+  ```csharp Program.cs {5-6}
+  builder.Services.AddApitally(options =>
+  {
+      options.ClientId = "your-client-id";
+      options.Env = "dev";
+      options.RequestLogging.Enabled = true;
+      options.RequestLogging.CaptureTraces = true;
+  });
+  ```
+
+  ```json appsettings.json {6-7}
+  {
+    "Apitally": {
+      "ClientId": "your-client-id",
+      "Env": "dev",
+      "RequestLogging": {
+        "Enabled": true,
+        "CaptureTraces": true
+      }
+    }
+  }
+  ```
+</CodeGroup>
+
+## Instrumenting libraries
+
+`HttpClient` and some other .NET libraries include built-in Activity instrumentation, so they generate spans automatically without any additional setup.
+
+Other libraries require OpenTelemetry instrumentation packages. For example:
+
+| Library | Instrumentation package |
+| :--- | :--- |
+| Entity Framework Core | [`OpenTelemetry.Instrumentation.EntityFrameworkCore`](https://www.nuget.org/packages/OpenTelemetry.Instrumentation.EntityFrameworkCore) |
+| SqlClient | [`OpenTelemetry.Instrumentation.SqlClient`](https://www.nuget.org/packages/OpenTelemetry.Instrumentation.SqlClient) |
+| Npgsql | [`Npgsql.OpenTelemetry`](https://www.nuget.org/packages/Npgsql.OpenTelemetry) |
+| StackExchange.Redis | [`OpenTelemetry.Instrumentation.StackExchangeRedis`](https://www.nuget.org/packages/OpenTelemetry.Instrumentation.StackExchangeRedis) |
+
+See the [OpenTelemetry registry](https://opentelemetry.io/ecosystem/registry/?language=dotnet&component=instrumentation) for more instrumentation packages.
+
+## Creating custom spans
+
+For custom operations that aren't covered by library instrumentation, you can create spans manually using the `System.Diagnostics` API.
+
+First, create an `ActivitySource` for your application (typically as a static field):
+
+```csharp
+using System.Diagnostics;
+
+public static class Telemetry
+{
+    public static readonly ActivitySource Source = new("MyApp");
+}
+```
+
+Then use `StartActivity` to create spans:
+
+```csharp
+public async Task ProcessOrderAsync(int orderId)
+{
+    using var activity = Telemetry.Source.StartActivity("ProcessOrder");
+    activity?.SetTag("order.id", orderId);
+
+    // ...
+}
+```
