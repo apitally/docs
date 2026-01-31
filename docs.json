@@ -54,7 +54,8 @@
                   "features/errors-dashboard",
                   "features/performance-dashboard",
                   "features/consumer-insights",
-                  "features/endpoint-insights"
+                  "features/endpoint-insights",
+                  "features/resources-dashboard"
                 ]
               },
               {
@@ -68,7 +69,6 @@
               {
                 "group": "API monitoring",
                 "pages": [
-                  "features/resources-dashboard",
                   "features/uptime-monitoring",
                   "features/custom-alerts"
                 ]
