@@ -172,3 +172,9 @@ useApitally(app, {
 </CodeGroup>
 
 <Snippet file="configure-request-logging-check.mdx" />
+
+## Enable tracing
+
+Tracing gives you a detailed breakdown of time spent during the handling of each request, showing the duration of database queries, HTTP calls, and other operations.
+
+To enable tracing, set `captureTraces` to `true` and instrument the libraries you want to trace with OpenTelemetry. See the [tracing guide](/sdk-reference/javascript/tracing) for further instructions.

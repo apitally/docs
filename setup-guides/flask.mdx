@@ -165,6 +165,12 @@ app.wsgi_app = ApitallyMiddleware(
 
 <Snippet file="configure-request-logging-check.mdx" />
 
+## Enable tracing
+
+Tracing gives you a detailed breakdown of time spent during the handling of each request, showing the duration of database queries, HTTP calls, and other operations.
+
+To enable tracing, set `capture_traces` to `True` and instrument the libraries you want to trace with OpenTelemetry. See the [tracing guide](/sdk-reference/python/tracing) for further instructions.
+
 ## Known issues
 
 - When running Flask with Gunicorn, the option `preload_app` must be set to `False`. Otherwise, the Apitally client will not work correctly.
