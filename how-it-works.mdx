@@ -6,46 +6,11 @@ description: "Seamless integration with our open-source SDKs."
 Apitally integrates with your application via a lightweight middleware or plugin, provided by one of our open-source SDKs. The SDKs send data directly to Apitally, without the need for additional infrastructure or agents, and without affecting the performance of your application.
 
 <CardGroup cols={3}>
-  <Card
-    title="SDK for Python"
-    icon="python"
-    href="https://github.com/apitally/apitally-py"
-    target="_blank"
-  >
-    GitHub repository
-  </Card>
-  <Card
-    title="SDK for Node.js"
-    icon="node-js"
-    href="https://github.com/apitally/apitally-js"
-    target="_blank"
-  >
-    GitHub repository
-  </Card>
-  <Card
-    title="SDK for Go"
-    icon="golang"
-    href="https://github.com/apitally/apitally-go"
-    target="_blank"
-  >
-    GitHub repository
-  </Card>
-  <Card
-    title="SDK for Java"
-    icon="java"
-    href="https://github.com/apitally/apitally-java"
-    target="_blank"
-  >
-    GitHub repository
-  </Card>
-  <Card
-    title="SDK for .NET"
-    icon="microsoft"
-    href="https://github.com/apitally/apitally-dotnet"
-    target="_blank"
-  >
-    GitHub repository
-  </Card>
+  <Card title="SDK for Python" icon="python" href="/sdk-reference/python" />
+  <Card title="SDK for Node.js" icon="node-js" href="/sdk-reference/javascript" />
+  <Card title="SDK for Go" icon="golang" href="/sdk-reference/go" />
+  <Card title="SDK for Java" icon="java" href="/sdk-reference/java" />
+  <Card title="SDK for .NET" icon="microsoft" href="/sdk-reference/dotnet" />
 </CardGroup>
 
 The diagram below illustrates how the SDKs works.
@@ -65,10 +30,11 @@ The diagram below illustrates how the SDKs works.
 
 The SDKs include the following functionality:
 
-- Introspection of your application to capture metadata about available endpoints.
-- Lightweight middleware that captures request and response data.
-- Request logger that buffers log data in a compressed temporary file on disk (if enabled).
-- Non-blocking client that handles communication with Apitally.
+- Introspection of your application to capture metadata about available endpoints
+- Lightweight middleware that captures request and response data
+- Instrumentation of logging libraries to capture application logs
+- OpenTelemetry integration to capture traces during request handling
+- Non-blocking client that handles communication with Apitally
 
 <Note>
   The client is designed to be resilient to temporary network failures
