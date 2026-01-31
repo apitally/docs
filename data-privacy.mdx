@@ -120,7 +120,7 @@ The following data is collected for each request handled by your application and
   <Accordion title="Exception info">
     Exception message and stack trace. May also include a Sentry event ID, if available.
 
-    Only captured if an unhandled exception occurred during the handling of the request, leading to a `500 Internal Server Error` response.
+    Only captured if an unhandled exception occurred during request handling, leading to a `500 Internal Server Error` response.
 
     Example:
 
@@ -222,7 +222,7 @@ The following data is collected for each request handled by your application, if
     ```
   </Accordion>
   <Accordion title={<>Application logs <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
-    Log messages emitted by the application during the handling of the request.
+    Log messages emitted by the application during request handling.
 
     Only collected if enabled via `capture_logs` (disabled by default).
 
@@ -236,7 +236,7 @@ The following data is collected for each request handled by your application, if
     ```
   </Accordion>
   <Accordion title={<>Traces <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
-    OpenTelemetry spans created by the application during the handling of the request.
+    OpenTelemetry spans created by the application during request handling.
 
     Only collected if enabled via `capture_traces` (disabled by default).
 
@@ -266,7 +266,7 @@ The following data is collected for each request handled by your application, if
   <Accordion title="Exception info">
     Exception message and stack trace. May also include a Sentry event ID, if available.
 
-    Only captured if an unhandled exception occurred during the handling of the request, leading to a `500 Internal Server Error` response. Can be disabled via `log_exception` (enabled by default).
+    Only captured if an unhandled exception occurred during request handling, leading to a `500 Internal Server Error` response. Can be disabled via `log_exception` (enabled by default).
 
     Example:
 
