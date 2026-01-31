@@ -47,7 +47,7 @@
             "icon": "list-check",
             "pages": [
               {
-                "group": "API analytics",
+                "group": "API metrics",
                 "pages": [
                   "features/apps-overview",
                   "features/traffic-dashboard",
@@ -58,8 +58,12 @@
                 ]
               },
               {
-                "group": "API logging",
-                "pages": ["features/request-logs", "features/application-logs"]
+                "group": "API logs & traces",
+                "pages": [
+                  "features/request-logs",
+                  "features/application-logs",
+                  "features/traces"
+                ]
               },
               {
                 "group": "API monitoring",
