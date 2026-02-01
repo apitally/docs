@@ -1,0 +1,50 @@
+---
+title: "Introduction"
+description: "Programmatically access logs and metrics for your apps."
+---
+
+The Apitally API lets you programmatically access request logs and traffic metrics for your apps. Use it to export data for analysis, or integrate with your own systems.
+
+<Info>API acccess requires the Premium plan.</Info>
+
+## Endpoints
+
+- [List apps](/api-reference/apps/list-apps): Retrieve all apps in your team.
+- [List consumers](/api-reference/consumers/list-consumers): Retrieve all consumers for an app.
+- [Get request logs](/api-reference/request-logs/get-request-logs): Retrieve request log data for an app.
+- [Get traffic](/api-reference/traffic/get-traffic): Retrieve aggregated traffic metrics for an app.
+
+## Authentication
+
+The API uses API keys for authentication. Include your API key in the `Api-Key` header.
+
+```bash
+curl -H "Api-Key: your-api-key" https://api.apitally.io/v1/apps
+```
+
+You can manage API keys in the Apitally dashboard under **Settings > API keys**. Keys are scoped to a team and grant access to all apps within that team.
+
+## Rate limits
+
+The API allows up to 100 requests per minute per API key. Rate limit information is included in response headers:
+
+- `X-RateLimit-Limit`: Maximum requests allowed per minute
+- `X-RateLimit-Remaining`: Requests remaining in the current window
+- `X-RateLimit-Reset`: Unix timestamp when the limit resets
+
+If you exceed the limit, the API returns a `429 Too Many Requests` response.
+
+## Pagination
+
+Endpoints that return lists use cursor-based pagination. Responses include:
+
+- `data`: Array of items for the current page
+- `has_more`: Boolean indicating whether more items exist
+- `next_token`: Token to fetch the next page (only present if `has_more` is `true`)
+
+Use the `limit` query parameter to control page size (default 100, max 1000). To fetch the next page, pass the `next_token` value from the previous response:
+
+```bash
+curl -H "Api-Key: your-api-key" \
+  "https://api.apitally.io/v1/apps/123/request-logs?limit=100&next_token=abc123"
+```
