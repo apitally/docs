@@ -1,0 +1,54 @@
+---
+title: Masking and filtering
+sidebarTitle: Masking & filtering
+description: Learn how to mask sensitive data and exclude requests from logging with the Apitally Serverless SDK for Python.
+---
+
+import DefaultMaskingAndExclusion from '/snippets/default-masking-and-exclusion.mdx';
+
+The Apitally Serverless SDK captures details about each request and response handled by your application. To protect sensitive data and reduce noise, the SDK provides mechanisms for masking data and filtering out requests you don't want to log.
+
+
+## Default masking and exclusion
+
+<DefaultMaskingAndExclusion />
+
+## Mask sensitive data
+
+You can extend the default masking rules by providing additional regular expressions via the `mask_headers` and `mask_body_fields` parameters. Patterns are case-insensitive and match anywhere within the name. Use `^` and `$` anchors for exact matches.
+
+```python Configuration example {10-12}
+from fastapi import FastAPI
+from apitally_serverless.fastapi import ApitallyMiddleware
+
+app = FastAPI()
+app.add_middleware(
+    ApitallyMiddleware,
+    log_request_headers=True,
+    log_request_body=True,
+    log_response_body=True,
+    # Mask specific headers and body fields
+    mask_headers=[r"^X-Custom-Key$", r"^X-Internal-"],
+    mask_body_fields=[r"^credit_card$", r"social_security"],
+)
+```
+
+## Exclude requests
+
+You can exclude requests from logging using path patterns (regular expressions) via the `exclude_paths` parameter. Like the masking patterns, these are case-insensitive and match anywhere within the request path. Use `^` and `$` anchors for exact matches.
+
+```python Configuration example {7-8}
+from fastapi import FastAPI
+from apitally_serverless.fastapi import ApitallyMiddleware
+
+app = FastAPI()
+app.add_middleware(
+    ApitallyMiddleware,
+    # Exclude paths matching certain patterns
+    exclude_paths=[r"/admin/", r"/internal/"],
+)
+```
+
+<Note>
+  Excluded requests won't be logged, but are still counted in metrics. To exclude endpoints from metrics, you can mark them as excluded in the [dashboard](/features/traffic-dashboard#exclude-endpoints).
+</Note>

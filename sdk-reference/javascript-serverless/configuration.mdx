@@ -1,44 +1,26 @@
 ---
-title: JavaScript Serverless SDK reference
-sidebarTitle: JavaScript
-description: The parameters of the Apitally Serverless SDK for JavaScript.
+title: Configuration
+description: How to configure the Apitally Serverless SDK for JavaScript.
 mode: wide
 ---
 
-import SetupGuidesJavaScriptServerless from '/snippets/setup-guides-javascript-serverless.mdx';
+```javascript Hono {7-10}
+import { Hono } from "hono";
+import { useApitally } from "@apitally/serverless/hono";
 
-<CardGroup cols={2}>
-  <Card
-    title="GitHub repository"
-    icon="github"
-    href="https://github.com/apitally/apitally-js-serverless"
-    target="_blank"
-  >
-    apitally/apitally-js-serverless
-  </Card>
-  <Card
-    title="npm package"
-    icon="npm"
-    href="https://www.npmjs.com/package/@apitally/serverless"
-    target="_blank"
-  >
-    @apitally/serverless
-  </Card>
-</CardGroup>
+const app = new Hono();
 
-## Installation
-
-```shell
-npm install @apitally/serverless
+useApitally(app, {
+  logRequestHeaders: true,
+  logRequestBody: true,
+  logResponseBody: true,
+  // other parameters ...
+});
 ```
-
-## Supported frameworks
-
-<SetupGuidesJavaScriptServerless />
 
 ## Parameters
 
-The following parameters apply for all integrations.
+The following configuration parameters are available.
 
 | Parameter | Description | Type | Default |
 | :-------- | :---------- | :--- | :------ |

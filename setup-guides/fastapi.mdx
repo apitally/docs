@@ -126,6 +126,7 @@ app.add_middleware(
     log_request_body=True,
     log_response_body=True,
     capture_logs=True,
+    capture_traces=False,  # requires instrumentation
 )
 ```
 
@@ -146,6 +147,7 @@ app.add_middleware(
     log_response_body=True,
     log_exception=True,
     capture_logs=True,
+    capture_traces=False,  # requires instrumentation
     # Mask query parameters using regex
     mask_query_params=[r"^card_number$"],
     # Mask headers using regex
@@ -166,3 +168,9 @@ app.add_middleware(
 </CodeGroup>
 
 <Snippet file="configure-request-logging-check.mdx" />
+
+## Enable tracing
+
+Tracing gives you a detailed breakdown of time spent during the handling of each request, showing the duration of database queries, HTTP calls, and other operations.
+
+To enable tracing, set `capture_traces` to `True` and instrument the libraries you want to trace with OpenTelemetry. See the [tracing guide](/sdk-reference/python/tracing) for further instructions.

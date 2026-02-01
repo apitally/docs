@@ -23,7 +23,7 @@ This page guides you through the steps of configuring your [AdonisJS](https://ad
 
 ## Add middleware
 
-Install the [Apitally SDK](/sdk-reference/javascript) in your AdonisJS project.
+Install the [Apitally SDK](/sdk-reference/javascript/overview) in your AdonisJS project.
 
 ```shell
 npm install apitally
@@ -122,6 +122,7 @@ const apitallyConfig = defineConfig({
     logRequestBody: true,
     logResponseBody: true,
     captureLogs: true,
+    captureTraces: false, // requires instrumentation
   },
 })
 
@@ -143,6 +144,7 @@ const apitallyConfig = defineConfig({
     logResponseBody: true,
     logException: true,
     captureLogs: true,
+    captureTraces: false, // requires instrumentation
     // Mask query parameters using regex
     maskQueryParams: [/^card_number$/i],
     // Mask headers using regex
@@ -166,3 +168,9 @@ export default apitallyConfig;
 </CodeGroup>
 
 <Snippet file="configure-request-logging-check.mdx" />
+
+## Enable tracing
+
+Tracing gives you a detailed breakdown of time spent during the handling of each request, showing the duration of database queries, HTTP calls, and other operations.
+
+To enable tracing, set `captureTraces` to `true` and instrument the libraries you want to trace with OpenTelemetry. See the [tracing guide](/sdk-reference/javascript/tracing) for further instructions.

@@ -23,7 +23,7 @@ This page guides you through the steps of configuring your [Gin](https://gin-gon
 
 ## Add middleware
 
-Add the [Apitally SDK](/sdk-reference/go) to the dependencies in your Gin project.
+Add the [Apitally SDK](/sdk-reference/go/overview) to the dependencies in your Gin project.
 
 ```shell
 go get github.com/apitally/apitally-go/gin
@@ -161,6 +161,7 @@ func main() {
     config.RequestLogging.LogRequestBody = true
     config.RequestLogging.LogResponseBody = true
     config.RequestLogging.CaptureLogs = true
+    config.RequestLogging.CaptureTraces = false // requires instrumentation
 
     r.Use(apitally.Middleware(r, config))
 
@@ -192,6 +193,7 @@ func main() {
     config.RequestLogging.LogResponseBody = true
     config.RequestLogging.LogPanic = true
     config.RequestLogging.CaptureLogs = true
+    config.RequestLogging.CaptureTraces = false // requires instrumentation
     // Mask query parameters using regex
     config.RequestLogging.MaskQueryParams = []*regexp.Regexp{regexp.MustCompile(`^card_number$`)}
     // Mask headers using regex
@@ -228,3 +230,9 @@ func main() {
 </CodeGroup>
 
 <Snippet file="configure-request-logging-check.mdx" />
+
+## Enable tracing
+
+Tracing gives you a detailed breakdown of time spent during the handling of each request, showing the duration of database queries, HTTP calls, and other operations.
+
+To enable tracing, set `CaptureTraces` to `true` and instrument the libraries you want to trace with OpenTelemetry. See the [tracing guide](/sdk-reference/go/tracing) for further instructions.

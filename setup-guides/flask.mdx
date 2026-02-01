@@ -8,7 +8,7 @@ import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
 import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import AddMiddlewarePythonSnippet from '/snippets/add-middleware-python.mdx';
-import UWSGIWarning from '/snippets/uwsgi-warning.mdx';
+import GunicornUWSGIWarning from '/snippets/gunicorn-uwsgi-warning.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
 
 This page guides you through the steps of configuring your [Flask](https://flask.palletsprojects.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
@@ -60,7 +60,7 @@ app.wsgi_app = ApitallyMiddleware(
   <Snippet file="middleware-last-note.mdx" />
 </div>
 
-<UWSGIWarning framework="Flask" />
+<GunicornUWSGIWarning framework="Flask" />
 
 <Snippet file="add-middleware-check.mdx" />
 
@@ -122,6 +122,7 @@ app.wsgi_app = ApitallyMiddleware(
     log_request_body=True,
     log_response_body=True,
     capture_logs=True,
+    capture_traces=False,  # requires instrumentation
 )
 ```
 
@@ -142,6 +143,7 @@ app.wsgi_app = ApitallyMiddleware(
     log_response_body=True,
     log_exception=True,
     capture_logs=True,
+    capture_traces=False,  # requires instrumentation
     # Mask query parameters using regex
     mask_query_params=[r"^card_number$"],
     # Mask headers using regex
@@ -163,6 +165,13 @@ app.wsgi_app = ApitallyMiddleware(
 
 <Snippet file="configure-request-logging-check.mdx" />
 
+## Enable tracing
+
+Tracing gives you a detailed breakdown of time spent during the handling of each request, showing the duration of database queries, HTTP calls, and other operations.
+
+To enable tracing, set `capture_traces` to `True` and instrument the libraries you want to trace with OpenTelemetry. See the [tracing guide](/sdk-reference/python/tracing) for further instructions.
+
 ## Known issues
 
 - When running Flask with Gunicorn, the option `preload_app` must be set to `False`. Otherwise, the Apitally client will not work correctly.
+- When running Flask with uWSGI, the options `--enable-threads` and `--lazy-apps` must be set. Otherwise, the Apitally client will not work correctly.

@@ -1,0 +1,53 @@
+---
+title: Java SDK reference
+sidebarTitle: Overview
+description: Overview of the Apitally SDK for Java.
+mode: wide
+---
+
+import SetupGuidesJava from '/snippets/setup-guides-java.mdx';
+
+<CardGroup cols={2}>
+  <Card
+    title="GitHub repository"
+    icon="github"
+    href="https://github.com/apitally/apitally-java"
+    target="_blank"
+  >
+    apitally/apitally-java
+  </Card>
+  <Card
+    title="Maven artifact"
+    icon="java"
+    href="https://central.sonatype.com/artifact/io.apitally/apitally"
+    target="_blank"
+  >
+    io.apitally/apitally
+  </Card>
+</CardGroup>
+
+## Installation
+
+<CodeGroup>
+```xml Maven
+<dependency>
+  <groupId>io.apitally</groupId>
+  <artifactId>apitally</artifactId>
+  <version>[0.1.0,)</version>
+</dependency>
+```
+
+```groovy Gradle
+dependencies {
+  implementation 'io.apitally:apitally:+'
+}
+```
+</CodeGroup>
+
+## Supported frameworks
+
+The Java SDK currently supports the web frameworks listed below. If your framework is not listed, please [let us know](/support) and we'll consider adding support for it.
+
+Click on a framework for a detailed setup guide.
+
+<SetupGuidesJava />

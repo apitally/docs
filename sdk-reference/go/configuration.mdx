@@ -1,28 +1,96 @@
 ---
-title: Go SDK reference
-sidebarTitle: Go
-description: The parameters of the Apitally SDK for Go.
+title: Configuration
+description: How to configure the Apitally SDK for Go.
 mode: wide
 ---
 
-import SetupGuidesGo from '/snippets/setup-guides-go.mdx';
+You can configure Apitally using the `Config` struct passed to the `Middleware` function.
 
-<CardGroup cols={2}>
-  <Card
-    title="GitHub repository"
-    icon="github"
-    href="https://github.com/apitally/apitally-go"
-    target="_blank"
-  >
-    apitally/apitally-go
-  </Card>
-</CardGroup>
+<CodeGroup>
+  ```go Chi {10-14}
+  package main
 
-## Supported frameworks
+  import (
+      apitally "github.com/apitally/apitally-go/chi"
+      "github.com/go-chi/chi/v5"
+  )
 
-<SetupGuidesGo />
+  func main() {
+      r := chi.NewRouter()
 
-## Configuration options
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      config.RequestLogging.Enabled = true
+      // other parameters ...
+
+      r.Use(apitally.Middleware(r, config))
+  }
+  ```
+
+  ```go Echo {10-14}
+  package main
+
+  import (
+      apitally "github.com/apitally/apitally-go/echo"
+      "github.com/labstack/echo/v4"
+  )
+
+  func main() {
+      e := echo.New()
+
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      config.RequestLogging.Enabled = true
+      // other parameters ...
+
+      e.Use(apitally.Middleware(e, config))
+  }
+  ```
+
+  ```go Fiber {10-14}
+  package main
+
+  import (
+      apitally "github.com/apitally/apitally-go/fiber"
+      "github.com/gofiber/fiber/v2"
+  )
+
+  func main() {
+      app := fiber.New()
+
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      config.RequestLogging.Enabled = true
+      // other parameters ...
+
+      app.Use(apitally.Middleware(app, config))
+  }
+  ```
+
+  ```go Gin {10-14}
+  package main
+
+  import (
+      apitally "github.com/apitally/apitally-go/gin"
+      "github.com/gin-gonic/gin"
+  )
+
+  func main() {
+      r := gin.Default()
+
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      config.RequestLogging.Enabled = true
+      // other parameters ...
+
+      r.Use(apitally.Middleware(r, config))
+  }
+  ```
+</CodeGroup>
+
+See the [setup guides](/setup-guides#go) for more examples.
+
+## Parameters
 
 The following are the fields of the `Config` struct.
 
@@ -33,9 +101,7 @@ The following are the fields of the `Config` struct.
 | `RequestLogging` | Configuration options for request logging. See table below. | `*RequestLoggingConfig` |
 | `AppVersion` | The current version of your application, e.g. `1.0.0`. | `string` |
 
-## Request logging config
-
-The following are the fields of the `RequestLoggingConfig` struct.
+The `RequestLogging` field is a pointer to a `RequestLoggingConfig` struct with the following fields:
 
 | Parameter | Description | Type | Default |
 | :-------- | :---------- | :--- | :------ |
@@ -47,6 +113,7 @@ The following are the fields of the `RequestLoggingConfig` struct.
 | `LogResponseBody` | Whether to include the response body in the logs. Only JSON and text are supported, up to 50 KB. | `bool` | `false` |
 | `LogPanic` | Whether to log information when a panic occurs during request handling. | `bool` | `false` |
 | `CaptureLogs` | Whether to capture application logs emitted during request handling. | `bool` | `false` |
+| `CaptureTraces` | Whether to enable tracing with OpenTelemetry. | `bool` | `false` |
 | `MaskQueryParams` | List of regular expressions for matching query parameters to mask. These are in addition to the default masking patterns. | `[]*regexp.Regexp` | `nil` |
 | `MaskHeaders` | List of regular expressions for matching headers to mask. These are in addition to the default masking patterns. | `[]*regexp.Regexp` | `nil` |
 | `MaskBodyFields` | List of regular expressions for matching request/response body fields to mask. These are in addition to the default masking patterns. | `[]*regexp.Regexp` | `nil` |
@@ -54,30 +121,3 @@ The following are the fields of the `RequestLoggingConfig` struct.
 | `MaskResponseBodyCallback` | Callback function for masking the response body. Takes two parameters `request` and `response` and returns the response body as `[]byte` or `nil`. | `func(request *Request, response *Response) []byte` | `nil` |
 | `ExcludePaths` | List of regular expressions for matching paths to exclude from logging. | `[]*regexp.Regexp` | `nil` |
 | `ExcludeCallback` | Callback function for excluding requests from logging. Takes two parameters `request` and `response` and returns `true`, if the request should be excluded, or `false` otherwise. | `func(request *Request, response *Response) bool` | `nil` |
-
-### Request struct
-
-Below are the fields of the `Request` struct.
-
-| Field | Description | Type |
-| :---- | :---------- | :--- |
-| `Timestamp` | Unix timestamp of the request. | `float64` |
-| `Method` | HTTP method of the request. | `string` |
-| `Path` | Path of the request. | `string` |
-| `URL` | Full URL of the request. | `string` |
-| `Headers` | Array of key-value pairs representing the request headers. | `[][2]string` |
-| `Size` | Size of the request body in bytes. | `int64` |
-| `Consumer` | Identifier of the consumer making the request. | `string` |
-| `Body` | Raw request body. | `[]byte` |
-
-### Response struct
-
-Below are the fields of the `Response` struct.
-
-| Field | Description | Type |
-| :---- | :---------- | :--- |
-| `StatusCode` | HTTP status code of the response. | `int` |
-| `ResponseTime` | Time taken to respond to the request in seconds. | `float64` |
-| `Headers` | Array of key-value pairs representing the response headers. | `[][2]string` |
-| `Size` | Size of the response body in bytes. | `int64` |
-| `Body` | Raw response body. | `[]byte` |

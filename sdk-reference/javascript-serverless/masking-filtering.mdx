@@ -1,0 +1,54 @@
+---
+title: Masking and filtering
+sidebarTitle: Masking & filtering
+description: Learn how to mask sensitive data and exclude requests from logging with the Apitally Serverless SDK for JavaScript.
+---
+
+import DefaultMaskingAndExclusion from '/snippets/default-masking-and-exclusion.mdx';
+
+The Apitally Serverless SDK captures details about each request and response handled by your application. To protect sensitive data and reduce noise, the SDK provides mechanisms for masking data and filtering out requests you don't want to log.
+
+
+## Default masking and exclusion
+
+<DefaultMaskingAndExclusion />
+
+## Mask sensitive data
+
+You can extend the default masking rules by providing additional regular expressions via the `maskHeaders` and `maskBodyFields` parameters. Patterns match anywhere within the name. Use `^` and `$` anchors for exact matches, and the `i` flag for case-insensitive matching.
+
+```javascript Configuration example {10-12}
+import { Hono } from "hono";
+import { useApitally } from "@apitally/serverless/hono";
+
+const app = new Hono();
+
+useApitally(app, {
+  logRequestHeaders: true,
+  logRequestBody: true,
+  logResponseBody: true,
+  // Mask specific headers and body fields
+  maskHeaders: [/^X-Custom-Key$/i, /^X-Internal-/i],
+  maskBodyFields: [/^credit_card$/i, /social_security/i],
+});
+```
+
+## Exclude requests
+
+You can exclude requests from logging using path patterns (regular expressions) via the `excludePaths` parameter. Like the masking patterns, these match anywhere within the request path. Use `^` and `$` anchors for exact matches, and the `i` flag for case-insensitive matching.
+
+```javascript Configuration example {7-8}
+import { Hono } from "hono";
+import { useApitally } from "@apitally/serverless/hono";
+
+const app = new Hono();
+
+useApitally(app, {
+  // Exclude paths matching certain patterns
+  excludePaths: [/\/admin\//i, /\/internal\//i],
+});
+```
+
+<Note>
+  Excluded requests won't be logged, but are still counted in metrics. To exclude endpoints from metrics, you can mark them as excluded in the [dashboard](/features/traffic-dashboard#exclude-endpoints).
+</Note>

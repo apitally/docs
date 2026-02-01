@@ -47,24 +47,28 @@
             "icon": "list-check",
             "pages": [
               {
-                "group": "API analytics",
+                "group": "API metrics",
                 "pages": [
                   "features/apps-overview",
                   "features/traffic-dashboard",
                   "features/errors-dashboard",
                   "features/performance-dashboard",
                   "features/consumer-insights",
-                  "features/endpoint-insights"
+                  "features/endpoint-insights",
+                  "features/resources-dashboard"
                 ]
               },
               {
-                "group": "API logging",
-                "pages": ["features/request-logs", "features/application-logs"]
+                "group": "API logs & traces",
+                "pages": [
+                  "features/request-logs",
+                  "features/application-logs",
+                  "features/traces"
+                ]
               },
               {
                 "group": "API monitoring",
                 "pages": [
-                  "features/resources-dashboard",
                   "features/uptime-monitoring",
                   "features/custom-alerts"
                 ]
@@ -137,19 +141,72 @@
             "group": "Standard SDKs",
             "icon": "box-isometric",
             "pages": [
-              "sdk-reference/python",
-              "sdk-reference/javascript",
-              "sdk-reference/go",
-              "sdk-reference/java",
-              "sdk-reference/dotnet"
+              {
+                "group": "Python",
+                "pages": [
+                  "sdk-reference/python/overview",
+                  "sdk-reference/python/configuration",
+                  "sdk-reference/python/masking-filtering",
+                  "sdk-reference/python/tracing"
+                ]
+              },
+              {
+                "group": "JavaScript",
+                "pages": [
+                  "sdk-reference/javascript/overview",
+                  "sdk-reference/javascript/configuration",
+                  "sdk-reference/javascript/masking-filtering",
+                  "sdk-reference/javascript/tracing"
+                ]
+              },
+              {
+                "group": "Go",
+                "pages": [
+                  "sdk-reference/go/overview",
+                  "sdk-reference/go/configuration",
+                  "sdk-reference/go/masking-filtering",
+                  "sdk-reference/go/tracing"
+                ]
+              },
+              {
+                "group": "Java",
+                "pages": [
+                  "sdk-reference/java/overview",
+                  "sdk-reference/java/configuration",
+                  "sdk-reference/java/masking-filtering"
+                ]
+              },
+              {
+                "group": ".NET",
+                "pages": [
+                  "sdk-reference/dotnet/overview",
+                  "sdk-reference/dotnet/configuration",
+                  "sdk-reference/dotnet/masking-filtering",
+                  "sdk-reference/dotnet/tracing"
+                ]
+              }
             ]
           },
           {
             "group": "Serverless SDKs",
             "icon": "box-isometric",
             "pages": [
-              "sdk-reference/python-serverless",
-              "sdk-reference/javascript-serverless"
+              {
+                "group": "Python",
+                "pages": [
+                  "sdk-reference/python-serverless/overview",
+                  "sdk-reference/python-serverless/configuration",
+                  "sdk-reference/python-serverless/masking-filtering"
+                ]
+              },
+              {
+                "group": "JavaScript",
+                "pages": [
+                  "sdk-reference/javascript-serverless/overview",
+                  "sdk-reference/javascript-serverless/configuration",
+                  "sdk-reference/javascript-serverless/masking-filtering"
+                ]
+              }
             ]
           }
         ]
@@ -214,6 +271,10 @@
     {
       "source": "/frameworks/blacksheep",
       "destination": "/setup-guides/blacksheep"
+    },
+    {
+      "source": "/frameworks/django",
+      "destination": "/setup-guides/django"
     },
     {
       "source": "/frameworks/django-ninja",

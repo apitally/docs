@@ -1,38 +1,53 @@
 ---
-title: Python SDK reference
-sidebarTitle: Python
-description: The parameters of the Apitally SDK for Python.
+title: Configuration
+description: How to configure the Apitally SDK for Python.
 mode: wide
 ---
 
-import SetupGuidesPython from '/snippets/setup-guides-python.mdx';
+<CodeGroup>
+  ```python FastAPI {7-10}
+  from fastapi import FastAPI
+  from apitally.fastapi import ApitallyMiddleware
 
-<CardGroup cols={2}>
-  <Card
-    title="GitHub repository"
-    icon="github"
-    href="https://github.com/apitally/apitally-py"
-    target="_blank"
-  >
-    apitally/apitally-py
-  </Card>
-  <Card
-    title="PyPI package"
-    icon="python"
-    href="https://pypi.org/project/apitally/"
-    target="_blank"
-  >
-    apitally
-  </Card>
-</CardGroup>
+  app = FastAPI()
+  app.add_middleware(
+      ApitallyMiddleware,
+      client_id="your-client-id",
+      env="dev",
+      enable_request_logging=True,
+      # other parameters ...
+  )
+  ```
 
-## Supported frameworks
+  ```python Django {2-5}
+  APITALLY_MIDDLEWARE = {
+      "client_id": "your-client-id",
+      "env": "dev",
+      "enable_request_logging": True,
+      # other parameters ...
+  }
+  ```
 
-<SetupGuidesPython />
+  ```python Flask {7-10}
+  from flask import Flask
+  from apitally.flask import ApitallyMiddleware
+
+  app = Flask(__name__)
+  app.wsgi_app = ApitallyMiddleware(
+      app,
+      client_id="your-client-id",
+      env="dev",
+      enable_request_logging=True,
+      # other parameters ...
+  )
+  ```
+</CodeGroup>
+
+See the [setup guides](/setup-guides#python) for more examples.
 
 ## Parameters
 
-The following parameters apply for all integrations.
+The following configuration parameters are available. Only `client_id` and `env` are required.
 
 | Parameter | Description | Type | Default |
 | :-------- | :---------- | :--- | :------ |
@@ -47,6 +62,7 @@ The following parameters apply for all integrations.
 | `log_response_body` | Whether to include the response body in the logs. Only JSON and text are supported, up to 50 KB. | `bool` | `False` |
 | `log_exception` | Whether to include exception details in the logs. | `bool` | `True` |
 | `capture_logs` | Whether to capture application logs emitted during request handling. | `bool` | `False` |
+| `capture_traces` | Whether to enable tracing with OpenTelemetry. | `bool` | `False` |
 | `mask_query_params` | List of regular expressions for matching query parameters to mask. These are in addition to the default masking patterns. | `list[str]` | `[]` |
 | `mask_headers` | List of regular expressions for matching headers to mask. These are in addition to the default masking patterns. | `list[str]` | `[]` |
 | `mask_body_fields` | List of regular expressions for matching request/response body fields to mask. These are in addition to the default masking patterns. | `list[str]` | `[]` |
@@ -54,30 +70,3 @@ The following parameters apply for all integrations.
 | `mask_response_body_callback` | Callback function for masking the response body. Takes two parameters `request` and `response` and returns the response body as `bytes` or `None`. | `Callable` | `None` |
 | `exclude_paths` | List of regular expressions for matching paths to exclude from logging. | `list[str]` | `[]` |
 | `exclude_callback` | Callback function for excluding requests from logging. Takes two parameters `request` and `response` and returns `True`, if the request should be excluded, or `False` otherwise. | `Callable` | `None` |
-
-### Request dict
-
-Below are the keys of the `request` dicts that are passed to the user-provided callback functions.
-
-| Key | Description | Type |
-| :-- | :---------- | :--- |
-| `timestamp` | Unix timestamp of the request. | `float` |
-| `method` | HTTP method of the request. | `str` |
-| `path` | Path of the request. | `str` |
-| `url` | Full URL of the request. | `str` |
-| `headers` | Array of key-value pairs representing the request headers. | `list[tuple[str, str]]` |
-| `size` | Size of the request body in bytes. | `int` |
-| `consumer` | Identifier of the consumer making the request. | `str` |
-| `body` | Raw request body. | `bytes` |
-
-### Response dict
-
-Below are the keys of the `response` dicts that are passed to some of the user-provided callback functions.
-
-| Key | Description | Type |
-| :-- | :---------- | :--- |
-| `status_code` | HTTP status code of the response. | `int` |
-| `response_time` | Time taken to respond to the request in seconds. | `float` |
-| `headers` | Array of key-value pairs representing the response headers. | `list[tuple[str, str]]` |
-| `size` | Size of the response body in bytes. | `int` |
-| `body` | Raw response body. | `bytes` |

@@ -23,7 +23,7 @@ This page guides you through the steps of configuring your [Spring Boot](https:/
 
 ## Enable Apitally
 
-Add the [Apitally SDK](/sdk-reference/java) to your project's dependencies.
+Add the [Apitally SDK](/sdk-reference/java/overview) to your project's dependencies.
 
 <CodeGroup>
 ```xml Maven
@@ -134,7 +134,7 @@ public class ConsumerIdentificationFilter extends OncePerRequestFilter {
 
 <RequestLoggingConfigSnippet language="java" />
 
-Check out the <a href="/sdk-reference/java#request-logging-config">SDK reference</a> to learn more about the request logging configuration options.
+Check out the <a href="/sdk-reference/java/configuration">SDK reference</a> to learn more about the request logging configuration options.
 
 <CodeGroup>
 ```yaml Basic example
@@ -146,6 +146,7 @@ apitally:
     request-headers-included: true
     request-body-included: true
     response-body-included: true
+    log-capture-enabled: true
 ```
 
 ```yaml Advanced example
@@ -160,6 +161,7 @@ apitally:
     response-headers-included: true
     response-body-included: true
     exception-included: true
+    log-capture-enabled: true
     # Mask query parameters using regex
     query-param-mask-patterns:
       - "^card_number$"

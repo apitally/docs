@@ -1,38 +1,23 @@
 ---
-title: Java SDK reference
-sidebarTitle: Java
-description: The parameters of the Apitally SDK for Java.
+title: Configuration
+description: How to configure the Apitally SDK for Java.
 mode: wide
 ---
 
-import SetupGuidesJava from '/snippets/setup-guides-java.mdx';
+You can configure Apitally in your `application.yml` file.
 
-<CardGroup cols={2}>
-  <Card
-    title="GitHub repository"
-    icon="github"
-    href="https://github.com/apitally/apitally-java"
-    target="_blank"
-  >
-    apitally/apitally-java
-  </Card>
-  <Card
-    title="Maven artifact"
-    icon="java"
-    href="https://central.sonatype.com/artifact/io.apitally/apitally"
-    target="_blank"
-  >
-    io.apitally/apitally
-  </Card>
-</CardGroup>
+```yaml application.yml {2-6}
+apitally:
+  client-id: "your-client-id"
+  env: "dev"
+  request-logging:
+    enabled: true
+    # other parameters ...
+```
 
-## Supported frameworks
+## Parameters
 
-<SetupGuidesJava />
-
-## Configuration options
-
-The following parameters apply when configuring the Apitally client in your `application.yml` file.
+The following configuration parameters are available. Only `client-id` and `env` are required.
 
 | Parameter | Description | Type |
 | :-------- | :---------- | :--- |
@@ -40,9 +25,7 @@ The following parameters apply when configuring the Apitally client in your `app
 | `env` | Name of the environment, e.g. `prod` or `dev`. The environment will be automatically created if it doesn't exist. | `string` |
 | <nobr>`request-logging`</nobr> | Configuration for request logging. See table below. | `object` |
 
-## Request logging config
-
-The following are the properties of the `request-logging` configuration object.
+The `request-logging` parameter is an object with the following properties:
 
 | Parameter | Description | Type | Default |
 | :-------- | :---------- | :--- | :------ |
@@ -52,35 +35,9 @@ The following are the properties of the `request-logging` configuration object.
 | <nobr>`request-body-included`</nobr> | Whether to include the request body in the logs. Only JSON and text are supported, up to 50 KB. | `boolean` | `false` |
 | <nobr>`response-headers-included`</nobr> | Whether to include response headers in the logs. | `boolean` | `true` |
 | <nobr>`response-body-included`</nobr> | Whether to include the response body in the logs. Only JSON and text are supported, up to 50 KB. | `boolean` | `false` |
+| <nobr>`log-capture-enabled`</nobr> | Whether to capture application logs emitted during request handling. | `boolean` | `false` |
 | <nobr>`query-param-mask-patterns`</nobr> | List of regular expressions for matching query parameters to mask. These are in addition to the default masking patterns. | `List<String>` | `[]` |
 | <nobr>`header-mask-patterns`</nobr> | List of regular expressions for matching headers to mask. These are in addition to the default masking patterns. | `List<String>` | `[]` |
 | <nobr>`body-field-mask-patterns`</nobr> | List of regular expressions for matching request/response body fields to mask. These are in addition to the default masking patterns. | `List<String>` | `[]` |
 | <nobr>`path-exclude-patterns`</nobr> | List of regular expressions for matching paths to exclude from logging. | `List<String>` | `[]` |
 | <nobr>`callbacks-class`</nobr> | Fully qualified name of a class implementing `RequestLoggingCallbacks` for custom masking and exclusion logic. | `string` | - |
-
-### Request object
-
-Below are the properties of the `Request` objects that are passed to the callback methods.
-
-| Property | Description | Type |
-| :------- | :---------- | :--- |
-| `timestamp` | Unix timestamp of the request. | `double` |
-| `method` | HTTP method of the request. | `string` |
-| `path` | Path of the request. | `string` |
-| `url` | Full URL of the request. | `string` |
-| `headers` | Array of key-value pairs representing the request headers. | `Header[]` |
-| `size` | Size of the request body in bytes. | `long` |
-| `consumer` | Identifier of the consumer making the request. | `string` |
-| `body` | Raw request body as bytes. | `byte[]` |
-
-### Response object
-
-Below are the properties of the `Response` objects that are passed to some of the callback methods.
-
-| Property | Description | Type |
-| :------- | :---------- | :--- |
-| `statusCode` | HTTP status code of the response. | `int` |
-| `responseTime` | Time taken to respond to the request in seconds. | `double` |
-| `headers` | Array of key-value pairs representing the response headers. | `Header[]` |
-| `size` | Size of the response body in bytes. | `long` |
-| `body` | Raw response body as bytes. | `byte[]` |

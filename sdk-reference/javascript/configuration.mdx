@@ -1,44 +1,87 @@
 ---
-title: JavaScript SDK reference
-sidebarTitle: JavaScript
-description: The parameters of the Apitally SDK for JavaScript.
+title: Configuration
+description: How to configure the Apitally SDK for JavaScript.
 mode: wide
 ---
 
-import SetupGuidesJavaScript from '/snippets/setup-guides-javascript.mdx';
+## Configuration
 
-<CardGroup cols={2}>
-  <Card
-    title="GitHub repository"
-    icon="github"
-    href="https://github.com/apitally/apitally-js"
-    target="_blank"
-  >
-    apitally/apitally-js
-  </Card>
-  <Card
-    title="npm package"
-    icon="npm"
-    href="https://www.npmjs.com/package/apitally"
-    target="_blank"
-  >
-    apitally
-  </Card>
-</CardGroup>
+You can configure Apitally via a configuration object.
 
-## Installation
+<CodeGroup>
+  ```javascript Hono {7-12}
+  import { Hono } from "hono";
+  import { useApitally } from "apitally/hono";
 
-```shell
-npm install apitally
-```
+  const app = new Hono();
 
-## Supported frameworks
+  useApitally(app, {
+    clientId: "your-client-id",
+    env: "dev",
+    requestLogging: {
+      enabled: true,
+      // other parameters ...
+    },
+  });
+  ```
 
-<SetupGuidesJavaScript />
+  ```javascript NestJS {9-14}
+  import { NestFactory } from "@nestjs/core";
+  import { useApitally } from "apitally/nestjs";
+  import { AppModule } from "./app.module";
+
+  async function bootstrap() {
+    const app = await NestFactory.create(AppModule);
+
+    await useApitally(app, {
+      clientId: "your-client-id",
+      env: "dev",
+      requestLogging: {
+        enabled: true,
+        // other parameters ...
+      },
+    });
+  }
+  ```
+
+  ```javascript Express {7-12}
+  import express from "express";
+  import { useApitally } from "apitally/express";
+
+  const app = express();
+
+  useApitally(app, {
+    clientId: "your-client-id",
+    env: "dev",
+    requestLogging: {
+      enabled: true,
+      // other parameters ...
+    },
+  });
+  ```
+
+  ```javascript Fastify {7-12}
+  import Fastify from "fastify";
+  import { apitallyPlugin } from "apitally/fastify";
+
+  const fastify = Fastify({ logger: true });
+
+  await fastify.register(apitallyPlugin, {
+    clientId: "your-client-id",
+    env: "dev",
+    requestLogging: {
+      enabled: true,
+      // other parameters ...
+    },
+  });
+  ```
+</CodeGroup>
+
+See the [setup guides](/setup-guides#javascript) for more examples.
 
 ## Parameters
 
-The following parameters apply for all integrations.
+The following configuration parameters are available. Only `clientId` and `env` are required.
 
 | Parameter | Description | Type | Default |
 | :-------- | :---------- | :--- | :------ |
@@ -48,9 +91,7 @@ The following parameters apply for all integrations.
 | `appVersion` | The current version of your application, e.g. `1.0.0`. | `string` |
 | `logger` | A custom logger instance. If not provided, a default logger is created automatically. | `object` |
 
-## Request logging config
-
-The following are the keys of the `requestLogging` object.
+The `requestLogging` parameter is an object with the following properties:
 
 | Parameter | Description | Type | Default |
 | :-------- | :---------- | :--- | :------ |
@@ -62,6 +103,7 @@ The following are the keys of the `requestLogging` object.
 | `logResponseBody` | Whether to include the response body in the logs. Only JSON and text are supported, up to 50 KB. | `boolean` | `false` |
 | `logException` | Whether to include exception details in the logs. | `boolean` | `true` |
 | `captureLogs` | Whether to capture application logs emitted during request handling. | `boolean` | `false` |
+| `captureTraces` | Whether to enable tracing with OpenTelemetry. | `boolean` | `false` |
 | `maskQueryParams` | Array of regular expressions for matching query parameters to mask. These are in addition to the default masking patterns. | `RegExp[]` | `[]` |
 | `maskHeaders` | Array of regular expressions for matching headers to mask. These are in addition to the default masking patterns. | `RegExp[]` | `[]` |
 | `maskBodyFields` | Array of regular expressions for matching request/response body fields to mask. These are in addition to the default masking patterns. | `RegExp[]` | `[]` |
@@ -69,30 +111,3 @@ The following are the keys of the `requestLogging` object.
 | `maskResponseBodyCallback` | Callback function for masking the response body. Takes two parameters `request` and `response` and returns the response body as `Buffer` or `null`. | `Function` | - |
 | `excludePaths` | Array of regular expressions for matching paths to exclude from logging. | `RegExp[]` | `[]` |
 | `excludeCallback` | Callback function for excluding requests from logging. Takes two parameters `request` and `response` and returns `true`, if the request should be excluded, or `false` otherwise. | `Function` | - |
-
-### Request object
-
-Below are the properties of the `request` objects that are passed to the user-provided callback functions.
-
-| Property | Description | Type |
-| :------- | :---------- | :--- |
-| `timestamp` | Unix timestamp of the request. | `number` |
-| `consumer` | Identifier of the consumer making the request. | `string` |
-| `method` | HTTP method of the request. | `string` |
-| `path` | Path of the request. | `string` |
-| `url` | Full URL of the request. | `string` |
-| `headers` | Array of key-value pairs representing the request headers. | `[string, string][]` |
-| `size` | Size of the request body in bytes. | `number` |
-| `body` | Raw request body as bytes. | `Buffer` |
-
-### Response object
-
-Below are the properties of the `response` objects that are passed to some of the user-provided callback functions.
-
-| Property | Description | Type |
-| :------- | :---------- | :--- |
-| `statusCode` | HTTP status code of the response. | `number` |
-| `responseTime` | Time taken to respond to the request in seconds. | `number` |
-| `headers` | Array of key-value pairs representing the response headers. | `[string, string][]` |
-| `size` | Size of the response body in bytes. | `number` |
-| `body` | Raw response body as bytes. | `Buffer` |

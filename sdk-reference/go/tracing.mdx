@@ -1,0 +1,152 @@
+---
+title: Tracing instrumentation
+sidebarTitle: Tracing
+description: How to instrument your Go application with OpenTelemetry for tracing in Apitally.
+---
+
+When tracing is enabled, the Apitally SDK captures [OpenTelemetry](https://opentelemetry.io/docs/languages/go/) spans during request handling and attaches them to request logs. This allows you to see exactly what happened during each request, including database queries, HTTP calls to external services, and custom operations.
+
+If you have an existing OpenTelemetry setup, the SDK automatically registers itself as a span processor with the global `TracerProvider`. Otherwise, it creates its own. Any spans created using the standard OpenTelemetry API or by instrumentation libraries will be captured.
+
+## Enable tracing
+
+To enable tracing, set `CaptureTraces` to `true` in your middleware configuration:
+
+<CodeGroup>
+  ```go Chi {13-14}
+  package main
+
+  import (
+      apitally "github.com/apitally/apitally-go/chi"
+      "github.com/go-chi/chi/v5"
+  )
+
+  func main() {
+      r := chi.NewRouter()
+
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      config.RequestLogging.Enabled = true
+      config.RequestLogging.CaptureTraces = true
+
+      r.Use(apitally.Middleware(r, config))
+
+      // ... rest of your code ...
+  }
+  ```
+
+  ```go Echo {13-14}
+  package main
+
+  import (
+      apitally "github.com/apitally/apitally-go/echo"
+      "github.com/labstack/echo/v4"
+  )
+
+  func main() {
+      e := echo.New()
+
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      config.RequestLogging.Enabled = true
+      config.RequestLogging.CaptureTraces = true
+
+      e.Use(apitally.Middleware(e, config))
+
+      // ... rest of your code ...
+  }
+  ```
+
+  ```go Fiber {13-14}
+  package main
+
+  import (
+      apitally "github.com/apitally/apitally-go/fiber"
+      "github.com/gofiber/fiber/v2"
+  )
+
+  func main() {
+      app := fiber.New()
+
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      config.RequestLogging.Enabled = true
+      config.RequestLogging.CaptureTraces = true
+
+      app.Use(apitally.Middleware(app, config))
+
+      // ... rest of your code ...
+  }
+  ```
+
+  ```go Gin {13-14}
+  package main
+
+  import (
+      apitally "github.com/apitally/apitally-go/gin"
+      "github.com/gin-gonic/gin"
+  )
+
+  func main() {
+      r := gin.Default()
+
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      config.RequestLogging.Enabled = true
+      config.RequestLogging.CaptureTraces = true
+
+      r.Use(apitally.Middleware(r, config))
+
+      // ... rest of your code ...
+  }
+  ```
+</CodeGroup>
+
+## Instrument libraries
+
+To capture spans from HTTP clients, database drivers, and other libraries, use the corresponding OpenTelemetry instrumentation libraries.
+
+For example, to instrument outgoing HTTP requests using `otelhttp`:
+
+```shell
+go get go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp
+```
+
+```go
+import (
+    "net/http"
+
+    "go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
+)
+
+client := &http.Client{
+    Transport: otelhttp.NewTransport(http.DefaultTransport),
+}
+```
+
+See the [OpenTelemetry registry](https://opentelemetry.io/ecosystem/registry/?language=go&component=instrumentation) for a complete list of available instrumentation libraries.
+
+## Create custom spans
+
+For custom operations that aren't covered by library instrumentation, you can create spans manually using the standard OpenTelemetry API:
+
+```go
+import (
+    "context"
+
+    "go.opentelemetry.io/otel"
+    "go.opentelemetry.io/otel/attribute"
+)
+
+var tracer = otel.Tracer("my-app")
+
+func processOrder(ctx context.Context, orderID string) error {
+    ctx, span := tracer.Start(ctx, "process_order")
+    defer span.End()
+    span.SetAttributes(attribute.String("order_id", orderID))
+
+    // ...
+}
+```
+
+Make sure to pass the `ctx` returned by `tracer.Start()` to any child operations to maintain the span hierarchy.

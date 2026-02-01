@@ -1,44 +1,26 @@
 ---
-title: Python Serverless SDK reference
-sidebarTitle: Python
-description: The parameters of the Apitally Serverless SDK for Python.
+title: Configuration
+description: How to configure the Apitally Serverless SDK for Python.
 mode: wide
 ---
 
-import SetupGuidesPythonServerless from '/snippets/setup-guides-python-serverless.mdx';
+```python FastAPI {7-10}
+from fastapi import FastAPI
+from apitally_serverless.fastapi import ApitallyMiddleware
 
-<CardGroup cols={2}>
-  <Card
-    title="GitHub repository"
-    icon="github"
-    href="https://github.com/apitally/apitally-py-serverless"
-    target="_blank"
-  >
-    apitally/apitally-py-serverless
-  </Card>
-  <Card
-    title="PyPI package"
-    icon="python"
-    href="https://pypi.org/project/apitally-serverless/"
-    target="_blank"
-  >
-    apitally-serverless
-  </Card>
-</CardGroup>
-
-## Installation
-
-```shell
-uv add apitally-serverless
+app = FastAPI()
+app.add_middleware(
+    ApitallyMiddleware,
+    log_request_headers=True,
+    log_request_body=True,
+    log_response_body=True,
+    # other parameters ...
+)
 ```
-
-## Supported frameworks
-
-<SetupGuidesPythonServerless />
 
 ## Parameters
 
-The following parameters apply for all integrations.
+The following configuration parameters are available.
 
 | Parameter | Description | Type | Default |
 | :-------- | :---------- | :--- | :------ |

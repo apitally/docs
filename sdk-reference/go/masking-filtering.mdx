@@ -1,0 +1,393 @@
+---
+title: Masking and filtering
+sidebarTitle: Masking & filtering
+description: Learn how to mask sensitive data and exclude requests from logging with the Apitally SDK for Go.
+---
+
+import DefaultMaskingAndExclusion from '/snippets/default-masking-and-exclusion.mdx';
+
+When request logging is enabled, the Apitally SDK captures details about each request and response handled by your application. To protect sensitive data and reduce noise, the SDK provides mechanisms for masking data and filtering out requests you don't want to log.
+
+
+## Default masking and exclusion
+
+<DefaultMaskingAndExclusion />
+
+## Mask sensitive data
+
+You can extend the default masking rules by providing additional regular expressions via the `MaskQueryParams`, `MaskHeaders`, and `MaskBodyFields` fields. Patterns match anywhere within the name. Use `^` and `$` anchors for exact matches, and the `(?i)` flag for case-insensitive matching.
+
+For more control over request and response body masking, you can provide callback functions via the `MaskRequestBodyCallback` and `MaskResponseBodyCallback` fields. The functions receive the captured request and response data as arguments (see [callback arguments](#callback-arguments) below) and should return the masked body as `[]byte`, or `nil` to mask the entire body.
+
+<CodeGroup>
+  ```go Chi example {19-34}
+  package main
+
+  import (
+      "regexp"
+
+      apitally "github.com/apitally/apitally-go/chi"
+      "github.com/go-chi/chi/v5"
+  )
+
+  func main() {
+      r := chi.NewRouter()
+
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      config.RequestLogging.Enabled = true
+      config.RequestLogging.LogRequestHeaders = true
+      config.RequestLogging.LogRequestBody = true
+      config.RequestLogging.LogResponseBody = true
+      // Mask specific query parameters, headers and body fields
+      config.RequestLogging.MaskQueryParams = []*regexp.Regexp{
+          regexp.MustCompile(`(?i)^card_number$`),
+          regexp.MustCompile(`(?i)^account_id$`),
+      }
+      config.RequestLogging.MaskHeaders = []*regexp.Regexp{
+          regexp.MustCompile(`(?i)^X-Custom-Key$`),
+          regexp.MustCompile(`(?i)^X-Internal-`),
+      }
+      config.RequestLogging.MaskBodyFields = []*regexp.Regexp{
+          regexp.MustCompile(`(?i)^credit_card$`),
+          regexp.MustCompile(`(?i)social_security`),
+      }
+      // Mask request and response body using custom logic (see examples below)
+      config.RequestLogging.MaskRequestBodyCallback = maskRequestBody
+      config.RequestLogging.MaskResponseBodyCallback = maskResponseBody
+
+      r.Use(apitally.Middleware(r, config))
+  }
+  ```
+
+  ```go Echo example {19-34}
+  package main
+
+  import (
+      "regexp"
+
+      apitally "github.com/apitally/apitally-go/echo"
+      "github.com/labstack/echo/v4"
+  )
+
+  func main() {
+      e := echo.New()
+
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      config.RequestLogging.Enabled = true
+      config.RequestLogging.LogRequestHeaders = true
+      config.RequestLogging.LogRequestBody = true
+      config.RequestLogging.LogResponseBody = true
+      // Mask specific query parameters, headers and body fields
+      config.RequestLogging.MaskQueryParams = []*regexp.Regexp{
+          regexp.MustCompile(`(?i)^card_number$`),
+          regexp.MustCompile(`(?i)^account_id$`),
+      }
+      config.RequestLogging.MaskHeaders = []*regexp.Regexp{
+          regexp.MustCompile(`(?i)^X-Custom-Key$`),
+          regexp.MustCompile(`(?i)^X-Internal-`),
+      }
+      config.RequestLogging.MaskBodyFields = []*regexp.Regexp{
+          regexp.MustCompile(`(?i)^credit_card$`),
+          regexp.MustCompile(`(?i)social_security`),
+      }
+      // Mask request and response body using custom logic (see examples below)
+      config.RequestLogging.MaskRequestBodyCallback = maskRequestBody
+      config.RequestLogging.MaskResponseBodyCallback = maskResponseBody
+
+      e.Use(apitally.Middleware(e, config))
+  }
+  ```
+
+  ```go Fiber example {19-34}
+  package main
+
+  import (
+      "regexp"
+
+      apitally "github.com/apitally/apitally-go/fiber"
+      "github.com/gofiber/fiber/v2"
+  )
+
+  func main() {
+      app := fiber.New()
+
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      config.RequestLogging.Enabled = true
+      config.RequestLogging.LogRequestHeaders = true
+      config.RequestLogging.LogRequestBody = true
+      config.RequestLogging.LogResponseBody = true
+      // Mask specific query parameters, headers and body fields
+      config.RequestLogging.MaskQueryParams = []*regexp.Regexp{
+          regexp.MustCompile(`(?i)^card_number$`),
+          regexp.MustCompile(`(?i)^account_id$`),
+      }
+      config.RequestLogging.MaskHeaders = []*regexp.Regexp{
+          regexp.MustCompile(`(?i)^X-Custom-Key$`),
+          regexp.MustCompile(`(?i)^X-Internal-`),
+      }
+      config.RequestLogging.MaskBodyFields = []*regexp.Regexp{
+          regexp.MustCompile(`(?i)^credit_card$`),
+          regexp.MustCompile(`(?i)social_security`),
+      }
+      // Mask request and response body using custom logic (see examples below)
+      config.RequestLogging.MaskRequestBodyCallback = maskRequestBody
+      config.RequestLogging.MaskResponseBodyCallback = maskResponseBody
+
+      app.Use(apitally.Middleware(app, config))
+  }
+  ```
+
+  ```go Gin example {19-34}
+  package main
+
+  import (
+      "regexp"
+
+      apitally "github.com/apitally/apitally-go/gin"
+      "github.com/gin-gonic/gin"
+  )
+
+  func main() {
+      r := gin.Default()
+
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      config.RequestLogging.Enabled = true
+      config.RequestLogging.LogRequestHeaders = true
+      config.RequestLogging.LogRequestBody = true
+      config.RequestLogging.LogResponseBody = true
+      // Mask specific query parameters, headers and body fields
+      config.RequestLogging.MaskQueryParams = []*regexp.Regexp{
+          regexp.MustCompile(`(?i)^card_number$`),
+          regexp.MustCompile(`(?i)^account_id$`),
+      }
+      config.RequestLogging.MaskHeaders = []*regexp.Regexp{
+          regexp.MustCompile(`(?i)^X-Custom-Key$`),
+          regexp.MustCompile(`(?i)^X-Internal-`),
+      }
+      config.RequestLogging.MaskBodyFields = []*regexp.Regexp{
+          regexp.MustCompile(`(?i)^credit_card$`),
+          regexp.MustCompile(`(?i)social_security`),
+      }
+      // Mask request and response body using custom logic (see examples below)
+      config.RequestLogging.MaskRequestBodyCallback = maskRequestBody
+      config.RequestLogging.MaskResponseBodyCallback = maskResponseBody
+
+      r.Use(apitally.Middleware(r, config))
+  }
+  ```
+</CodeGroup>
+
+```go Callback function examples
+import (
+    "encoding/json"
+    "strings"
+
+    apitally "github.com/apitally/apitally-go/chi"
+)
+
+func maskRequestBody(request *apitally.Request) []byte {
+    // Mask entire request body for admin endpoints
+    if strings.HasPrefix(request.Path, "/admin/") {
+        return nil
+    }
+    // Otherwise, return the original request body
+    return request.Body
+}
+
+func maskResponseBody(request *apitally.Request, response *apitally.Response) []byte {
+    // Mask entire response body for admin endpoints
+    if strings.HasPrefix(request.Path, "/admin/") {
+        return nil
+    }
+    // Mask specific fields in user profile responses
+    if strings.HasPrefix(request.Path, "/users/") && response.Body != nil {
+        var data map[string]any
+        if err := json.Unmarshal(response.Body, &data); err == nil {
+            if _, ok := data["email"]; ok {
+                data["email"] = "******"
+            }
+            if _, ok := data["phone"]; ok {
+                data["phone"] = "******"
+            }
+            if maskedBody, err := json.Marshal(data); err == nil {
+                return maskedBody
+            }
+        }
+    }
+    // Otherwise, return the original response body
+    return response.Body
+}
+```
+
+<Note>
+  Callbacks are applied before pattern-based field masking. The returned body is still masked using the default and custom `MaskBodyFields` patterns.
+</Note>
+
+## Exclude requests
+
+You can exclude requests from logging using path patterns (regular expressions) via the `ExcludePaths` field. Like the masking patterns, these match anywhere within the request path. Use `^` and `$` anchors for exact matches, and the `(?i)` flag for case-insensitive matching.
+
+Alternatively, you can provide a callback function with custom exclusion logic via the `ExcludeCallback` field. The function receives the captured request and response data as arguments (see [callback arguments](#callback-arguments) below) and should return `true` to exclude the request from logging, or `false` to include it.
+
+<CodeGroup>
+  ```go Chi example {16-22}
+  package main
+
+  import (
+      "regexp"
+
+      apitally "github.com/apitally/apitally-go/chi"
+      "github.com/go-chi/chi/v5"
+  )
+
+  func main() {
+      r := chi.NewRouter()
+
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      config.RequestLogging.Enabled = true
+      // Exclude paths matching certain patterns
+      config.RequestLogging.ExcludePaths = []*regexp.Regexp{
+          regexp.MustCompile(`(?i)/admin/`),
+          regexp.MustCompile(`(?i)/internal/`),
+      }
+      // Exclude requests using custom logic (see example below)
+      config.RequestLogging.ExcludeCallback = excludeRequest
+
+      r.Use(apitally.Middleware(r, config))
+  }
+  ```
+
+  ```go Echo example {16-22}
+  package main
+
+  import (
+      "regexp"
+
+      apitally "github.com/apitally/apitally-go/echo"
+      "github.com/labstack/echo/v4"
+  )
+
+  func main() {
+      e := echo.New()
+
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      config.RequestLogging.Enabled = true
+      // Exclude paths matching certain patterns
+      config.RequestLogging.ExcludePaths = []*regexp.Regexp{
+          regexp.MustCompile(`(?i)/admin/`),
+          regexp.MustCompile(`(?i)/internal/`),
+      }
+      // Exclude requests using custom logic (see example below)
+      config.RequestLogging.ExcludeCallback = excludeRequest
+
+      e.Use(apitally.Middleware(e, config))
+  }
+  ```
+
+  ```go Fiber example {16-22}
+  package main
+
+  import (
+      "regexp"
+
+      apitally "github.com/apitally/apitally-go/fiber"
+      "github.com/gofiber/fiber/v2"
+  )
+
+  func main() {
+      app := fiber.New()
+
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      config.RequestLogging.Enabled = true
+      // Exclude paths matching certain patterns
+      config.RequestLogging.ExcludePaths = []*regexp.Regexp{
+          regexp.MustCompile(`(?i)/admin/`),
+          regexp.MustCompile(`(?i)/internal/`),
+      }
+      // Exclude requests using custom logic (see example below)
+      config.RequestLogging.ExcludeCallback = excludeRequest
+
+      app.Use(apitally.Middleware(app, config))
+  }
+  ```
+
+  ```go Gin example {16-22}
+  package main
+
+  import (
+      "regexp"
+
+      apitally "github.com/apitally/apitally-go/gin"
+      "github.com/gin-gonic/gin"
+  )
+
+  func main() {
+      r := gin.Default()
+
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      config.RequestLogging.Enabled = true
+      // Exclude paths matching certain patterns
+      config.RequestLogging.ExcludePaths = []*regexp.Regexp{
+          regexp.MustCompile(`(?i)/admin/`),
+          regexp.MustCompile(`(?i)/internal/`),
+      }
+      // Exclude requests using custom logic (see example below)
+      config.RequestLogging.ExcludeCallback = excludeRequest
+
+      r.Use(apitally.Middleware(r, config))
+  }
+  ```
+</CodeGroup>
+
+```go Callback function example
+import apitally "github.com/apitally/apitally-go/chi"
+
+func excludeRequest(request *apitally.Request, response *apitally.Response) bool {
+    // Exclude requests from a specific consumer
+    if request.Consumer == "internal-service" {
+        return true
+    }
+    // Exclude successful requests (only log failures)
+    if response.StatusCode < 400 {
+        return true
+    }
+    return false
+}
+```
+
+<Note>
+  Excluded requests won't be logged, but are still counted in metrics. To exclude endpoints from metrics, you can mark them as excluded in the [dashboard](/features/traffic-dashboard#exclude-endpoints).
+</Note>
+
+## Callback arguments
+
+The `Request` struct passed to callback functions has the following fields:
+
+| Field | Description | Type |
+| :---- | :---------- | :--- |
+| `Timestamp` | Unix timestamp of the request. | `float64` |
+| `Method` | HTTP method of the request. | `string` |
+| `Path` | Path of the matched endpoint, if applicable. | `string` |
+| `URL` | Full URL of the request. | `string` |
+| `Headers` | Array of key-value pairs representing the request headers. | `[][2]string` |
+| `Size` | Size of the request body in bytes. | `int64` |
+| `Consumer` | Identifier of the consumer making the request. | `string` |
+| `Body` | Raw request body. | `[]byte` |
+
+The `Response` struct passed to `MaskResponseBodyCallback` and `ExcludeCallback` has the following fields:
+
+| Field | Description | Type |
+| :---- | :---------- | :--- |
+| `StatusCode` | HTTP status code of the response. | `int` |
+| `ResponseTime` | Time taken to respond to the request in seconds. | `float64` |
+| `Headers` | Array of key-value pairs representing the response headers. | `[][2]string` |
+| `Size` | Size of the response body in bytes. | `int64` |
+| `Body` | Raw response body. | `[]byte` |
