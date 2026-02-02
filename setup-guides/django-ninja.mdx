@@ -11,6 +11,10 @@ import AddMiddlewarePythonSnippet from '/snippets/add-middleware-python.mdx';
 import ConfigureDjangoMiddlewareSnippet from '/snippets/configure-django-middleware.mdx';
 import GunicornUWSGIWarning from '/snippets/gunicorn-uwsgi-warning.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
+import AddMiddlewareCheck from '/snippets/add-middleware-check.mdx';
+import IdentifyConsumersSnippet from '/snippets/identify-consumers.mdx';
+import IdentifyConsumersCheck from '/snippets/identify-consumers-check.mdx';
+import ConfigureRequestLoggingCheck from '/snippets/configure-request-logging-check.mdx';
 
 This page guides you through the steps of configuring your [Django Ninja](https://django-ninja.dev) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
 
@@ -60,11 +64,11 @@ APITALLY_MIDDLEWARE = {
   <GunicornUWSGIWarning framework="Django" />
 </div>
 
-<Snippet file="add-middleware-check.mdx" />
+<AddMiddlewareCheck />
 
 ## Identify consumers
 
-<Snippet file="identify-consumers.mdx" />
+<IdentifyConsumersSnippet />
 
 To associate requests with consumers, provide a callback function in the middleware settings that takes a [`HttpRequest`](https://docs.djangoproject.com/en/4.2/ref/request-response/#httprequest-objects) object as an argument and returns a consumer identifier, an `ApitallyConsumer` object or `None`.
 
@@ -101,7 +105,7 @@ APITALLY_MIDDLEWARE = {
 ```
 </CodeGroup>
 
-<Snippet file="identify-consumers-check.mdx" />
+<IdentifyConsumersCheck />
 
 ## Configure request logging
 
@@ -153,7 +157,7 @@ APITALLY_MIDDLEWARE = {
 ```
 </CodeGroup>
 
-<Snippet file="configure-request-logging-check.mdx" />
+<ConfigureRequestLoggingCheck />
 
 ## Enable tracing
 

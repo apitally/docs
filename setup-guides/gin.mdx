@@ -8,6 +8,11 @@ import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
 import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
+import MiddlewareFirstNote from '/snippets/middleware-first-note.mdx';
+import AddMiddlewareCheck from '/snippets/add-middleware-check.mdx';
+import IdentifyConsumersSnippet from '/snippets/identify-consumers.mdx';
+import IdentifyConsumersCheck from '/snippets/identify-consumers-check.mdx';
+import ConfigureRequestLoggingCheck from '/snippets/configure-request-logging-check.mdx';
 
 This page guides you through the steps of configuring your [Gin](https://gin-gonic.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
 
@@ -53,14 +58,14 @@ func main() {
 ```
 
 <div style={{ marginTop: "-0.5rem" }}>
-  <Snippet file="middleware-first-note.mdx" />
+  <MiddlewareFirstNote />
 </div>
 
-<Snippet file="add-middleware-check.mdx" />
+<AddMiddlewareCheck />
 
 ## Identify consumers
 
-<Snippet file="identify-consumers.mdx" />
+<IdentifyConsumersSnippet />
 
 To associate requests with consumers, use the `SetConsumerIdentifier` or `SetConsumer` function, for example in a middleware.
 
@@ -99,7 +104,7 @@ func authMiddleware() gin.HandlerFunc {
 ```
 </CodeGroup>
 
-<Snippet file="identify-consumers-check.mdx" />
+<IdentifyConsumersCheck />
 
 ## Capture validation errors
 
@@ -229,7 +234,7 @@ func main() {
 ```
 </CodeGroup>
 
-<Snippet file="configure-request-logging-check.mdx" />
+<ConfigureRequestLoggingCheck />
 
 ## Enable tracing
 

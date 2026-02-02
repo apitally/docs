@@ -10,6 +10,11 @@ import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import AddMiddlewarePythonSnippet from '/snippets/add-middleware-python.mdx';
 import GunicornUWSGIWarning from '/snippets/gunicorn-uwsgi-warning.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
+import MiddlewareLastNote from '/snippets/middleware-last-note.mdx';
+import AddMiddlewareCheck from '/snippets/add-middleware-check.mdx';
+import IdentifyConsumersSnippet from '/snippets/identify-consumers.mdx';
+import IdentifyConsumersCheck from '/snippets/identify-consumers-check.mdx';
+import ConfigureRequestLoggingCheck from '/snippets/configure-request-logging-check.mdx';
 
 This page guides you through the steps of configuring your [Flask](https://flask.palletsprojects.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
 
@@ -57,16 +62,16 @@ app.wsgi_app = ApitallyMiddleware(
 ```
 
 <div style={{ marginTop: "-0.5rem" }}>
-  <Snippet file="middleware-last-note.mdx" />
+  <MiddlewareLastNote />
 </div>
 
 <GunicornUWSGIWarning framework="Flask" />
 
-<Snippet file="add-middleware-check.mdx" />
+<AddMiddlewareCheck />
 
 ## Identify consumers
 
-<Snippet file="identify-consumers.mdx" />
+<IdentifyConsumersSnippet />
 
 Use the `set_consumer` function to associate requests with consumers, for example within a [`before_request`](https://flask.palletsprojects.com/en/2.2.x/api/#flask.Flask.before_request) function or directly in your endpoint functions.
 
@@ -101,7 +106,7 @@ def list_items():
 ```
 </CodeGroup>
 
-<Snippet file="identify-consumers-check.mdx" />
+<IdentifyConsumersCheck />
 
 ## Configure request logging
 
@@ -163,7 +168,7 @@ app.wsgi_app = ApitallyMiddleware(
 ```
 </CodeGroup>
 
-<Snippet file="configure-request-logging-check.mdx" />
+<ConfigureRequestLoggingCheck />
 
 ## Enable tracing
 
