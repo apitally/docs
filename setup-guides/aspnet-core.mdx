@@ -8,6 +8,11 @@ import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
 import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
+import MiddlewareFirstNote from '/snippets/middleware-first-note.mdx';
+import AddMiddlewareCheck from '/snippets/add-middleware-check.mdx';
+import IdentifyConsumersSnippet from '/snippets/identify-consumers.mdx';
+import IdentifyConsumersCheck from '/snippets/identify-consumers-check.mdx';
+import ConfigureRequestLoggingCheck from '/snippets/configure-request-logging-check.mdx';
 
 This page guides you through the steps of configuring your [ASP.NET Core](https://dotnet.microsoft.com/en-us/apps/aspnet) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
 
@@ -62,13 +67,13 @@ app.UseApitally();
 ```
 </CodeGroup>
 
-<Snippet file="middleware-first-note.mdx" />
+<MiddlewareFirstNote />
 
-<Snippet file="add-middleware-check.mdx" />
+<AddMiddlewareCheck />
 
 ## Identify consumers
 
-<Snippet file="identify-consumers.mdx" />
+<IdentifyConsumersSnippet />
 
 To associate requests with consumers, set the `ApitallyConsumer` item in the request context. You can do this in middleware, for example:
 
@@ -104,7 +109,7 @@ app.Use(async (context, next) =>
 ```
 </CodeGroup>
 
-<Snippet file="identify-consumers-check.mdx" />
+<IdentifyConsumersCheck />
 
 ## Configure request logging
 
@@ -183,7 +188,7 @@ builder.Services.PostConfigure<ApitallyOptions>(options =>
 ```
 </CodeGroup>
 
-<Snippet file="configure-request-logging-check.mdx" />
+<ConfigureRequestLoggingCheck />
 
 ## Enable tracing
 

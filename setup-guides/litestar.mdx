@@ -9,6 +9,10 @@ import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
 import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
 import AddMiddlewarePythonSnippet from '/snippets/add-middleware-python.mdx';
 import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
+import AddMiddlewareCheck from '/snippets/add-middleware-check.mdx';
+import IdentifyConsumersSnippet from '/snippets/identify-consumers.mdx';
+import IdentifyConsumersCheck from '/snippets/identify-consumers-check.mdx';
+import ConfigureRequestLoggingCheck from '/snippets/configure-request-logging-check.mdx';
 
 This page guides you through the steps of configuring your [Litestar](https://litestar.dev/) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
 
@@ -55,12 +59,12 @@ app = Litestar(route_handlers=[...], plugins=[apitally_plugin])
 ```
 
 <div style={{ marginTop: "-0.5rem" }}>
-  <Snippet file="add-middleware-check.mdx" />
+  <AddMiddlewareCheck />
 </div>
 
 ## Identify consumers
 
-<Snippet file="identify-consumers.mdx" />
+<IdentifyConsumersSnippet />
 
 Use the `set_consumer` function to associate requests with consumers, for example in a `before_request` life cycle hook or directly in your route handler functions.
 
@@ -109,7 +113,7 @@ apitally_plugin = ApitallyPlugin(
 ```
 </CodeGroup>
 
-<Snippet file="identify-consumers-check.mdx" />
+<IdentifyConsumersCheck />
 
 ## Configure request logging
 
@@ -169,7 +173,7 @@ app = Litestar(route_handlers=[...], plugins=[apitally_plugin])
 ```
 </CodeGroup>
 
-<Snippet file="configure-request-logging-check.mdx" />
+<ConfigureRequestLoggingCheck />
 
 ## Enable tracing
 
