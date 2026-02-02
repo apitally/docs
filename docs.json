@@ -46,92 +46,97 @@
             "pages": ["introduction", "how-it-works", "data-privacy", "support"]
           },
           {
-            "group": "Features",
-            "icon": "list-check",
+            "group": "API metrics",
+            "icon": "chart-line",
             "pages": [
-              {
-                "group": "API metrics",
-                "pages": [
-                  "features/apps-overview",
-                  "features/traffic-dashboard",
-                  "features/errors-dashboard",
-                  "features/performance-dashboard",
-                  "features/consumer-insights",
-                  "features/endpoint-insights",
-                  "features/resources-dashboard"
-                ]
-              },
-              {
-                "group": "API logs & traces",
-                "pages": [
-                  "features/request-logs",
-                  "features/application-logs",
-                  "features/traces"
-                ]
-              },
-              {
-                "group": "API monitoring",
-                "pages": [
-                  "features/uptime-monitoring",
-                  "features/custom-alerts"
-                ]
-              }
+              "features/apps-overview",
+              "features/traffic-dashboard",
+              "features/errors-dashboard",
+              "features/performance-dashboard",
+              "features/consumer-insights",
+              "features/endpoint-insights",
+              "features/resources-dashboard"
             ]
           },
           {
+            "group": "API logs & traces",
+            "icon": "list",
+            "pages": [
+              "features/request-logs",
+              "features/application-logs",
+              "features/traces"
+            ]
+          },
+          {
+            "group": "API monitoring",
+            "icon": "bell",
+            "pages": ["features/uptime-monitoring", "features/custom-alerts"]
+          }
+        ]
+      },
+      {
+        "anchor": "Setup guides",
+        "icon": "rocket",
+        "groups": [
+          {
             "group": "Setup guides",
             "icon": "rocket",
+            "pages": ["setup-guides"]
+          },
+          {
+            "group": "Python",
+            "icon": "python",
             "pages": [
-              {
-                "group": "Python",
-                "pages": [
-                  "setup-guides/blacksheep",
-                  "setup-guides/django-ninja",
-                  "setup-guides/django-rest-framework",
-                  "setup-guides/fastapi",
-                  "setup-guides/flask",
-                  "setup-guides/litestar",
-                  "setup-guides/starlette"
-                ]
-              },
-              {
-                "group": "JavaScript",
-                "pages": [
-                  "setup-guides/adonisjs",
-                  "setup-guides/elysia",
-                  "setup-guides/express",
-                  "setup-guides/fastify",
-                  "setup-guides/h3",
-                  "setup-guides/hapi",
-                  "setup-guides/hono",
-                  "setup-guides/koa",
-                  "setup-guides/nestjs"
-                ]
-              },
-              {
-                "group": "Go",
-                "pages": [
-                  "setup-guides/chi",
-                  "setup-guides/echo",
-                  "setup-guides/fiber",
-                  "setup-guides/gin"
-                ]
-              },
-              {
-                "group": "Java",
-                "pages": ["setup-guides/spring-boot"]
-              },
-              {
-                "group": ".NET",
-                "pages": ["setup-guides/aspnet-core"]
-              },
-              {
-                "group": "Cloudflare Workers",
-                "pages": [
-                  "setup-guides/fastapi-cloudflare-workers",
-                  "setup-guides/hono-cloudflare-workers"
-                ]
-              }
+              "setup-guides/blacksheep",
+              "setup-guides/django-ninja",
+              "setup-guides/django-rest-framework",
+              "setup-guides/fastapi",
+              "setup-guides/flask",
+              "setup-guides/litestar",
+              "setup-guides/starlette"
+            ]
+          },
+          {
+            "group": "JavaScript",
+            "icon": "node-js",
+            "pages": [
+              "setup-guides/adonisjs",
+              "setup-guides/elysia",
+              "setup-guides/express",
+              "setup-guides/fastify",
+              "setup-guides/h3",
+              "setup-guides/hapi",
+              "setup-guides/hono",
+              "setup-guides/koa",
+              "setup-guides/nestjs"
+            ]
+          },
+          {
+            "group": "Go",
+            "icon": "golang",
+            "pages": [
+              "setup-guides/chi",
+              "setup-guides/echo",
+              "setup-guides/fiber",
+              "setup-guides/gin"
+            ]
+          },
+          {
+            "group": "Java",
+            "icon": "java",
+            "pages": ["setup-guides/spring-boot"]
+          },
+          {
+            "group": ".NET",
+            "icon": "microsoft",
+            "pages": ["setup-guides/aspnet-core"]
+          },
+          {
+            "group": "Cloudflare Workers",
+            "icon": "cloudflare",
+            "pages": [
+              "setup-guides/fastapi-cloudflare-workers",
+              "setup-guides/hono-cloudflare-workers"
             ]
           }
         ]

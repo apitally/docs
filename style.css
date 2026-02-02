@@ -1,0 +1,18 @@
+html {
+  scrollbar-gutter: stable;
+}
+
+#sidebar {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+}
+
+html,
+#sidebar {
+  scrollbar-color: #e1e2e2 #ffffff00;
+}
+
+html.dark,
+html.dark #sidebar {
+  scrollbar-color: #252b2b #0e151500;
+}
