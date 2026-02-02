@@ -1,9 +1,11 @@
 ---
-title: "SDK reference"
-description: "Select your language from the options below."
+title: "Overview"
+description: "Install and configure the Apitally SDK for your framework."
 ---
 
 ## Standard SDKs
+
+For apps with long-running processes. These SDKs include a client that sends data to Apitally in the background.
 
 <CardGroup cols={3}>
   <Card
@@ -34,6 +36,8 @@ description: "Select your language from the options below."
 </CardGroup>
 
 ## Serverless SDKs
+
+For apps running on Cloudflare Workers. These SDKs rely on [Logpush](https://developers.cloudflare.com/workers/observability/logs/logpush/) to send data to Apitally.
 
 <CardGroup cols={3}>
   <Card

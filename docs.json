@@ -18,6 +18,9 @@
       "dark": "#0e1515"
     }
   },
+  "interaction": {
+    "drilldown": false
+  },
   "navbar": {
     "links": [
       {
@@ -138,6 +141,11 @@
         "icon": "box-isometric",
         "groups": [
           {
+            "group": "SDK reference",
+            "icon": "book",
+            "pages": ["sdk-reference"]
+          },
+          {
             "group": "Standard SDKs",
             "icon": "box-isometric",
             "pages": [
@@ -217,7 +225,24 @@
           "source": "https://api.apitally.io/openapi.json",
           "directory": "api-reference"
         },
-        "icon": "brackets-curly"
+        "icon": "brackets-curly",
+        "groups": [
+          {
+            "group": "API reference",
+            "icon": "book",
+            "pages": ["api-reference"]
+          },
+          {
+            "group": "Endpoints",
+            "icon": "brackets-curly",
+            "pages": [
+              "GET /v1/apps",
+              "GET /v1/apps/{app_id}/consumers",
+              "GET /v1/apps/{app_id}/request-logs",
+              "GET /v1/apps/{app_id}/traffic"
+            ]
+          }
+        ]
       },
       {
         "anchor": "Website",
