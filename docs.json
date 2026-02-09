@@ -43,34 +43,43 @@
           {
             "group": "Overview",
             "icon": "map",
-            "pages": ["introduction", "how-it-works", "data-privacy", "support"]
+            "pages": [
+              "introduction",
+              "how-it-works",
+              "data-privacy",
+              "usage-limits",
+              "support"
+            ]
           },
           {
             "group": "API metrics",
             "icon": "chart-line",
             "pages": [
-              "features/apps-overview",
-              "features/traffic-dashboard",
-              "features/errors-dashboard",
-              "features/performance-dashboard",
-              "features/consumer-insights",
-              "features/endpoint-insights",
-              "features/resources-dashboard"
+              "api-metrics/apps-overview",
+              "api-metrics/traffic-dashboard",
+              "api-metrics/errors-dashboard",
+              "api-metrics/performance-dashboard",
+              "api-metrics/consumer-insights",
+              "api-metrics/endpoint-insights",
+              "api-metrics/resources-dashboard"
             ]
           },
           {
             "group": "API logs & traces",
             "icon": "list",
             "pages": [
-              "features/request-logs",
-              "features/application-logs",
-              "features/traces"
+              "api-logs-traces/request-logs",
+              "api-logs-traces/application-logs",
+              "api-logs-traces/traces"
             ]
           },
           {
             "group": "API monitoring",
             "icon": "bell",
-            "pages": ["features/uptime-monitoring", "features/custom-alerts"]
+            "pages": [
+              "api-monitoring/uptime-monitoring",
+              "api-monitoring/custom-alerts"
+            ]
           }
         ]
       },
@@ -279,24 +288,72 @@
       "destination": "/introduction"
     },
     {
+      "source": "/features/apps-overview",
+      "destination": "/api-metrics/apps-overview"
+    },
+    {
+      "source": "/features/traffic-dashboard",
+      "destination": "/api-metrics/traffic-dashboard"
+    },
+    {
+      "source": "/features/errors-dashboard",
+      "destination": "/api-metrics/errors-dashboard"
+    },
+    {
+      "source": "/features/performance-dashboard",
+      "destination": "/api-metrics/performance-dashboard"
+    },
+    {
+      "source": "/features/consumer-insights",
+      "destination": "/api-metrics/consumer-insights"
+    },
+    {
+      "source": "/features/endpoint-insights",
+      "destination": "/api-metrics/endpoint-insights"
+    },
+    {
+      "source": "/features/resources-dashboard",
+      "destination": "/api-metrics/resources-dashboard"
+    },
+    {
+      "source": "/features/request-logs",
+      "destination": "/api-logs-traces/request-logs"
+    },
+    {
+      "source": "/features/application-logs",
+      "destination": "/api-logs-traces/application-logs"
+    },
+    {
+      "source": "/features/traces",
+      "destination": "/api-logs-traces/traces"
+    },
+    {
+      "source": "/features/uptime-monitoring",
+      "destination": "/api-monitoring/uptime-monitoring"
+    },
+    {
+      "source": "/features/custom-alerts",
+      "destination": "/api-monitoring/custom-alerts"
+    },
+    {
       "source": "/features/api-monitoring",
-      "destination": "/features/traffic-dashboard"
+      "destination": "/api-metrics/traffic-dashboard"
     },
     {
       "source": "/features/api-traffic-monitoring",
-      "destination": "/features/traffic-dashboard"
+      "destination": "/api-metrics/traffic-dashboard"
     },
     {
       "source": "/features/api-metrics-insights",
-      "destination": "/features/traffic-dashboard"
+      "destination": "/api-metrics/traffic-dashboard"
     },
     {
       "source": "/features/request-log",
-      "destination": "/features/request-logs"
+      "destination": "/api-logs-traces/request-logs"
     },
     {
       "source": "/features/alerting",
-      "destination": "/features/custom-alerts"
+      "destination": "/api-monitoring/custom-alerts"
     },
     {
       "source": "/frameworks/blacksheep",

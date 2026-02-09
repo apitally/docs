@@ -1,0 +1,38 @@
+---
+title: "Usage limits"
+description: "Understand the limits, quotas, and usage-based billing in Apitally."
+---
+
+You can track your current usage against your plan's limits and quotas in the dashboard under *Settings > Usage*.
+
+## Limits
+
+Depending on your plan, there are hard limits on the number of apps and team members, as well as usage limits on app instances and API consumers.
+
+If you exceed a usage limit, your team will be notified and given a 7-day grace period. If usage remains above the limit after the grace period, Apitally will stop ingesting data for your apps until usage drops below the limit or you upgrade your plan. Your dashboard and historical data remain accessible.
+
+### App instances
+
+Each running process of your applications counts as one app instance.
+
+For example, consider an app with two environments (production and staging), each running two containers, with each container running two worker processes (e.g. via Gunicorn). This would result in 8 app instances in total.
+
+The *Apps* overview page shows the current number of active instances for each app. For a breakdown by environment, check the app details.
+
+### API consumers
+
+The API consumers limit is based on the number of unique consumers that have made requests to your API within a rolling 24-hour period. This limit only applies if your application provides a consumer identifier for each request. See the [setup guide](/setup-guides) for your framework to learn how.
+
+## Monthly quotas
+
+Monthly quotas apply to request logs, application logs and spans in traces. Quotas are based on calendar months and reset at the start of each month.
+
+If you exceed a monthly quota, Apitally stops ingesting new request logs, application logs or spans (depending on which quota was exceeded) until the start of the next month. Your API metrics are not affected.
+
+<Tip>You can exclude certain requests from logging using custom exclusion rules to reduce your usage and stay within quotas. Check out the [SDK reference](/sdk-reference) for details.</Tip>
+
+### Usage-based billing
+
+On the Starter and Premium plans, you can enable usage-based billing under *Settings > Billing* in the dashboard. With usage-based billing enabled, data ingestion continues beyond your monthly quotas, and you are charged for the additional requests, logs or spans.
+
+Usage-based billing is disabled by default.
