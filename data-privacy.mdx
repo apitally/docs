@@ -107,7 +107,7 @@ The following data is collected for each request handled by your application and
   <Accordion title="Validation error info">
     Details about validation errors leading to a `4xx` response. Includes error type, message and field name. Doesn't include the invalid value.
 
-    Only captured if a supported framework is used. See [here](/features/errors-dashboard#validation-errors) for details.
+    Only captured if a supported framework is used. See [here](/api-metrics/errors-dashboard#validation-errors) for details.
 
     Example:
 
@@ -347,7 +347,7 @@ The Apitally SDK automatically excludes requests to common static assets and hea
 You can add additional patterns for exclusion via the `exclude_paths` option. For more granular control you can also provide a callback function via `exclude_callbacks`.
 
 <Note>
-  These exclusions don't impact metrics. If you'd like to exclude certain endpoints from metrics, you can mark them as excluded in the dashboard. See [here](/features/traffic-dashboard#exclude-endpoints) for details.
+  These exclusions don't impact metrics. If you'd like to exclude certain endpoints from metrics, you can mark them as excluded in the dashboard. See [here](/api-metrics/traffic-dashboard#exclude-endpoints) for details.
 </Note>
 
 ## Data transit

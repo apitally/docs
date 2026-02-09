@@ -336,10 +336,6 @@
       "destination": "/api-monitoring/custom-alerts"
     },
     {
-      "source": "/features/api-monitoring",
-      "destination": "/api-metrics/traffic-dashboard"
-    },
-    {
       "source": "/features/api-traffic-monitoring",
       "destination": "/api-metrics/traffic-dashboard"
     },
