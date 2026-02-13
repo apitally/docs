@@ -8,6 +8,36 @@ description: View key API metrics for all your apps at a glance.
 
 When you open the Apitally dashboard, you first land on the *Apps* page.
 Here you see an overview of key API metrics for all your applications, including sparkline graphs that help you quickly identify unexpected spikes or drops.
-Clicking on a metric or graph takes you to the relevant dashboard with more details.
 
-You can also create, edit and delete apps on this screen.
+Clicking on a metric or graph takes you to the relevant dashboard with more details:
+
+<CardGroup cols={2}>
+  <Card
+    title="Requests"
+    icon="chart-simple"
+    href="/api-metrics/traffic-dashboard"
+  >
+    Traffic dashboard
+  </Card>
+  <Card
+    title="Error rate"
+    icon="bug"
+    href="/api-metrics/errors-dashboard"
+  >
+    Errors dashboard
+  </Card>
+  <Card
+    title="Apdex score"
+    icon="bolt"
+    href="/api-metrics/performance-dashboard"
+  >
+    Performance dashboard
+  </Card>
+  <Card
+    title="Consumers"
+    icon="fingerprint"
+    href="/api-metrics/consumer-insights"
+  >
+    Consumers dashboard
+  </Card>
+</CardGroup>
