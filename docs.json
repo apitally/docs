@@ -55,13 +55,13 @@
             "group": "API metrics",
             "icon": "chart-line",
             "pages": [
-              "api-metrics/apps-overview",
-              "api-metrics/traffic-dashboard",
-              "api-metrics/errors-dashboard",
-              "api-metrics/performance-dashboard",
-              "api-metrics/consumer-insights",
-              "api-metrics/endpoint-insights",
-              "api-metrics/resources-dashboard"
+              "api-metrics/overview",
+              "api-metrics/traffic",
+              "api-metrics/errors",
+              "api-metrics/performance",
+              "api-metrics/consumers",
+              "api-metrics/endpoints",
+              "api-metrics/resources"
             ]
           },
           {
@@ -77,8 +77,8 @@
             "group": "API monitoring",
             "icon": "bell",
             "pages": [
-              "api-monitoring/uptime-monitoring",
-              "api-monitoring/custom-alerts"
+              "api-monitoring/uptime",
+              "api-monitoring/alerts"
             ]
           }
         ]
@@ -288,32 +288,68 @@
       "destination": "/introduction"
     },
     {
+      "source": "/api-metrics/apps-overview",
+      "destination": "/api-metrics/overview"
+    },
+    {
+      "source": "/api-metrics/traffic-dashboard",
+      "destination": "/api-metrics/traffic"
+    },
+    {
+      "source": "/api-metrics/errors-dashboard",
+      "destination": "/api-metrics/errors"
+    },
+    {
+      "source": "/api-metrics/performance-dashboard",
+      "destination": "/api-metrics/performance"
+    },
+    {
+      "source": "/api-metrics/consumer-insights",
+      "destination": "/api-metrics/consumers"
+    },
+    {
+      "source": "/api-metrics/endpoint-insights",
+      "destination": "/api-metrics/endpoints"
+    },
+    {
+      "source": "/api-metrics/resources-dashboard",
+      "destination": "/api-metrics/resources"
+    },
+    {
+      "source": "/api-monitoring/uptime-monitoring",
+      "destination": "/api-monitoring/uptime"
+    },
+    {
+      "source": "/api-monitoring/custom-alerts",
+      "destination": "/api-monitoring/alerts"
+    },
+    {
       "source": "/features/apps-overview",
-      "destination": "/api-metrics/apps-overview"
+      "destination": "/api-metrics/overview"
     },
     {
       "source": "/features/traffic-dashboard",
-      "destination": "/api-metrics/traffic-dashboard"
+      "destination": "/api-metrics/traffic"
     },
     {
       "source": "/features/errors-dashboard",
-      "destination": "/api-metrics/errors-dashboard"
+      "destination": "/api-metrics/errors"
     },
     {
       "source": "/features/performance-dashboard",
-      "destination": "/api-metrics/performance-dashboard"
+      "destination": "/api-metrics/performance"
     },
     {
       "source": "/features/consumer-insights",
-      "destination": "/api-metrics/consumer-insights"
+      "destination": "/api-metrics/consumers"
     },
     {
       "source": "/features/endpoint-insights",
-      "destination": "/api-metrics/endpoint-insights"
+      "destination": "/api-metrics/endpoints"
     },
     {
       "source": "/features/resources-dashboard",
-      "destination": "/api-metrics/resources-dashboard"
+      "destination": "/api-metrics/resources"
     },
     {
       "source": "/features/request-logs",
@@ -329,19 +365,19 @@
     },
     {
       "source": "/features/uptime-monitoring",
-      "destination": "/api-monitoring/uptime-monitoring"
+      "destination": "/api-monitoring/uptime"
     },
     {
       "source": "/features/custom-alerts",
-      "destination": "/api-monitoring/custom-alerts"
+      "destination": "/api-monitoring/alerts"
     },
     {
       "source": "/features/api-traffic-monitoring",
-      "destination": "/api-metrics/traffic-dashboard"
+      "destination": "/api-metrics/traffic"
     },
     {
       "source": "/features/api-metrics-insights",
-      "destination": "/api-metrics/traffic-dashboard"
+      "destination": "/api-metrics/traffic"
     },
     {
       "source": "/features/request-log",
@@ -349,7 +385,7 @@
     },
     {
       "source": "/features/alerting",
-      "destination": "/api-monitoring/custom-alerts"
+      "destination": "/api-monitoring/alerts"
     },
     {
       "source": "/frameworks/blacksheep",
