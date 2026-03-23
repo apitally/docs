@@ -30,18 +30,45 @@ This page guides you through the steps of configuring your [Echo](https://echo.l
 
 Add the [Apitally SDK](/sdk-reference/go/overview) to the dependencies in your Echo project.
 
-```shell
-go get github.com/apitally/apitally-go/echo
+<CodeGroup>
+```shell v5
+go get github.com/apitally/apitally-go/echo-v5
 ```
+
+```shell v4
+go get github.com/apitally/apitally-go/echo-v4
+```
+</CodeGroup>
 
 Add the Apitally middleware to your Echo application and provide the `ClientId` for your app.
 You'll find the `ClientId` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
 
-```go
+<CodeGroup>
+```go v5
 package main
 
 import (
-    apitally "github.com/apitally/apitally-go/echo"
+    apitally "github.com/apitally/apitally-go/echo-v5"
+    "github.com/labstack/echo/v5"
+)
+
+func main() {
+    e := echo.New()
+
+    config := apitally.NewConfig("your-client-id")
+    config.Env = "dev" // or "prod" etc.
+
+    e.Use(apitally.Middleware(e, config))
+
+    // ... rest of your code ...
+}
+```
+
+```go v4
+package main
+
+import (
+    apitally "github.com/apitally/apitally-go/echo-v4"
     "github.com/labstack/echo/v4"
 )
 
@@ -56,6 +83,7 @@ func main() {
     // ... rest of your code ...
 }
 ```
+</CodeGroup>
 
 <div style={{ marginTop: "-0.5rem" }}>
   <MiddlewareFirstNote />
@@ -72,7 +100,7 @@ To associate requests with consumers, use the `SetConsumerIdentifier` or `SetCon
 <CodeGroup>
 ```go {8} Identifier only
 func authMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
-    return func(c echo.Context) error {
+    return func(c *echo.Context) error {
         // Your authentication logic here
         // ...
 
@@ -87,7 +115,7 @@ func authMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 
 ```go {7-11} With name and group
 func authMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
-    return func(c echo.Context) error {
+    return func(c *echo.Context) error {
         // Your authentication logic here
         // ...
 
@@ -115,8 +143,8 @@ This gives you visibility into the validation errors returned by your API endpoi
 package main
 
 import (
-    apitally "github.com/apitally/apitally-go/echo"
-    "github.com/labstack/echo/v4"
+    apitally "github.com/apitally/apitally-go/echo-v5"
+    "github.com/labstack/echo/v5"
     "github.com/go-playground/validator/v10"
 )
 
@@ -130,7 +158,7 @@ func main() {
 
     // ...
 
-    e.POST("/hello", func(c echo.Context) error {
+    e.POST("/hello", func(c *echo.Context) error {
         var req HelloRequest
         if err := c.Bind(&req); err != nil {
             return c.JSON(400, map[string]string{"error": err.Error()})
@@ -155,8 +183,8 @@ func main() {
 package main
 
 import (
-    apitally "github.com/apitally/apitally-go/echo"
-    "github.com/labstack/echo/v4"
+    apitally "github.com/apitally/apitally-go/echo-v5"
+    "github.com/labstack/echo/v5"
 )
 
 func main() {
@@ -184,8 +212,8 @@ import (
     "regexp"
     "strings"
 
-    apitally "github.com/apitally/apitally-go/echo"
-    "github.com/labstack/echo/v4"
+    apitally "github.com/apitally/apitally-go/echo-v5"
+    "github.com/labstack/echo/v5"
 )
 
 func main() {

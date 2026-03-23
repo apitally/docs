@@ -30,18 +30,45 @@ This page guides you through the steps of configuring your [Fiber](https://gofib
 
 Add the [Apitally SDK](/sdk-reference/go/overview) to the dependencies in your Fiber project.
 
-```shell
-go get github.com/apitally/apitally-go/fiber
+<CodeGroup>
+```shell v3
+go get github.com/apitally/apitally-go/fiber-v3
 ```
+
+```shell v2
+go get github.com/apitally/apitally-go/fiber-v2
+```
+</CodeGroup>
 
 Add the Apitally middleware to your Fiber application and provide the `ClientId` for your app.
 You'll find the `ClientId` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
 
-```go
+<CodeGroup>
+```go v3
 package main
 
 import (
-    apitally "github.com/apitally/apitally-go/fiber"
+    apitally "github.com/apitally/apitally-go/fiber-v3"
+    "github.com/gofiber/fiber/v3"
+)
+
+func main() {
+    app := fiber.New()
+
+    config := apitally.NewConfig("your-client-id")
+    config.Env = "dev" // or "prod" etc.
+
+    app.Use(apitally.Middleware(app, config))
+
+    // ... rest of your code ...
+}
+```
+
+```go v2
+package main
+
+import (
+    apitally "github.com/apitally/apitally-go/fiber-v2"
     "github.com/gofiber/fiber/v2"
 )
 
@@ -56,6 +83,7 @@ func main() {
     // ... rest of your code ...
 }
 ```
+</CodeGroup>
 
 <div style={{ marginTop: "-0.5rem" }}>
   <MiddlewareFirstNote />
@@ -71,7 +99,7 @@ To associate requests with consumers, use the `SetConsumerIdentifier` or `SetCon
 
 <CodeGroup>
 ```go {7} Identifier only
-func authMiddleware(c *fiber.Ctx) error {
+func authMiddleware(c fiber.Ctx) error {
     // Your authentication logic here
     // ...
 
@@ -84,7 +112,7 @@ func authMiddleware(c *fiber.Ctx) error {
 ```
 
 ```go {6-10} With name and group
-func authMiddleware(c *fiber.Ctx) error {
+func authMiddleware(c fiber.Ctx) error {
     // Your authentication logic here
     // ...
 
@@ -111,8 +139,8 @@ This gives you visibility into the validation errors returned by your API endpoi
 package main
 
 import (
-    apitally "github.com/apitally/apitally-go/fiber"
-    "github.com/gofiber/fiber/v2"
+    apitally "github.com/apitally/apitally-go/fiber-v3"
+    "github.com/gofiber/fiber/v3"
     "github.com/go-playground/validator/v10"
 )
 
@@ -124,9 +152,9 @@ func main() {
     app := fiber.New()
     validate := validator.New()
 
-    app.Post("/hello", func(c *fiber.Ctx) error {
+    app.Post("/hello", func(c fiber.Ctx) error {
         var req HelloRequest
-        if err := c.BodyParser(&req); err != nil {
+        if err := c.Bind().Body(&req); err != nil {
             return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
         }
         if err := validate.Struct(req); err != nil {
@@ -151,8 +179,8 @@ func main() {
 package main
 
 import (
-    apitally "github.com/apitally/apitally-go/fiber"
-    "github.com/gofiber/fiber/v2"
+    apitally "github.com/apitally/apitally-go/fiber-v3"
+    "github.com/gofiber/fiber/v3"
 )
 
 func main() {
@@ -180,8 +208,8 @@ import (
     "regexp"
     "strings"
 
-    apitally "github.com/apitally/apitally-go/fiber"
-    "github.com/gofiber/fiber/v2"
+    apitally "github.com/apitally/apitally-go/fiber-v3"
+    "github.com/gofiber/fiber/v3"
 )
 
 func main() {

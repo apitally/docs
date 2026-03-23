@@ -31,7 +31,7 @@ This page guides you through the steps of configuring your [Chi](https://go-chi.
 Add the [Apitally SDK](/sdk-reference/go/overview) to the dependencies in your Chi project.
 
 ```shell
-go get github.com/apitally/apitally-go/chi
+go get github.com/apitally/apitally-go/chi-v5
 ```
 
 Add the Apitally middleware to your Chi application and provide the `ClientId` for your app.
@@ -41,7 +41,7 @@ You'll find the `ClientId` on the _Setup instructions_ page for your app in the 
 package main
 
 import (
-    apitally "github.com/apitally/apitally-go/chi"
+    apitally "github.com/apitally/apitally-go/chi-v5"
     "github.com/go-chi/chi/v5"
 )
 
@@ -118,7 +118,7 @@ import (
     "encoding/json"
     "net/http"
 
-    apitally "github.com/apitally/apitally-go/chi"
+    apitally "github.com/apitally/apitally-go/chi-v5"
     "github.com/go-chi/chi/v5"
     "github.com/go-playground/validator/v10"
 )
@@ -160,7 +160,7 @@ func main() {
 package main
 
 import (
-    apitally "github.com/apitally/apitally-go/chi"
+    apitally "github.com/apitally/apitally-go/chi-v5"
     "github.com/go-chi/chi/v5"
 )
 
@@ -189,7 +189,7 @@ import (
     "regexp"
     "strings"
 
-    apitally "github.com/apitally/apitally-go/chi"
+    apitally "github.com/apitally/apitally-go/chi-v5"
     "github.com/go-chi/chi/v5"
 )
 
