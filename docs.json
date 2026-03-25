@@ -76,10 +76,7 @@
           {
             "group": "API monitoring",
             "icon": "bell",
-            "pages": [
-              "api-monitoring/uptime",
-              "api-monitoring/alerts"
-            ]
+            "pages": ["api-monitoring/uptime", "api-monitoring/alerts"]
           }
         ]
       },
@@ -253,6 +250,7 @@
               "GET /v1/apps",
               "GET /v1/apps/{app_id}/consumers",
               "GET /v1/apps/{app_id}/request-logs",
+              "GET /v1/apps/{app_id}/request-logs/{request_uuid}",
               "GET /v1/apps/{app_id}/traffic"
             ]
           }
