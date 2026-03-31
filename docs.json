@@ -249,6 +249,7 @@
             "pages": [
               "GET /v1/apps",
               "GET /v1/apps/{app_id}/consumers",
+              "GET /v1/apps/{app_id}/endpoints",
               "GET /v1/apps/{app_id}/request-logs",
               "GET /v1/apps/{app_id}/request-logs/{request_uuid}",
               "GET /v1/apps/{app_id}/traffic"
