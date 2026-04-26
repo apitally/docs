@@ -77,6 +77,11 @@
             "group": "API monitoring",
             "icon": "bell",
             "pages": ["api-monitoring/uptime", "api-monitoring/alerts"]
+          },
+          {
+            "group": "For agents",
+            "icon": "robot",
+            "pages": ["agents/cli-and-skill"]
           }
         ]
       },

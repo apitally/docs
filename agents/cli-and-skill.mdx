@@ -1,0 +1,126 @@
+---
+title: Apitally CLI and skill for agents
+sidebarTitle: CLI & skill
+description: Give coding agents access to your API metrics and request logs for agent-driven investigations and analyses.
+---
+
+The Apitally CLI makes API metrics and request log data accessible to coding agents such as Claude Code, Cursor, and Codex.
+An accompanying skill teaches agents how to use the CLI effectively, so they can answer questions that go beyond what the pre-built dashboards cover.
+
+While primarily designed for agents, the CLI works equally well directly in your terminal or as part of scripts and automations.
+
+The CLI is a single Rust binary with a bundled [DuckDB](https://duckdb.org/) engine and no runtime dependencies.
+It's open-source and also published as an npm package, so you can run it with `npx` without prior installation.
+
+<CardGroup cols={2}>
+  <Card
+    title="GitHub repository"
+    icon="github"
+    href="https://github.com/apitally/cli"
+  />
+  <Card
+    title="npm package"
+    icon="npm"
+    href="https://www.npmjs.com/package/@apitally/cli"
+  />
+</CardGroup>
+
+## Capabilities
+
+- Retrieve API metrics with various aggregation options and filters
+- Retrieve request logs with filters and field selection, including headers and payloads
+- Fetch full details about specific API requests, including application logs and traces
+- Load data into a local DuckDB database and run arbitrary SQL queries against it
+- List apps, consumers, and endpoints in your team
+
+All commands output newline-delimited JSON to stdout by default.
+
+<Tip>
+  For example use cases, see the [release announcement](https://apitally.io/blog/apitally-cli-and-skill-for-agents).
+</Tip>
+
+## Agent skill
+
+The skill bundles instructions and reference material that allow agents to use the CLI efficiently, without digging through documentation or `--help` text on every invocation.
+It includes guidance on key concepts, an investigation workflow, a full command reference, and the schemas of the DuckDB tables the CLI writes to.
+
+It follows the open [Agent Skills](https://agents.md/) standard and works with Claude Code, Cursor, Codex, and other compatible agents.
+
+The skill lives alongside the CLI in the [GitHub repository](https://github.com/apitally/cli/tree/main/skills/apitally-cli).
+
+## Installation
+
+### For agents
+
+Install the `apitally-cli` skill using the [skills CLI](https://github.com/vercel-labs/skills):
+
+```bash
+npx skills add apitally/cli
+```
+
+Once installed, agents will pick up the skill automatically when you mention Apitally or ask it to investigate API metrics or request logs. Agents will invoke the CLI through `npx`, so it doesn't need to be installed separately.
+
+### For humans
+
+The CLI can be used via `npx`, no installation required:
+
+```bash
+npx @apitally/cli <command>
+```
+
+To use the `apitally` binary directly, install it with the standalone installer:
+
+```bash
+# macOS and Linux
+curl -fsSL https://apitally.io/cli/install.sh | sh
+```
+
+```bash
+# Windows
+powershell -ExecutionPolicy Bypass -c "irm https://apitally.io/cli/install.ps1 | iex"
+```
+
+You can also download the binary for your platform from the [latest release](https://github.com/apitally/cli/releases/latest) on GitHub.
+
+## Authentication
+
+The CLI uses the Apitally [API](/api-reference) under the hood and therefore requires a team-scoped API key.
+
+Authenticate using a browser-based flow that creates and saves an API key to `~/.apitally/auth.json`:
+
+```bash
+npx @apitally/cli auth
+```
+
+If you already have an API key, you can provide it directly:
+
+```bash
+npx @apitally/cli auth --api-key "your-api-key"
+```
+
+You can also set the API key via the `APITALLY_API_KEY` environment variable, or pass `--api-key` to any command.
+
+## Commands
+
+| Command           | Description                                                                                                       |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `auth`            | Configure API key                                                                                                 |
+| `whoami`          | Check authentication and show team info                                                                           |
+| `apps`            | List all apps in your team                                                                                        |
+| `consumers`       | List consumers for an app                                                                                         |
+| `endpoints`       | List endpoints for an app, with method and path filters                                                           |
+| `metrics`         | Fetch metrics for an app, with filters and different aggregation options                                          |
+| `request-logs`    | Fetch request log data, with filters and field selection                                                          |
+| `request-details` | Fetch full details for a specific request and response, including headers, payloads, application logs, and traces |
+| `sql`             | Run SQL queries against a local DuckDB database                                                                   |
+| `reset-db`        | Drop and recreate all tables in the local DuckDB database                                                         |
+
+Run `npx @apitally/cli --help` for detailed usage information, or refer to the [command reference](https://github.com/apitally/cli/blob/main/skills/apitally-cli/references/commands.md) in the skill.
+
+## DuckDB database
+
+Most commands accept a `--db` flag. When set, data is written to a local DuckDB database instead of being printed as NDJSON to stdout. The database can then be queried with the `sql` command.
+
+The database defaults to `~/.apitally/data.duckdb` if no other path is provided (e.g. `--db ./my-investigation.duckdb`). It is created automatically on first use, and data is retained between sessions. When writing to tables, existing records are updated rather than duplicated.
+
+For the schemas of the tables the CLI writes to, see the [DuckDB table reference](https://github.com/apitally/cli/blob/main/skills/apitally-cli/references/duckdb_tables.md) in the skill.
