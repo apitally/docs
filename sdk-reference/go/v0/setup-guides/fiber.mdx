@@ -1,0 +1,270 @@
+---
+title: "Setup guide for Fiber"
+sidebarTitle: "Fiber"
+description: "Just a few simple steps to get started with Apitally."
+---
+
+import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
+import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
+import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
+import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
+import MiddlewareFirstNote from '/snippets/middleware-first-note.mdx';
+import AddMiddlewareCheck from '/snippets/add-middleware-check.mdx';
+import IdentifyConsumersSnippet from '/snippets/identify-consumers.mdx';
+import IdentifyConsumersCheck from '/snippets/identify-consumers-check.mdx';
+import ConfigureRequestLoggingCheck from '/snippets/configure-request-logging-check.mdx';
+
+This page guides you through the steps of configuring your [Fiber](https://gofiber.io) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
+
+<SetupGuideStartSnippet framework="Fiber" />
+
+## Create app
+
+<CreateAppSnippet1 framework="Fiber" />
+
+<img src="https://assets.apitally.io/docs/2025-12-08/create-app.webp" alt="Create app" className="rounded-xl" />
+
+<CreateAppSnippet2 />
+
+## Add middleware
+
+Add the [Apitally SDK](/sdk-reference/go/v0/overview) to the dependencies in your Fiber project.
+
+<CodeGroup>
+```shell v3
+go get github.com/apitally/apitally-go/fiber-v3
+```
+
+```shell v2
+go get github.com/apitally/apitally-go/fiber-v2
+```
+</CodeGroup>
+
+Add the Apitally middleware to your Fiber application and provide the `ClientId` for your app.
+You'll find the `ClientId` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
+
+<CodeGroup>
+```go v3
+package main
+
+import (
+    apitally "github.com/apitally/apitally-go/fiber-v3"
+    "github.com/gofiber/fiber/v3"
+)
+
+func main() {
+    app := fiber.New()
+
+    config := apitally.NewConfig("your-client-id")
+    config.Env = "dev" // or "prod" etc.
+
+    app.Use(apitally.Middleware(app, config))
+
+    // ... rest of your code ...
+}
+```
+
+```go v2
+package main
+
+import (
+    apitally "github.com/apitally/apitally-go/fiber-v2"
+    "github.com/gofiber/fiber/v2"
+)
+
+func main() {
+    app := fiber.New()
+
+    config := apitally.NewConfig("your-client-id")
+    config.Env = "dev" // or "prod" etc.
+
+    app.Use(apitally.Middleware(app, config))
+
+    // ... rest of your code ...
+}
+```
+</CodeGroup>
+
+<div style={{ marginTop: "-0.5rem" }}>
+  <MiddlewareFirstNote />
+</div>
+
+<AddMiddlewareCheck />
+
+## Identify consumers
+
+<IdentifyConsumersSnippet />
+
+To associate requests with consumers, use the `SetConsumerIdentifier` or `SetConsumer` function, for example in a middleware.
+
+<CodeGroup>
+```go {7} Identifier only
+func authMiddleware(c fiber.Ctx) error {
+    // Your authentication logic here
+    // ...
+
+    if user.IsAuthenticated() {
+        // Use the authenticated identity as consumer identifier
+        apitally.SetConsumerIdentifier(c, user.Identifier)
+    }
+    return c.Next()
+}
+```
+
+```go {6-10} With name and group
+func authMiddleware(c fiber.Ctx) error {
+    // Your authentication logic here
+    // ...
+
+    if user.IsAuthenticated() {
+        apitally.SetConsumer(c, apitally.Consumer{
+            Identifier: user.Email,
+            Name:       user.Name, // optional
+            Group:      user.Group, // optional
+        })
+    }
+    return c.Next()
+}
+```
+</CodeGroup>
+
+<IdentifyConsumersCheck />
+
+## Capture validation errors
+
+If you're using the `go-playground/validator/v10` package to validate incoming data, you can use the `CaptureValidationError` function to record validation errors.
+This gives you visibility into the validation errors returned by your API endpoints.
+
+```go {23}
+package main
+
+import (
+    apitally "github.com/apitally/apitally-go/fiber-v3"
+    "github.com/gofiber/fiber/v3"
+    "github.com/go-playground/validator/v10"
+)
+
+type HelloRequest struct {
+    Name string `json:"name" validate:"required"`
+}
+
+func main() {
+    app := fiber.New()
+    validate := validator.New()
+
+    app.Post("/hello", func(c fiber.Ctx) error {
+        var req HelloRequest
+        if err := c.Bind().Body(&req); err != nil {
+            return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+        }
+        if err := validate.Struct(req); err != nil {
+            apitally.CaptureValidationError(c, err)
+            return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+        }
+        return c.Status(fiber.StatusOK).JSON(fiber.Map{
+            "message": "Hello, " + req.Name + "!",
+        })
+    })
+
+    // ...
+}
+```
+
+## Configure request logging
+
+<RequestLoggingConfigSnippet language="go" />
+
+<CodeGroup>
+```go Basic example
+package main
+
+import (
+    apitally "github.com/apitally/apitally-go/fiber-v3"
+    "github.com/gofiber/fiber/v3"
+)
+
+func main() {
+    app := fiber.New()
+
+    config := apitally.NewConfig("your-client-id")
+    config.Env = "dev" // or "prod" etc.
+    config.RequestLogging.Enabled = true
+    config.RequestLogging.LogRequestHeaders = true
+    config.RequestLogging.LogRequestBody = true
+    config.RequestLogging.LogResponseBody = true
+    config.RequestLogging.CaptureLogs = true
+    config.RequestLogging.CaptureTraces = false // requires instrumentation
+
+    app.Use(apitally.Middleware(app, config))
+
+    // ... rest of your code ...
+}
+```
+
+```go Advanced example
+package main
+
+import (
+    "regexp"
+    "strings"
+
+    apitally "github.com/apitally/apitally-go/fiber-v3"
+    "github.com/gofiber/fiber/v3"
+)
+
+func main() {
+    app := fiber.New()
+
+    config := apitally.NewConfig("your-client-id")
+    config.Env = "dev" // or "prod" etc.
+    config.RequestLogging.Enabled = true
+    config.RequestLogging.LogQueryParams = true
+    config.RequestLogging.LogRequestHeaders = true
+    config.RequestLogging.LogRequestBody = true
+    config.RequestLogging.LogResponseHeaders = true
+    config.RequestLogging.LogResponseBody = true
+    config.RequestLogging.LogPanic = true
+    config.RequestLogging.CaptureLogs = true
+    config.RequestLogging.CaptureTraces = false // requires instrumentation
+    // Mask query parameters using regex
+    config.RequestLogging.MaskQueryParams = []*regexp.Regexp{regexp.MustCompile(`^card_number$`)}
+    // Mask headers using regex
+    config.RequestLogging.MaskHeaders = []*regexp.Regexp{regexp.MustCompile(`^X-Sensitive-Header$`)}
+    // Mask request/response body fields using regex
+    config.RequestLogging.MaskBodyFields = []*regexp.Regexp{regexp.MustCompile(`^sensitive_field$`)}
+    // Exclude paths from request logging using regex (common health check paths are excluded by default)
+    config.RequestLogging.ExcludePaths = []*regexp.Regexp{regexp.MustCompile(`/metrics$`)}
+    // Mask request/response body with custom logic via callbacks (e.g. for admin endpoints)
+    // The callback should return nil to mask the whole body, or return the (modified) raw body
+    config.RequestLogging.MaskRequestBodyCallback = func(request *apitally.Request) []byte {
+        if strings.HasPrefix(request.Path, "/admin/") {
+            return nil // Mask the whole body for admin endpoints
+        }
+        return request.Body
+    }
+    config.RequestLogging.MaskResponseBodyCallback = func(request *apitally.Request, response *apitally.Response) []byte {
+        if strings.HasPrefix(request.Path, "/admin/") {
+            return nil // Mask the whole body for admin endpoints
+        }
+        return response.Body
+    }
+    // Exclude requests from logging with custom logic via callback (e.g. exclude requests from a specific consumer)
+    // The callback should return true to exclude the request
+    config.RequestLogging.ExcludeCallback = func(request *apitally.Request, response *apitally.Response) bool {
+        return request.Consumer == "some-consumer"
+    }
+
+    app.Use(apitally.Middleware(app, config))
+
+    // ... rest of your code ...
+}
+```
+</CodeGroup>
+
+<ConfigureRequestLoggingCheck />
+
+## Enable tracing
+
+Tracing gives you a detailed breakdown of time spent during the handling of each request, showing the duration of database queries, HTTP calls, and other operations.
+
+To enable tracing, set `CaptureTraces` to `true` and instrument the libraries you want to trace with OpenTelemetry. See the [tracing guide](/sdk-reference/go/v0/tracing) for further instructions.

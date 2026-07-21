@@ -1,0 +1,123 @@
+---
+title: Configuration
+description: Configure the Apitally SDK for Go.
+mode: wide
+---
+
+You can configure Apitally using the `Config` struct passed to the `Middleware` function.
+
+<CodeGroup>
+  ```go Chi {10-14}
+  package main
+
+  import (
+      apitally "github.com/apitally/apitally-go/chi"
+      "github.com/go-chi/chi/v5"
+  )
+
+  func main() {
+      r := chi.NewRouter()
+
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      config.RequestLogging.Enabled = true
+      // other parameters ...
+
+      r.Use(apitally.Middleware(r, config))
+  }
+  ```
+
+  ```go Echo {10-14}
+  package main
+
+  import (
+      apitally "github.com/apitally/apitally-go/echo"
+      "github.com/labstack/echo/v4"
+  )
+
+  func main() {
+      e := echo.New()
+
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      config.RequestLogging.Enabled = true
+      // other parameters ...
+
+      e.Use(apitally.Middleware(e, config))
+  }
+  ```
+
+  ```go Fiber {10-14}
+  package main
+
+  import (
+      apitally "github.com/apitally/apitally-go/fiber"
+      "github.com/gofiber/fiber/v2"
+  )
+
+  func main() {
+      app := fiber.New()
+
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      config.RequestLogging.Enabled = true
+      // other parameters ...
+
+      app.Use(apitally.Middleware(app, config))
+  }
+  ```
+
+  ```go Gin {10-14}
+  package main
+
+  import (
+      apitally "github.com/apitally/apitally-go/gin"
+      "github.com/gin-gonic/gin"
+  )
+
+  func main() {
+      r := gin.Default()
+
+      config := apitally.NewConfig("your-client-id")
+      config.Env = "dev"
+      config.RequestLogging.Enabled = true
+      // other parameters ...
+
+      r.Use(apitally.Middleware(r, config))
+  }
+  ```
+</CodeGroup>
+
+See the [setup guides](/sdk-reference/setup-guides/overview#go) for more examples.
+
+## Parameters
+
+The following are the fields of the `Config` struct.
+
+| Parameter | Description | Type |
+| :-------- | :---------- | :--- |
+| `ClientId` | Client ID for your application. Find it on the _Setup instructions_ page for your app. | `string` |
+| `Env` | Name of the environment, e.g. `prod` or `dev`. The environment will be automatically created if it doesn't exist. | `string` |
+| `RequestLogging` | Configuration options for request logging. See table below. | `*RequestLoggingConfig` |
+| `AppVersion` | The current version of your application, e.g. `1.0.0`. | `string` |
+
+The `RequestLogging` field is a pointer to a `RequestLoggingConfig` struct with the following fields:
+
+| Parameter | Description | Type | Default |
+| :-------- | :---------- | :--- | :------ |
+| `Enabled` | Whether request logging is enabled. | `bool` | `false` |
+| `LogQueryParams` | Whether to include query parameters in the logs. If disabled, these will be stripped from the request URLs logged. | `bool` | `true` |
+| `LogRequestHeaders` | Whether to include request headers in the logs. Default masking for common sensitive headers (e.g. `Authorization`) applies. | `bool` | `false` |
+| `LogRequestBody` | Whether to include the request body in the logs. Only JSON and text are supported, up to 50 KB. | `bool` | `false` |
+| `LogResponseHeaders` | Whether to include response headers in the logs. | `bool` | `true` |
+| `LogResponseBody` | Whether to include the response body in the logs. Only JSON and text are supported, up to 50 KB. | `bool` | `false` |
+| `LogPanic` | Whether to log information when a panic occurs during request handling. | `bool` | `false` |
+| `CaptureLogs` | Whether to capture application logs emitted during request handling. | `bool` | `false` |
+| `CaptureTraces` | Whether to enable tracing with OpenTelemetry. | `bool` | `false` |
+| `MaskQueryParams` | List of regular expressions for matching query parameters to mask. These are in addition to the default masking patterns. | `[]*regexp.Regexp` | `nil` |
+| `MaskHeaders` | List of regular expressions for matching headers to mask. These are in addition to the default masking patterns. | `[]*regexp.Regexp` | `nil` |
+| `MaskBodyFields` | List of regular expressions for matching request/response body fields to mask. These are in addition to the default masking patterns. | `[]*regexp.Regexp` | `nil` |
+| `MaskRequestBodyCallback` | Callback function for masking the request body. Takes one parameter `request` and returns the request body as `[]byte` or `nil`. | `func(request *Request) []byte` | `nil` |
+| `MaskResponseBodyCallback` | Callback function for masking the response body. Takes two parameters `request` and `response` and returns the response body as `[]byte` or `nil`. | `func(request *Request, response *Response) []byte` | `nil` |
+| `ExcludePaths` | List of regular expressions for matching paths to exclude from logging. | `[]*regexp.Regexp` | `nil` |
+| `ExcludeCallback` | Callback function for excluding requests from logging. Takes two parameters `request` and `response` and returns `true`, if the request should be excluded, or `false` otherwise. | `func(request *Request, response *Response) bool` | `nil` |

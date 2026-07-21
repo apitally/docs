@@ -86,149 +86,235 @@
         ]
       },
       {
-        "anchor": "Setup guides",
-        "icon": "rocket",
-        "groups": [
-          {
-            "group": "Setup guides",
-            "icon": "rocket",
-            "pages": ["setup-guides"]
-          },
-          {
-            "group": "Python",
-            "icon": "python",
-            "pages": [
-              "setup-guides/blacksheep",
-              "setup-guides/django-ninja",
-              "setup-guides/django-rest-framework",
-              "setup-guides/fastapi",
-              "setup-guides/flask",
-              "setup-guides/litestar",
-              "setup-guides/starlette"
-            ]
-          },
-          {
-            "group": "JavaScript",
-            "icon": "node-js",
-            "pages": [
-              "setup-guides/adonisjs",
-              "setup-guides/elysia",
-              "setup-guides/express",
-              "setup-guides/fastify",
-              "setup-guides/h3",
-              "setup-guides/hapi",
-              "setup-guides/hono",
-              "setup-guides/koa",
-              "setup-guides/nestjs"
-            ]
-          },
-          {
-            "group": "Go",
-            "icon": "golang",
-            "pages": [
-              "setup-guides/chi",
-              "setup-guides/echo",
-              "setup-guides/fiber",
-              "setup-guides/gin"
-            ]
-          },
-          {
-            "group": "Java",
-            "icon": "java",
-            "pages": ["setup-guides/spring-boot"]
-          },
-          {
-            "group": ".NET",
-            "icon": "microsoft",
-            "pages": ["setup-guides/aspnet-core"]
-          },
-          {
-            "group": "Cloudflare Workers",
-            "icon": "cloudflare",
-            "pages": [
-              "setup-guides/fastapi-cloudflare-workers",
-              "setup-guides/hono-cloudflare-workers"
-            ]
-          }
-        ]
-      },
-      {
         "anchor": "SDK reference",
         "icon": "box-isometric",
-        "groups": [
+        "products": [
           {
-            "group": "SDK reference",
+            "product": "Overview",
             "icon": "book",
-            "pages": ["sdk-reference"]
+            "pages": ["sdk-reference/overview"]
           },
           {
-            "group": "Standard SDKs",
-            "icon": "box-isometric",
-            "pages": [
+            "product": "Python",
+            "icon": "python",
+            "versions": [
               {
-                "group": "Python",
-                "pages": [
-                  "sdk-reference/python/overview",
-                  "sdk-reference/python/configuration",
-                  "sdk-reference/python/masking-filtering",
-                  "sdk-reference/python/tracing"
+                "version": "v0",
+                "groups": [
+                  {
+                    "group": "SDK reference",
+                    "icon": "book",
+                    "pages": [
+                      "sdk-reference/python/v0/overview",
+                      "sdk-reference/python/v0/configuration",
+                      "sdk-reference/python/v0/masking-filtering",
+                      "sdk-reference/python/v0/tracing"
+                    ]
+                  },
+                  {
+                    "group": "Setup guides",
+                    "icon": "rocket",
+                    "pages": [
+                      "sdk-reference/python/v0/setup-guides/blacksheep",
+                      "sdk-reference/python/v0/setup-guides/django-ninja",
+                      "sdk-reference/python/v0/setup-guides/django-rest-framework",
+                      "sdk-reference/python/v0/setup-guides/fastapi",
+                      "sdk-reference/python/v0/setup-guides/flask",
+                      "sdk-reference/python/v0/setup-guides/litestar",
+                      "sdk-reference/python/v0/setup-guides/starlette"
+                    ]
+                  }
                 ]
               },
               {
-                "group": "JavaScript",
-                "pages": [
-                  "sdk-reference/javascript/overview",
-                  "sdk-reference/javascript/configuration",
-                  "sdk-reference/javascript/masking-filtering",
-                  "sdk-reference/javascript/tracing"
-                ]
-              },
-              {
-                "group": "Go",
-                "pages": [
-                  "sdk-reference/go/overview",
-                  "sdk-reference/go/configuration",
-                  "sdk-reference/go/masking-filtering",
-                  "sdk-reference/go/tracing"
-                ]
-              },
-              {
-                "group": "Java",
-                "pages": [
-                  "sdk-reference/java/overview",
-                  "sdk-reference/java/configuration",
-                  "sdk-reference/java/masking-filtering"
-                ]
-              },
-              {
-                "group": ".NET",
-                "pages": [
-                  "sdk-reference/dotnet/overview",
-                  "sdk-reference/dotnet/configuration",
-                  "sdk-reference/dotnet/masking-filtering",
-                  "sdk-reference/dotnet/tracing"
+                "version": "v1",
+                "groups": [
+                  {
+                    "group": "Setup guides",
+                    "icon": "rocket",
+                    "pages": [
+                      "sdk-reference/python/v1/setup-guides/fastapi"
+                    ]
+                  }
                 ]
               }
             ]
           },
           {
-            "group": "Serverless SDKs",
-            "icon": "box-isometric",
-            "pages": [
+            "product": "JavaScript",
+            "icon": "node-js",
+            "versions": [
               {
-                "group": "Python",
-                "pages": [
-                  "sdk-reference/python-serverless/overview",
-                  "sdk-reference/python-serverless/configuration",
-                  "sdk-reference/python-serverless/masking-filtering"
+                "version": "v0",
+                "groups": [
+                  {
+                    "group": "SDK reference",
+                    "icon": "book",
+                    "pages": [
+                      "sdk-reference/javascript/v0/overview",
+                      "sdk-reference/javascript/v0/configuration",
+                      "sdk-reference/javascript/v0/masking-filtering",
+                      "sdk-reference/javascript/v0/tracing"
+                    ]
+                  },
+                  {
+                    "group": "Setup guides",
+                    "icon": "rocket",
+                    "pages": [
+                      "sdk-reference/javascript/v0/setup-guides/adonisjs",
+                      "sdk-reference/javascript/v0/setup-guides/elysia",
+                      "sdk-reference/javascript/v0/setup-guides/express",
+                      "sdk-reference/javascript/v0/setup-guides/fastify",
+                      "sdk-reference/javascript/v0/setup-guides/h3",
+                      "sdk-reference/javascript/v0/setup-guides/hapi",
+                      "sdk-reference/javascript/v0/setup-guides/hono",
+                      "sdk-reference/javascript/v0/setup-guides/koa",
+                      "sdk-reference/javascript/v0/setup-guides/nestjs"
+                    ]
+                  }
                 ]
               },
               {
-                "group": "JavaScript",
-                "pages": [
-                  "sdk-reference/javascript-serverless/overview",
-                  "sdk-reference/javascript-serverless/configuration",
-                  "sdk-reference/javascript-serverless/masking-filtering"
+                "version": "v1"
+              }
+            ]
+          },
+          {
+            "product": "Go",
+            "icon": "golang",
+            "versions": [
+              {
+                "version": "v0",
+                "groups": [
+                  {
+                    "group": "SDK reference",
+                    "icon": "book",
+                    "pages": [
+                      "sdk-reference/go/v0/overview",
+                      "sdk-reference/go/v0/configuration",
+                      "sdk-reference/go/v0/masking-filtering",
+                      "sdk-reference/go/v0/tracing"
+                    ]
+                  },
+                  {
+                    "group": "Setup guides",
+                    "icon": "rocket",
+                    "pages": [
+                      "sdk-reference/go/v0/setup-guides/chi",
+                      "sdk-reference/go/v0/setup-guides/echo",
+                      "sdk-reference/go/v0/setup-guides/fiber",
+                      "sdk-reference/go/v0/setup-guides/gin"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "product": "Java",
+            "icon": "java",
+            "versions": [
+              {
+                "version": "v0",
+                "groups": [
+                  {
+                    "group": "SDK reference",
+                    "icon": "book",
+                    "pages": [
+                      "sdk-reference/java/v0/overview",
+                      "sdk-reference/java/v0/configuration",
+                      "sdk-reference/java/v0/masking-filtering"
+                    ]
+                  },
+                  {
+                    "group": "Setup guides",
+                    "icon": "rocket",
+                    "pages": [
+                      "sdk-reference/java/v0/setup-guides/spring-boot"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "product": ".NET",
+            "icon": "microsoft",
+            "versions": [
+              {
+                "version": "v0",
+                "groups": [
+                  {
+                    "group": "SDK reference",
+                    "icon": "book",
+                    "pages": [
+                      "sdk-reference/dotnet/v0/overview",
+                      "sdk-reference/dotnet/v0/configuration",
+                      "sdk-reference/dotnet/v0/masking-filtering",
+                      "sdk-reference/dotnet/v0/tracing"
+                    ]
+                  },
+                  {
+                    "group": "Setup guides",
+                    "icon": "rocket",
+                    "pages": [
+                      "sdk-reference/dotnet/v0/setup-guides/aspnet-core"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "product": "Python Serverless",
+            "icon": "python",
+            "versions": [
+              {
+                "version": "v0",
+                "groups": [
+                  {
+                    "group": "SDK reference",
+                    "icon": "book",
+                    "pages": [
+                      "sdk-reference/python-serverless/v0/overview",
+                      "sdk-reference/python-serverless/v0/configuration",
+                      "sdk-reference/python-serverless/v0/masking-filtering"
+                    ]
+                  },
+                  {
+                    "group": "Setup guides",
+                    "icon": "rocket",
+                    "pages": [
+                      "sdk-reference/python-serverless/v0/setup-guides/fastapi-cloudflare-workers"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "product": "JavaScript Serverless",
+            "icon": "node-js",
+            "versions": [
+              {
+                "version": "v0",
+                "groups": [
+                  {
+                    "group": "SDK reference",
+                    "icon": "book",
+                    "pages": [
+                      "sdk-reference/javascript-serverless/v0/overview",
+                      "sdk-reference/javascript-serverless/v0/configuration",
+                      "sdk-reference/javascript-serverless/v0/masking-filtering"
+                    ]
+                  },
+                  {
+                    "group": "Setup guides",
+                    "icon": "rocket",
+                    "pages": [
+                      "sdk-reference/javascript-serverless/v0/setup-guides/hono-cloudflare-workers"
+                    ]
+                  }
                 ]
               }
             ]
@@ -394,127 +480,359 @@
     },
     {
       "source": "/frameworks/blacksheep",
-      "destination": "/setup-guides/blacksheep"
+      "destination": "/sdk-reference/python/v0/setup-guides/blacksheep"
     },
     {
       "source": "/frameworks/django",
-      "destination": "/setup-guides/django"
+      "destination": "/sdk-reference/python/v0/setup-guides/django"
     },
     {
       "source": "/frameworks/django-ninja",
-      "destination": "/setup-guides/django-ninja"
+      "destination": "/sdk-reference/python/v0/setup-guides/django-ninja"
     },
     {
       "source": "/frameworks/django-rest-framework",
-      "destination": "/setup-guides/django-rest-framework"
+      "destination": "/sdk-reference/python/v0/setup-guides/django-rest-framework"
     },
     {
       "source": "/frameworks/fastapi",
-      "destination": "/setup-guides/fastapi"
+      "destination": "/sdk-reference/python/v0/setup-guides/fastapi"
     },
     {
       "source": "/frameworks/flask",
-      "destination": "/setup-guides/flask"
+      "destination": "/sdk-reference/python/v0/setup-guides/flask"
     },
     {
       "source": "/frameworks/litestar",
-      "destination": "/setup-guides/litestar"
+      "destination": "/sdk-reference/python/v0/setup-guides/litestar"
     },
     {
       "source": "/frameworks/starlette",
-      "destination": "/setup-guides/starlette"
+      "destination": "/sdk-reference/python/v0/setup-guides/starlette"
     },
     {
       "source": "/frameworks/adonisjs",
-      "destination": "/setup-guides/adonisjs"
+      "destination": "/sdk-reference/javascript/v0/setup-guides/adonisjs"
     },
     {
       "source": "/frameworks/elysia",
-      "destination": "/setup-guides/elysia"
+      "destination": "/sdk-reference/javascript/v0/setup-guides/elysia"
     },
     {
       "source": "/frameworks/express",
-      "destination": "/setup-guides/express"
+      "destination": "/sdk-reference/javascript/v0/setup-guides/express"
     },
     {
       "source": "/frameworks/fastify",
-      "destination": "/setup-guides/fastify"
+      "destination": "/sdk-reference/javascript/v0/setup-guides/fastify"
     },
     {
       "source": "/frameworks/h3",
-      "destination": "/setup-guides/h3"
+      "destination": "/sdk-reference/javascript/v0/setup-guides/h3"
     },
     {
       "source": "/frameworks/hapi",
-      "destination": "/setup-guides/hapi"
+      "destination": "/sdk-reference/javascript/v0/setup-guides/hapi"
     },
     {
       "source": "/frameworks/hono",
-      "destination": "/setup-guides/hono"
+      "destination": "/sdk-reference/javascript/v0/setup-guides/hono"
     },
     {
       "source": "/frameworks/koa",
-      "destination": "/setup-guides/koa"
+      "destination": "/sdk-reference/javascript/v0/setup-guides/koa"
     },
     {
       "source": "/frameworks/nestjs",
-      "destination": "/setup-guides/nestjs"
+      "destination": "/sdk-reference/javascript/v0/setup-guides/nestjs"
     },
     {
       "source": "/frameworks/chi",
-      "destination": "/setup-guides/chi"
+      "destination": "/sdk-reference/go/v0/setup-guides/chi"
     },
     {
       "source": "/frameworks/echo",
-      "destination": "/setup-guides/echo"
+      "destination": "/sdk-reference/go/v0/setup-guides/echo"
     },
     {
       "source": "/frameworks/fiber",
-      "destination": "/setup-guides/fiber"
+      "destination": "/sdk-reference/go/v0/setup-guides/fiber"
     },
     {
       "source": "/frameworks/gin",
-      "destination": "/setup-guides/gin"
+      "destination": "/sdk-reference/go/v0/setup-guides/gin"
     },
     {
       "source": "/frameworks/spring-boot",
-      "destination": "/setup-guides/spring-boot"
+      "destination": "/sdk-reference/java/v0/setup-guides/spring-boot"
     },
     {
       "source": "/frameworks/aspnet-core",
-      "destination": "/setup-guides/aspnet-core"
+      "destination": "/sdk-reference/dotnet/v0/setup-guides/aspnet-core"
     },
     {
       "source": "/reference",
-      "destination": "/sdk-reference"
+      "destination": "/sdk-reference/overview"
     },
     {
       "source": "/reference/python",
-      "destination": "/sdk-reference/python"
+      "destination": "/sdk-reference/python/v0/overview"
     },
     {
       "source": "/reference/javascript",
-      "destination": "/sdk-reference/javascript"
+      "destination": "/sdk-reference/javascript/v0/overview"
     },
     {
       "source": "/reference/java",
-      "destination": "/sdk-reference/java"
+      "destination": "/sdk-reference/java/v0/overview"
     },
     {
       "source": "/reference/go",
-      "destination": "/sdk-reference/go"
+      "destination": "/sdk-reference/go/v0/overview"
     },
     {
       "source": "/reference/dotnet",
-      "destination": "/sdk-reference/dotnet"
+      "destination": "/sdk-reference/dotnet/v0/overview"
     },
     {
       "source": "/setup-guides/fastapi-serverless",
-      "destination": "/setup-guides/fastapi-cloudflare-workers"
+      "destination": "/sdk-reference/python-serverless/v0/setup-guides/fastapi-cloudflare-workers"
     },
     {
       "source": "/setup-guides/hono-serverless",
-      "destination": "/setup-guides/hono-cloudflare-workers"
+      "destination": "/sdk-reference/javascript-serverless/v0/setup-guides/hono-cloudflare-workers"
+    },
+    {
+      "source": "/setup-guides",
+      "destination": "/sdk-reference/setup-guides/overview"
+    },
+    {
+      "source": "/setup-guides/cloudflare-workers",
+      "destination": "/sdk-reference/setup-guides/cloudflare-workers"
+    },
+    {
+      "source": "/setup-guides/blacksheep",
+      "destination": "/sdk-reference/python/v0/setup-guides/blacksheep"
+    },
+    {
+      "source": "/setup-guides/django",
+      "destination": "/sdk-reference/python/v0/setup-guides/django"
+    },
+    {
+      "source": "/setup-guides/django-ninja",
+      "destination": "/sdk-reference/python/v0/setup-guides/django-ninja"
+    },
+    {
+      "source": "/setup-guides/django-rest-framework",
+      "destination": "/sdk-reference/python/v0/setup-guides/django-rest-framework"
+    },
+    {
+      "source": "/setup-guides/fastapi",
+      "destination": "/sdk-reference/python/v0/setup-guides/fastapi"
+    },
+    {
+      "source": "/setup-guides/flask",
+      "destination": "/sdk-reference/python/v0/setup-guides/flask"
+    },
+    {
+      "source": "/setup-guides/litestar",
+      "destination": "/sdk-reference/python/v0/setup-guides/litestar"
+    },
+    {
+      "source": "/setup-guides/starlette",
+      "destination": "/sdk-reference/python/v0/setup-guides/starlette"
+    },
+    {
+      "source": "/setup-guides/adonisjs",
+      "destination": "/sdk-reference/javascript/v0/setup-guides/adonisjs"
+    },
+    {
+      "source": "/setup-guides/elysia",
+      "destination": "/sdk-reference/javascript/v0/setup-guides/elysia"
+    },
+    {
+      "source": "/setup-guides/express",
+      "destination": "/sdk-reference/javascript/v0/setup-guides/express"
+    },
+    {
+      "source": "/setup-guides/fastify",
+      "destination": "/sdk-reference/javascript/v0/setup-guides/fastify"
+    },
+    {
+      "source": "/setup-guides/h3",
+      "destination": "/sdk-reference/javascript/v0/setup-guides/h3"
+    },
+    {
+      "source": "/setup-guides/hapi",
+      "destination": "/sdk-reference/javascript/v0/setup-guides/hapi"
+    },
+    {
+      "source": "/setup-guides/hono",
+      "destination": "/sdk-reference/javascript/v0/setup-guides/hono"
+    },
+    {
+      "source": "/setup-guides/koa",
+      "destination": "/sdk-reference/javascript/v0/setup-guides/koa"
+    },
+    {
+      "source": "/setup-guides/nestjs",
+      "destination": "/sdk-reference/javascript/v0/setup-guides/nestjs"
+    },
+    {
+      "source": "/setup-guides/chi",
+      "destination": "/sdk-reference/go/v0/setup-guides/chi"
+    },
+    {
+      "source": "/setup-guides/echo",
+      "destination": "/sdk-reference/go/v0/setup-guides/echo"
+    },
+    {
+      "source": "/setup-guides/fiber",
+      "destination": "/sdk-reference/go/v0/setup-guides/fiber"
+    },
+    {
+      "source": "/setup-guides/gin",
+      "destination": "/sdk-reference/go/v0/setup-guides/gin"
+    },
+    {
+      "source": "/setup-guides/spring-boot",
+      "destination": "/sdk-reference/java/v0/setup-guides/spring-boot"
+    },
+    {
+      "source": "/setup-guides/aspnet-core",
+      "destination": "/sdk-reference/dotnet/v0/setup-guides/aspnet-core"
+    },
+    {
+      "source": "/setup-guides/fastapi-cloudflare-workers",
+      "destination": "/sdk-reference/python-serverless/v0/setup-guides/fastapi-cloudflare-workers"
+    },
+    {
+      "source": "/setup-guides/hono-cloudflare-workers",
+      "destination": "/sdk-reference/javascript-serverless/v0/setup-guides/hono-cloudflare-workers"
+    },
+    {
+      "source": "/sdk-reference",
+      "destination": "/sdk-reference/overview"
+    },
+    {
+      "source": "/sdk-reference/python",
+      "destination": "/sdk-reference/python/v0/overview"
+    },
+    {
+      "source": "/sdk-reference/python/overview",
+      "destination": "/sdk-reference/python/v0/overview"
+    },
+    {
+      "source": "/sdk-reference/python/configuration",
+      "destination": "/sdk-reference/python/v0/configuration"
+    },
+    {
+      "source": "/sdk-reference/python/masking-filtering",
+      "destination": "/sdk-reference/python/v0/masking-filtering"
+    },
+    {
+      "source": "/sdk-reference/python/tracing",
+      "destination": "/sdk-reference/python/v0/tracing"
+    },
+    {
+      "source": "/sdk-reference/javascript",
+      "destination": "/sdk-reference/javascript/v0/overview"
+    },
+    {
+      "source": "/sdk-reference/javascript/overview",
+      "destination": "/sdk-reference/javascript/v0/overview"
+    },
+    {
+      "source": "/sdk-reference/javascript/configuration",
+      "destination": "/sdk-reference/javascript/v0/configuration"
+    },
+    {
+      "source": "/sdk-reference/javascript/masking-filtering",
+      "destination": "/sdk-reference/javascript/v0/masking-filtering"
+    },
+    {
+      "source": "/sdk-reference/javascript/tracing",
+      "destination": "/sdk-reference/javascript/v0/tracing"
+    },
+    {
+      "source": "/sdk-reference/go",
+      "destination": "/sdk-reference/go/v0/overview"
+    },
+    {
+      "source": "/sdk-reference/go/overview",
+      "destination": "/sdk-reference/go/v0/overview"
+    },
+    {
+      "source": "/sdk-reference/go/configuration",
+      "destination": "/sdk-reference/go/v0/configuration"
+    },
+    {
+      "source": "/sdk-reference/go/masking-filtering",
+      "destination": "/sdk-reference/go/v0/masking-filtering"
+    },
+    {
+      "source": "/sdk-reference/go/tracing",
+      "destination": "/sdk-reference/go/v0/tracing"
+    },
+    {
+      "source": "/sdk-reference/java",
+      "destination": "/sdk-reference/java/v0/overview"
+    },
+    {
+      "source": "/sdk-reference/java/overview",
+      "destination": "/sdk-reference/java/v0/overview"
+    },
+    {
+      "source": "/sdk-reference/java/configuration",
+      "destination": "/sdk-reference/java/v0/configuration"
+    },
+    {
+      "source": "/sdk-reference/java/masking-filtering",
+      "destination": "/sdk-reference/java/v0/masking-filtering"
+    },
+    {
+      "source": "/sdk-reference/dotnet",
+      "destination": "/sdk-reference/dotnet/v0/overview"
+    },
+    {
+      "source": "/sdk-reference/dotnet/overview",
+      "destination": "/sdk-reference/dotnet/v0/overview"
+    },
+    {
+      "source": "/sdk-reference/dotnet/configuration",
+      "destination": "/sdk-reference/dotnet/v0/configuration"
+    },
+    {
+      "source": "/sdk-reference/dotnet/masking-filtering",
+      "destination": "/sdk-reference/dotnet/v0/masking-filtering"
+    },
+    {
+      "source": "/sdk-reference/dotnet/tracing",
+      "destination": "/sdk-reference/dotnet/v0/tracing"
+    },
+    {
+      "source": "/sdk-reference/python-serverless/overview",
+      "destination": "/sdk-reference/python-serverless/v0/overview"
+    },
+    {
+      "source": "/sdk-reference/python-serverless/configuration",
+      "destination": "/sdk-reference/python-serverless/v0/configuration"
+    },
+    {
+      "source": "/sdk-reference/python-serverless/masking-filtering",
+      "destination": "/sdk-reference/python-serverless/v0/masking-filtering"
+    },
+    {
+      "source": "/sdk-reference/javascript-serverless/overview",
+      "destination": "/sdk-reference/javascript-serverless/v0/overview"
+    },
+    {
+      "source": "/sdk-reference/javascript-serverless/configuration",
+      "destination": "/sdk-reference/javascript-serverless/v0/configuration"
+    },
+    {
+      "source": "/sdk-reference/javascript-serverless/masking-filtering",
+      "destination": "/sdk-reference/javascript-serverless/v0/masking-filtering"
     }
   ]
 }

@@ -1,0 +1,180 @@
+---
+title: "Setup guide for AdonisJS"
+sidebarTitle: "AdonisJS"
+description: "Just a few simple steps to get started with Apitally."
+---
+
+import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
+import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
+import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
+import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
+import AddMiddlewareCheck from '/snippets/add-middleware-check.mdx';
+import IdentifyConsumersSnippet from '/snippets/identify-consumers.mdx';
+import IdentifyConsumersCheck from '/snippets/identify-consumers-check.mdx';
+import ConfigureRequestLoggingCheck from '/snippets/configure-request-logging-check.mdx';
+
+This page guides you through the steps of configuring your [AdonisJS](https://adonisjs.com) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
+
+<SetupGuideStartSnippet framework="AdonisJS" />
+
+## Create app
+
+<CreateAppSnippet1 framework="AdonisJS" />
+
+<img src="https://assets.apitally.io/docs/2025-12-08/create-app.webp" alt="Create app" className="rounded-xl" />
+
+<CreateAppSnippet2 />
+
+## Add middleware
+
+Install the [Apitally SDK](/sdk-reference/javascript/v0/overview) in your AdonisJS project.
+
+```shell
+npm install apitally
+```
+
+Then configure Apitally by running the below Ace command. You'll be prompted to enter the client ID for your app.
+You'll find it on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
+
+```shell
+node ace configure apitally/adonisjs
+```
+
+This command will automatically:
+
+- Create a config file at `config/apitally.ts`
+- Register the Apitally provider in `adonisrc.ts`
+- Add the Apitally middleware to `start/kernel.ts`
+- Add environment variables to `.env` and `start/env.ts`
+
+Finally, to capture validation and server errors, modify your exception handler in `app/exceptions/handler.ts`:
+
+```javascript {2,6}
+import { ExceptionHandler, HttpContext } from '@adonisjs/core/http'
+import { captureError } from 'apitally/adonisjs'
+
+export default class HttpExceptionHandler extends ExceptionHandler {
+  async report(error: unknown, ctx: HttpContext) {
+    captureError(error, ctx)
+    return super.report(error, ctx)
+  }
+}
+```
+
+<div className="mt-4">
+  <AddMiddlewareCheck />
+</div>
+
+## Identify consumers
+
+<IdentifyConsumersSnippet />
+
+Use the `setConsumer` function to associate requests with consumers, for example in a [custom middleware](https://docs.adonisjs.com/guides/basics/middleware#creating-middleware).
+
+<CodeGroup>
+```javascript Identifier only
+import { HttpContext } from '@adonisjs/core/http'
+import { NextFn } from '@adonisjs/core/types/http'
+import { setConsumer } from 'apitally/adonisjs'
+
+export default class ApitallyConsumerMiddleware {
+  async handle(ctx: HttpContext, next: NextFn) {
+    if (ctx.auth.isAuthenticated) {
+      setConsumer(ctx, ctx.auth.user!.email)
+    }
+    await next()
+  }
+}
+```
+
+```javascript With name and group
+import { HttpContext } from '@adonisjs/core/http'
+import { NextFn } from '@adonisjs/core/types/http'
+import { setConsumer } from 'apitally/adonisjs'
+
+export default class ApitallyConsumerMiddleware {
+  async handle(ctx: HttpContext, next: NextFn) {
+    if (ctx.auth.isAuthenticated) {
+      setConsumer(ctx, {
+        identifier: String(ctx.auth.user!.id),
+        name: ctx.auth.user!.fullName, // optional
+        group: ctx.auth.user!.organization, // optional
+      })
+    }
+    await next()
+  }
+}
+```
+</CodeGroup>
+
+<IdentifyConsumersCheck />
+
+## Configure request logging
+
+<RequestLoggingConfigSnippet language="javascript" />
+
+<CodeGroup>
+```javascript Basic example
+import { defineConfig } from 'apitally/adonisjs'
+
+const apitallyConfig = defineConfig({
+  clientId: 'your-client-id',
+  env: 'dev', // or 'prod' etc.
+  requestLogging: {
+    enabled: true,
+    logRequestHeaders: true,
+    logRequestBody: true,
+    logResponseBody: true,
+    captureLogs: true,
+    captureTraces: false, // requires instrumentation
+  },
+})
+
+export default apitallyConfig;
+```
+
+```javascript Advanced example
+import { defineConfig } from 'apitally/adonisjs'
+
+const apitallyConfig = defineConfig({
+  clientId: 'your-client-id',
+  env: 'dev', // or 'prod' etc.
+  requestLogging: {
+    enabled: true,
+    logQueryParams: true,
+    logRequestHeaders: true,
+    logRequestBody: true,
+    logResponseHeaders: true,
+    logResponseBody: true,
+    logException: true,
+    captureLogs: true,
+    captureTraces: false, // requires instrumentation
+    // Mask query parameters using regex
+    maskQueryParams: [/^card_number$/i],
+    // Mask headers using regex
+    maskHeaders: [/^X-Sensitive-Header$/i],
+    // Mask request/response body fields using regex
+    maskBodyFields: [/^sensitive_field$/i],
+    // Mask request/response body with custom logic via callbacks (e.g. for admin endpoints)
+    // The callback should return null to mask the whole body, or return the (modified) raw body
+    maskRequestBodyCallback: (request) => request.url?.startsWith('/admin/') ? null : request.body,
+    maskResponseBodyCallback: (request, response) => request.url?.startsWith('/admin/') ? null : response.body,
+    // Exclude paths from request logging using regex (common health check paths are excluded by default)
+    excludePaths: [/\/metrics$/],
+    // Exclude requests from logging with custom logic via callback (e.g. exclude requests from a specific consumer)
+    // The callback should return true to exclude the request
+    excludeCallback: (request, response) => request.consumer === 'some-consumer',
+  },
+})
+
+export default apitallyConfig;
+```
+</CodeGroup>
+
+<ConfigureRequestLoggingCheck />
+
+## Enable tracing
+
+Tracing gives you a detailed breakdown of time spent during the handling of each request, showing the duration of database queries, HTTP calls, and other operations.
+
+To enable tracing, set `captureTraces` to `true` and instrument the libraries you want to trace with OpenTelemetry. See the [tracing guide](/sdk-reference/javascript/v0/tracing) for further instructions.

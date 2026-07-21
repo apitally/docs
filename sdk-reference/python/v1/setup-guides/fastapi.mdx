@@ -1,0 +1,194 @@
+---
+title: "Setup guide for FastAPI"
+sidebarTitle: "FastAPI"
+description: "Set up Apitally v1 for your FastAPI application."
+---
+
+import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
+
+This page guides you through configuring your
+[FastAPI](https://fastapi.tiangolo.com) application with Apitally v1. If you
+don't have an account yet, [sign up](https://app.apitally.io/?signup) before you
+begin.
+
+<SetupGuideStartSnippet framework="FastAPI" />
+
+<Tip>
+  Running FastAPI on Cloudflare Workers? Use the Python Serverless SDK instead.
+  The setup below is for apps with long-running processes.
+</Tip>
+
+## Create app
+
+Create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and
+select FastAPI as the framework.
+
+After creating the app, you will see tailored setup instructions and a write
+token in the format `apt_...`. The write token only permits sending telemetry to
+your app; it does not grant read access to your data.
+
+## Install the SDK
+
+Install the Apitally SDK with the `fastapi` extra, which includes the
+OpenTelemetry instrumentation for FastAPI.
+
+<CodeGroup>
+```shell pip
+pip install "apitally[fastapi]"
+```
+
+```shell poetry
+poetry add "apitally[fastapi]"
+```
+
+```shell uv
+uv add "apitally[fastapi]"
+```
+
+</CodeGroup>
+
+## Initialize Apitally
+
+Call `apitally.init` with your FastAPI application and write token.
+
+```python
+import apitally
+from fastapi import FastAPI
+
+app = FastAPI()
+
+apitally.init(
+    app,
+    write_token="your-write-token",
+    env="dev",  # defaults to "prod"
+)
+```
+
+You can set the `APITALLY_WRITE_TOKEN` and `APITALLY_ENV` environment variables
+instead of passing `write_token` and `env` in code:
+
+```python
+import apitally
+from fastapi import FastAPI
+
+app = FastAPI()
+apitally.init(app)
+```
+
+Deploy your application with these changes, or restart it if you're testing
+locally.
+
+<Check>
+  The basic setup is now complete. Metrics, request logs, traces, exceptions,
+  application logs, and response headers will start appearing in the Apitally
+  dashboard.
+</Check>
+
+## Identify consumers
+
+Call `apitally.set_consumer` from your authentication dependency or endpoint to
+associate the current request with a consumer. Unlike v0, you do not pass the
+FastAPI request object.
+
+<CodeGroup>
+```python Dependency
+from typing import Annotated
+
+import apitally
+from fastapi import Depends, FastAPI
+
+
+def identify_consumer(
+    current_user: Annotated[User, Depends(get_current_user)],
+) -> None:
+    apitally.set_consumer(
+        current_user.user_id,
+        name=current_user.name,  # optional
+        group=current_user.group,  # optional
+    )
+
+
+app = FastAPI(dependencies=[Depends(identify_consumer)])
+apitally.init(app, write_token="your-write-token")
+```
+
+```python Endpoint function
+from typing import Annotated
+
+import apitally
+from fastapi import Depends, FastAPI
+
+app = FastAPI()
+apitally.init(app, write_token="your-write-token")
+
+
+@app.get("/items")
+async def list_items(
+    current_user: Annotated[User, Depends(get_current_user)],
+) -> list[str]:
+    apitally.set_consumer(
+        current_user.user_id,
+        name=current_user.name,  # optional
+        group=current_user.group,  # optional
+    )
+    return ["item1"]
+```
+
+</CodeGroup>
+
+## Capture headers and bodies
+
+Request logging and tracing are enabled automatically in v1. Request headers and
+request and response bodies are not captured by default, while response headers
+are. Opt in to the additional data you need when initializing Apitally:
+
+```python
+apitally.init(
+    app,
+    write_token="your-write-token",
+    capture_request_headers=True,
+    capture_request_body=True,
+    capture_response_body=True,
+)
+```
+
+Sensitive query parameters, headers, and JSON body fields are masked using
+built-in patterns. Add your own case-insensitive regular expressions when
+needed:
+
+```python
+apitally.init(
+    app,
+    write_token="your-write-token",
+    capture_request_headers=True,
+    capture_request_body=True,
+    capture_response_body=True,
+    mask_query_params=[r"^card_number$"],
+    mask_headers=[r"^X-Sensitive-Header$"],
+    mask_body_fields=[r"^sensitive_field$"],
+    exclude_paths=[r"^/metrics$"],
+)
+```
+
+<Warning>
+  Application logs from Python's standard `logging` module are captured by
+  default and exported as written. Sanitize sensitive data at the logging
+  source, or set `capture_logs=False`.
+</Warning>
+
+## Sample high-traffic applications
+
+Use `sample_rate` to capture traces and logs for a fraction of requests. Metrics
+continue to count every request.
+
+```python
+apitally.init(
+    app,
+    write_token="your-write-token",
+    sample_rate=0.1,  # capture traces and logs for 10% of requests
+)
+```
+
+You can also make per-request decisions with `sample_on_request` and
+`sample_on_response`, including always retaining server errors that survived
+request-stage sampling.
