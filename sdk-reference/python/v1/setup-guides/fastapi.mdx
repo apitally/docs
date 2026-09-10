@@ -37,14 +37,13 @@ OpenTelemetry instrumentation for FastAPI.
 pip install "apitally[fastapi]"
 ```
 
-```shell poetry
-poetry add "apitally[fastapi]"
-```
-
 ```shell uv
 uv add "apitally[fastapi]"
 ```
 
+```shell poetry
+poetry add "apitally[fastapi]"
+```
 </CodeGroup>
 
 ## Initialize Apitally
@@ -64,31 +63,21 @@ apitally.init(
 )
 ```
 
-You can set the `APITALLY_WRITE_TOKEN` and `APITALLY_ENV` environment variables
+You can also set the `APITALLY_WRITE_TOKEN` and `APITALLY_ENV` environment variables
 instead of passing `write_token` and `env` in code:
-
-```python
-import apitally
-from fastapi import FastAPI
-
-app = FastAPI()
-apitally.init(app)
-```
 
 Deploy your application with these changes, or restart it if you're testing
 locally.
 
 <Check>
-  The basic setup is now complete. Metrics, request logs, traces, exceptions,
-  application logs, and response headers will start appearing in the Apitally
+  The basic setup is now complete. Metrics and request logs with application logs will start appearing in the Apitally
   dashboard.
 </Check>
 
 ## Identify consumers
 
 Call `apitally.set_consumer` from your authentication dependency or endpoint to
-associate the current request with a consumer. Unlike v0, you do not pass the
-FastAPI request object.
+associate the current request with a consumer.
 
 <CodeGroup>
 ```python Dependency
@@ -138,8 +127,7 @@ async def list_items(
 
 ## Capture headers and bodies
 
-Request logging and tracing are enabled automatically in v1. Request headers and
-request and response bodies are not captured by default, while response headers
+Request headers and request and response bodies are not captured by default, while response headers
 are. Opt in to the additional data you need when initializing Apitally:
 
 ```python
@@ -170,12 +158,6 @@ apitally.init(
 )
 ```
 
-<Warning>
-  Application logs from Python's standard `logging` module are captured by
-  default and exported as written. Sanitize sensitive data at the logging
-  source, or set `capture_logs=False`.
-</Warning>
-
 ## Sample high-traffic applications
 
 Use `sample_rate` to capture traces and logs for a fraction of requests. Metrics
@@ -190,5 +172,4 @@ apitally.init(
 ```
 
 You can also make per-request decisions with `sample_on_request` and
-`sample_on_response`, including always retaining server errors that survived
-request-stage sampling.
+`sample_on_response`.
