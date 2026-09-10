@@ -1,54 +1,54 @@
 ---
 title: "Setup guide for FastAPI"
 sidebarTitle: "FastAPI"
-description: "Set up Apitally v1 for your FastAPI application."
+description: "Set up the Apitally SDK for your FastAPI application."
 ---
 
 import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
 
-This page guides you through configuring your
-[FastAPI](https://fastapi.tiangolo.com) application with Apitally v1. If you
-don't have an account yet, [sign up](https://app.apitally.io/?signup) before you
-begin.
+<Info>This setup guide is for v1 of the Python SDK (currently in beta).</Info>
+
+This page guides you through the setup of the Apitally SDK for your [FastAPI](https://fastapi.tiangolo.com) application. If you don't have an Apitally account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
 
 <SetupGuideStartSnippet framework="FastAPI" />
 
-<Tip>
-  Running FastAPI on Cloudflare Workers? Use the Python Serverless SDK instead.
-  The setup below is for apps with long-running processes.
-</Tip>
+<Tip>Running FastAPI on Cloudflare Workers? Follow [this setup guide](/sdk-reference/python-serverless/v0/setup-guides/fastapi-cloudflare-workers) instead.</Tip>
 
 ## Create app
 
-Create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and
-select FastAPI as the framework.
+To get started, create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and select FastAPI as your framework.
 
-After creating the app, you will see tailored setup instructions and a write
-token in the format `apt_...`. The write token only permits sending telemetry to
-your app; it does not grant read access to your data.
+<img src="https://assets.apitally.io/docs/2025-12-08/create-app.webp" alt="Create app" className="rounded-xl" />
+
+You can also configure the environments (e.g. `prod` and `dev`) for your app, or simply accept the defaults.
+
+After submitting, you will see tailored setup instructions for your app. These include your write token and code snippets you can copy and paste into your project.
+
+<Note>
+  The **write token** (`apt_...`) provided in the setup instructions uniquely identifies your app for the purpose of data ingestion only. It does not grant any kind of read access to your data.
+</Note>
 
 ## Install the SDK
 
-Install the Apitally SDK with the `fastapi` extra, which includes the
-OpenTelemetry instrumentation for FastAPI.
+Install the Apitally SDK with the `fastapi` extra as a dependency in your project.
 
 <CodeGroup>
 ```shell pip
-pip install "apitally[fastapi]"
+pip install --pre "apitally[fastapi]"
 ```
 
 ```shell uv
-uv add "apitally[fastapi]"
+uv add --prerelease allow "apitally[fastapi]"
 ```
 
 ```shell poetry
-poetry add "apitally[fastapi]"
+poetry add --allow-prereleases "apitally[fastapi]"
 ```
 </CodeGroup>
 
 ## Initialize Apitally
 
-Call `apitally.init` with your FastAPI application and write token.
+Call `apitally.init` with your FastAPI application, the write token, and other configuration options immediately after creating the app.
 
 ```python
 import apitally
@@ -59,25 +59,22 @@ app = FastAPI()
 apitally.init(
     app,
     write_token="your-write-token",
-    env="dev",  # defaults to "prod"
+    env="dev",  # or "prod" etc.
 )
 ```
 
-You can also set the `APITALLY_WRITE_TOKEN` and `APITALLY_ENV` environment variables
-instead of passing `write_token` and `env` in code:
+You can also set the `APITALLY_WRITE_TOKEN` and `APITALLY_ENV` environment variables instead of passing `write_token` and `env` in code.
 
-Deploy your application with these changes, or restart it if you're testing
-locally.
+Deploy your application with these changes, or restart it if you're testing locally.
 
 <Check>
-  The basic setup is now complete. Metrics and request logs with application logs will start appearing in the Apitally
+  The basic setup is now complete. Metrics and logs will start appearing in the Apitally
   dashboard.
 </Check>
 
 ## Identify consumers
 
-Call `apitally.set_consumer` from your authentication dependency or endpoint to
-associate the current request with a consumer.
+Call `apitally.set_consumer` from your authentication dependency or endpoint to associate the current request with a consumer.
 
 <CodeGroup>
 ```python Dependency
@@ -127,41 +124,28 @@ async def list_items(
 
 ## Capture headers and bodies
 
-Request headers and request and response bodies are not captured by default, while response headers
-are. Opt in to the additional data you need when initializing Apitally:
+Request headers and request and response bodies are not captured by default, while response headers are. Opt in to capture the additional data you need when initializing Apitally:
 
 ```python
 apitally.init(
     app,
     write_token="your-write-token",
+    env="dev",  # or "prod" etc.
     capture_request_headers=True,
     capture_request_body=True,
     capture_response_body=True,
 )
 ```
 
-Sensitive query parameters, headers, and JSON body fields are masked using
-built-in patterns. Add your own case-insensitive regular expressions when
-needed:
+## Mask sensitive information
 
-```python
-apitally.init(
-    app,
-    write_token="your-write-token",
-    capture_request_headers=True,
-    capture_request_body=True,
-    capture_response_body=True,
-    mask_query_params=[r"^card_number$"],
-    mask_headers=[r"^X-Sensitive-Header$"],
-    mask_body_fields=[r"^sensitive_field$"],
-    exclude_paths=[r"^/metrics$"],
-)
-```
+...
 
-## Sample high-traffic applications
+## Sample requests
 
-Use `sample_rate` to capture traces and logs for a fraction of requests. Metrics
-continue to count every request.
+If your application receives a lot of traffic, you may want to sample requests to stay within your quotas.
+
+Use `sample_rate` to capture traces and logs for a fraction of requests. Metrics continue to count every request.
 
 ```python
 apitally.init(
@@ -171,5 +155,4 @@ apitally.init(
 )
 ```
 
-You can also make per-request decisions with `sample_on_request` and
-`sample_on_response`.
+You can also make per-request decisions with `sample_on_request` and `sample_on_response` callbacks.
