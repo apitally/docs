@@ -130,6 +130,16 @@
                 "version": "v1",
                 "groups": [
                   {
+                    "group": "SDK reference",
+                    "icon": "book",
+                    "pages": [
+                      "sdk-reference/python/v1/overview",
+                      "sdk-reference/python/v1/configuration",
+                      "sdk-reference/python/v1/masking-filtering",
+                      "sdk-reference/python/v1/tracing"
+                    ]
+                  },
+                  {
                     "group": "Setup guides",
                     "icon": "rocket",
                     "pages": [
