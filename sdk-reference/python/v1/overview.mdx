@@ -7,6 +7,8 @@ mode: wide
 
 import SetupGuidesPython from '/snippets/setup-guides-python.mdx';
 
+<Warning>The Apitally SDK v1 is currently in beta.</Warning>
+
 <CardGroup cols={2}>
   <Card
     title="GitHub repository"
@@ -34,23 +36,22 @@ The Apitally SDK for Python uses extras to install the correct dependencies for 
 
 <CodeGroup>
 ```shell pip
-pip install "apitally[<your_framework>]"
+pip install --pre "apitally[<your_framework>]"
 ```
 
 ```shell uv
-uv add "apitally[<your_framework>]"
+uv add --prerelease allow "apitally[<your_framework>]"
 ```
 
 ```shell poetry
-poetry add "apitally[<your_framework>]"
+poetry add --allow-prereleases "apitally[<your_framework>]"
 ```
 </CodeGroup>
 
 Replace the `<your_framework>` placeholder with the extra for your framework. The options are:
 
 - `blacksheep`
-- `django_ninja`
-- `django_rest_framework`
+- `django`
 - `fastapi`
 - `flask`
 - `litestar`
@@ -62,4 +63,4 @@ The Python SDK currently supports the web frameworks listed below. If your frame
 
 Click on a framework for a detailed setup guide.
 
-<SetupGuidesPython />
+<SetupGuidesPython version="v1" />
