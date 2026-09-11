@@ -1,0 +1,103 @@
+---
+title: Sampling
+description: Sample request logs and traces and exclude requests with the Apitally SDK for Python.
+---
+
+The Apitally SDK provides options for sampling request logs and traces and excluding requests you don't want to capture.
+
+<Note>
+  Requests excluded or sampled out won't be logged, but are still counted in metrics. To exclude endpoints from metrics, you can mark them as excluded in the [dashboard](/api-metrics/traffic#exclude-endpoints).
+</Note>
+
+## Default exclusions
+
+The SDK automatically excludes common static assets and health check endpoints, such as `/robots.txt` or `/healthz`.
+
+See the [data privacy](/data-privacy#data-filtering) page for more information about default exclusions.
+
+## Sample rate
+
+If your application receives a lot of traffic, you may want to sample requests to stay within your request logs quota.
+
+Use `sample_rate` to capture only a fraction of requests. The default is `1.0`, which captures all requests.
+
+```python
+apitally.init(
+    app,
+    write_token="your-write-token",
+    sample_rate=0.1,  # capture logs and traces for 10% of requests
+)
+```
+
+To apply different sample rates based on custom criteria, see [Custom sampling](#custom-sampling) below.
+
+## Custom sampling
+
+For more control over which requests are captured, provide a callback function via `sample_on_request` or `sample_on_response`. Each callback receives the request span, with metadata available through [`span.attributes`](/sdk-reference/python/v1/attributes).
+
+Choose the callback based on when the information you need is available:
+
+- `sample_on_request` runs when the request starts. Use it when request attributes are enough to make the decision. Dropped requests are discarded immediately, so this has less overhead.
+- `sample_on_response` runs after the request span ends. Use it when the decision depends on the response status or attributes added while handling the request. The SDK retains telemetry until the response completes.
+
+The callback should return `False` to discard the request, `True` to capture it, or a probability between `0.0` and `1.0`. Return `None` to leave the sampling decision unchanged.
+
+<CodeGroup>
+  ```python Sample on request
+  import apitally
+  from fastapi import FastAPI
+  from opentelemetry.sdk.trace import ReadableSpan
+
+
+  def should_capture_request(span: ReadableSpan) -> bool:
+      attributes = span.attributes or {}
+      user_agent = attributes.get("user_agent.original")
+      return user_agent != "my-company-monitor"
+
+
+  app = FastAPI()
+  apitally.init(
+      app,
+      write_token="your-write-token",
+      env="dev",
+      sample_on_request=should_capture_request,
+  )
+  ```
+
+  ```python Sample on response
+  import apitally
+  from fastapi import FastAPI
+  from opentelemetry.sdk.trace import ReadableSpan
+
+
+  def should_capture_request(span: ReadableSpan) -> bool:
+      attributes = span.attributes or {}
+      if attributes.get("apitally.consumer.identifier") == "internal-service":
+          return False
+      status_code = attributes.get("http.response.status_code")
+      if isinstance(status_code, int) and status_code < 400:
+          return False
+      return True
+
+
+  app = FastAPI()
+  apitally.init(
+      app,
+      write_token="your-write-token",
+      env="dev",
+      sample_on_response=should_capture_request,
+  )
+  ```
+</CodeGroup>
+
+## Exclude paths
+
+To exclude requests based on their path, provide regular expressions via the `exclude_paths` parameter. These match the actual request path (e.g. `/users/123`), not the endpoint route pattern (e.g. `/users/{id}`). Query parameters are ignored. Patterns are case-insensitive and match anywhere within the path. Use `^` and `$` anchors for exact matches.
+
+```python
+apitally.init(
+    app,
+    write_token="your-write-token",
+    exclude_paths=[r"/admin/", r"/internal/"],
+)
+```

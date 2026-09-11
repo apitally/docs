@@ -1,72 +1,145 @@
 ---
 title: Configuration
 description: Configure the Apitally SDK for Python.
-mode: wide
 ---
 
 <CodeGroup>
-  ```python FastAPI {7-10}
+  ```python FastAPI {5-10}
+  import apitally
   from fastapi import FastAPI
-  from apitally.fastapi import ApitallyMiddleware
 
   app = FastAPI()
-  app.add_middleware(
-      ApitallyMiddleware,
-      client_id="your-client-id",
+  apitally.init(
+      app,
+      write_token="your-write-token",
       env="dev",
-      enable_request_logging=True,
       # other parameters ...
   )
   ```
 
-  ```python Django {2-5}
-  APITALLY_MIDDLEWARE = {
-      "client_id": "your-client-id",
-      "env": "dev",
-      "enable_request_logging": True,
+  ```python Django {4-9}
+  import apitally
+
+  # At the end of settings.py
+  apitally.init(
+      write_token="your-write-token",
+      env="dev",
       # other parameters ...
-  }
+  )
   ```
 
-  ```python Flask {7-10}
+  ```python Flask {5-10}
+  import apitally
   from flask import Flask
-  from apitally.flask import ApitallyMiddleware
 
   app = Flask(__name__)
-  app.wsgi_app = ApitallyMiddleware(
+  apitally.init(
       app,
-      client_id="your-client-id",
+      write_token="your-write-token",
       env="dev",
-      enable_request_logging=True,
       # other parameters ...
   )
   ```
 </CodeGroup>
 
-See the [setup guides](/sdk-reference/setup-guides/overview#python) for more examples.
-
 ## Parameters
 
-The following configuration parameters are available. Only `client_id` and `env` are required.
+#### `write_token`
 
-| Parameter | Description | Type | Default |
-| :-------- | :---------- | :--- | :------ |
-| `client_id` | Client ID for your application. Find it on the _Setup instructions_ page for your app. | `string` |
-| `env` | Name of the environment, e.g. `prod` or `dev`. The environment will be automatically created if it doesn't exist. | `string` | `dev` |
-| `app_version` | The current version of your application, e.g. `1.0.0`. | `string` | `None` |
-| `enable_request_logging` | Whether request logging is enabled. | `bool` | `False` |
-| `log_query_params` | Whether to include query parameters in the logs. If disabled, these will be stripped from the request URLs logged. | `bool` | `True` |
-| `log_request_headers` | Whether to include request headers in the logs. Default masking for common sensitive headers (e.g. `Authorization`) applies. | `bool` | `False` |
-| `log_request_body` | Whether to include the request body in the logs. Only JSON and text are supported, up to 50 KB. | `bool` | `False` |
-| `log_response_headers` | Whether to include response headers in the logs. | `bool` | `True` |
-| `log_response_body` | Whether to include the response body in the logs. Only JSON and text are supported, up to 50 KB. | `bool` | `False` |
-| `log_exception` | Whether to include exception details in the logs. | `bool` | `True` |
-| `capture_logs` | Whether to capture application logs emitted during request handling. | `bool` | `False` |
-| `capture_traces` | Whether to enable tracing with OpenTelemetry. | `bool` | `False` |
-| `mask_query_params` | List of regular expressions for matching query parameters to mask. These are in addition to the default masking patterns. | `list[str]` | `[]` |
-| `mask_headers` | List of regular expressions for matching headers to mask. These are in addition to the default masking patterns. | `list[str]` | `[]` |
-| `mask_body_fields` | List of regular expressions for matching request/response body fields to mask. These are in addition to the default masking patterns. | `list[str]` | `[]` |
-| `mask_request_body_callback` | Callback function for masking the request body. Takes one parameter `request` and returns the request body as `bytes` or `None`. | `Callable` | `None` |
-| `mask_response_body_callback` | Callback function for masking the response body. Takes two parameters `request` and `response` and returns the response body as `bytes` or `None`. | `Callable` | `None` |
-| `exclude_paths` | List of regular expressions for matching paths to exclude from logging. | `list[str]` | `[]` |
-| `exclude_callback` | Callback function for excluding requests from logging. Takes two parameters `request` and `response` and returns `True`, if the request should be excluded, or `False` otherwise. | `Callable` | `None` |
+Write token for your application in the format `apt_...`. Find it on the _Setup instructions_ page for your app. Required unless the `APITALLY_WRITE_TOKEN` environment variable is set.
+
+#### `env`
+
+Name of the environment, for example `prod` or `dev`. Can also be set via the `APITALLY_ENV` environment variable. The environment is created automatically if it does not exist. Defaults to `dev`.
+
+#### `app_version`
+
+The current version of your application, for example `1.0.0`.
+
+#### `disabled`
+
+Boolean. Whether to disable the SDK. The `APITALLY_DISABLED` and `OTEL_SDK_DISABLED` environment variables are used when this parameter is not set. Defaults to `False`.
+
+#### `capture_logs`
+
+Boolean. Whether to capture application logs from the standard `logging` module and other third-party logging integrations. Defaults to `True`.
+
+#### `capture_request_headers`
+
+Boolean. Whether to capture request headers. Default masking applies to common sensitive headers such as `Authorization`. Defaults to `False`.
+
+#### `capture_request_body`
+
+Boolean. Whether to capture the request body. Only JSON and text bodies up to 50 KB are supported. Defaults to `False`.
+
+#### `capture_response_headers`
+
+Boolean. Whether to capture response headers. Defaults to `True`.
+
+#### `capture_response_body`
+
+Boolean. Whether to capture the response body. Only JSON and text bodies up to 50 KB are supported. Defaults to `False`.
+
+#### `mask_query_params`
+
+List of regular expressions for matching query parameters to mask. These are applied in addition to the default masking patterns. Defaults to `[]`.
+
+```python
+mask_query_params=[r"^api_key$", r"^token$"],
+```
+
+#### `mask_headers`
+
+List of regular expressions for matching headers to mask. These are applied in addition to the default masking patterns. Defaults to `[]`.
+
+```python
+mask_headers=[r"^X-Api-Key$", r"^X-Internal-"],
+```
+
+#### `mask_body_fields`
+
+List of regular expressions for matching request and response body fields to mask. These are applied in addition to the default masking patterns. Defaults to `[]`.
+
+```python
+mask_body_fields=[r"^credit_card$", r"^account_id$"],
+```
+
+#### `mask_request_body`
+
+Callback for masking the request body. It receives the request [`ReadableSpan`](/sdk-reference/python/v1/attributes) and body as `bytes`, and returns the masked body as `bytes` or `None`.
+
+#### `mask_response_body`
+
+Callback for masking the response body. It receives the request [`ReadableSpan`](/sdk-reference/python/v1/attributes) and body as `bytes`, and returns the masked body as `bytes` or `None`.
+
+#### `exclude_paths`
+
+List of regular expressions for matching paths to exclude from request logs and traces. Excluded requests are still included in metrics. Defaults to `[]`.
+
+```python
+exclude_paths=[r"^/admin/$", r"/internal/"],
+```
+
+#### `sample_rate`
+
+Fraction of requests to capture as request logs and traces, from `0.0` to `1.0`. Metrics are not sampled. Defaults to `1.0`.
+
+#### `sample_on_request`
+
+Callback for adjusting sampling when a request starts. It receives the request [`ReadableSpan`](/sdk-reference/python/v1/attributes) and returns a probability, a boolean, or `None` to use `sample_rate`.
+
+#### `sample_on_response`
+
+Callback for adjusting sampling when a response is ready. It receives the ended request [`ReadableSpan`](/sdk-reference/python/v1/attributes) and returns a probability, a boolean, or `None` to preserve the existing decision.
+
+#### `django_urlconf`
+
+String or list of strings representing Django URLconf modules or modules used to discover routes and schemas. Set this to `None` to use the root URLconf.
+
+```python
+django_urlconf=["myproject.urls", "myapp.urls"],
+```
+
+#### `django_include_class_based_views`
+
+Boolean. Whether to include class-based Django views in the reported endpoint list in addition to Django REST Framework and Django Ninja routes. Defaults to `False`.
