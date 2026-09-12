@@ -146,6 +146,7 @@
                     "group": "Setup guides",
                     "icon": "rocket",
                     "pages": [
+                      "sdk-reference/python/v1/setup-guides/django-ninja",
                       "sdk-reference/python/v1/setup-guides/django-rest-framework",
                       "sdk-reference/python/v1/setup-guides/fastapi"
                     ]

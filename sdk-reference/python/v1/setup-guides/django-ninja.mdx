@@ -1,6 +1,6 @@
 ---
-title: "Setup guide for Django REST Framework"
-sidebarTitle: "Django REST Framework"
+title: "Setup guide for Django Ninja"
+sidebarTitle: "Django Ninja"
 description: "Set up the Apitally SDK for your Django application."
 ---
 
@@ -8,13 +8,13 @@ import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
 
 <Info>This setup guide is for v1 of the Python SDK (currently in beta).</Info>
 
-This page guides you through the setup of the Apitally SDK for your [Django REST Framework](https://www.django-rest-framework.org) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
+This page guides you through the setup of the Apitally SDK for your [Django Ninja](https://django-ninja.dev) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
 
-<SetupGuideStartSnippet framework="Django REST Framework" />
+<SetupGuideStartSnippet framework="Django Ninja" />
 
 ## Create app
 
-To get started, create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and select Django REST Framework as your framework.
+To get started, create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and select Django Ninja as your framework.
 
 <img src="https://assets.apitally.io/docs/2025-12-08/create-app.webp" alt="Create app" className="rounded-xl" />
 
@@ -80,22 +80,23 @@ Call `apitally.set_consumer` during request handling to associate the current re
 You can also provide a display name and group for each consumer.
 
 <CodeGroup>
-```python View function {10-14}
+```python View function {11-15}
 import apitally
-from rest_framework.decorators import api_view
-from rest_framework.request import Request
-from rest_framework.response import Response
+from django.http import HttpRequest
+from ninja import NinjaAPI
+
+api = NinjaAPI()
 
 
-@api_view(["GET"])
-def list_items(request: Request) -> Response:
+@api.get("/items")
+def list_items(request: HttpRequest) -> list[str]:
     if request.user.is_authenticated:
         apitally.set_consumer(
             request.user.get_username(),
             name=request.user.get_full_name(),  # optional
             group=request.user.groups.first().name,  # optional
         )
-    return Response(["item1"])
+    return ["item1"]
 ```
 
 ```python Middleware {13-17}
