@@ -183,7 +183,7 @@ More information about sampling is available [here](/sdk-reference/python/v1/sam
 
 Instrumenting third-party libraries adds details about database queries, HTTP calls to external services, and other operations to your request traces. This lets you see how these operations contribute to API response times.
 
-The SDK provides helper functions in `apitally.otel` to instrument popular libraries. Each requires a separate OpenTelemetry instrumentation package. For example, to trace database queries made with SQLAlchemy, install:
+The SDK provides helper functions in `apitally.otel` to instrument popular libraries. Each requires a separate OpenTelemetry instrumentation package. For example, to trace database queries made with SQLAlchemy, install `opentelemetry-instrumentation-sqlalchemy`:
 
 <CodeGroup>
 ```shell pip
@@ -207,4 +207,4 @@ from apitally.otel import instrument_sqlalchemy
 instrument_sqlalchemy(engine)
 ```
 
-More information about tracing and the provided helpers is available [here](/sdk-reference/python/v1/tracing).
+More information about tracing and the provided instrumentation helpers is available [here](/sdk-reference/python/v1/tracing).
