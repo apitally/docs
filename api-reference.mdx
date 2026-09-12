@@ -5,14 +5,17 @@ description: "Programmatically access logs and metrics for your apps."
 
 The Apitally API lets you programmatically access request logs and traffic metrics for your apps. Use it to export data for analysis, or integrate with your own systems.
 
-<Info>API access requires the Premium plan.</Info>
+The API also powers the [Apitally CLI](/agents/cli-and-skill), which can be used from your terminal or by coding agents.
 
 ## Endpoints
 
 - [List apps](/api-reference/apps/list-apps): Retrieve all apps in your team.
 - [List consumers](/api-reference/consumers/list-consumers): Retrieve all consumers for an app.
+- [List endpoints](/api-reference/endpoints/list-endpoints): Retrieve all API endpoints for an app.
 - [Get request logs](/api-reference/request-logs/get-request-logs): Retrieve request log data for an app.
-- [Get traffic](/api-reference/traffic/get-traffic): Retrieve aggregated traffic metrics for an app.
+- [Get request details](/api-reference/request-logs/get-request-details): Retrieve details about a specific request.
+- [Get traffic](/api-reference/metrics/get-traffic): Retrieve aggregated traffic metrics for an app.
+- [Get team](/api-reference/team/get-team): Retrieve the authenticated team.
 
 ## Authentication
 
