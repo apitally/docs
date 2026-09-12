@@ -1,22 +1,20 @@
 ---
-title: "Setup guide for FastAPI"
-sidebarTitle: "FastAPI"
-description: "Set up the Apitally SDK for your FastAPI application."
+title: "Setup guide for Flask"
+sidebarTitle: "Flask"
+description: "Set up the Apitally SDK for your Flask application."
 ---
 
 import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
 
 <Info>This setup guide is for v1 of the Python SDK (currently in beta).</Info>
 
-This page guides you through the setup of the Apitally SDK for your [FastAPI](https://fastapi.tiangolo.com) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
+This page guides you through the setup of the Apitally SDK for your [Flask](https://flask.palletsprojects.com) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
 
-<SetupGuideStartSnippet framework="FastAPI" />
-
-<Tip>Running FastAPI on Cloudflare Workers? Follow [this setup guide](/sdk-reference/python-serverless/v0/setup-guides/fastapi-cloudflare-workers) instead.</Tip>
+<SetupGuideStartSnippet framework="Flask" />
 
 ## Create app
 
-To get started, create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and select FastAPI as your framework.
+To get started, create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and select Flask as your framework.
 
 <img src="https://assets.apitally.io/docs/2025-12-08/create-app.webp" alt="Create app" className="rounded-xl" />
 
@@ -30,31 +28,31 @@ After submitting, you will see tailored setup instructions for your app. These i
 
 ## Install the SDK
 
-Install the Apitally SDK with the `fastapi` extra as a dependency in your project.
+Install the Apitally SDK with the `flask` extra as a dependency in your project.
 
 <CodeGroup>
 ```shell pip
-pip install --pre "apitally[fastapi]"
+pip install --pre "apitally[flask]"
 ```
 
 ```shell uv
-uv add --prerelease allow "apitally[fastapi]"
+uv add --prerelease allow "apitally[flask]"
 ```
 
 ```shell poetry
-poetry add --allow-prereleases "apitally[fastapi]"
+poetry add --allow-prereleases "apitally[flask]"
 ```
 </CodeGroup>
 
 ## Initialize Apitally
 
-Call `apitally.init` with your FastAPI application, the write token, and [other configuration options](/sdk-reference/python/v1/configuration) immediately after creating the app.
+Call `apitally.init` with your Flask application, the write token, and [other configuration options](/sdk-reference/python/v1/configuration) immediately after creating the app.
 
 ```python {6-10}
 import apitally
-from fastapi import FastAPI
+from flask import Flask
 
-app = FastAPI()
+app = Flask(__name__)
 
 apitally.init(
     app,
@@ -76,51 +74,45 @@ Deploy your application with these changes, or restart it if you're testing loca
 
 Consumers are the users or applications calling your API. Identifying them lets you analyze and filter API traffic by consumer in Apitally.
 
-Call `apitally.set_consumer` during request handling to associate the current request with a consumer identifier. You can call it wherever the consumer is known, such as in an endpoint, dependency, existing middleware, or authentication code.
+Call `apitally.set_consumer` during request handling to associate the current request with a consumer identifier. You can call it wherever the consumer is known, such as in a view, a request callback, existing middleware, or authentication code.
 
 You can also provide a display name and group for each consumer.
 
 <CodeGroup>
-```python Dependency {10-14}
-from typing import Annotated
-
+```python Before request hook {11-15}
 import apitally
-from fastapi import Depends, FastAPI
+from flask import Flask, g
 
-
-def identify_consumer(
-    current_user: Annotated[User, Depends(get_current_user)],
-) -> None:
-    apitally.set_consumer(
-        current_user.user_id,
-        name=current_user.name,  # optional
-        group=current_user.group,  # optional
-    )
-
-
-app = FastAPI(dependencies=[Depends(identify_consumer)])
+app = Flask(__name__)
 apitally.init(app, write_token="your-write-token")
+
+
+@app.before_request
+def identify_consumer() -> None:
+    if g.current_user:
+        apitally.set_consumer(
+            g.current_user["email"],
+            name=g.current_user["name"],  # optional
+            group=g.current_user["role"],  # optional
+        )
 ```
 
-```python Endpoint function {14-18}
-from typing import Annotated
-
+```python View function {11-15}
 import apitally
-from fastapi import Depends, FastAPI
+from flask import Flask, g
 
-app = FastAPI()
+app = Flask(__name__)
 apitally.init(app, write_token="your-write-token")
 
 
 @app.get("/items")
-async def list_items(
-    current_user: Annotated[User, Depends(get_current_user)],
-) -> list[str]:
-    apitally.set_consumer(
-        current_user.user_id,
-        name=current_user.name,  # optional
-        group=current_user.group,  # optional
-    )
+def list_items() -> list[str]:
+    if g.current_user:
+        apitally.set_consumer(
+            g.current_user["email"],
+            name=g.current_user["name"],  # optional
+            group=g.current_user["role"],  # optional
+        )
     return ["item1"]
 ```
 

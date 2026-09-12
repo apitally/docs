@@ -1,22 +1,20 @@
 ---
-title: "Setup guide for FastAPI"
-sidebarTitle: "FastAPI"
-description: "Set up the Apitally SDK for your FastAPI application."
+title: "Setup guide for Starlette"
+sidebarTitle: "Starlette"
+description: "Set up the Apitally SDK for your Starlette application."
 ---
 
 import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
 
 <Info>This setup guide is for v1 of the Python SDK (currently in beta).</Info>
 
-This page guides you through the setup of the Apitally SDK for your [FastAPI](https://fastapi.tiangolo.com) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
+This page guides you through the setup of the Apitally SDK for your [Starlette](https://www.starlette.io) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
 
-<SetupGuideStartSnippet framework="FastAPI" />
-
-<Tip>Running FastAPI on Cloudflare Workers? Follow [this setup guide](/sdk-reference/python-serverless/v0/setup-guides/fastapi-cloudflare-workers) instead.</Tip>
+<SetupGuideStartSnippet framework="Starlette" />
 
 ## Create app
 
-To get started, create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and select FastAPI as your framework.
+To get started, create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and select Starlette as your framework.
 
 <img src="https://assets.apitally.io/docs/2025-12-08/create-app.webp" alt="Create app" className="rounded-xl" />
 
@@ -30,31 +28,31 @@ After submitting, you will see tailored setup instructions for your app. These i
 
 ## Install the SDK
 
-Install the Apitally SDK with the `fastapi` extra as a dependency in your project.
+Install the Apitally SDK with the `starlette` extra as a dependency in your project.
 
 <CodeGroup>
 ```shell pip
-pip install --pre "apitally[fastapi]"
+pip install --pre "apitally[starlette]"
 ```
 
 ```shell uv
-uv add --prerelease allow "apitally[fastapi]"
+uv add --prerelease allow "apitally[starlette]"
 ```
 
 ```shell poetry
-poetry add --allow-prereleases "apitally[fastapi]"
+poetry add --allow-prereleases "apitally[starlette]"
 ```
 </CodeGroup>
 
 ## Initialize Apitally
 
-Call `apitally.init` with your FastAPI application, the write token, and [other configuration options](/sdk-reference/python/v1/configuration) immediately after creating the app.
+Call `apitally.init` with your Starlette application, the write token, and [other configuration options](/sdk-reference/python/v1/configuration) immediately after creating the app.
 
 ```python {6-10}
 import apitally
-from fastapi import FastAPI
+from starlette.applications import Starlette
 
-app = FastAPI()
+app = Starlette()
 
 apitally.init(
     app,
@@ -76,52 +74,59 @@ Deploy your application with these changes, or restart it if you're testing loca
 
 Consumers are the users or applications calling your API. Identifying them lets you analyze and filter API traffic by consumer in Apitally.
 
-Call `apitally.set_consumer` during request handling to associate the current request with a consumer identifier. You can call it wherever the consumer is known, such as in an endpoint, dependency, existing middleware, or authentication code.
+Call `apitally.set_consumer` during request handling to associate the current request with a consumer identifier. You can call it wherever the consumer is known, such as in an endpoint, existing middleware, or authentication code.
 
 You can also provide a display name and group for each consumer.
 
+These examples use `request.user`, which is provided by Starlette's [authentication middleware](https://www.starlette.io/authentication/).
+
 <CodeGroup>
-```python Dependency {10-14}
-from typing import Annotated
-
+```python Endpoint function {10-14}
 import apitally
-from fastapi import Depends, FastAPI
+from starlette.applications import Starlette
+from starlette.requests import Request
+from starlette.responses import JSONResponse
+from starlette.routing import Route
 
 
-def identify_consumer(
-    current_user: Annotated[User, Depends(get_current_user)],
-) -> None:
-    apitally.set_consumer(
-        current_user.user_id,
-        name=current_user.name,  # optional
-        group=current_user.group,  # optional
-    )
+async def list_items(request: Request) -> JSONResponse:
+    if request.user.is_authenticated:
+        apitally.set_consumer(
+            request.user.identity,
+            name=request.user.display_name,  # optional
+            group="Customers",  # optional
+        )
+    return JSONResponse(["item1"])
 
 
-app = FastAPI(dependencies=[Depends(identify_consumer)])
+app = Starlette(routes=[Route("/items", list_items)])
 apitally.init(app, write_token="your-write-token")
 ```
 
-```python Endpoint function {14-18}
-from typing import Annotated
-
+```python Middleware {11-15}
 import apitally
-from fastapi import Depends, FastAPI
+from starlette.applications import Starlette
+from starlette.requests import Request
 
-app = FastAPI()
+
+def identify_consumer(app):
+    async def middleware(scope, receive, send):
+        if scope["type"] == "http":
+            request = Request(scope)
+            if request.user.is_authenticated:
+                apitally.set_consumer(
+                    request.user.identity,
+                    name=request.user.display_name,  # optional
+                    group="Customers",  # optional
+                )
+        await app(scope, receive, send)
+
+    return middleware
+
+
+app = Starlette()
 apitally.init(app, write_token="your-write-token")
-
-
-@app.get("/items")
-async def list_items(
-    current_user: Annotated[User, Depends(get_current_user)],
-) -> list[str]:
-    apitally.set_consumer(
-        current_user.user_id,
-        name=current_user.name,  # optional
-        group=current_user.group,  # optional
-    )
-    return ["item1"]
+app.add_middleware(identify_consumer)
 ```
 
 </CodeGroup>

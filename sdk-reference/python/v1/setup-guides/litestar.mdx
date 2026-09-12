@@ -1,22 +1,20 @@
 ---
-title: "Setup guide for FastAPI"
-sidebarTitle: "FastAPI"
-description: "Set up the Apitally SDK for your FastAPI application."
+title: "Setup guide for Litestar"
+sidebarTitle: "Litestar"
+description: "Set up the Apitally SDK for your Litestar application."
 ---
 
 import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
 
 <Info>This setup guide is for v1 of the Python SDK (currently in beta).</Info>
 
-This page guides you through the setup of the Apitally SDK for your [FastAPI](https://fastapi.tiangolo.com) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
+This page guides you through the setup of the Apitally SDK for your [Litestar](https://litestar.dev/) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
 
-<SetupGuideStartSnippet framework="FastAPI" />
-
-<Tip>Running FastAPI on Cloudflare Workers? Follow [this setup guide](/sdk-reference/python-serverless/v0/setup-guides/fastapi-cloudflare-workers) instead.</Tip>
+<SetupGuideStartSnippet framework="Litestar" />
 
 ## Create app
 
-To get started, create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and select FastAPI as your framework.
+To get started, create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and select Litestar as your framework.
 
 <img src="https://assets.apitally.io/docs/2025-12-08/create-app.webp" alt="Create app" className="rounded-xl" />
 
@@ -30,37 +28,35 @@ After submitting, you will see tailored setup instructions for your app. These i
 
 ## Install the SDK
 
-Install the Apitally SDK with the `fastapi` extra as a dependency in your project.
+Install the Apitally SDK with the `litestar` extra as a dependency in your project.
 
 <CodeGroup>
 ```shell pip
-pip install --pre "apitally[fastapi]"
+pip install --pre "apitally[litestar]"
 ```
 
 ```shell uv
-uv add --prerelease allow "apitally[fastapi]"
+uv add --prerelease allow "apitally[litestar]"
 ```
 
 ```shell poetry
-poetry add --allow-prereleases "apitally[fastapi]"
+poetry add --allow-prereleases "apitally[litestar]"
 ```
 </CodeGroup>
 
 ## Initialize Apitally
 
-Call `apitally.init` with your FastAPI application, the write token, and [other configuration options](/sdk-reference/python/v1/configuration) immediately after creating the app.
+Add `ApitallyPlugin` to your Litestar application with the write token and [other configuration options](/sdk-reference/python/v1/configuration) when creating the app.
 
-```python {6-10}
-import apitally
-from fastapi import FastAPI
+```python {4-7}
+from apitally.litestar import ApitallyPlugin
+from litestar import Litestar
 
-app = FastAPI()
-
-apitally.init(
-    app,
+apitally_plugin = ApitallyPlugin(
     write_token="your-write-token",
     env="dev",  # or "prod" etc.
 )
+app = Litestar(plugins=[apitally_plugin])
 ```
 
 You can also set the `APITALLY_WRITE_TOKEN` and `APITALLY_ENV` environment variables instead of passing `write_token` and `env` in code.
@@ -76,52 +72,52 @@ Deploy your application with these changes, or restart it if you're testing loca
 
 Consumers are the users or applications calling your API. Identifying them lets you analyze and filter API traffic by consumer in Apitally.
 
-Call `apitally.set_consumer` during request handling to associate the current request with a consumer identifier. You can call it wherever the consumer is known, such as in an endpoint, dependency, existing middleware, or authentication code.
+Call `apitally.set_consumer` during request handling to associate the current request with a consumer identifier. You can call it wherever the consumer is known, such as in a route handler, `before_request` hook, existing middleware, or authentication code.
 
 You can also provide a display name and group for each consumer.
 
 <CodeGroup>
-```python Dependency {10-14}
-from typing import Annotated
-
+```python Before request hook {8-12}
 import apitally
-from fastapi import Depends, FastAPI
+from apitally.litestar import ApitallyPlugin
+from litestar import Litestar, Request
 
 
-def identify_consumer(
-    current_user: Annotated[User, Depends(get_current_user)],
-) -> None:
-    apitally.set_consumer(
-        current_user.user_id,
-        name=current_user.name,  # optional
-        group=current_user.group,  # optional
-    )
+async def identify_consumer(request: Request) -> None:
+    if request.user.is_authenticated:
+        apitally.set_consumer(
+            request.user.identity,
+            name=request.user.name,  # optional
+            group=request.user.role,  # optional
+        )
 
 
-app = FastAPI(dependencies=[Depends(identify_consumer)])
-apitally.init(app, write_token="your-write-token")
+apitally_plugin = ApitallyPlugin(write_token="your-write-token")
+app = Litestar(
+    before_request=identify_consumer,
+    plugins=[apitally_plugin],
+)
 ```
 
-```python Endpoint function {14-18}
-from typing import Annotated
-
+```python Route handler {9-13}
 import apitally
-from fastapi import Depends, FastAPI
-
-app = FastAPI()
-apitally.init(app, write_token="your-write-token")
+from apitally.litestar import ApitallyPlugin
+from litestar import Litestar, Request, get
 
 
-@app.get("/items")
-async def list_items(
-    current_user: Annotated[User, Depends(get_current_user)],
-) -> list[str]:
-    apitally.set_consumer(
-        current_user.user_id,
-        name=current_user.name,  # optional
-        group=current_user.group,  # optional
-    )
+@get("/items")
+async def list_items(request: Request) -> list[str]:
+    if request.user.is_authenticated:
+        apitally.set_consumer(
+            request.user.identity,
+            name=request.user.name,  # optional
+            group=request.user.role,  # optional
+        )
     return ["item1"]
+
+
+apitally_plugin = ApitallyPlugin(write_token="your-write-token")
+app = Litestar(route_handlers=[list_items], plugins=[apitally_plugin])
 ```
 
 </CodeGroup>
@@ -130,9 +126,8 @@ async def list_items(
 
 Only response headers are captured by default. You can opt in to capture request headers as well as request and response bodies when initializing Apitally.
 
-```python {5-7}
-apitally.init(
-    app,
+```python {4-6}
+apitally_plugin = ApitallyPlugin(
     write_token="your-write-token",
     env="dev",  # or "prod" etc.
     capture_request_headers=True,
@@ -147,9 +142,8 @@ The SDK automatically masks common sensitive query parameters, headers, and body
 
 To mask additional data, pass regular expressions matching query parameter names, header names, or body field names to `mask_query_params`, `mask_headers`, or `mask_body_fields`, respectively. Matching is case-insensitive.
 
-```python {4-6}
-apitally.init(
-    app,
+```python {3-5}
+apitally_plugin = ApitallyPlugin(
     write_token="your-write-token",
     mask_query_params=[r"^account_id$"],
     mask_headers=[r"^X-Custom-Key$"],
@@ -167,9 +161,8 @@ If your application receives a lot of traffic, you may want to sample requests t
 
 Use `sample_rate` to capture logs and traces for a fraction of requests.
 
-```python {4}
-apitally.init(
-    app,
+```python {3}
+apitally_plugin = ApitallyPlugin(
     write_token="your-write-token",
     sample_rate=0.1,  # capture logs and traces for 10% of requests
 )
