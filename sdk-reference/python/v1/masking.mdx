@@ -17,11 +17,12 @@ You can extend the default masking rules by providing additional regular express
 
 The following example uses FastAPI. The same masking options are available for all supported frameworks.
 
-```python FastAPI example {12-15}
+```python FastAPI example {13-16}
 import apitally
 from fastapi import FastAPI
 
 app = FastAPI()
+
 apitally.init(
     app,
     write_token="your-write-token",
@@ -42,7 +43,7 @@ For more control over body masking, you can provide callback functions via the `
 
 The following example callbacks mask the entire body for admin endpoints and selected fields in user profile responses:
 
-```python Callback function examples {46-48}
+```python Callback function examples {47-49}
 import json
 
 import apitally
@@ -81,6 +82,7 @@ def mask_response_body(span: ReadableSpan, body: bytes) -> bytes | None:
 
 
 app = FastAPI()
+
 apitally.init(
     app,
     write_token="your-write-token",

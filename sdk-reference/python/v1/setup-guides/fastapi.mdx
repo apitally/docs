@@ -8,7 +8,7 @@ import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
 
 <Info>This setup guide is for v1 of the Python SDK (currently in beta).</Info>
 
-This page guides you through the setup of the Apitally SDK for your [FastAPI](https://fastapi.tiangolo.com) application. If you don't have an Apitally account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
+This page guides you through the setup of the Apitally SDK for your [FastAPI](https://fastapi.tiangolo.com) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
 
 <SetupGuideStartSnippet framework="FastAPI" />
 
@@ -48,9 +48,9 @@ poetry add --allow-prereleases "apitally[fastapi]"
 
 ## Initialize Apitally
 
-Call `apitally.init` with your FastAPI application, the write token, and other configuration options immediately after creating the app.
+Call `apitally.init` with your FastAPI application, the write token, and [other configuration options](/sdk-reference/python/v1/configuration) immediately after creating the app.
 
-```python
+```python {6-10}
 import apitally
 from fastapi import FastAPI
 
@@ -74,10 +74,14 @@ Deploy your application with these changes, or restart it if you're testing loca
 
 ## Identify consumers
 
-Call `apitally.set_consumer` from your authentication dependency or endpoint to associate the current request with a consumer.
+Consumers are the users or applications calling your API. Identifying them lets you analyze and filter API traffic by consumer in Apitally.
+
+Call `apitally.set_consumer` from a dependency or in your endpoint functions to associate the current request with a consumer identifier.
+
+You can also provide a display name and group for each consumer.
 
 <CodeGroup>
-```python Dependency
+```python Dependency {10-14}
 from typing import Annotated
 
 import apitally
@@ -98,7 +102,7 @@ app = FastAPI(dependencies=[Depends(identify_consumer)])
 apitally.init(app, write_token="your-write-token")
 ```
 
-```python Endpoint function
+```python Endpoint function {14-18}
 from typing import Annotated
 
 import apitally
@@ -124,9 +128,9 @@ async def list_items(
 
 ## Capture headers and bodies
 
-Request headers and request and response bodies are not captured by default, while response headers are. Opt in to capture the additional data you need when initializing Apitally:
+Only response headers are captured by default. You can opt in to capture request headers as well as request and response bodies when initializing Apitally.
 
-```python
+```python {5-7}
 apitally.init(
     app,
     write_token="your-write-token",
@@ -139,20 +143,68 @@ apitally.init(
 
 ## Mask sensitive information
 
-...
+The SDK automatically masks common sensitive query parameters, headers, and body fields.
 
-## Sample requests
+To mask additional data, pass regular expressions matching query parameter names, header names, or body field names to `mask_query_params`, `mask_headers`, or `mask_body_fields`, respectively. Matching is case-insensitive.
 
-If your application receives a lot of traffic, you may want to sample requests to stay within your quotas.
-
-Use `sample_rate` to capture traces and logs for a fraction of requests. Metrics continue to count every request.
-
-```python
+```python {4-6}
 apitally.init(
     app,
     write_token="your-write-token",
-    sample_rate=0.1,  # capture traces and logs for 10% of requests
+    mask_query_params=[r"^account_id$"],
+    mask_headers=[r"^X-Custom-Key$"],
+    mask_body_fields=[r"^credit_card$"],
 )
 ```
 
-You can also make per-request decisions with `sample_on_request` and `sample_on_response` callbacks.
+You can also use the `mask_request_body` and `mask_response_body` callbacks to mask individual fields or entire bodies using custom logic.
+
+More information about masking is available [here](/sdk-reference/python/v1/masking).
+
+## Sample requests
+
+If your application receives a lot of traffic, you may want to sample requests to stay within your request logs quota. Metrics will continue to count every request regardless of sampling.
+
+Use `sample_rate` to capture logs and traces for a fraction of requests.
+
+```python {4}
+apitally.init(
+    app,
+    write_token="your-write-token",
+    sample_rate=0.1,  # capture logs and traces for 10% of requests
+)
+```
+
+You can also use the `sample_on_request` and `sample_on_response` callbacks to make sampling decisions using custom logic.
+
+More information about sampling is available [here](/sdk-reference/python/v1/sampling).
+
+## Instrument third-party libraries
+
+Instrumenting third-party libraries adds details about database queries, HTTP calls to external services, and other operations to your request traces. This lets you see how these operations contribute to API response times.
+
+The SDK provides helper functions in `apitally.otel` to instrument popular libraries. Each requires a separate OpenTelemetry instrumentation package. For example, to trace database queries made with SQLAlchemy, install:
+
+<CodeGroup>
+```shell pip
+pip install opentelemetry-instrumentation-sqlalchemy
+```
+
+```shell uv
+uv add opentelemetry-instrumentation-sqlalchemy
+```
+
+```shell poetry
+poetry add opentelemetry-instrumentation-sqlalchemy
+```
+</CodeGroup>
+
+Then call `instrument_sqlalchemy` with your SQLAlchemy engine at application startup:
+
+```python
+from apitally.otel import instrument_sqlalchemy
+
+instrument_sqlalchemy(engine)
+```
+
+More information about tracing and the provided helpers is available [here](/sdk-reference/python/v1/tracing).

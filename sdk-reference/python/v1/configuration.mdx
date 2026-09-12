@@ -4,11 +4,12 @@ description: Configure the Apitally SDK for Python.
 ---
 
 <CodeGroup>
-  ```python FastAPI {5-10}
+  ```python FastAPI {6-11}
   import apitally
   from fastapi import FastAPI
 
   app = FastAPI()
+
   apitally.init(
       app,
       write_token="your-write-token",
@@ -28,11 +29,12 @@ description: Configure the Apitally SDK for Python.
   )
   ```
 
-  ```python Flask {5-10}
+  ```python Flask {6-11}
   import apitally
   from flask import Flask
 
   app = Flask(__name__)
+
   apitally.init(
       app,
       write_token="your-write-token",
@@ -134,7 +136,7 @@ Callback for adjusting sampling when a response is ready. It receives the ended 
 
 #### `django_urlconf`
 
-String or list of strings representing Django URLconf modules or modules used to discover routes and schemas. Set this to `None` to use the root URLconf.
+Applies to Django only. String or list of strings representing Django URLconf modules used to discover routes and schemas. Set this to `None` to use the root URLconf.
 
 ```python
 django_urlconf=["myproject.urls", "myapp.urls"],
@@ -142,4 +144,4 @@ django_urlconf=["myproject.urls", "myapp.urls"],
 
 #### `django_include_class_based_views`
 
-Boolean. Whether to include class-based Django views in the reported endpoint list in addition to Django REST Framework and Django Ninja routes. Defaults to `False`.
+Boolean. Applies to Django only. Whether to include class-based Django views in the reported endpoint list in addition to Django REST Framework and Django Ninja routes. Defaults to `False`.
