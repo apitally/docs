@@ -1,0 +1,204 @@
+---
+title: "Setup guide for Django REST Framework"
+sidebarTitle: "Django REST Framework"
+description: "Set up the Apitally SDK for your Django application."
+---
+
+import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
+
+<Info>This setup guide is for v1 of the Python SDK (currently in beta).</Info>
+
+This page guides you through the setup of the Apitally SDK for your [Django REST Framework](https://www.django-rest-framework.org) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
+
+<SetupGuideStartSnippet framework="Django REST Framework" />
+
+## Create app
+
+To get started, create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and select Django REST Framework as your framework.
+
+<img src="https://assets.apitally.io/docs/2025-12-08/create-app.webp" alt="Create app" className="rounded-xl" />
+
+You can also configure the environments (e.g. `prod` and `dev`) for your app, or simply accept the defaults.
+
+After submitting, you will see tailored setup instructions for your app. These include your write token and code snippets you can copy and paste into your project.
+
+<Note>
+  The **write token** (`apt_...`) provided in the setup instructions uniquely identifies your app for the purpose of data ingestion only. It does not grant any kind of read access to your data.
+</Note>
+
+## Install the SDK
+
+Install the Apitally SDK with the `django` extra as a dependency in your project.
+
+<CodeGroup>
+```shell pip
+pip install --pre "apitally[django]"
+```
+
+```shell uv
+uv add --prerelease allow "apitally[django]"
+```
+
+```shell poetry
+poetry add --allow-prereleases "apitally[django]"
+```
+</CodeGroup>
+
+## Initialize Apitally
+
+Call `apitally.init` with the write token and [other configuration options](/sdk-reference/python/v1/configuration) at the end of your Django settings file (`settings.py`), after `MIDDLEWARE` is defined. The SDK adds its middleware automatically.
+
+```python settings.py {8-11}
+import apitally
+
+MIDDLEWARE = [
+    # ...
+]
+
+# At the end of settings.py
+apitally.init(
+    write_token="your-write-token",
+    env="dev",  # or "prod" etc.
+)
+```
+
+You can also set the `APITALLY_WRITE_TOKEN` and `APITALLY_ENV` environment variables instead of passing `write_token` and `env` in code.
+
+Deploy your application with these changes, or restart it if you're testing locally.
+
+<Check>
+  The basic setup is now complete. Metrics and logs will start appearing in the Apitally
+  dashboard.
+</Check>
+
+## Identify consumers
+
+Consumers are the users or applications calling your API. Identifying them lets you analyze and filter API traffic by consumer in Apitally.
+
+Call `apitally.set_consumer` during request handling to associate the current request with a consumer identifier. You can call it wherever the consumer is known, such as in a view, existing middleware, or authentication code.
+
+You can also provide a display name and group for each consumer.
+
+<CodeGroup>
+```python View function {10-14}
+import apitally
+from rest_framework.decorators import api_view
+from rest_framework.request import Request
+from rest_framework.response import Response
+
+
+@api_view(["GET"])
+def list_items(request: Request) -> Response:
+    if request.user.is_authenticated:
+        apitally.set_consumer(
+            request.user.get_username(),
+            name=request.user.get_full_name(),  # optional
+            group=request.user.groups.first().name,  # optional
+        )
+    return Response(["item1"])
+```
+
+```python Middleware {13-17}
+import apitally
+from django.http import HttpRequest, HttpResponse
+
+
+class IdentifyConsumerMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request: HttpRequest) -> HttpResponse:
+        response = self.get_response(request)
+        user = getattr(request, "user", None)
+        if user is not None and user.is_authenticated:
+            apitally.set_consumer(
+                user.get_username(),
+                name=user.get_full_name(),  # optional
+                group=user.groups.first().name,  # optional
+            )
+        return response
+```
+
+</CodeGroup>
+
+If you use the middleware example, save it in `your_project/api/middleware.py` and append it to `MIDDLEWARE` before calling `apitally.init`.
+
+## Capture headers and bodies
+
+Only response headers are captured by default. You can opt in to capture request headers as well as request and response bodies when initializing Apitally.
+
+```python {4-6}
+apitally.init(
+    write_token="your-write-token",
+    env="dev",  # or "prod" etc.
+    capture_request_headers=True,
+    capture_request_body=True,
+    capture_response_body=True,
+)
+```
+
+## Mask sensitive information
+
+The SDK automatically masks common sensitive query parameters, headers, and body fields.
+
+To mask additional data, pass regular expressions matching query parameter names, header names, or body field names to `mask_query_params`, `mask_headers`, or `mask_body_fields`, respectively. Matching is case-insensitive.
+
+```python {3-5}
+apitally.init(
+    write_token="your-write-token",
+    mask_query_params=[r"^account_id$"],
+    mask_headers=[r"^X-Custom-Key$"],
+    mask_body_fields=[r"^credit_card$"],
+)
+```
+
+You can also use the `mask_request_body` and `mask_response_body` callbacks to mask individual fields or entire bodies using custom logic.
+
+More information about masking is available [here](/sdk-reference/python/v1/masking).
+
+## Sample requests
+
+If your application receives a lot of traffic, you may want to sample requests to stay within your request logs quota. Metrics will continue to count every request regardless of sampling.
+
+Use `sample_rate` to capture logs and traces for a fraction of requests.
+
+```python {3}
+apitally.init(
+    write_token="your-write-token",
+    sample_rate=0.1,  # capture logs and traces for 10% of requests
+)
+```
+
+You can also use the `sample_on_request` and `sample_on_response` callbacks to make sampling decisions using custom logic.
+
+More information about sampling is available [here](/sdk-reference/python/v1/sampling).
+
+## Instrument third-party libraries
+
+Instrumenting third-party libraries adds details about database queries, HTTP calls to external services, and other operations to your request traces. This lets you see how these operations contribute to API response times.
+
+The SDK provides helper functions in `apitally.otel` to instrument popular libraries. Each requires a separate OpenTelemetry instrumentation package. For example, if your Django application uses PostgreSQL with psycopg 3, install `opentelemetry-instrumentation-psycopg` to trace database queries made through the Django ORM:
+
+<CodeGroup>
+```shell pip
+pip install opentelemetry-instrumentation-psycopg
+```
+
+```shell uv
+uv add opentelemetry-instrumentation-psycopg
+```
+
+```shell poetry
+poetry add opentelemetry-instrumentation-psycopg
+```
+</CodeGroup>
+
+Then call `instrument_psycopg` at the end of your Django settings file, after `apitally.init`:
+
+```python
+from apitally.otel import instrument_psycopg
+
+instrument_psycopg()
+```
+
+More information about tracing and the provided instrumentation helpers is available [here](/sdk-reference/python/v1/tracing).
