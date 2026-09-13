@@ -118,7 +118,7 @@ from apitally.otel import span
 
 def checkout(cart_id: int) -> None:
     with span("validate_cart") as s:
-        s.set_attribute("cart_id", cart_id)
+        s.set_attribute("cart.id", cart_id)
         # Validation logic here
         ...
 

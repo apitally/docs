@@ -37,11 +37,11 @@ apitally.init(
 )
 ```
 
-### Custom body masking callbacks
+### Body masking callbacks
 
 For more control over body masking, you can provide callback functions via the `mask_request_body` and `mask_response_body` parameters. Each function receives the ended request `ReadableSpan` and the captured body as `bytes`. Request metadata is available through [`span.attributes`](/sdk-reference/python/v1/attributes). Each function should return the masked body as `bytes`, or `None` to mask the entire body.
 
-The following example callbacks mask the entire body for admin endpoints and selected fields in user profile responses:
+The following example callbacks mask the entire request body for admin endpoints and selected fields in user profile responses:
 
 ```python Callback function examples {47-49}
 import json

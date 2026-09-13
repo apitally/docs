@@ -1,0 +1,98 @@
+---
+title: Sampling
+description: Sample request logs and traces and exclude requests with the Apitally SDK for JavaScript.
+---
+
+The Apitally SDK provides options for sampling request logs and traces and excluding requests you don't want to capture.
+
+<Note>
+  Requests excluded or sampled out won't be logged, but are still counted in metrics. To exclude endpoints from metrics, you can mark them as excluded in the [dashboard](/api-metrics/traffic#exclude-endpoints).
+</Note>
+
+## Default exclusions
+
+The SDK automatically excludes common static assets and health check endpoints, such as `/robots.txt` or `/healthz`.
+
+See the [data privacy](/data-privacy#data-filtering) page for more information about default exclusions.
+
+## Sample rate
+
+If your application receives a lot of traffic, you may want to sample requests to stay within your request logs quota.
+
+Use `sampleRate` to capture only a fraction of requests. The default is `1.0`, which captures all requests.
+
+```javascript
+useApitally(app, {
+  writeToken: "your-write-token",
+  sampleRate: 0.1, // capture logs and traces for 10% of requests
+});
+```
+
+To apply different sample rates based on custom criteria, see [Custom sampling](#custom-sampling) below.
+
+## Custom sampling
+
+For more control over which requests are captured, provide a callback function via `sampleOnRequest` or `sampleOnResponse`. Each callback receives the request span, with metadata available through [`span.attributes`](/sdk-reference/javascript/v1/attributes).
+
+Choose the callback based on when the information you need is available:
+
+- `sampleOnRequest` runs when the request starts. Use it when request attributes are enough to make the decision. Dropped requests are discarded immediately, so this has less overhead.
+- `sampleOnResponse` runs after the request span ends. Use it when the decision depends on the response status or attributes added while handling the request. The SDK retains telemetry until the response completes.
+
+The callback should return `false` to discard the request, `true` to capture it, or a probability between `0.0` and `1.0`. Return `undefined` to leave the sampling decision unchanged.
+
+<CodeGroup>
+  ```javascript Sample on request
+  import { Hono } from "hono";
+  import { useApitally } from "apitally";
+
+  function shouldCaptureRequest(span) {
+    const userAgent = span.attributes["user_agent.original"];
+    return userAgent !== "my-company-monitor";
+  }
+
+  const app = new Hono();
+
+  useApitally(app, {
+    writeToken: "your-write-token",
+    env: "dev",
+    sampleOnRequest: shouldCaptureRequest,
+  });
+  ```
+
+  ```javascript Sample on response
+  import { Hono } from "hono";
+  import { useApitally } from "apitally";
+
+  function shouldCaptureRequest(span) {
+    const attributes = span.attributes;
+    if (attributes["apitally.consumer.identifier"] === "internal-service") {
+      return false;
+    }
+    const statusCode = attributes["http.response.status_code"];
+    if (typeof statusCode === "number" && statusCode < 400) {
+      return false;
+    }
+    return true;
+  }
+
+  const app = new Hono();
+
+  useApitally(app, {
+    writeToken: "your-write-token",
+    env: "dev",
+    sampleOnResponse: shouldCaptureRequest,
+  });
+  ```
+</CodeGroup>
+
+## Exclude paths
+
+To exclude requests based on their path, provide regular expressions via the `excludePaths` option. These match the actual request path (for example `/users/123`), not the endpoint route pattern (for example `/users/:id`). Query parameters are ignored. Patterns match anywhere within the path. Use `^` and `$` anchors for exact matches, and the `i` flag for case-insensitive matching.
+
+```javascript
+useApitally(app, {
+  writeToken: "your-write-token",
+  excludePaths: [/\/admin\//i, /\/internal\//i],
+});
+```
