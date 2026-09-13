@@ -202,7 +202,8 @@
                     "icon": "rocket",
                     "pages": [
                       "sdk-reference/javascript/v1/setup-guides/express",
-                      "sdk-reference/javascript/v1/setup-guides/fastify"
+                      "sdk-reference/javascript/v1/setup-guides/fastify",
+                      "sdk-reference/javascript/v1/setup-guides/hono"
                     ]
                   }
                 ]
