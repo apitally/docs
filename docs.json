@@ -205,6 +205,7 @@
                       "sdk-reference/javascript/v1/setup-guides/express",
                       "sdk-reference/javascript/v1/setup-guides/fastify",
                       "sdk-reference/javascript/v1/setup-guides/h3",
+                      "sdk-reference/javascript/v1/setup-guides/hapi",
                       "sdk-reference/javascript/v1/setup-guides/hono",
                       "sdk-reference/javascript/v1/setup-guides/koa",
                       "sdk-reference/javascript/v1/setup-guides/nestjs"
