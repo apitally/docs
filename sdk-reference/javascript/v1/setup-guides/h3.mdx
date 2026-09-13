@@ -1,22 +1,22 @@
 ---
-title: "Setup guide for Hono"
-sidebarTitle: "Hono"
-description: "Set up the Apitally SDK for your Hono application."
+title: "Setup guide for H3 v2"
+sidebarTitle: "H3"
+description: "Set up the Apitally SDK for your H3 application."
 ---
 
 import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
 
 <Info>This setup guide is for v1 of the JavaScript SDK (currently in beta).</Info>
 
-<Tip>Running Hono on Cloudflare Workers? Follow [this setup guide](/sdk-reference/javascript-serverless/v0/setup-guides/hono-cloudflare-workers) instead.</Tip>
+<Note>Apitally only works with H3 v2 (currently in beta).</Note>
 
-This page guides you through the setup of the Apitally SDK for your [Hono](https://hono.dev) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
+This page guides you through the setup of the Apitally SDK for your [H3](https://h3.dev) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
 
-<SetupGuideStartSnippet framework="Hono" />
+<SetupGuideStartSnippet framework="H3" />
 
 ## Create app
 
-To get started, create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and select Hono as your framework.
+To get started, create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and select H3 as your framework.
 
 <img src="https://assets.apitally.io/docs/2025-12-08/create-app.webp" alt="Create app" className="rounded-xl" />
 
@@ -30,7 +30,7 @@ After submitting, you will see tailored setup instructions for your app. These i
 
 ## Install the SDK
 
-Install the Apitally SDK as a dependency in your project. The SDK supports Node.js 20.6 or later and Bun.
+Install the Apitally SDK as a dependency in your project. This setup requires Node.js 20.11.1 or later, or Bun.
 
 <CodeGroup>
 ```shell npm
@@ -52,33 +52,21 @@ bun add apitally@beta
 
 ## Initialize Apitally
 
-Call `useApitally` with your Hono application, the write token, and [other configuration options](/sdk-reference/javascript/v1/configuration) immediately after creating the app, before registering middleware and routes.
+Add `apitallyPlugin` to the `plugins` configuration when creating your H3 application, providing the write token and [other configuration options](/sdk-reference/javascript/v1/configuration).
 
-<CodeGroup>
-```javascript ESM {6-9}
-import { Hono } from "hono";
-import { useApitally } from "apitally";
+```javascript {5-10}
+import { H3 } from "h3";
+import { apitallyPlugin } from "apitally/h3";
 
-const app = new Hono();
-
-useApitally(app, {
-  writeToken: "your-write-token",
-  env: "dev", // or "prod" etc.
+const app = new H3({
+  plugins: [
+    apitallyPlugin({
+      writeToken: "your-write-token",
+      env: "dev", // or "prod" etc.
+    }),
+  ],
 });
 ```
-
-```javascript CommonJS {6-9}
-const { Hono } = require("hono");
-const { useApitally } = require("apitally");
-
-const app = new Hono();
-
-useApitally(app, {
-  writeToken: "your-write-token",
-  env: "dev", // or "prod" etc.
-});
-```
-</CodeGroup>
 
 You can also set the `APITALLY_WRITE_TOKEN` and `APITALLY_ENV` environment variables instead of passing `writeToken` and `env` in code.
 
@@ -101,32 +89,31 @@ You can also provide a display name and group for each consumer.
 ```javascript Middleware {6-10}
 import { setConsumer } from "apitally";
 
-app.use(async (c, next) => {
-  const payload = c.get("jwtPayload");
-  if (payload) {
+app.use((event) => {
+  const user = event.context.user;
+  if (user) {
     setConsumer({
-      identifier: payload.sub,
-      name: payload.name, // optional
-      group: payload.group, // optional
+      identifier: user.username,
+      name: user.name, // optional
+      group: user.group, // optional
     });
   }
-  await next();
 });
 ```
 
 ```javascript Route handler {6-10}
 import { setConsumer } from "apitally";
 
-app.get("/items", (c) => {
-  const payload = c.get("jwtPayload");
-  if (payload) {
+app.get("/items", (event) => {
+  const user = event.context.user;
+  if (user) {
     setConsumer({
-      identifier: payload.sub,
-      name: payload.name, // optional
-      group: payload.group, // optional
+      identifier: user.username,
+      name: user.name, // optional
+      group: user.group, // optional
     });
   }
-  return c.json(["item1"]);
+  return ["item1"];
 });
 ```
 
@@ -136,13 +123,17 @@ app.get("/items", (c) => {
 
 Only response headers are captured by default. You can opt in to capture request headers as well as request and response bodies when initializing Apitally.
 
-```javascript {4-6}
-useApitally(app, {
-  writeToken: "your-write-token",
-  env: "dev", // or "prod" etc.
-  captureRequestHeaders: true,
-  captureRequestBody: true,
-  captureResponseBody: true,
+```javascript {6-8}
+const app = new H3({
+  plugins: [
+    apitallyPlugin({
+      writeToken: "your-write-token",
+      env: "dev", // or "prod" etc.
+      captureRequestHeaders: true,
+      captureRequestBody: true,
+      captureResponseBody: true,
+    }),
+  ],
 });
 ```
 
@@ -152,12 +143,16 @@ The SDK automatically masks common sensitive query parameters, headers, and body
 
 To mask additional data, pass regular expressions matching query parameter names, header names, or body field names to `maskQueryParams`, `maskHeaders`, or `maskBodyFields`, respectively. Use the `i` flag for case-insensitive matching.
 
-```javascript {3-5}
-useApitally(app, {
-  writeToken: "your-write-token",
-  maskQueryParams: [/^account_id$/i],
-  maskHeaders: [/^X-Custom-Key$/i],
-  maskBodyFields: [/^credit_card$/i],
+```javascript {5-7}
+const app = new H3({
+  plugins: [
+    apitallyPlugin({
+      writeToken: "your-write-token",
+      maskQueryParams: [/^account_id$/i],
+      maskHeaders: [/^X-Custom-Key$/i],
+      maskBodyFields: [/^credit_card$/i],
+    }),
+  ],
 });
 ```
 
@@ -171,10 +166,14 @@ If your application receives a lot of traffic, you may want to sample requests t
 
 Use `sampleRate` to capture logs and traces for a fraction of requests.
 
-```javascript {3}
-useApitally(app, {
-  writeToken: "your-write-token",
-  sampleRate: 0.1, // capture logs and traces for 10% of requests
+```javascript {5}
+const app = new H3({
+  plugins: [
+    apitallyPlugin({
+      writeToken: "your-write-token",
+      sampleRate: 0.1, // capture logs and traces for 10% of requests
+    }),
+  ],
 });
 ```
 
