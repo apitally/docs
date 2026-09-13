@@ -1,0 +1,137 @@
+---
+title: Configuration
+description: Configure the Apitally SDK for JavaScript.
+---
+
+<CodeGroup>
+  ```javascript Express {8-12}
+  import "apitally/express/register";
+
+  import express from "express";
+  import { useApitally } from "apitally";
+
+  const app = express();
+
+  useApitally(app, {
+    writeToken: "your-write-token",
+    env: "dev",
+    // other parameters ...
+  });
+  ```
+
+  ```javascript Fastify {6-10}
+  import Fastify from "fastify";
+  import { useApitally } from "apitally";
+
+  const app = Fastify();
+
+  useApitally(app, {
+    writeToken: "your-write-token",
+    env: "dev",
+    // other parameters ...
+  });
+  ```
+
+  ```javascript Hono {6-10}
+  import { Hono } from "hono";
+  import { useApitally } from "apitally";
+
+  const app = new Hono();
+
+  useApitally(app, {
+    writeToken: "your-write-token",
+    env: "dev",
+    // other parameters ...
+  });
+  ```
+</CodeGroup>
+
+## Parameters
+
+#### `writeToken`
+
+Write token for your application in the format `apt_...`. Find it on the _Setup instructions_ page for your app. Required unless the `APITALLY_WRITE_TOKEN` environment variable is set.
+
+#### `env`
+
+Name of the environment, for example `prod` or `dev`. Can also be set via the `APITALLY_ENV` environment variable. The environment is created automatically if it does not exist. Defaults to `dev`.
+
+#### `appVersion`
+
+The current version of your application, for example `1.0.0`.
+
+#### `disabled`
+
+Boolean. Whether to disable the SDK. The `APITALLY_DISABLED` and `OTEL_SDK_DISABLED` environment variables are used when this option is not set. Defaults to `false`.
+
+#### `captureLogs`
+
+Boolean. Whether to capture application logs from `console` and supported logging integrations. Defaults to `true`.
+
+#### `captureRequestHeaders`
+
+Boolean. Whether to capture request headers. Default masking applies to common sensitive headers such as `Authorization`. Defaults to `false`.
+
+#### `captureRequestBody`
+
+Boolean. Whether to capture the request body. Only JSON and text bodies up to 50 KB are supported. Defaults to `false`.
+
+#### `captureResponseHeaders`
+
+Boolean. Whether to capture response headers. Defaults to `true`.
+
+#### `captureResponseBody`
+
+Boolean. Whether to capture the response body. Only JSON and text bodies up to 50 KB are supported. Defaults to `false`.
+
+#### `maskQueryParams`
+
+Array of regular expressions for matching query parameters to mask. These are applied in addition to the default masking patterns. Defaults to `[]`.
+
+```javascript
+maskQueryParams: [/^api_key$/i, /^token$/i],
+```
+
+#### `maskHeaders`
+
+Array of regular expressions for matching headers to mask. These are applied in addition to the default masking patterns. Defaults to `[]`.
+
+```javascript
+maskHeaders: [/^X-Api-Key$/i, /^X-Internal-/i],
+```
+
+#### `maskBodyFields`
+
+Array of regular expressions for matching request and response body fields to mask. These are applied in addition to the default masking patterns. Defaults to `[]`.
+
+```javascript
+maskBodyFields: [/^credit_card$/i, /^account_id$/i],
+```
+
+#### `maskRequestBody`
+
+Callback for masking the request body. It receives the body as a `Buffer` and the request `ReadableSpan`, and returns the masked body as a `Buffer` or `null`.
+
+#### `maskResponseBody`
+
+Callback for masking the response body. It receives the body as a `Buffer` and the request `ReadableSpan`, and returns the masked body as a `Buffer` or `null`.
+
+#### `excludePaths`
+
+Array of regular expressions for matching paths to exclude from request logs and traces. Excluded requests are still included in metrics. Defaults to `[]`.
+
+```javascript
+excludePaths: [/^\/admin\/$/, /\/internal\//],
+```
+
+#### `sampleRate`
+
+Fraction of requests to capture as request logs and traces, from `0.0` to `1.0`. Metrics are not sampled. Defaults to `1.0`.
+
+#### `sampleOnRequest`
+
+Callback for adjusting sampling when a request starts. It receives the request `ReadableSpan` and returns a probability, a boolean, or `undefined` to use `sampleRate`.
+
+#### `sampleOnResponse`
+
+Callback for adjusting sampling when a response is ready. It receives the ended request `ReadableSpan` and returns a probability, a boolean, or `undefined` to preserve the existing decision.

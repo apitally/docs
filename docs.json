@@ -198,6 +198,14 @@
                 "tag": "beta",
                 "groups": [
                   {
+                    "group": "SDK reference",
+                    "icon": "book",
+                    "pages": [
+                      "sdk-reference/javascript/v1/overview",
+                      "sdk-reference/javascript/v1/configuration"
+                    ]
+                  },
+                  {
                     "group": "Setup guides",
                     "icon": "rocket",
                     "pages": [
