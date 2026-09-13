@@ -40,8 +40,6 @@ useApitally(app, {
 
 For more control over body masking, you can provide callback functions via the `maskRequestBody` and `maskResponseBody` options. Each function receives the captured body as a `Buffer` and the ended request `ReadableSpan`. Request metadata is available through [`span.attributes`](/sdk-reference/javascript/v1/attributes). Each function should return the masked body as a `Buffer`, or `null` to mask the entire body.
 
-The following example callbacks mask the entire request body for admin endpoints and selected fields in user profile responses:
-
 ```javascript Callback function examples {49-51}
 import { Hono } from "hono";
 import { useApitally } from "apitally";

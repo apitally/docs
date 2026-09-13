@@ -48,6 +48,8 @@ description: Configure the Apitally SDK for JavaScript.
 
 ## Parameters
 
+### General
+
 #### `writeToken`
 
 Write token for your application in the format `apt_...`. Find it on the _Setup instructions_ page for your app. Required unless the `APITALLY_WRITE_TOKEN` environment variable is set.
@@ -63,6 +65,8 @@ The current version of your application, for example `1.0.0`.
 #### `disabled`
 
 Boolean. Whether to disable the SDK. The `APITALLY_DISABLED` and `OTEL_SDK_DISABLED` environment variables are used when this option is not set. Defaults to `false`.
+
+### Data capture
 
 #### `captureLogs`
 
@@ -83,6 +87,8 @@ Boolean. Whether to capture response headers. Defaults to `true`.
 #### `captureResponseBody`
 
 Boolean. Whether to capture the response body. Only JSON and text bodies up to 50 KB are supported. Defaults to `false`.
+
+### Masking
 
 #### `maskQueryParams`
 
@@ -112,17 +118,15 @@ maskBodyFields: [/^credit_card$/i, /^account_id$/i],
 
 Callback for masking the request body. It receives the body as a `Buffer` and the request `ReadableSpan`, and returns the masked body as a `Buffer` or `null`.
 
+See example [here](/sdk-reference/javascript/v1/masking#body-masking-callbacks).
+
 #### `maskResponseBody`
 
 Callback for masking the response body. It receives the body as a `Buffer` and the request `ReadableSpan`, and returns the masked body as a `Buffer` or `null`.
 
-#### `excludePaths`
+See example [here](/sdk-reference/javascript/v1/masking#body-masking-callbacks).
 
-Array of regular expressions for matching paths to exclude from request logs and traces. Excluded requests are still included in metrics. Defaults to `[]`.
-
-```javascript
-excludePaths: [/^\/admin\/$/, /\/internal\//],
-```
+### Sampling
 
 #### `sampleRate`
 
@@ -132,6 +136,18 @@ Fraction of requests to capture as request logs and traces, from `0.0` to `1.0`.
 
 Callback for adjusting sampling when a request starts. It receives the request `ReadableSpan` and returns a probability, a boolean, or `undefined` to use `sampleRate`.
 
+See example [here](/sdk-reference/javascript/v1/sampling#custom-sampling).
+
 #### `sampleOnResponse`
 
 Callback for adjusting sampling when a response is ready. It receives the ended request `ReadableSpan` and returns a probability, a boolean, or `undefined` to preserve the existing decision.
+
+See example [here](/sdk-reference/javascript/v1/sampling#custom-sampling).
+
+#### `excludePaths`
+
+Array of regular expressions for matching paths to exclude from request logs and traces. Excluded requests are still included in metrics. Defaults to `[]`.
+
+```javascript
+excludePaths: [/^\/admin\/$/, /\/internal\//],
+```

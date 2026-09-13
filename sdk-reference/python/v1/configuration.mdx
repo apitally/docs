@@ -46,6 +46,8 @@ description: Configure the Apitally SDK for Python.
 
 ## Parameters
 
+### General
+
 #### `write_token`
 
 Write token for your application in the format `apt_...`. Find it on the _Setup instructions_ page for your app. Required unless the `APITALLY_WRITE_TOKEN` environment variable is set.
@@ -61,6 +63,8 @@ The current version of your application, for example `1.0.0`.
 #### `disabled`
 
 Boolean. Whether to disable the SDK. The `APITALLY_DISABLED` and `OTEL_SDK_DISABLED` environment variables are used when this parameter is not set. Defaults to `False`.
+
+### Data capture
 
 #### `capture_logs`
 
@@ -81,6 +85,8 @@ Boolean. Whether to capture response headers. Defaults to `True`.
 #### `capture_response_body`
 
 Boolean. Whether to capture the response body. Only JSON and text bodies up to 50 KB are supported. Defaults to `False`.
+
+### Masking
 
 #### `mask_query_params`
 
@@ -110,17 +116,15 @@ mask_body_fields=[r"^credit_card$", r"^account_id$"],
 
 Callback for masking the request body. It receives the request [`ReadableSpan`](/sdk-reference/python/v1/attributes) and body as `bytes`, and returns the masked body as `bytes` or `None`.
 
+See example [here](/sdk-reference/python/v1/masking#body-masking-callbacks).
+
 #### `mask_response_body`
 
 Callback for masking the response body. It receives the request [`ReadableSpan`](/sdk-reference/python/v1/attributes) and body as `bytes`, and returns the masked body as `bytes` or `None`.
 
-#### `exclude_paths`
+See example [here](/sdk-reference/python/v1/masking#body-masking-callbacks).
 
-List of regular expressions for matching paths to exclude from request logs and traces. Excluded requests are still included in metrics. Defaults to `[]`.
-
-```python
-exclude_paths=[r"^/admin/$", r"/internal/"],
-```
+### Sampling
 
 #### `sample_rate`
 
@@ -130,13 +134,27 @@ Fraction of requests to capture as request logs and traces, from `0.0` to `1.0`.
 
 Callback for adjusting sampling when a request starts. It receives the request [`ReadableSpan`](/sdk-reference/python/v1/attributes) and returns a probability, a boolean, or `None` to use `sample_rate`.
 
+See example [here](/sdk-reference/python/v1/sampling#custom-sampling).
+
 #### `sample_on_response`
 
 Callback for adjusting sampling when a response is ready. It receives the ended request [`ReadableSpan`](/sdk-reference/python/v1/attributes) and returns a probability, a boolean, or `None` to preserve the existing decision.
 
+See example [here](/sdk-reference/python/v1/sampling#custom-sampling).
+
+#### `exclude_paths`
+
+List of regular expressions for matching paths to exclude from request logs and traces. Excluded requests are still included in metrics. Defaults to `[]`.
+
+```python
+exclude_paths=[r"^/admin/$", r"/internal/"],
+```
+
+### Django-specific
+
 #### `django_urlconf`
 
-Applies to Django only. String or list of strings representing Django URLconf modules used to discover routes and schemas. Set this to `None` to use the root URLconf.
+String or list of strings representing Django URLconf modules used to discover routes and schemas. Set this to `None` to use the root URLconf.
 
 ```python
 django_urlconf=["myproject.urls", "myapp.urls"],
@@ -144,4 +162,4 @@ django_urlconf=["myproject.urls", "myapp.urls"],
 
 #### `django_include_class_based_views`
 
-Boolean. Applies to Django only. Whether to include class-based Django views in the reported endpoint list in addition to Django REST Framework and Django Ninja routes. Defaults to `False`.
+Boolean. Whether to include class-based Django views in the reported endpoint list in addition to Django REST Framework and Django Ninja routes. Defaults to `False`.
