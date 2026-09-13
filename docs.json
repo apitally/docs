@@ -195,7 +195,16 @@
               },
               {
                 "version": "v1",
-                "tag": "beta"
+                "tag": "beta",
+                "groups": [
+                  {
+                    "group": "Setup guides",
+                    "icon": "rocket",
+                    "pages": [
+                      "sdk-reference/javascript/v1/setup-guides/express"
+                    ]
+                  }
+                ]
               }
             ]
           },
