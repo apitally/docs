@@ -203,6 +203,7 @@
                     "icon": "book",
                     "pages": [
                       "sdk-reference/javascript/v1/overview",
+                      "sdk-reference/javascript/v1/migration",
                       "sdk-reference/javascript/v1/configuration",
                       "sdk-reference/javascript/v1/masking",
                       "sdk-reference/javascript/v1/sampling",
