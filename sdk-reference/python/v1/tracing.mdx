@@ -83,3 +83,19 @@ def checkout(cart_id: int) -> None:
         # Payment logic here
         ...
 ```
+
+## Capture handled exceptions
+
+Apitally includes exceptions in request traces to help you diagnose server errors. Exceptions that propagate through your web framework are captured automatically.
+
+If your application catches an exception and handles it without re-raising it, call `apitally.capture_exception()` to include it in the current request trace.
+
+```python
+import apitally
+
+try:
+    process_order()
+except Exception as exc:
+    apitally.capture_exception(exc)
+    # Return an error response without re-raising the exception
+```

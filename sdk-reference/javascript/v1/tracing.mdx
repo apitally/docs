@@ -111,3 +111,20 @@ async function checkout(cartId) {
   });
 }
 ```
+
+## Capture handled exceptions
+
+Apitally includes exceptions in request traces to help you diagnose server errors. Exceptions that propagate through your web framework are captured automatically.
+
+If your application catches an exception and handles it without rethrowing it, call `captureException()` to include it in the current request trace.
+
+```javascript
+import { captureException } from "apitally";
+
+try {
+  processOrder();
+} catch (error) {
+  captureException(error);
+  // Return an error response without rethrowing the exception
+}
+```
