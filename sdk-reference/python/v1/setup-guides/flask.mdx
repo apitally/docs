@@ -83,7 +83,7 @@ Call `apitally.set_consumer` during request handling to associate the current re
 You can also provide a display name and group for each consumer.
 
 <CodeGroup>
-```python Before request hook {11-15}
+```python Before request hook {12-16}
 import apitally
 from flask import Flask, g
 
@@ -93,15 +93,16 @@ apitally.init(app, write_token="your-write-token")
 
 @app.before_request
 def identify_consumer() -> None:
-    if g.current_user:
+    user = g.get("user")
+    if user:
         apitally.set_consumer(
-            g.current_user["email"],
-            name=g.current_user["name"],  # optional
-            group=g.current_user["role"],  # optional
+            user["email"],
+            name=user["name"],  # optional
+            group=user["role"],  # optional
         )
 ```
 
-```python View function {11-15}
+```python View function {12-16}
 import apitally
 from flask import Flask, g
 
@@ -111,11 +112,12 @@ apitally.init(app, write_token="your-write-token")
 
 @app.get("/items")
 def list_items() -> list[str]:
-    if g.current_user:
+    user = g.get("user")
+    if user:
         apitally.set_consumer(
-            g.current_user["email"],
-            name=g.current_user["name"],  # optional
-            group=g.current_user["role"],  # optional
+            user["email"],
+            name=user["name"],  # optional
+            group=user["role"],  # optional
         )
     return ["item1"]
 ```
