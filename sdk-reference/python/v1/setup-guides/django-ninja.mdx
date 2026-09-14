@@ -94,7 +94,7 @@ def list_items(request: HttpRequest) -> list[str]:
         apitally.set_consumer(
             request.user.get_username(),
             name=request.user.get_full_name(),  # optional
-            group=request.user.groups.first().name,  # optional
+            group=request.user.groups.values_list("name", flat=True).first(),  # optional
         )
     return ["item1"]
 ```
@@ -115,7 +115,7 @@ class IdentifyConsumerMiddleware:
             apitally.set_consumer(
                 user.get_username(),
                 name=user.get_full_name(),  # optional
-                group=user.groups.first().name,  # optional
+                group=user.groups.values_list("name", flat=True).first(),  # optional
             )
         return response
 ```
