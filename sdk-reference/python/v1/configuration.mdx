@@ -114,15 +114,21 @@ mask_body_fields=[r"^credit_card$", r"^account_id$"],
 
 #### `mask_request_body`
 
-Callback for masking the request body. It receives the request [`ReadableSpan`](/sdk-reference/python/v1/attributes) and body as `bytes`, and returns the masked body as `bytes` or `None`.
+Callback for masking the request body. It receives the request [`ReadableSpan`](https://opentelemetry-python.readthedocs.io/en/stable/sdk/trace.html#opentelemetry.sdk.trace.ReadableSpan) and body as `bytes`, and returns the masked body as `bytes` or `None`.
 
 See example [here](/sdk-reference/python/v1/masking#body-masking-callbacks).
 
 #### `mask_response_body`
 
-Callback for masking the response body. It receives the request [`ReadableSpan`](/sdk-reference/python/v1/attributes) and body as `bytes`, and returns the masked body as `bytes` or `None`.
+Callback for masking the response body. It receives the request [`ReadableSpan`](https://opentelemetry-python.readthedocs.io/en/stable/sdk/trace.html#opentelemetry.sdk.trace.ReadableSpan) and body as `bytes`, and returns the masked body as `bytes` or `None`.
 
 See example [here](/sdk-reference/python/v1/masking#body-masking-callbacks).
+
+#### `mask_log_record`
+
+Callback for masking application logs. It receives an OpenTelemetry [`ReadWriteLogRecord`](https://opentelemetry-python.readthedocs.io/en/stable/sdk/_logs.html#opentelemetry.sdk._logs.ReadWriteLogRecord) and returns the same record after masking, or `None` to drop it.
+
+See example [here](/sdk-reference/python/v1/masking#log-record-masking-callback).
 
 ### Sampling
 
@@ -132,13 +138,13 @@ Fraction of requests to capture as request logs and traces, from `0.0` to `1.0`.
 
 #### `sample_on_request`
 
-Callback for adjusting sampling when a request starts. It receives the request [`ReadableSpan`](/sdk-reference/python/v1/attributes) and returns a probability, a boolean, or `None` to use `sample_rate`.
+Callback for adjusting sampling when a request starts. It receives the request [`ReadableSpan`](https://opentelemetry-python.readthedocs.io/en/stable/sdk/trace.html#opentelemetry.sdk.trace.ReadableSpan) and returns a probability, a boolean, or `None` to use `sample_rate`.
 
 See example [here](/sdk-reference/python/v1/sampling#custom-sampling).
 
 #### `sample_on_response`
 
-Callback for adjusting sampling when a response is ready. It receives the ended request [`ReadableSpan`](/sdk-reference/python/v1/attributes) and returns a probability, a boolean, or `None` to preserve the existing decision.
+Callback for adjusting sampling when a response is ready. It receives the ended request [`ReadableSpan`](https://opentelemetry-python.readthedocs.io/en/stable/sdk/trace.html#opentelemetry.sdk.trace.ReadableSpan) and returns a probability, a boolean, or `None` to preserve the existing decision.
 
 See example [here](/sdk-reference/python/v1/sampling#custom-sampling).
 
