@@ -59,21 +59,22 @@ Apitally sets up the OpenTelemetry tracer provider automatically, so you do not 
 
 ## Existing OpenTelemetry setup
 
-If your application already registers its own tracer provider, add `ApitallySpanProcessor` to its span processors. For example, with `NodeSDK`:
+Apitally works alongside your existing OpenTelemetry instrumentation and exporters. If your application registers its own tracer provider, add `ApitallySpanProcessor` to the list of span processors. For example, with `NodeSDK`:
 
-```javascript {2,5}
+```javascript {2,7}
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import { ApitallySpanProcessor } from "apitally";
 
 const sdk = new NodeSDK({
-  spanProcessors: [new ApitallySpanProcessor()],
+  spanProcessors: [
+    // your existing span processors ...
+    new ApitallySpanProcessor(),
+  ],
   // your existing configuration ...
 });
 
 sdk.start();
 ```
-
-Your existing exporters continue to receive spans, while Apitally captures spans created during requests.
 
 ## Create custom spans
 
