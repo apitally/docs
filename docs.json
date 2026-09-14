@@ -135,6 +135,7 @@
                     "icon": "book",
                     "pages": [
                       "sdk-reference/python/v1/overview",
+                      "sdk-reference/python/v1/migration",
                       "sdk-reference/python/v1/configuration",
                       "sdk-reference/python/v1/masking",
                       "sdk-reference/python/v1/sampling",
