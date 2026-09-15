@@ -3,3 +3,4 @@
 
 # Agents
 .claude/*.lock
+.pi/tasks/

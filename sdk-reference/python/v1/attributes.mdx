@@ -1,0 +1,42 @@
+---
+title: Attributes
+description: Span attributes available to callbacks in the Apitally SDK for Python.
+---
+
+In the Apitally SDK, each API request is represented by a span. Span attributes contain metadata about the request and response, such as the request path, HTTP method, and response status code.
+
+You can use this metadata to make decisions in [sampling](/sdk-reference/python/v1/sampling#custom-sampling) and [masking](/sdk-reference/python/v1/masking#body-masking-callbacks) callbacks, which receive the `span` object as an argument. Access attributes through `span.attributes`. Individual attributes might be missing, so use `.get()`:
+
+```python {4-5}
+from opentelemetry.sdk.trace import ReadableSpan
+
+def callback(span: ReadableSpan):
+    attributes = span.attributes or {}
+    path = attributes.get("url.path")
+    # ...
+```
+
+## Default attributes
+
+The following attributes are useful for common callback decisions. The list is not exhaustive.
+
+| Attribute | Type | Description |
+| :--- | :--- | :--- |
+| `http.request.method` | `str` | HTTP method, e.g. `GET` or `POST`. |
+| `url.path` | `str` | Request path, e.g. `/users/123`. |
+| `url.query` | `str` | Query string without `?`, e.g. `page=2`. |
+| `user_agent.original` | `str` | Value of the `User-Agent` header. |
+| `http.route` | `str` | Matched endpoint route pattern, e.g. `/users/{id}`. |
+| `http.response.status_code` | `int` | HTTP response status code, e.g. `200` or `404`. |
+| `apitally.consumer.identifier` | `str` | Consumer identifier supplied via `apitally.set_consumer()`. |
+| `apitally.consumer.group` | `str` | Optional consumer group supplied via `apitally.set_consumer()`. |
+
+## Set custom attributes
+
+Use `apitally.set_request_attribute()` in your request handling code to attach custom metadata to the current request span. These attributes are included in the request trace and available to response-stage sampling and masking callbacks.
+
+```python
+import apitally
+
+apitally.set_request_attribute("tenant.id", tenant_id)
+```

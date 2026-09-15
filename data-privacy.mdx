@@ -5,8 +5,8 @@ description: "How Apitally handles data collection, storage, and retention."
 
 Apitally is built with a strong focus on data privacy. We hold ourselves to these principles:
 
-- Collect only the data that's required, and nothing more
-- Require explicit user opt-in for any feature that could capture sensitive data
+- Collect only the data that's required
+- Require explicit user opt-in for features that could capture sensitive data
 - Offer extensive configuration options to control data collection, masking and filtering
 - Provide full transparency about what data is collected and how it's handled
 
@@ -18,9 +18,7 @@ This is a complete overview of the data collected by Apitally.
 
 <Tip>
   The configuration options mentioned throughout this page are in `snake_case` notation, as used in Python.
-  Check out the [SDK reference](/sdk-reference) for your language to see the equivalent parameter names.
-
-  The [setup guide](/setup-guides) for each framework also includes configuration examples.
+  Check out the [SDK reference](/sdk-reference/overview) for your language to see the equivalent parameter names.
 </Tip>
 
 <span style={{ position: "relative", top: -2 }}><Icon icon="shield" /></span> *= Potentially sensitive and not collected by default.*
@@ -92,7 +90,7 @@ The following data is collected for each request handled by your application and
   <Accordion title={<>Consumer <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
     Consumer identifier, and optionally name and group, as provided by your own implementation.
 
-    See the [setup guide](/setup-guides) for your framework for how to associate requests with consumers.
+    See the [setup guide](/sdk-reference/setup-guides/overview) for your framework for how to associate requests with consumers.
 
     Example:
 
@@ -209,7 +207,7 @@ The following data is collected for each request handled by your application, if
   <Accordion title={<>Consumer <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
     Consumer identifier, and optionally name and group, as provided by your own implementation.
 
-    See the [setup guide](/setup-guides) for your framework for how to associate requests with consumers.
+    See the [setup guide](/sdk-reference/setup-guides/overview) for your framework for how to associate requests with consumers.
 
     Example:
 

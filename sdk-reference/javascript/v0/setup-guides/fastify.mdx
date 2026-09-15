@@ -1,0 +1,191 @@
+---
+title: "Setup guide for Fastify"
+sidebarTitle: "Fastify"
+description: "Just a few simple steps to get started with Apitally."
+---
+
+import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
+import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
+import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
+import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
+import AddMiddlewareCheck from '/snippets/add-middleware-check.mdx';
+import IdentifyConsumersSnippet from '/snippets/identify-consumers.mdx';
+import IdentifyConsumersCheck from '/snippets/identify-consumers-check.mdx';
+import ConfigureRequestLoggingCheck from '/snippets/configure-request-logging-check.mdx';
+
+This page guides you through the steps of configuring your [Fastify](https://fastify.dev) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
+
+<SetupGuideStartSnippet framework="Fastify" />
+
+## Create app
+
+<CreateAppSnippet1 framework="Fastify" />
+
+<img src="https://assets.apitally.io/docs/2025-12-08/create-app.webp" alt="Create app" className="rounded-xl" />
+
+<CreateAppSnippet2 />
+
+## Add plugin
+
+Next, install the [Apitally SDK](/sdk-reference/javascript/v0/overview) and the [fastify-plugin](https://www.npmjs.com/package/fastify-plugin) package in your Fastify project.
+
+<CodeGroup>
+```shell npm
+npm install apitally fastify-plugin
+```
+
+```shell yarn
+yarn add apitally fastify-plugin
+```
+</CodeGroup>
+
+Register the Apitally plugin with your Fastify application and provide the `clientId` for your app.
+You'll find the `clientId` on the _Setup instructions_ page for your app in the Apitally dashboard, which is displayed immediately after creating the app.
+
+<CodeGroup>
+```javascript ESM
+import Fastify from "fastify";
+import { apitallyPlugin } from "apitally/fastify";
+
+const fastify = Fastify({ logger: true });
+
+await fastify.register(apitallyPlugin, {
+  clientId: "your-client-id",
+  env: "dev", // or "prod" etc.
+});
+```
+
+```javascript CommonJS
+const fastify = require("fastify")({ logger: true });
+const { apitallyPlugin } = require("apitally/fastify");
+
+fastify.register(apitallyPlugin, {
+  clientId: "your-client-id",
+  env: "dev", // or "prod" etc.
+});
+
+// Wrap your routes in a plugin, so Apitally can detect them
+fastify.register((instance, opts, done) => {
+  instance.get("/", (request, reply) => {
+    reply.send("hello");
+  });
+  done();
+});
+```
+</CodeGroup>
+
+<div className="mt-4">
+  <AddMiddlewareCheck />
+</div>
+
+## Identify consumers
+
+<IdentifyConsumersSnippet />
+
+Use the `setConsumer` function to associate requests with consumers, for example in an `onRequest` hook.
+
+<CodeGroup>
+```javascript Identifier only
+import { setConsumer } from "apitally/fastify";
+
+fastify.addHook("onRequest", async (request, reply) => {
+  try {
+    await request.jwtVerify(); // Assuming @fastify/jwt is used for authentication
+    setConsumer(request, request.user.name);
+  } catch (err) {
+    reply.send(err);
+  }
+});
+```
+
+```javascript With name and group
+import { setConsumer } from "apitally/fastify";
+
+fastify.addHook("onRequest", async (request, reply) => {
+  try {
+    await request.jwtVerify(); // Assuming @fastify/jwt is used for authentication
+    setConsumer(request, {
+      identifier: request.user.id.toString(),
+      name: request.user.name, // optional
+      group: request.user.group, // optional
+    });
+  } catch (err) {
+    reply.send(err);
+  }
+});
+```
+</CodeGroup>
+
+<IdentifyConsumersCheck />
+
+## Configure request logging
+
+<RequestLoggingConfigSnippet language="javascript" />
+
+<CodeGroup>
+```javascript Basic example
+import Fastify from "fastify";
+import { apitallyPlugin } from "apitally/fastify";
+
+const fastify = Fastify({ logger: true });
+
+await fastify.register(apitallyPlugin, {
+  clientId: "your-client-id",
+  env: "dev", // or "prod" etc.
+  requestLogging: {
+    enabled: true,
+    logRequestHeaders: true,
+    logRequestBody: true,
+    logResponseBody: true,
+    captureLogs: true,
+    captureTraces: false, // requires instrumentation
+  },
+});
+```
+
+```javascript Advanced example
+import Fastify from "fastify";
+import { apitallyPlugin } from "apitally/fastify";
+
+const fastify = Fastify({ logger: true });
+
+await fastify.register(apitallyPlugin, {
+  clientId: "your-client-id",
+  env: "dev", // or "prod" etc.
+  requestLogging: {
+    enabled: true,
+    logQueryParams: true,
+    logRequestHeaders: true,
+    logRequestBody: true,
+    logResponseHeaders: true,
+    logResponseBody: true,
+    logException: true,
+    captureLogs: true,
+    captureTraces: false, // requires instrumentation
+    // Mask query parameters using regex
+    maskQueryParams: [/^card_number$/i],
+    // Mask headers using regex
+    maskHeaders: [/^X-Sensitive-Header$/i],
+    // Mask request/response body fields using regex
+    maskBodyFields: [/^sensitive_field$/i],
+    // Mask request/response body with custom logic via callbacks (e.g. for admin endpoints)
+    // The callback should return null to mask the whole body, or return the (modified) raw body
+    maskRequestBodyCallback: (request) => request.path?.startsWith("/admin/") ? null : request.body,
+    maskResponseBodyCallback: (request, response) => request.path?.startsWith("/admin/") ? null : response.body,
+    // Exclude paths from request logging using regex (common health check paths are excluded by default)
+    excludePaths: [/\/metrics$/],
+    // Exclude requests from logging with custom logic via callback (e.g. exclude requests from a specific consumer)
+    // The callback should return true to exclude the request
+    excludeCallback: (request, response) => request.consumer === "some-consumer",
+  },
+});
+```
+</CodeGroup>
+
+<ConfigureRequestLoggingCheck />
+
+## Enable tracing
+
+Tracing gives you a detailed breakdown of time spent during the handling of each request, showing the duration of database queries, HTTP calls, and other operations.
+
+To enable tracing, set `captureTraces` to `true` and instrument the libraries you want to trace with OpenTelemetry. See the [tracing guide](/sdk-reference/javascript/v0/tracing) for further instructions.

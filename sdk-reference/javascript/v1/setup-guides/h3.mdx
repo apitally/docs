@@ -1,0 +1,237 @@
+---
+title: "Setup guide for H3 v2"
+sidebarTitle: "H3"
+description: "Set up the Apitally SDK for your H3 application."
+---
+
+import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
+
+<Info>This setup guide is for v1 of the JavaScript SDK (currently in beta).</Info>
+
+<Note>Apitally only works with H3 v2 (currently in beta).</Note>
+
+This page guides you through the setup of the Apitally SDK for your [H3](https://h3.dev) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
+
+<SetupGuideStartSnippet framework="H3" />
+
+## Requirements
+
+Requires Node.js 20.11.1+ or Bun 1.1.13+, with H3 2.0.1-rc.26+.
+
+## Create app
+
+To get started, create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and select H3 as your framework.
+
+<img src="https://assets.apitally.io/docs/2025-12-08/create-app.webp" alt="Create app" className="rounded-xl" />
+
+You can also configure the environments (e.g. `prod` and `dev`) for your app, or simply accept the defaults.
+
+After submitting, you will see tailored setup instructions for your app. These include your write token and code snippets you can copy and paste into your project.
+
+<Note>
+  The **write token** (`apt_...`) provided in the setup instructions uniquely identifies your app for the purpose of data ingestion only. It does not grant any kind of read access to your data.
+</Note>
+
+## Install the SDK
+
+Install the Apitally SDK as a dependency in your project.
+
+<CodeGroup>
+```shell npm
+npm install apitally@beta
+```
+
+```shell yarn
+yarn add apitally@beta
+```
+
+```shell pnpm
+pnpm add apitally@beta
+```
+
+```shell bun
+bun add apitally@beta
+```
+</CodeGroup>
+
+## Initialize Apitally
+
+Add `apitallyPlugin` to the `plugins` configuration when creating your H3 application, providing the write token and [other configuration options](/sdk-reference/javascript/v1/configuration).
+
+```javascript {5-10}
+import { H3 } from "h3";
+import { apitallyPlugin } from "apitally/h3";
+
+const app = new H3({
+  plugins: [
+    apitallyPlugin({
+      writeToken: "your-write-token",
+      env: "dev", // or "prod" etc.
+    }),
+  ],
+});
+```
+
+You can also set the `APITALLY_WRITE_TOKEN` and `APITALLY_ENV` environment variables instead of passing `writeToken` and `env` in code.
+
+Deploy your application with these changes, or restart it if you're testing locally.
+
+<Check>
+  The basic setup is now complete. Metrics and logs will start appearing in the Apitally
+  dashboard.
+</Check>
+
+## Identify consumers
+
+Consumers are the users or applications calling your API. Identifying them lets you analyze and filter API traffic by consumer in Apitally.
+
+Call `setConsumer` during request handling to associate the current request with a consumer identifier. You can call it wherever the consumer is known, such as in a route handler, existing middleware, or authentication code.
+
+You can also provide a display name and group for each consumer.
+
+<CodeGroup>
+```javascript Middleware {6-10}
+import { setConsumer } from "apitally";
+
+app.use((event) => {
+  const user = event.context.user;
+  if (user) {
+    setConsumer({
+      identifier: user.username,
+      name: user.name, // optional
+      group: user.group, // optional
+    });
+  }
+});
+```
+
+```javascript Route handler {6-10}
+import { setConsumer } from "apitally";
+
+app.get("/items", (event) => {
+  const user = event.context.user;
+  if (user) {
+    setConsumer({
+      identifier: user.username,
+      name: user.name, // optional
+      group: user.group, // optional
+    });
+  }
+  return ["item1"];
+});
+```
+
+</CodeGroup>
+
+## Capture headers and bodies
+
+Only response headers are captured by default. You can opt in to capture request headers as well as request and response bodies when initializing Apitally.
+
+```javascript {6-8}
+const app = new H3({
+  plugins: [
+    apitallyPlugin({
+      writeToken: "your-write-token",
+      env: "dev", // or "prod" etc.
+      captureRequestHeaders: true,
+      captureRequestBody: true,
+      captureResponseBody: true,
+    }),
+  ],
+});
+```
+
+## Mask sensitive information
+
+The SDK automatically masks common sensitive query parameters, headers, and body fields.
+
+To mask additional data, pass regular expressions matching query parameter names, header names, or body field names to `maskQueryParams`, `maskHeaders`, or `maskBodyFields`, respectively. Use the `i` flag for case-insensitive matching.
+
+```javascript {5-7}
+const app = new H3({
+  plugins: [
+    apitallyPlugin({
+      writeToken: "your-write-token",
+      maskQueryParams: [/^account_id$/i],
+      maskHeaders: [/^X-Custom-Key$/i],
+      maskBodyFields: [/^credit_card$/i],
+    }),
+  ],
+});
+```
+
+You can use the `maskRequestBody` and `maskResponseBody` callbacks to mask individual fields or entire bodies using custom logic. Use `maskLogRecord` to mask or drop application log records.
+
+More information about masking is available [here](/sdk-reference/javascript/v1/masking).
+
+## Sample requests
+
+If your application receives a lot of traffic, you may want to sample requests to stay within your request logs quota. Metrics will continue to count every request regardless of sampling.
+
+Use `sampleRate` to capture logs and traces for a fraction of requests.
+
+```javascript {5}
+const app = new H3({
+  plugins: [
+    apitallyPlugin({
+      writeToken: "your-write-token",
+      sampleRate: 0.1, // capture logs and traces for 10% of requests
+    }),
+  ],
+});
+```
+
+You can also use the `sampleOnRequest` and `sampleOnResponse` callbacks to make sampling decisions using custom logic.
+
+More information about sampling is available [here](/sdk-reference/javascript/v1/sampling).
+
+## Instrument third-party libraries
+
+Instrumenting third-party libraries adds details about database queries, HTTP calls to external services, and other operations to your request traces. This lets you see how these operations contribute to API response times.
+
+Use OpenTelemetry instrumentation packages to instrument the libraries you want to trace. For example, to trace database queries made with `pg`, install `@opentelemetry/instrumentation` and `@opentelemetry/instrumentation-pg`:
+
+<CodeGroup>
+```shell npm
+npm install @opentelemetry/instrumentation @opentelemetry/instrumentation-pg
+```
+
+```shell yarn
+yarn add @opentelemetry/instrumentation @opentelemetry/instrumentation-pg
+```
+
+```shell pnpm
+pnpm add @opentelemetry/instrumentation @opentelemetry/instrumentation-pg
+```
+
+```shell bun
+bun add @opentelemetry/instrumentation @opentelemetry/instrumentation-pg
+```
+</CodeGroup>
+
+Create an `instrumentation.mjs` file that registers the instrumentation:
+
+```javascript instrumentation.mjs
+import { registerInstrumentations } from "@opentelemetry/instrumentation";
+import { PgInstrumentation } from "@opentelemetry/instrumentation-pg";
+
+registerInstrumentations({
+  instrumentations: [new PgInstrumentation()],
+});
+```
+
+Load this file before your application code so the instrumentation is registered before `pg` is imported:
+
+<CodeGroup>
+```shell Node.js
+node --import ./instrumentation.mjs app.js
+```
+
+```shell Bun
+bun --preload ./instrumentation.mjs app.js
+```
+</CodeGroup>
+
+Apitally sets up OpenTelemetry automatically, so you don't need to create a tracer provider or configure an exporter.
+
+More information about tracing and instrumenting third-party libraries is available [here](/sdk-reference/javascript/v1/tracing).

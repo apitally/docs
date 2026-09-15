@@ -16,3 +16,31 @@ html.dark,
 html.dark #sidebar {
   scrollbar-color: #252b2b #0e151500;
 }
+
+header div:has(> [data-component-part="version-select-trigger"]) {
+  flex-shrink: 0;
+  margin-left: -0.5rem;
+  order: 1;
+}
+
+header [data-component-part="products-selector-trigger"] {
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+}
+
+header a:has(> .nav-logo) {
+  flex-shrink: 0;
+}
+
+@media (min-width: 1024px) {
+  header div:has(> a > .nav-logo) {
+    flex: 0 0 30.5rem;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  header div:has(> #search-bar-entry) {
+    flex: 0 1 18rem;
+    min-width: 0;
+  }
+}

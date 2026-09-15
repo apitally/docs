@@ -1,0 +1,220 @@
+---
+title: "Setup guide for AdonisJS"
+sidebarTitle: "AdonisJS"
+description: "Set up the Apitally SDK for your AdonisJS application."
+---
+
+import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
+
+<Info>This setup guide is for v1 of the JavaScript SDK (currently in beta).</Info>
+
+This page guides you through the setup of the Apitally SDK for your [AdonisJS](https://adonisjs.com) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
+
+<SetupGuideStartSnippet framework="AdonisJS" />
+
+## Requirements
+
+Requires Node.js 20.6+ and either AdonisJS 6.3+ or AdonisJS 7.x.
+
+## Create app
+
+To get started, create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and select AdonisJS as your framework.
+
+<img src="https://assets.apitally.io/docs/2025-12-08/create-app.webp" alt="Create app" className="rounded-xl" />
+
+You can also configure the environments (e.g. `prod` and `dev`) for your app, or simply accept the defaults.
+
+After submitting, you will see tailored setup instructions for your app. These include your write token and code snippets you can copy and paste into your project.
+
+<Note>
+  The **write token** (`apt_...`) provided in the setup instructions uniquely identifies your app for the purpose of data ingestion only. It does not grant any kind of read access to your data.
+</Note>
+
+## Install the SDK
+
+Install the Apitally SDK as a dependency in your project.
+
+<CodeGroup>
+```shell npm
+npm install apitally@beta
+```
+
+```shell yarn
+yarn add apitally@beta
+```
+
+```shell pnpm
+pnpm add apitally@beta
+```
+</CodeGroup>
+
+## Initialize Apitally
+
+Configure Apitally by running the following Ace command from your application directory:
+
+```shell
+node ace configure apitally
+```
+
+You'll be prompted for your write token, environment (default `dev`), and whether to capture request headers, request bodies, and response bodies.
+
+The command saves your answers and configures Apitally automatically. Your write token and environment are stored in `.env`. Your preferences are saved in `config/apitally.ts`. You can edit this file to set [other configuration options](/sdk-reference/javascript/v1/configuration).
+
+Deploy your application with these changes, or restart it if you're testing locally.
+
+<Check>
+  The basic setup is now complete. Metrics and logs will start appearing in the Apitally
+  dashboard.
+</Check>
+
+## Identify consumers
+
+Consumers are the users or applications calling your API. Identifying them lets you analyze and filter API traffic by consumer in Apitally.
+
+Call `setConsumer` during request handling to associate the current request with a consumer identifier. You can call it wherever the consumer is known, such as in a controller method, existing middleware, or authentication code.
+
+You can also provide a display name and group for each consumer.
+
+<CodeGroup>
+```typescript Middleware {9-13}
+import type { HttpContext } from "@adonisjs/core/http";
+import type { NextFn } from "@adonisjs/core/types/http";
+import { setConsumer } from "apitally";
+
+export default class IdentifyConsumerMiddleware {
+  async handle({ auth }: HttpContext, next: NextFn) {
+    const user = auth.user;
+    if (user) {
+      setConsumer({
+        identifier: String(user.id),
+        name: user.fullName ?? undefined, // optional
+        group: "Customers", // optional
+      });
+    }
+    await next();
+  }
+}
+```
+
+```typescript Controller method {8-12}
+import type { HttpContext } from "@adonisjs/core/http";
+import { setConsumer } from "apitally";
+
+export default class ItemsController {
+  index({ auth }: HttpContext) {
+    const user = auth.user;
+    if (user) {
+      setConsumer({
+        identifier: String(user.id),
+        name: user.fullName ?? undefined, // optional
+        group: "Customers", // optional
+      });
+    }
+    return ["item1"];
+  }
+}
+```
+
+</CodeGroup>
+
+## Capture headers and bodies
+
+Only response headers are captured by default. You can opt in to capture request headers as well as request and response bodies when running the Ace command, or by updating `config/apitally.ts`.
+
+```typescript config/apitally.ts {7-9}
+import env from "#start/env";
+import { defineConfig } from "apitally/adonisjs";
+
+export default defineConfig({
+  writeToken: env.get("APITALLY_WRITE_TOKEN"),
+  env: env.get("APITALLY_ENV"),
+  captureRequestHeaders: true,
+  captureRequestBody: true,
+  captureResponseBody: true,
+});
+```
+
+## Mask sensitive information
+
+The SDK automatically masks common sensitive query parameters, headers, and body fields.
+
+To mask additional data, pass regular expressions matching query parameter names, header names, or body field names to `maskQueryParams`, `maskHeaders`, or `maskBodyFields`, respectively. Use the `i` flag for case-insensitive matching.
+
+```typescript config/apitally.ts {7-9}
+import env from "#start/env";
+import { defineConfig } from "apitally/adonisjs";
+
+export default defineConfig({
+  writeToken: env.get("APITALLY_WRITE_TOKEN"),
+  env: env.get("APITALLY_ENV"),
+  maskQueryParams: [/^account_id$/i],
+  maskHeaders: [/^X-Custom-Key$/i],
+  maskBodyFields: [/^credit_card$/i],
+});
+```
+
+You can use the `maskRequestBody` and `maskResponseBody` callbacks to mask individual fields or entire bodies using custom logic. Use `maskLogRecord` to mask or drop application log records.
+
+More information about masking is available [here](/sdk-reference/javascript/v1/masking).
+
+## Sample requests
+
+If your application receives a lot of traffic, you may want to sample requests to stay within your request logs quota. Metrics will continue to count every request regardless of sampling.
+
+Use `sampleRate` to capture logs and traces for a fraction of requests.
+
+```typescript config/apitally.ts {7}
+import env from "#start/env";
+import { defineConfig } from "apitally/adonisjs";
+
+export default defineConfig({
+  writeToken: env.get("APITALLY_WRITE_TOKEN"),
+  env: env.get("APITALLY_ENV"),
+  sampleRate: 0.1, // capture logs and traces for 10% of requests
+});
+```
+
+You can also use the `sampleOnRequest` and `sampleOnResponse` callbacks to make sampling decisions using custom logic.
+
+More information about sampling is available [here](/sdk-reference/javascript/v1/sampling).
+
+## Instrument third-party libraries
+
+Instrumenting third-party libraries adds details about database queries, HTTP calls to external services, and other operations to your request traces. This lets you see how these operations contribute to API response times.
+
+Use OpenTelemetry instrumentation packages to instrument the libraries you want to trace. For example, if your AdonisJS application uses PostgreSQL with Lucid, install `@opentelemetry/instrumentation` and `@opentelemetry/instrumentation-pg` to trace database queries made through the ORM:
+
+<CodeGroup>
+```shell npm
+npm install @opentelemetry/instrumentation @opentelemetry/instrumentation-pg
+```
+
+```shell yarn
+yarn add @opentelemetry/instrumentation @opentelemetry/instrumentation-pg
+```
+
+```shell pnpm
+pnpm add @opentelemetry/instrumentation @opentelemetry/instrumentation-pg
+```
+</CodeGroup>
+
+Create an `instrumentation.ts` file in your project root that registers the instrumentation:
+
+```typescript instrumentation.ts
+import { registerInstrumentations } from "@opentelemetry/instrumentation";
+import { PgInstrumentation } from "@opentelemetry/instrumentation-pg";
+
+registerInstrumentations({
+  instrumentations: [new PgInstrumentation()],
+});
+```
+
+Import this file on the first line of `bin/server.ts` so the instrumentation is registered before `pg` is imported:
+
+```typescript bin/server.ts
+import "../instrumentation.js";
+```
+
+Apitally sets up OpenTelemetry automatically, so you don't need to create a tracer provider or configure an exporter.
+
+More information about tracing and instrumenting third-party libraries is available [here](/sdk-reference/javascript/v1/tracing).

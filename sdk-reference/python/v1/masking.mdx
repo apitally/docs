@@ -1,0 +1,134 @@
+---
+title: Masking
+description: Mask sensitive data with the Apitally SDK for Python.
+---
+
+The Apitally SDK provides mechanisms for masking sensitive data in captured requests, responses, and application logs.
+
+## Default masking
+
+The SDK automatically masks common sensitive query parameters, headers, and request/response body fields based on built-in patterns. For example, fields named `password`, `token`, `secret`, or headers like `Authorization` are masked by default.
+
+See the [data privacy](/data-privacy#data-masking) page for more information about default masking.
+
+## Custom masking
+
+You can extend the default masking rules by providing additional regular expressions via the `mask_query_params`, `mask_headers`, and `mask_body_fields` parameters. Patterns are case-insensitive and match anywhere within the name. Use `^` and `$` anchors for exact matches.
+
+Body field patterns recursively match keys in JSON objects and replace the corresponding values only when they are strings.
+
+The following example uses FastAPI. The same masking options are available for all supported frameworks.
+
+```python FastAPI example {13-16}
+import apitally
+from fastapi import FastAPI
+
+app = FastAPI()
+
+apitally.init(
+    app,
+    write_token="your-write-token",
+    env="dev",
+    capture_request_headers=True,
+    capture_request_body=True,
+    capture_response_body=True,
+    # Mask specific query parameters, headers and body fields
+    mask_query_params=[r"^card_number$", r"^account_id$"],
+    mask_headers=[r"^X-Custom-Key$", r"^X-Internal-"],
+    mask_body_fields=[r"^credit_card$", r"social_security"],
+)
+```
+
+### Body masking callbacks
+
+For more control over body masking, you can provide callback functions via the `mask_request_body` and `mask_response_body` parameters. Each function receives the ended request [`ReadableSpan`](https://opentelemetry-python.readthedocs.io/en/stable/sdk/trace.html#opentelemetry.sdk.trace.ReadableSpan) and the captured body as `bytes`. Request metadata is available through [`span.attributes`](/sdk-reference/python/v1/attributes). Each function should return the masked body as `bytes`, or `None` to mask the entire body.
+
+```python Callback function examples {47-49}
+import json
+
+import apitally
+from fastapi import FastAPI
+from opentelemetry.sdk.trace import ReadableSpan
+
+
+def mask_request_body(span: ReadableSpan, body: bytes) -> bytes | None:
+    # Mask entire request body for admin endpoints
+    path = (span.attributes or {}).get("url.path")
+    if isinstance(path, str) and path.startswith("/admin/"):
+        return None
+    # Otherwise, return the original request body
+    return body
+
+
+def mask_response_body(span: ReadableSpan, body: bytes) -> bytes | None:
+    path = (span.attributes or {}).get("url.path")
+    # Mask entire response body for admin endpoints
+    if isinstance(path, str) and path.startswith("/admin/"):
+        return None
+    # Mask specific fields in user profile responses
+    if isinstance(path, str) and path.startswith("/users/"):
+        try:
+            data = json.loads(body)
+            if isinstance(data, dict):
+                if "email" in data:
+                    data["email"] = "******"
+                if "phone" in data:
+                    data["phone"] = "******"
+                return json.dumps(data).encode()
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            pass
+    # Otherwise, return the original response body
+    return body
+
+
+app = FastAPI()
+
+apitally.init(
+    app,
+    write_token="your-write-token",
+    env="dev",
+    capture_request_headers=True,
+    capture_request_body=True,
+    capture_response_body=True,
+    # Mask request and response bodies using custom logic
+    mask_request_body=mask_request_body,
+    mask_response_body=mask_response_body,
+)
+```
+
+<Note>
+  Callbacks are applied before pattern-based field masking. If the returned body contains JSON, it is still masked using the default and custom `mask_body_fields` patterns.
+</Note>
+
+### Log record masking callback
+
+To mask sensitive data in application logs, provide a callback function via the `mask_log_record` parameter. The function receives an OpenTelemetry [`ReadWriteLogRecord`](https://opentelemetry-python.readthedocs.io/en/stable/sdk/_logs.html#opentelemetry.sdk._logs.ReadWriteLogRecord). You can modify the log message through `record.log_record.body` and structured fields through `record.log_record.attributes`. Return the same record to keep it, or `None` to drop it.
+
+```python Callback function example {25}
+import re
+
+import apitally
+from fastapi import FastAPI
+from opentelemetry.sdk._logs import ReadWriteLogRecord
+
+
+def mask_log_record(record: ReadWriteLogRecord) -> ReadWriteLogRecord | None:
+    # Drop logs from the httpx logger
+    if record.instrumentation_scope and record.instrumentation_scope.name == "httpx":
+        return None
+    # Mask tokens
+    body = record.log_record.body
+    if isinstance(body, str):
+        record.log_record.body = re.sub(r"token=\S+", "token=******", body)
+    return record
+
+
+app = FastAPI()
+
+apitally.init(
+    app,
+    write_token="your-write-token",
+    env="dev",
+    mask_log_record=mask_log_record,
+)
+```

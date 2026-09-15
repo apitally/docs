@@ -1,0 +1,70 @@
+---
+title: Python SDK reference
+sidebarTitle: Overview
+description: Overview of the Apitally SDK for Python.
+mode: wide
+---
+
+import SetupGuidesPython from '/snippets/v1/setup-guides-python.mdx';
+
+<CardGroup cols={2}>
+  <Card
+    title="GitHub repository"
+    icon="github"
+    href="https://github.com/apitally/apitally-py"
+    target="_blank"
+  >
+    apitally/apitally-py
+  </Card>
+  <Card
+    title="PyPI package"
+    icon="python"
+    href="https://pypi.org/project/apitally/"
+    target="_blank"
+  >
+    apitally
+  </Card>
+</CardGroup>
+
+<Warning>The Apitally SDK v1 is currently in beta.</Warning>
+
+<Tip>Running FastAPI on Cloudflare Workers? Use our [Serverless SDK](/sdk-reference/python-serverless/v0/overview) instead.</Tip>
+
+## Requirements
+
+Requires Python 3.10+.
+
+## Installation
+
+The Apitally SDK for Python uses extras to install the correct dependencies for each framework.
+
+<CodeGroup>
+```shell pip
+pip install --pre "apitally[<your_framework>]"
+```
+
+```shell uv
+uv add --prerelease allow "apitally[<your_framework>]"
+```
+
+```shell poetry
+poetry add --allow-prereleases "apitally[<your_framework>]"
+```
+</CodeGroup>
+
+Replace the `<your_framework>` placeholder with the extra for your framework. The options are:
+
+- `blacksheep`
+- `django`
+- `fastapi`
+- `flask`
+- `litestar`
+- `starlette`
+
+## Supported frameworks
+
+The Python SDK currently supports the web frameworks listed below. If your framework is not listed, please [let us know](/support) and we'll consider adding support for it.
+
+Click on a framework for a detailed setup guide.
+
+<SetupGuidesPython />

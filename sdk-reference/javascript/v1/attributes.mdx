@@ -1,0 +1,41 @@
+---
+title: Attributes
+description: Span attributes available to callbacks in the Apitally SDK for JavaScript.
+---
+
+In the Apitally SDK, each API request is represented by a span. Span attributes contain metadata about the request and response, such as the request path, HTTP method, and response status code.
+
+You can use this metadata to make decisions in [sampling](/sdk-reference/javascript/v1/sampling#custom-sampling) and [masking](/sdk-reference/javascript/v1/masking#body-masking-callbacks) callbacks, which receive the `span` object as an argument. Access attributes through `span.attributes`. Individual attributes might be missing, so use bracket notation and handle `undefined`:
+
+```javascript {2-3}
+function callback(span) {
+  const attributes = span.attributes;
+  const path = attributes["url.path"];
+  // ...
+}
+```
+
+## Default attributes
+
+The following attributes are useful for common callback decisions. The list is not exhaustive.
+
+| Attribute | Type | Description |
+| :--- | :--- | :--- |
+| `http.request.method` | `string` | HTTP method, e.g. `GET` or `POST`. |
+| `url.path` | `string` | Request path, e.g. `/users/123`. |
+| `url.query` | `string` | Query string without `?`, e.g. `page=2`. |
+| `user_agent.original` | `string` | Value of the `User-Agent` header. |
+| `http.route` | `string` | Matched endpoint route pattern, e.g. `/users/:id`. |
+| `http.response.status_code` | `number` | HTTP response status code, e.g. `200` or `404`. |
+| `apitally.consumer.identifier` | `string` | Consumer identifier supplied via `setConsumer()`. |
+| `apitally.consumer.group` | `string` | Optional consumer group supplied via `setConsumer()`. |
+
+## Set custom attributes
+
+Use `setRequestAttribute()` in your request handling code to attach custom metadata to the current request span. These attributes are included in the request trace and available to response-stage sampling and masking callbacks.
+
+```javascript
+import { setRequestAttribute } from "apitally";
+
+setRequestAttribute("tenant.id", tenantId);
+```

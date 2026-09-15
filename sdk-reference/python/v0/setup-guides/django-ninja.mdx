@@ -1,0 +1,171 @@
+---
+title: "Setup guide for Django Ninja"
+sidebarTitle: "Django Ninja"
+description: "Just a few simple steps to get started with Apitally."
+---
+
+import SetupGuideStartSnippet from '/snippets/setup-guide-start.mdx';
+import CreateAppSnippet1 from '/snippets/create-app-1.mdx';
+import CreateAppSnippet2 from '/snippets/create-app-2.mdx';
+import AddMiddlewarePythonSnippet from '/snippets/add-middleware-python.mdx';
+import ConfigureDjangoMiddlewareSnippet from '/snippets/configure-django-middleware.mdx';
+import GunicornUWSGIWarning from '/snippets/gunicorn-uwsgi-warning.mdx';
+import RequestLoggingConfigSnippet from '/snippets/request-logging-config.mdx';
+import AddMiddlewareCheck from '/snippets/add-middleware-check.mdx';
+import IdentifyConsumersSnippet from '/snippets/identify-consumers.mdx';
+import IdentifyConsumersCheck from '/snippets/identify-consumers-check.mdx';
+import ConfigureRequestLoggingCheck from '/snippets/configure-request-logging-check.mdx';
+
+This page guides you through the steps of configuring your [Django Ninja](https://django-ninja.dev) application to work with Apitally. If you don't have an account yet, now would be a good time to [sign up](https://app.apitally.io/?signup).
+
+<SetupGuideStartSnippet framework="Django Ninja" />
+
+## Create app
+
+<CreateAppSnippet1 framework="Django Ninja" />
+
+<img src="https://assets.apitally.io/docs/2025-12-08/create-app.webp" alt="Create app" className="rounded-xl" />
+
+<CreateAppSnippet2 />
+
+## Add middleware
+
+<AddMiddlewarePythonSnippet framework="Django" extra="django_ninja" />
+
+<CodeGroup>
+```shell pip
+pip install "apitally[django_ninja]"
+```
+
+```shell poetry
+poetry add "apitally[django_ninja]"
+```
+
+```shell uv
+uv add "apitally[django_ninja]"
+```
+</CodeGroup>
+
+<ConfigureDjangoMiddlewareSnippet />
+
+```python
+MIDDLEWARE = [
+    "apitally.django.ApitallyMiddleware",
+    # Other middleware ...
+]
+APITALLY_MIDDLEWARE = {
+    "client_id": "your-client-id",
+    "env": "dev",  # or "prod" etc.
+    "include_django_views": False,  # Set to True to include regular Django views
+}
+```
+
+<div style={{ marginTop: "-0.5rem" }}>
+  <GunicornUWSGIWarning framework="Django" />
+</div>
+
+<AddMiddlewareCheck />
+
+## Identify consumers
+
+<IdentifyConsumersSnippet />
+
+To associate requests with consumers, provide a callback function in the middleware settings that takes a [`HttpRequest`](https://docs.djangoproject.com/en/4.2/ref/request-response/#httprequest-objects) object as an argument and returns a consumer identifier, an `ApitallyConsumer` object or `None`.
+
+<CodeGroup>
+```python Callback
+from django.http import HttpRequest
+
+def identify_consumer(request: HttpRequest) -> str | None:
+    if request.user.is_authenticated:
+        return request.user.username
+    return None
+```
+
+```python Callback (with name and group)
+from django.http import HttpRequest
+from apitally.django import ApitallyConsumer
+
+def identify_consumer(request: HttpRequest) -> ApitallyConsumer | None:
+    if request.user.is_authenticated:
+        return ApitallyConsumer(
+            identifier=request.user.username,
+            name=f"{request.user.first_name} {request.user.last_name}",
+            group=request.user.groups.first().name,
+        )
+    return None
+```
+
+```python Middleware settings
+APITALLY_MIDDLEWARE = {
+    "client_id": "your-client-id",
+    "env": "dev",  # or "prod" etc.
+    "consumer_callback": "your_project.api.utils.identify_consumer",
+}
+```
+</CodeGroup>
+
+<IdentifyConsumersCheck />
+
+## Configure request logging
+
+<RequestLoggingConfigSnippet language="python" />
+
+<CodeGroup>
+```python Basic example
+APITALLY_MIDDLEWARE = {
+    "client_id": "your-client-id",
+    "env": "dev",  # or "prod" etc.
+    "enable_request_logging": True,
+    "log_request_headers": True,
+    "log_request_body": True,
+    "log_response_body": True,
+    "capture_logs": True,
+    "capture_traces": False,  # requires instrumentation
+}
+```
+
+```python Advanced example
+APITALLY_MIDDLEWARE = {
+    "client_id": "your-client-id",
+    "env": "dev",  # or "prod" etc.
+    "enable_request_logging": True,
+    "log_query_params": True,
+    "log_request_headers": True,
+    "log_request_body": True,
+    "log_response_headers": True,
+    "log_response_body": True,
+    "log_exception": True,
+    "capture_logs": True,
+    "capture_traces": False,  # requires instrumentation
+    # Mask query parameters using regex
+    "mask_query_params": [r"^card_number$"],
+    # Mask headers using regex
+    "mask_headers": [r"^X-Sensitive-Header$"],
+    # Mask request/response body fields using regex
+    "mask_body_fields": [r"^sensitive_field$"],
+    # Mask request/response body with custom logic via callbacks (e.g. for admin endpoints)
+    # The callback should return None to mask the whole body, or return the (modified) raw body
+    "mask_request_body_callback": lambda request: None if request["path"].startswith("/admin/") else request["body"],
+    "mask_response_body_callback": lambda request, response: None if request["path"].startswith("/admin/") else response["body"],
+    # Exclude paths from request logging using regex (common health check paths are excluded by default)
+    "exclude_paths": [r"/metrics$"],
+    # Exclude requests from logging with custom logic via callback (e.g. exclude requests from a specific consumer)
+    # The callback should return True to exclude the request
+    "exclude_callback": lambda request, response: request["consumer"] == "some-consumer",
+}
+```
+</CodeGroup>
+
+<ConfigureRequestLoggingCheck />
+
+## Enable tracing
+
+Tracing gives you a detailed breakdown of time spent during the handling of each request, showing the duration of database queries, HTTP calls, and other operations.
+
+To enable tracing, set `capture_traces` to `True` and instrument the libraries you want to trace with OpenTelemetry. See the [tracing guide](/sdk-reference/python/v0/tracing) for further instructions.
+
+## Known issues
+
+- When running Django with Gunicorn, the option `preload_app` must be set to `False`. Otherwise, the Apitally client will not work correctly.
+- When running Django with uWSGI, the options `--enable-threads` and `--lazy-apps` must be set. Otherwise, the Apitally client will not work correctly.

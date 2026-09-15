@@ -1,0 +1,130 @@
+---
+title: Tracing instrumentation
+sidebarTitle: Tracing
+description: Instrument your JavaScript application with OpenTelemetry for tracing in Apitally.
+---
+
+The Apitally SDK captures [OpenTelemetry](https://opentelemetry.io/docs/languages/js/) spans during request handling. This allows you to see exactly what happened during each request, including database queries, HTTP calls to external services, and custom operations.
+
+If your application does not have an existing OpenTelemetry setup, the SDK configures one automatically. Spans created within a captured request using the standard OpenTelemetry API or instrumentation libraries will be captured.
+
+## Instrument libraries
+
+Use official OpenTelemetry instrumentation packages to trace supported libraries. Initialize the instrumentations before loading your application code or the libraries they instrument.
+
+For example, to trace database queries made with `pg`, install `@opentelemetry/instrumentation` and `@opentelemetry/instrumentation-pg`:
+
+<CodeGroup>
+```shell npm
+npm install @opentelemetry/instrumentation @opentelemetry/instrumentation-pg
+```
+
+```shell yarn
+yarn add @opentelemetry/instrumentation @opentelemetry/instrumentation-pg
+```
+
+```shell pnpm
+pnpm add @opentelemetry/instrumentation @opentelemetry/instrumentation-pg
+```
+
+```shell bun
+bun add @opentelemetry/instrumentation @opentelemetry/instrumentation-pg
+```
+</CodeGroup>
+
+Create an instrumentation file that registers the instrumentation:
+
+```javascript instrumentation.mjs
+import { registerInstrumentations } from "@opentelemetry/instrumentation";
+import { PgInstrumentation } from "@opentelemetry/instrumentation-pg";
+
+registerInstrumentations({
+  instrumentations: [new PgInstrumentation()],
+});
+```
+
+Load this file before your application code:
+
+<CodeGroup>
+```shell Node.js
+node --import ./instrumentation.mjs app.js
+```
+
+```shell Bun
+bun --preload ./instrumentation.mjs app.js
+```
+</CodeGroup>
+
+Apitally sets up the OpenTelemetry tracer provider automatically, so you do not need to configure one or add an exporter.
+
+## Existing OpenTelemetry setup
+
+Apitally works alongside your existing OpenTelemetry instrumentation and exporters. If your application registers its own tracer provider, add `ApitallySpanProcessor` to the list of span processors. For example, with `NodeSDK`:
+
+```javascript {2,7}
+import { NodeSDK } from "@opentelemetry/sdk-node";
+import { ApitallySpanProcessor } from "apitally";
+
+const sdk = new NodeSDK({
+  spanProcessors: [
+    // your existing span processors ...
+    new ApitallySpanProcessor(),
+  ],
+  // your existing configuration ...
+});
+
+sdk.start();
+```
+
+## Create custom spans
+
+For custom operations that are not covered by library instrumentation, you can create spans using the helpers provided by the SDK. These are thin wrappers around the standard OpenTelemetry API, which you can also use directly.
+
+### `instrument()` function wrapper
+
+Use `instrument()` to automatically create a span for a function. It works with both synchronous and asynchronous functions:
+
+```javascript
+import { instrument } from "apitally";
+
+const processOrder = instrument("process_order", async (orderId) => {
+  // Process the order ...
+});
+```
+
+### `span()` helper
+
+Use `span()` to trace code blocks within a function:
+
+```javascript
+import { trace } from "@opentelemetry/api";
+import { span } from "apitally";
+
+async function checkout(cartId) {
+  await span("validate_cart", async () => {
+    trace.getActiveSpan()?.setAttribute("cart.id", cartId);
+    // Validate the cart ...
+  });
+
+  await span("process_payment", async () => {
+    // Process the payment ...
+  });
+}
+```
+
+## Capture handled exceptions
+
+Apitally includes exceptions in request traces to help you diagnose server errors. Exceptions that propagate through your web framework are captured automatically.
+
+If your application catches an exception and handles it without rethrowing it, call `captureException()` to include it in the current request trace.
+
+```javascript
+import { captureException } from "apitally";
+
+try {
+  processOrder();
+} catch (error) {
+  captureException(error);
+  // Return an error response without rethrowing the exception
+}
+```
