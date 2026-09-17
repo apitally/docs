@@ -160,7 +160,7 @@ exclude_paths=[r"^/admin/$", r"/internal/"],
 
 #### `django_urlconf`
 
-String or list of strings representing Django URLconf modules used to discover routes and schemas. Set this to `None` to use the root URLconf.
+String or list of strings representing Django URLconf modules used to select views to track and discover routes and schemas. Set this to `None` to use the root URLconf.
 
 ```python
 django_urlconf=["myproject.urls", "myapp.urls"],
@@ -168,4 +168,4 @@ django_urlconf=["myproject.urls", "myapp.urls"],
 
 #### `django_include_class_based_views`
 
-Boolean. Whether to include class-based Django views in the reported endpoint list in addition to Django REST Framework and Django Ninja routes. Defaults to `False`.
+Boolean. Whether to track class-based and function-based Django views in addition to Django REST Framework and Django Ninja views. Defaults to `False`.
