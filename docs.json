@@ -262,33 +262,6 @@
             ]
           },
           {
-            "product": "Java",
-            "icon": "java",
-            "versions": [
-              {
-                "version": "v0",
-                "groups": [
-                  {
-                    "group": "SDK reference",
-                    "icon": "book",
-                    "pages": [
-                      "sdk-reference/java/v0/overview",
-                      "sdk-reference/java/v0/configuration",
-                      "sdk-reference/java/v0/masking-filtering"
-                    ]
-                  },
-                  {
-                    "group": "Setup guides",
-                    "icon": "rocket",
-                    "pages": [
-                      "sdk-reference/java/v0/setup-guides/spring-boot"
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
             "product": ".NET",
             "icon": "microsoft",
             "versions": [
@@ -614,10 +587,6 @@
       "destination": "/sdk-reference/go/v0/setup-guides/gin"
     },
     {
-      "source": "/frameworks/spring-boot",
-      "destination": "/sdk-reference/java/v0/setup-guides/spring-boot"
-    },
-    {
       "source": "/frameworks/aspnet-core",
       "destination": "/sdk-reference/dotnet/v0/setup-guides/aspnet-core"
     },
@@ -632,10 +601,6 @@
     {
       "source": "/reference/javascript",
       "destination": "/sdk-reference/javascript/v0/overview"
-    },
-    {
-      "source": "/reference/java",
-      "destination": "/sdk-reference/java/v0/overview"
     },
     {
       "source": "/reference/go",
@@ -746,10 +711,6 @@
       "destination": "/sdk-reference/go/v0/setup-guides/gin"
     },
     {
-      "source": "/setup-guides/spring-boot",
-      "destination": "/sdk-reference/java/v0/setup-guides/spring-boot"
-    },
-    {
       "source": "/setup-guides/aspnet-core",
       "destination": "/sdk-reference/dotnet/v0/setup-guides/aspnet-core"
     },
@@ -824,22 +785,6 @@
     {
       "source": "/sdk-reference/go/tracing",
       "destination": "/sdk-reference/go/v0/tracing"
-    },
-    {
-      "source": "/sdk-reference/java",
-      "destination": "/sdk-reference/java/v0/overview"
-    },
-    {
-      "source": "/sdk-reference/java/overview",
-      "destination": "/sdk-reference/java/v0/overview"
-    },
-    {
-      "source": "/sdk-reference/java/configuration",
-      "destination": "/sdk-reference/java/v0/configuration"
-    },
-    {
-      "source": "/sdk-reference/java/masking-filtering",
-      "destination": "/sdk-reference/java/v0/masking-filtering"
     },
     {
       "source": "/sdk-reference/dotnet",
