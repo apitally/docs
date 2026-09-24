@@ -1,10 +1,10 @@
 ---
 title: Apitally CLI and skill for agents
 sidebarTitle: CLI & skill
-description: Give coding agents access to your API metrics and request logs for agent-driven investigations and analyses.
+description: Give coding agents access to your API metrics, request logs, and traces for agent-driven investigations and analyses.
 ---
 
-The Apitally CLI makes API metrics and request log data accessible to coding agents such as Claude Code, Cursor, and Codex.
+The Apitally CLI makes API metrics, request logs, and traces accessible to coding agents such as Claude Code, Cursor, and Codex.
 An accompanying skill teaches agents how to use the CLI effectively, so they can answer questions that go beyond what the pre-built dashboards cover.
 
 While primarily designed for agents, the CLI works equally well directly in your terminal or as part of scripts and automations.
@@ -30,6 +30,7 @@ It's open-source and also published as an npm package, so you can run it with `n
 - Retrieve API metrics with various aggregation options and filters
 - Retrieve request logs with filters and field selection, including headers and payloads
 - Fetch full details about specific API requests, including application logs and traces
+- Retrieve traces with associated attributes and events
 - Load data into a local DuckDB database and run arbitrary SQL queries against it
 - List apps, consumers, and endpoints in your team
 
@@ -58,7 +59,7 @@ Install the `apitally-cli` skill using the [skills CLI](https://github.com/verce
 npx skills add apitally/cli
 ```
 
-Once installed, agents will pick up the skill automatically when you mention Apitally or ask it to investigate API metrics or request logs. Agents will invoke the CLI through `npx`, so it doesn't need to be installed separately.
+Once installed, agents will pick up the skill automatically when you mention Apitally or ask it to investigate API metrics, request logs, or traces. Agents will invoke the CLI through `npx`, so it doesn't need to be installed separately.
 
 ### For humans
 
@@ -111,7 +112,8 @@ You can also set the API key via the `APITALLY_API_KEY` environment variable, or
 | `endpoints`       | List endpoints for an app, with method and path filters                                                           |
 | `metrics`         | Fetch metrics for an app, with filters and different aggregation options                                          |
 | `request-logs`    | Fetch request log data, with filters and field selection                                                          |
-| `request-details` | Fetch full details for a specific request and response, including headers, payloads, application logs, and traces |
+| `request-details` | Fetch full details for a specific request and response, including headers, payloads, application logs, and spans  |
+| `traces`          | Fetch spans for an app, with filters and field selection                                                         |
 | `sql`             | Run SQL queries against a local DuckDB database                                                                   |
 | `reset-db`        | Drop and recreate all tables in the local DuckDB database                                                         |
 
