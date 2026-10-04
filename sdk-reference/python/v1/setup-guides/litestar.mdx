@@ -78,10 +78,10 @@ Consumers are the users or applications calling your API. Identifying them lets 
 
 Call `apitally.set_consumer` during request handling to associate the current request with a consumer identifier. You can call it wherever the consumer is known, such as in a route handler, `before_request` hook, existing middleware, or authentication code.
 
-You can also provide a display name and group for each consumer.
+You can also provide a display name, group, and custom attributes for each consumer.
 
 <CodeGroup>
-```python Before request hook {8-12}
+```python Before request hook {8-13}
 import apitally
 from apitally.litestar import ApitallyPlugin
 from litestar import Litestar, Request
@@ -93,6 +93,7 @@ async def identify_consumer(request: Request) -> None:
             request.user.identity,
             name=request.user.name,  # optional
             group=request.user.role,  # optional
+            attributes={"plan": request.user.plan},  # optional
         )
 
 
@@ -103,7 +104,7 @@ app = Litestar(
 )
 ```
 
-```python Route handler {9-13}
+```python Route handler {9-14}
 import apitally
 from apitally.litestar import ApitallyPlugin
 from litestar import Litestar, Request, get
@@ -116,6 +117,7 @@ async def list_items(request: Request) -> list[str]:
             request.user.identity,
             name=request.user.name,  # optional
             group=request.user.role,  # optional
+            attributes={"plan": request.user.plan},  # optional
         )
     return ["item1"]
 

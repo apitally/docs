@@ -80,10 +80,10 @@ Consumers are the users or applications calling your API. Identifying them lets 
 
 Call `apitally.set_consumer` during request handling to associate the current request with a consumer identifier. You can call it wherever the consumer is known, such as in a view, a request callback, existing middleware, or authentication code.
 
-You can also provide a display name and group for each consumer.
+You can also provide a display name, group, and custom attributes for each consumer.
 
 <CodeGroup>
-```python Before request hook {12-16}
+```python Before request hook {12-17}
 import apitally
 from flask import Flask, g
 
@@ -99,10 +99,11 @@ def identify_consumer() -> None:
             user["email"],
             name=user["name"],  # optional
             group=user["role"],  # optional
+            attributes={"plan": user["plan"]},  # optional
         )
 ```
 
-```python View function {12-16}
+```python View function {12-17}
 import apitally
 from flask import Flask, g
 
@@ -118,6 +119,7 @@ def list_items() -> list[str]:
             user["email"],
             name=user["name"],  # optional
             group=user["role"],  # optional
+            attributes={"plan": user["plan"]},  # optional
         )
     return ["item1"]
 ```

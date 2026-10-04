@@ -93,10 +93,10 @@ Consumers are the users or applications calling your API. Identifying them lets 
 
 Call `setConsumer` during request handling to associate the current request with a consumer identifier. You can call it wherever the consumer is known, such as in a route handler, existing middleware, or authentication code.
 
-You can also provide a display name and group for each consumer.
+You can also provide a display name, group, and custom attributes for each consumer.
 
 <CodeGroup>
-```javascript Middleware {5-9}
+```javascript Middleware {5-10}
 import { setConsumer } from "apitally";
 
 app.use(async (ctx, next) => {
@@ -105,13 +105,14 @@ app.use(async (ctx, next) => {
       identifier: ctx.state.user.username,
       name: ctx.state.user.name, // optional
       group: ctx.state.user.group, // optional
+      attributes: { plan: ctx.state.user.plan }, // optional
     });
   }
   await next();
 });
 ```
 
-```javascript Route handler {8-12}
+```javascript Route handler {8-13}
 import Router from "@koa/router";
 import { setConsumer } from "apitally";
 
@@ -123,6 +124,7 @@ router.get("/items", (ctx) => {
       identifier: ctx.state.user.username,
       name: ctx.state.user.name, // optional
       group: ctx.state.user.group, // optional
+      attributes: { plan: ctx.state.user.plan }, // optional
     });
   }
   ctx.body = ["item1"];

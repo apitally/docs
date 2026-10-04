@@ -73,10 +73,10 @@ Consumers are the users or applications calling your API. Identifying them lets 
 
 Call `setConsumer` during request handling to associate the current request with a consumer identifier. You can call it wherever the consumer is known, such as in a controller method, existing middleware, or authentication code.
 
-You can also provide a display name and group for each consumer.
+You can also provide a display name, group, and custom attributes for each consumer.
 
 <CodeGroup>
-```typescript Middleware {9-13}
+```typescript Middleware {9-14}
 import type { HttpContext } from "@adonisjs/core/http";
 import type { NextFn } from "@adonisjs/core/types/http";
 import { setConsumer } from "apitally";
@@ -89,6 +89,7 @@ export default class IdentifyConsumerMiddleware {
         identifier: String(user.id),
         name: user.fullName ?? undefined, // optional
         group: "Customers", // optional
+        attributes: { plan: user.plan }, // optional
       });
     }
     await next();
@@ -96,7 +97,7 @@ export default class IdentifyConsumerMiddleware {
 }
 ```
 
-```typescript Controller method {8-12}
+```typescript Controller method {8-13}
 import type { HttpContext } from "@adonisjs/core/http";
 import { setConsumer } from "apitally";
 
@@ -108,6 +109,7 @@ export default class ItemsController {
         identifier: String(user.id),
         name: user.fullName ?? undefined, // optional
         group: "Customers", // optional
+        attributes: { plan: user.plan }, // optional
       });
     }
     return ["item1"];

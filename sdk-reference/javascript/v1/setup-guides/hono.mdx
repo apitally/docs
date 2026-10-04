@@ -99,10 +99,10 @@ Consumers are the users or applications calling your API. Identifying them lets 
 
 Call `setConsumer` during request handling to associate the current request with a consumer identifier. You can call it wherever the consumer is known, such as in a route handler, existing middleware, or authentication code.
 
-You can also provide a display name and group for each consumer.
+You can also provide a display name, group, and custom attributes for each consumer.
 
 <CodeGroup>
-```javascript Middleware {6-10}
+```javascript Middleware {6-11}
 import { setConsumer } from "apitally";
 
 app.use(async (c, next) => {
@@ -112,13 +112,14 @@ app.use(async (c, next) => {
       identifier: payload.sub,
       name: payload.name, // optional
       group: payload.group, // optional
+      attributes: { plan: payload.plan }, // optional
     });
   }
   await next();
 });
 ```
 
-```javascript Route handler {6-10}
+```javascript Route handler {6-11}
 import { setConsumer } from "apitally";
 
 app.get("/items", (c) => {
@@ -128,6 +129,7 @@ app.get("/items", (c) => {
       identifier: payload.sub,
       name: payload.name, // optional
       group: payload.group, // optional
+      attributes: { plan: payload.plan }, // optional
     });
   }
   return c.json(["item1"]);

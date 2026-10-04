@@ -88,10 +88,10 @@ Consumers are the users or applications calling your API. Identifying them lets 
 
 Call `setConsumer` during request handling to associate the current request with a consumer identifier. You can call it wherever the consumer is known, such as in a controller method, an interceptor, or authentication code.
 
-You can also provide a display name and group for each consumer.
+You can also provide a display name, group, and custom attributes for each consumer.
 
 <CodeGroup>
-```typescript Global interceptor {7-11}
+```typescript Global interceptor {7-12}
 import { setConsumer } from "apitally";
 
 app.useGlobalInterceptors({
@@ -102,6 +102,7 @@ app.useGlobalInterceptors({
         identifier: request.user.username,
         name: request.user.name, // optional
         group: request.user.group, // optional
+        attributes: { plan: request.user.plan }, // optional
       });
     }
     return next.handle();
@@ -109,7 +110,7 @@ app.useGlobalInterceptors({
 });
 ```
 
-```typescript Controller method {13-17}
+```typescript Controller method {13-18}
 import { Controller, Get, Req } from "@nestjs/common";
 import { setConsumer } from "apitally";
 
@@ -118,7 +119,7 @@ export class ItemsController {
   @Get()
   listItems(
     @Req() request: {
-      user?: { username: string; name?: string; group?: string };
+      user?: { username: string; name?: string; group?: string; plan?: string };
     },
   ): string[] {
     if (request.user) {
@@ -126,6 +127,7 @@ export class ItemsController {
         identifier: request.user.username,
         name: request.user.name, // optional
         group: request.user.group, // optional
+        attributes: { plan: request.user.plan }, // optional
       });
     }
     return ["item1"];

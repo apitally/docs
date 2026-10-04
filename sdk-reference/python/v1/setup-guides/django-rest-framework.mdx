@@ -81,10 +81,10 @@ Consumers are the users or applications calling your API. Identifying them lets 
 
 Call `apitally.set_consumer` during request handling to associate the current request with a consumer identifier. You can call it wherever the consumer is known, such as in a view, existing middleware, or authentication code.
 
-You can also provide a display name and group for each consumer.
+You can also provide a display name, group, and custom attributes for each consumer.
 
 <CodeGroup>
-```python View function {10-14}
+```python View function {10-15}
 import apitally
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
@@ -98,11 +98,12 @@ def list_items(request: Request) -> Response:
             request.user.get_username(),
             name=request.user.get_full_name(),  # optional
             group=request.user.groups.values_list("name", flat=True).first(),  # optional
+            attributes={"is_staff": request.user.is_staff},  # optional
         )
     return Response(["item1"])
 ```
 
-```python Middleware {13-17}
+```python Middleware {13-18}
 import apitally
 from django.http import HttpRequest, HttpResponse
 
@@ -119,6 +120,7 @@ class IdentifyConsumerMiddleware:
                 user.get_username(),
                 name=user.get_full_name(),  # optional
                 group=user.groups.values_list("name", flat=True).first(),  # optional
+                attributes={"is_staff": user.is_staff},  # optional
             )
         return response
 ```

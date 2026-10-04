@@ -80,12 +80,12 @@ Consumers are the users or applications calling your API. Identifying them lets 
 
 Call `apitally.set_consumer` during request handling to associate the current request with a consumer identifier. You can call it wherever the consumer is known, such as in an endpoint, existing middleware, or authentication code.
 
-You can also provide a display name and group for each consumer.
+You can also provide a display name, group, and custom attributes for each consumer.
 
 These examples use `request.user`, which is provided by Starlette's [authentication middleware](https://www.starlette.io/authentication/).
 
 <CodeGroup>
-```python Endpoint function {10-14}
+```python Endpoint function {10-15}
 import apitally
 from starlette.applications import Starlette
 from starlette.requests import Request
@@ -99,6 +99,7 @@ async def list_items(request: Request) -> JSONResponse:
             request.user.identity,
             name=request.user.display_name,  # optional
             group="Customers",  # optional
+            attributes={"plan": request.user.plan},  # optional
         )
     return JSONResponse(["item1"])
 
@@ -107,7 +108,7 @@ app = Starlette(routes=[Route("/items", list_items)])
 apitally.init(app, write_token="your-write-token")
 ```
 
-```python Middleware {11-15}
+```python Middleware {11-16}
 import apitally
 from starlette.applications import Starlette
 from starlette.requests import Request
@@ -122,6 +123,7 @@ def identify_consumer(app):
                     request.user.identity,
                     name=request.user.display_name,  # optional
                     group="Customers",  # optional
+                    attributes={"plan": request.user.plan},  # optional
                 )
         await app(scope, receive, send)
 

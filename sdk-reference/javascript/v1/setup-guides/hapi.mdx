@@ -105,10 +105,10 @@ Consumers are the users or applications calling your API. Identifying them lets 
 
 Call `setConsumer` during request handling to associate the current request with a consumer identifier. You can call it wherever the consumer is known, such as in a route handler, a request lifecycle extension, or authentication code.
 
-You can also provide a display name and group for each consumer.
+You can also provide a display name, group, and custom attributes for each consumer.
 
 <CodeGroup>
-```javascript onPostAuth extension {6-10}
+```javascript onPostAuth extension {6-11}
 import { setConsumer } from "apitally";
 
 server.ext("onPostAuth", (request, h) => {
@@ -118,13 +118,14 @@ server.ext("onPostAuth", (request, h) => {
       identifier: credentials.id,
       name: credentials.name, // optional
       group: credentials.group, // optional
+      attributes: { plan: credentials.plan }, // optional
     });
   }
   return h.continue;
 });
 ```
 
-```javascript Route handler {9-13}
+```javascript Route handler {9-14}
 import { setConsumer } from "apitally";
 
 server.route({
@@ -137,6 +138,7 @@ server.route({
         identifier: credentials.id,
         name: credentials.name, // optional
         group: credentials.group, // optional
+        attributes: { plan: credentials.plan }, // optional
       });
     }
     return ["item1"];
