@@ -1,0 +1,145 @@
+---
+title: Configuration
+description: Configure the Apitally SDK for .NET.
+---
+
+<CodeGroup>
+  ```csharp Program.cs {5-9}
+  using Apitally;
+
+  var builder = WebApplication.CreateBuilder(args);
+
+  builder.Services.AddApitally(options =>
+  {
+      options.WriteToken = "your-write-token";
+      // other options ...
+  });
+  ```
+
+  ```json appsettings.json {2-5}
+  {
+    "Apitally": {
+      "WriteToken": "your-write-token"
+      // other options ...
+    }
+  }
+  ```
+</CodeGroup>
+
+Options can be set in code or in the `Apitally` section of your application's configuration, such as `appsettings.json`. The `APITALLY_*` environment variables listed below take precedence over the configuration section, and values set in code take precedence over both. Callbacks can only be set in code.
+
+## Parameters
+
+### General
+
+#### `WriteToken`
+
+Write token for your application in the format `apt_...`. Find it on the _Setup instructions_ page for your app. Required unless the `APITALLY_WRITE_TOKEN` environment variable is set.
+
+#### `Env`
+
+Name of the environment, for example `prod` or `dev`. Can also be set via the `APITALLY_ENV` environment variable. The environment is created automatically if it does not exist. Defaults to the lowercased ASP.NET Core environment name, with `Production` shortened to `prod` and `Development` to `dev`.
+
+#### `AppVersion`
+
+The current version of your application, for example `1.0.0`.
+
+#### `Disabled`
+
+Boolean. Whether to disable the SDK. Truthy `APITALLY_DISABLED` or `OTEL_SDK_DISABLED` environment variables also disable it. Defaults to `false`.
+
+### Data capture
+
+#### `CaptureLogs`
+
+Boolean. Whether to capture application logs written via `ILogger`. Only logs associated with captured requests are exported. Defaults to `true`.
+
+<Note>
+  If you use Serilog, pass `writeToProviders: true` when registering it. Otherwise, Serilog doesn't forward logs to other logging providers, and Apitally can't capture them.
+</Note>
+
+#### `CaptureRequestHeaders`
+
+Boolean. Whether to capture request headers. Default masking applies to common sensitive headers such as `Authorization`. Defaults to `false`.
+
+#### `CaptureRequestBody`
+
+Boolean. Whether to capture the request body. Only JSON and text bodies up to 50 KB are supported. Defaults to `false`.
+
+#### `CaptureResponseHeaders`
+
+Boolean. Whether to capture response headers. Defaults to `true`.
+
+#### `CaptureResponseBody`
+
+Boolean. Whether to capture the response body. Only JSON and text bodies up to 50 KB are supported. Defaults to `false`.
+
+### Masking
+
+#### `MaskQueryParams`
+
+List of regular expressions for matching query parameters to mask. These are applied in addition to the default masking patterns. Defaults to `[]`.
+
+```csharp
+options.MaskQueryParams = ["^api_key$", "^token$"];
+```
+
+#### `MaskHeaders`
+
+List of regular expressions for matching headers to mask. These are applied in addition to the default masking patterns. Defaults to `[]`.
+
+```csharp
+options.MaskHeaders = ["^X-Api-Key$", "^X-Internal-"];
+```
+
+#### `MaskBodyFields`
+
+List of regular expressions for matching request and response body fields to mask. These are applied in addition to the default masking patterns. Defaults to `[]`.
+
+```csharp
+options.MaskBodyFields = ["^credit_card$", "^account_id$"];
+```
+
+#### `MaskRequestBody`
+
+Callback for masking the request body. It receives the request `SpanSnapshot` and the body as a `byte[]`, and returns the masked body as a `byte[]` or `null`.
+
+See example [here](/sdk-reference/dotnet/v1/masking#body-masking-callbacks).
+
+#### `MaskResponseBody`
+
+Callback for masking the response body. It receives the request `SpanSnapshot` and the body as a `byte[]`, and returns the masked body as a `byte[]` or `null`.
+
+See example [here](/sdk-reference/dotnet/v1/masking#body-masking-callbacks).
+
+#### `MaskLogRecord`
+
+Callback for masking application logs. It receives a `LogRecordSnapshot` and returns the same record after masking, or `null` to drop it.
+
+See example [here](/sdk-reference/dotnet/v1/masking#log-record-masking-callback).
+
+### Sampling
+
+#### `SampleRate`
+
+Fraction of requests to capture as request logs and traces, from `0.0` to `1.0`. Metrics are not sampled. Defaults to `1.0`.
+
+#### `SampleOnRequest`
+
+Callback for adjusting sampling when a request starts. It receives the request `SpanSnapshot` and returns a probability, or `null` to use `SampleRate`.
+
+See example [here](/sdk-reference/dotnet/v1/sampling#custom-sampling).
+
+#### `SampleOnResponse`
+
+Callback for adjusting sampling when a response is ready. It receives the ended request `SpanSnapshot` and returns a probability, or `null` to preserve the existing decision.
+
+See example [here](/sdk-reference/dotnet/v1/sampling#custom-sampling).
+
+#### `ExcludePaths`
+
+List of regular expressions for matching paths to exclude from request logs and traces. Excluded requests are still included in metrics. Defaults to `[]`.
+
+```csharp
+options.ExcludePaths = ["^/admin/$", "/internal/"];
+```

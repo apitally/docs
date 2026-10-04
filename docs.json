@@ -286,6 +286,32 @@
                     ]
                   }
                 ]
+              },
+              {
+                "version": "v1",
+                "tag": "beta",
+                "groups": [
+                  {
+                    "group": "SDK reference",
+                    "icon": "book",
+                    "pages": [
+                      "sdk-reference/dotnet/v1/overview",
+                      "sdk-reference/dotnet/v1/migration",
+                      "sdk-reference/dotnet/v1/configuration",
+                      "sdk-reference/dotnet/v1/masking",
+                      "sdk-reference/dotnet/v1/sampling",
+                      "sdk-reference/dotnet/v1/tracing",
+                      "sdk-reference/dotnet/v1/attributes"
+                    ]
+                  },
+                  {
+                    "group": "Setup guides",
+                    "icon": "rocket",
+                    "pages": [
+                      "sdk-reference/dotnet/v1/setup-guides/aspnet-core"
+                    ]
+                  }
+                ]
               }
             ]
           },

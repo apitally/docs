@@ -1,0 +1,121 @@
+---
+title: Tracing instrumentation
+sidebarTitle: Tracing
+description: Instrument your .NET application with OpenTelemetry for tracing in Apitally.
+---
+
+The Apitally SDK captures [OpenTelemetry](https://opentelemetry.io/docs/languages/dotnet/) spans during request handling. This allows you to see exactly what happened during each request, including database queries, HTTP calls to external services, and custom operations.
+
+If your application does not have an existing OpenTelemetry setup, the SDK configures one automatically. Spans created within a captured request using the standard [`Activity`](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing-concepts) API or instrumentation libraries will be captured.
+
+## Instrument libraries
+
+`HttpClient` calls and libraries that create spans using their own `ActivitySource`, such as Npgsql, are captured automatically without any additional setup.
+
+Other libraries require OpenTelemetry instrumentation packages. For example, to trace database queries made with `Microsoft.Data.SqlClient`, install `OpenTelemetry.Extensions.Hosting` and `OpenTelemetry.Instrumentation.SqlClient`:
+
+```shell
+dotnet add package OpenTelemetry.Extensions.Hosting
+dotnet add package OpenTelemetry.Instrumentation.SqlClient
+```
+
+Then register the instrumentation in your `Program.cs` file:
+
+```csharp Program.cs {6-10}
+builder.Services.AddApitally(options =>
+{
+    options.WriteToken = "your-write-token";
+});
+
+builder.Services.AddOpenTelemetry().WithTracing(tracing => tracing
+    .AddSqlClientInstrumentation()
+    .AddHttpClientInstrumentation()
+    .AddSource("*") // all other activity sources
+);
+```
+
+Apitally adds its span processor to the tracer provider automatically, so you do not need to add an exporter.
+
+## Existing OpenTelemetry setup
+
+Apitally works alongside your existing OpenTelemetry instrumentation and exporters. If your application registers a tracer provider via `AddOpenTelemetry().WithTracing(...)`, Apitally automatically adds its span processor to it.
+
+Apitally then captures only the activities your tracer provider is configured for, so register your own sources with `AddSource()` and add instrumentations such as `AddHttpClientInstrumentation()` as needed. Your tracer provider's sampler also affects which request logs and traces Apitally captures.
+
+If you build a tracer provider separately with `Sdk.CreateTracerProviderBuilder()`, add the ASP.NET Core instrumentation and the `apitally.otel` source to it, and register it with dependency injection so the SDK can find it:
+
+```csharp {5-6,10}
+using OpenTelemetry;
+using OpenTelemetry.Trace;
+
+var tracerProvider = Sdk.CreateTracerProviderBuilder()
+    .AddAspNetCoreInstrumentation()
+    .AddSource("apitally.otel")
+    // your existing configuration ...
+    .Build();
+
+builder.Services.AddSingleton<TracerProvider>(tracerProvider);
+builder.Services.AddApitally(options =>
+{
+    options.WriteToken = "your-write-token";
+});
+```
+
+## Create custom spans
+
+For custom operations that are not covered by library instrumentation, you can create spans using the `StartActivity()` method of the `IApitally` service. It is a thin wrapper around the standard .NET `ActivitySource` API, which you can also use directly.
+
+### `StartActivity()` method
+
+Use `StartActivity()` to trace code blocks within a request handler. The span ends when the returned activity is disposed:
+
+```csharp
+app.MapPost("/carts/{cartId}/checkout", (string cartId, IApitally apitally) =>
+{
+    using (var activity = apitally.StartActivity("validate_cart"))
+    {
+        activity?.SetTag("cart.id", cartId);
+        // Validate the cart ...
+    }
+
+    using (apitally.StartActivity("process_payment"))
+    {
+        // Process the payment ...
+    }
+});
+```
+
+You can also create spans with your own `ActivitySource`. If your application registers its own tracer provider, add the source to it with `AddSource()`.
+
+```csharp
+using System.Diagnostics;
+
+public class OrderService
+{
+    private static readonly ActivitySource Source = new("MyApp");
+
+    public void ProcessOrder()
+    {
+        using var activity = Source.StartActivity("process_order");
+        // Process the order ...
+    }
+}
+```
+
+## Capture handled exceptions
+
+Apitally includes exceptions in request traces to help you diagnose server errors. Exceptions that propagate through ASP.NET Core are captured automatically.
+
+If your application catches an exception and handles it without rethrowing it, call `CaptureException()` on the `IApitally` service to include it in the current request trace.
+
+```csharp
+try
+{
+    ProcessOrder();
+}
+catch (Exception exception)
+{
+    apitally.CaptureException(exception);
+    // Return an error response without rethrowing the exception
+}
+```

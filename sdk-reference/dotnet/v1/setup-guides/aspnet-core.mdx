@@ -1,0 +1,237 @@
+---
+title: "Setup guide for ASP.NET Core"
+sidebarTitle: "ASP.NET Core"
+description: "Set up the Apitally SDK for your ASP.NET Core application."
+---
+
+import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
+
+<Info>This setup guide is for v1 of the .NET SDK (currently in beta).</Info>
+
+This page guides you through the setup of the Apitally SDK for your [ASP.NET Core](https://dotnet.microsoft.com/en-us/apps/aspnet) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
+
+<SetupGuideStartSnippet framework="ASP.NET Core" />
+
+## Requirements
+
+Requires .NET 8+ and ASP.NET Core 8.x, 9.x, or 10.x.
+
+## Create app
+
+To get started, create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and select ASP.NET Core as your framework.
+
+<img src="https://assets.apitally.io/docs/2025-12-08/create-app.webp" alt="Create app" className="rounded-xl" />
+
+You can also configure the environments (e.g. `prod` and `dev`) for your app, or simply accept the defaults.
+
+After submitting, you will see tailored setup instructions for your app. These include your write token and code snippets you can copy and paste into your project.
+
+<Note>
+  The **write token** (`apt_...`) provided in the setup instructions uniquely identifies your app for the purpose of data ingestion only. It does not grant any kind of read access to your data.
+</Note>
+
+## Install the SDK
+
+Install the Apitally SDK as a dependency in your project.
+
+```shell
+dotnet add package Apitally --prerelease
+```
+
+## Initialize Apitally
+
+Call `AddApitally` with the write token and [other configuration options](/sdk-reference/dotnet/v1/configuration) when registering services in your `Program.cs` file. You can also configure Apitally in your `appsettings.json` file.
+
+<CodeGroup>
+```csharp Program.cs {1,5-8}
+using Apitally;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddApitally(options =>
+{
+    options.WriteToken = "your-write-token";
+});
+
+var app = builder.Build();
+```
+
+```json appsettings.json {2-4}
+{
+  "Apitally": {
+    "WriteToken": "your-write-token"
+  }
+}
+```
+</CodeGroup>
+
+If your application uses a `Startup` class, call `services.AddApitally()` in `ConfigureServices`.
+
+The SDK uses the ASP.NET Core environment name (e.g. from `ASPNETCORE_ENVIRONMENT`) to determine the environment in Apitally. `Production` maps to `prod` and `Development` maps to `dev`, matching the default environments of your app. To use a different environment name, set the [`Env`](/sdk-reference/dotnet/v1/configuration#env) option or the `APITALLY_ENV` environment variable.
+
+You can also set the `APITALLY_WRITE_TOKEN` environment variable instead of configuring `WriteToken`.
+
+Deploy your application with these changes, or restart it if you're testing locally.
+
+<Check>
+  The basic setup is now complete. Metrics and logs will start appearing in the Apitally
+  dashboard.
+</Check>
+
+## Identify consumers
+
+Consumers are the users or applications calling your API. Identifying them lets you analyze and filter API traffic by consumer in Apitally.
+
+Call `SetConsumer` on the `IApitally` service during request handling to associate the current request with a consumer identifier. You can call it wherever the consumer is known, such as in a Minimal API handler, a controller action, existing middleware, or authentication code.
+
+You can also provide a display name, group, and custom attributes for each consumer.
+
+<CodeGroup>
+```csharp Middleware {9-15}
+using System.Security.Claims;
+using Apitally;
+
+app.Use(async (context, next) =>
+{
+    var user = context.User;
+    if (user.Identity?.IsAuthenticated == true)
+    {
+        var apitally = context.RequestServices.GetRequiredService<IApitally>();
+        apitally.SetConsumer(
+            user.Identity.Name!,
+            name: user.FindFirstValue(ClaimTypes.GivenName), // optional
+            group: user.FindFirstValue(ClaimTypes.Role), // optional
+            attributes: new Dictionary<string, string?> { ["plan"] = user.FindFirstValue("plan") } // optional
+        );
+    }
+    await next();
+});
+```
+
+```csharp Minimal API {8-13}
+using System.Security.Claims;
+using Apitally;
+
+app.MapGet("/items", (ClaimsPrincipal user, IApitally apitally) =>
+{
+    if (user.Identity?.IsAuthenticated == true)
+    {
+        apitally.SetConsumer(
+            user.Identity.Name!,
+            name: user.FindFirstValue(ClaimTypes.GivenName), // optional
+            group: user.FindFirstValue(ClaimTypes.Role), // optional
+            attributes: new Dictionary<string, string?> { ["plan"] = user.FindFirstValue("plan") } // optional
+        );
+    }
+    return new[] { "item1" };
+});
+```
+
+```csharp Controller {14-19}
+using System.Security.Claims;
+using Apitally;
+using Microsoft.AspNetCore.Mvc;
+
+[ApiController]
+[Route("items")]
+public class ItemsController(IApitally apitally) : ControllerBase
+{
+    [HttpGet]
+    public IEnumerable<string> GetItems()
+    {
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            apitally.SetConsumer(
+                User.Identity.Name!,
+                name: User.FindFirstValue(ClaimTypes.GivenName), // optional
+                group: User.FindFirstValue(ClaimTypes.Role), // optional
+                attributes: new Dictionary<string, string?> { ["plan"] = User.FindFirstValue("plan") } // optional
+            );
+        }
+        return ["item1"];
+    }
+}
+```
+</CodeGroup>
+
+## Capture headers and bodies
+
+Only response headers are captured by default. You can opt in to capture request headers as well as request and response bodies when initializing Apitally.
+
+```csharp {4-6}
+builder.Services.AddApitally(options =>
+{
+    options.WriteToken = "your-write-token";
+    options.CaptureRequestHeaders = true;
+    options.CaptureRequestBody = true;
+    options.CaptureResponseBody = true;
+});
+```
+
+## Mask sensitive information
+
+The SDK automatically masks common sensitive query parameters, headers, and body fields.
+
+To mask additional data, pass regular expressions matching query parameter names, header names, or body field names to `MaskQueryParams`, `MaskHeaders`, or `MaskBodyFields`, respectively. Matching is case-insensitive.
+
+```csharp {4-6}
+builder.Services.AddApitally(options =>
+{
+    options.WriteToken = "your-write-token";
+    options.MaskQueryParams = ["^account_id$"];
+    options.MaskHeaders = ["^X-Custom-Key$"];
+    options.MaskBodyFields = ["^credit_card$"];
+});
+```
+
+You can use the `MaskRequestBody` and `MaskResponseBody` callbacks to mask individual fields or entire bodies using custom logic. Use `MaskLogRecord` to mask or drop application log records.
+
+More information about masking is available [here](/sdk-reference/dotnet/v1/masking).
+
+## Sample requests
+
+If your application receives a lot of traffic, you may want to sample requests to stay within your request logs quota. Metrics will continue to count every request regardless of sampling.
+
+Use `SampleRate` to capture logs and traces for a fraction of requests.
+
+```csharp {4}
+builder.Services.AddApitally(options =>
+{
+    options.WriteToken = "your-write-token";
+    options.SampleRate = 0.1; // capture logs and traces for 10% of requests
+});
+```
+
+You can also use the `SampleOnRequest` and `SampleOnResponse` callbacks to make sampling decisions using custom logic.
+
+More information about sampling is available [here](/sdk-reference/dotnet/v1/sampling).
+
+## Instrument third-party libraries
+
+Instrumenting third-party libraries adds details about database queries, HTTP calls to external services, and other operations to your request traces. This lets you see how these operations contribute to API response times.
+
+`HttpClient` and many other libraries, such as Npgsql, are traced automatically. Other libraries require OpenTelemetry instrumentation packages. For example, to trace database queries made with `Microsoft.Data.SqlClient`, install `OpenTelemetry.Extensions.Hosting` and `OpenTelemetry.Instrumentation.SqlClient`:
+
+```shell
+dotnet add package OpenTelemetry.Extensions.Hosting
+dotnet add package OpenTelemetry.Instrumentation.SqlClient
+```
+
+Then register the instrumentation in your `Program.cs` file:
+
+```csharp Program.cs {6-10}
+builder.Services.AddApitally(options =>
+{
+    options.WriteToken = "your-write-token";
+});
+
+builder.Services.AddOpenTelemetry().WithTracing(tracing => tracing
+    .AddSqlClientInstrumentation()
+    .AddHttpClientInstrumentation()
+    .AddSource("*") // all other activity sources
+);
+```
+
+Apitally adds its span processor to the tracer provider automatically, so you don't need to configure an exporter.
+
+More information about tracing and instrumenting third-party libraries is available [here](/sdk-reference/dotnet/v1/tracing).

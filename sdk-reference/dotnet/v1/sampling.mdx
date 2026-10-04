@@ -1,0 +1,101 @@
+---
+title: Sampling
+description: Sample request logs and traces and exclude requests with the Apitally SDK for .NET.
+---
+
+The Apitally SDK provides options for sampling request logs and traces and excluding requests you don't want to capture.
+
+<Note>
+  Requests excluded or sampled out won't be logged, but are still counted in metrics. To exclude endpoints from metrics, you can mark them as excluded in the [dashboard](/api-metrics/traffic#exclude-endpoints).
+</Note>
+
+## Default exclusions
+
+The SDK automatically excludes common static assets and health check endpoints, such as `/robots.txt` or `/healthz`.
+
+See the [data privacy](/data-privacy#data-filtering) page for more information about default exclusions.
+
+## Sample rate
+
+If your application receives a lot of traffic, you may want to sample requests to stay within your request logs quota.
+
+Use `SampleRate` to capture only a fraction of requests. The default is `1.0`, which captures all requests.
+
+```csharp
+builder.Services.AddApitally(options =>
+{
+    options.WriteToken = "your-write-token";
+    options.SampleRate = 0.1; // capture logs and traces for 10% of requests
+});
+```
+
+To apply different sample rates based on custom criteria, see [Custom sampling](#custom-sampling) below.
+
+## Custom sampling
+
+For more control over which requests are captured, provide a callback function via `SampleOnRequest` or `SampleOnResponse`. Each callback receives the request span, with metadata available through [`span.Attributes`](/sdk-reference/dotnet/v1/attributes).
+
+Choose the callback based on when the information you need is available:
+
+- `SampleOnRequest` runs when the request starts. Use it when request attributes are enough to make the decision. Dropped requests are discarded immediately, so this has less overhead.
+- `SampleOnResponse` runs after the request span ends. Use it when the decision depends on the response status or attributes added while handling the request. The SDK retains telemetry until the response completes.
+
+The callback should return `0.0` to discard the request, `1.0` to capture it, or a probability between `0.0` and `1.0`. Return `null` to leave the sampling decision unchanged.
+
+<CodeGroup>
+  ```csharp Sample on request
+  using Apitally;
+
+  static double? ShouldCaptureRequest(SpanSnapshot span)
+  {
+      var userAgent = span.Attributes.GetValueOrDefault("user_agent.original") as string;
+      return userAgent == "my-company-monitor" ? 0.0 : 1.0;
+  }
+
+  var builder = WebApplication.CreateBuilder(args);
+
+  builder.Services.AddApitally(options =>
+  {
+      options.WriteToken = "your-write-token";
+      options.SampleOnRequest = ShouldCaptureRequest;
+  });
+  ```
+
+  ```csharp Sample on response
+  using Apitally;
+
+  static double? ShouldCaptureRequest(SpanSnapshot span)
+  {
+      var attributes = span.Attributes;
+      if (attributes.GetValueOrDefault("apitally.consumer.identifier") as string == "internal-service")
+      {
+          return 0.0;
+      }
+      if (attributes.GetValueOrDefault("http.response.status_code") is long statusCode && statusCode < 400)
+      {
+          return 0.0;
+      }
+      return 1.0;
+  }
+
+  var builder = WebApplication.CreateBuilder(args);
+
+  builder.Services.AddApitally(options =>
+  {
+      options.WriteToken = "your-write-token";
+      options.SampleOnResponse = ShouldCaptureRequest;
+  });
+  ```
+</CodeGroup>
+
+## Exclude paths
+
+To exclude requests based on their path, provide regular expressions via the `ExcludePaths` option. These match the actual request path (e.g. `/users/123`), not the endpoint route pattern (e.g. `/users/{id}`). Query parameters are ignored. Patterns are case-insensitive and match anywhere within the path. Use `^` and `$` anchors for exact matches.
+
+```csharp
+builder.Services.AddApitally(options =>
+{
+    options.WriteToken = "your-write-token";
+    options.ExcludePaths = ["/admin/", "/internal/"];
+});
+```
