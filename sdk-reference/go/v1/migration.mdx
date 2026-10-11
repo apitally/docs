@@ -204,8 +204,6 @@ The request helpers, such as `SetConsumer()`, now take a `context.Context` inste
 | Fiber v2 | `apitally.SetConsumer(c, ...)` | `apitally.SetConsumer(c.UserContext(), ...)` |
 | Chi | `apitally.SetConsumer(r, ...)` | `apitally.SetConsumer(r.Context(), ...)` |
 
-The same applies to `CaptureValidationError`.
-
 `SetConsumerIdentifier` has been removed. Use `SetConsumer` with only the `Identifier` field set.
 
 ```go
@@ -225,6 +223,18 @@ apitally.SetConsumer(ctx, apitally.Consumer{
     Group:      user.Group,                           // optional
     Attributes: map[string]string{"plan": user.Plan}, // optional
 })
+```
+
+## Validation errors
+
+`CaptureValidationError` has been removed. Pass validation errors to `CaptureError` with the request context instead. See [request context](/sdk-reference/go/v1/tracing#request-context) for the context to pass on each framework.
+
+```go
+// Before
+apitally.CaptureValidationError(c, err)
+
+// After
+apitally.CaptureError(ctx, err)
 ```
 
 ## Application logs

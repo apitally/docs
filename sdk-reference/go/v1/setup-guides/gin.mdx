@@ -126,13 +126,13 @@ r.GET("/items", func(c *gin.Context) {
 
 ## Capture validation errors
 
-Apitally shows validation errors for each endpoint. If you validate request data with [go-playground/validator](https://github.com/go-playground/validator), call `apitally.CaptureValidationError` with the request context and the error before responding with a validation error.
+If you validate request data with [go-playground/validator](https://github.com/go-playground/validator), pass the error to `apitally.CaptureError` with the request context. Apitally then counts validation errors by endpoint and field, so you can see which fields clients most often get wrong.
 
 ```go {4}
 r.POST("/items", func(c *gin.Context) {
     var item Item
     if err := c.ShouldBindJSON(&item); err != nil {
-        apitally.CaptureValidationError(c.Request.Context(), err)
+        apitally.CaptureError(c.Request.Context(), err)
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }

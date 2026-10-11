@@ -160,7 +160,7 @@ app.Get("/items", func(c fiber.Ctx) error {
 
 ## Capture validation errors
 
-Apitally shows validation errors for each endpoint. If you validate request data with [go-playground/validator](https://github.com/go-playground/validator), call `apitally.CaptureValidationError` with the request context and the error before responding with a validation error.
+If you validate request data with [go-playground/validator](https://github.com/go-playground/validator), pass the error to `apitally.CaptureError` with the request context. Apitally then counts validation errors by endpoint and field, so you can see which fields clients most often get wrong.
 
 ```go {9}
 validate := validator.New()
@@ -171,7 +171,7 @@ app.Post("/items", func(c fiber.Ctx) error {
         return fiber.ErrBadRequest
     }
     if err := validate.Struct(item); err != nil {
-        apitally.CaptureValidationError(c.Context(), err)
+        apitally.CaptureError(c.Context(), err)
         return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
     }
     // ...
