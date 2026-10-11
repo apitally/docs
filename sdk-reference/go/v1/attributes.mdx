@@ -1,0 +1,45 @@
+---
+title: Attributes
+description: Span attributes available to callbacks in the Apitally SDK for Go.
+---
+
+In the Apitally SDK, each API request is represented by a span. Span attributes contain metadata about the request and response, such as the request path, HTTP method, and response status code.
+
+You can use this metadata to make decisions in [sampling](/sdk-reference/go/v1/sampling#custom-sampling) and [masking](/sdk-reference/go/v1/masking#body-masking-callbacks) callbacks, which receive the `span` object as an argument. Access attributes through `span.Attributes()`, and create an `attribute.Set` to look them up by key. Individual attributes might be missing, in which case `Value()` returns `false` as its second value:
+
+```go {7-8}
+import (
+    "go.opentelemetry.io/otel/attribute"
+    sdktrace "go.opentelemetry.io/otel/sdk/trace"
+)
+
+func callback(span sdktrace.ReadOnlySpan) {
+    attrs := attribute.NewSet(span.Attributes()...)
+    path, _ := attrs.Value("url.path")
+    // ...
+}
+```
+
+## Default attributes
+
+The following attributes are useful for common callback decisions. The list is not exhaustive.
+
+| Attribute | Type | Description |
+| :--- | :--- | :--- |
+| `http.request.method` | `string` | HTTP method, e.g. `GET` or `POST`. |
+| `url.path` | `string` | Request path, e.g. `/users/123`. |
+| `url.query` | `string` | Query string without `?`, e.g. `page=2`. |
+| `user_agent.original` | `string` | Value of the `User-Agent` header. |
+| `http.route` | `string` | Matched endpoint route pattern, e.g. `/users/:id` or `/users/{id}` (Chi). |
+| `http.response.status_code` | `int64` | HTTP response status code, e.g. `200` or `404`. |
+| `apitally.consumer.identifier` | `string` | Consumer identifier supplied via `SetConsumer()`. |
+
+Read `string` attributes with `AsString()` and `int64` attributes with `AsInt64()`. Both return the zero value for missing attributes.
+
+## Set custom attributes
+
+Use `apitally.SetRequestAttributes()` with the [request context](/sdk-reference/go/v1/tracing#request-context) in your request handling code to attach custom metadata to the current request span. These attributes are included in the request trace and available to response-stage sampling and masking callbacks.
+
+```go
+apitally.SetRequestAttributes(ctx, attribute.String("tenant.id", tenantID))
+```

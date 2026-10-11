@@ -1,0 +1,276 @@
+---
+title: "Setup guide for Echo"
+sidebarTitle: "Echo"
+description: "Set up the Apitally SDK for your Echo application."
+---
+
+import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
+
+<Info>This setup guide is for v1 of the Go SDK (currently in beta).</Info>
+
+This page guides you through the setup of the Apitally SDK for your [Echo](https://echo.labstack.com) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
+
+<SetupGuideStartSnippet framework="Echo" />
+
+## Requirements
+
+Requires Go 1.25+ and either Echo 4.11.4+ or Echo 5.0.4+.
+
+## Create app
+
+To get started, create a new app in the [Apitally dashboard](https://app.apitally.io/apps) and select Echo as your framework.
+
+<img src="https://assets.apitally.io/docs/2025-12-08/create-app.webp" alt="Create app" className="rounded-xl" />
+
+You can also configure the environments (e.g. `prod` and `dev`) for your app, or simply accept the defaults.
+
+After submitting, you will see tailored setup instructions for your app. These include your write token and code snippets you can copy and paste into your project.
+
+<Note>
+  The **write token** (`apt_...`) provided in the setup instructions uniquely identifies your app for the purpose of data ingestion only. It does not grant any kind of read access to your data.
+</Note>
+
+## Install the SDK
+
+Install the Apitally SDK as a dependency in your project.
+
+<CodeGroup>
+```shell Echo v5
+go get github.com/apitally/apitally-go/echo-v5@v1.0.0-beta.1
+```
+
+```shell Echo v4
+go get github.com/apitally/apitally-go/echo-v4@v1.0.0-beta.1
+```
+</CodeGroup>
+
+## Initialize Apitally
+
+Call `apitally.Init` with your Echo instance and a configuration containing the write token and [other configuration options](/sdk-reference/go/v1/configuration) after adding the recovery middleware, before registering other middleware and routes.
+
+<CodeGroup>
+```go Echo v5 {5,12-15}
+import (
+    "github.com/labstack/echo/v5"
+    "github.com/labstack/echo/v5/middleware"
+
+    apitally "github.com/apitally/apitally-go/echo-v5"
+)
+
+func main() {
+    e := echo.New()
+    e.Use(middleware.Recover())
+
+    cfg := apitally.NewConfig()
+    cfg.WriteToken = "your-write-token"
+    cfg.Env = "dev" // or "prod" etc.
+    apitally.Init(e, cfg)
+
+    // ... register your middleware and routes ...
+}
+```
+
+```go Echo v4 {5,12-15}
+import (
+    "github.com/labstack/echo/v4"
+    "github.com/labstack/echo/v4/middleware"
+
+    apitally "github.com/apitally/apitally-go/echo-v4"
+)
+
+func main() {
+    e := echo.New()
+    e.Use(middleware.Recover())
+
+    cfg := apitally.NewConfig()
+    cfg.WriteToken = "your-write-token"
+    cfg.Env = "dev" // or "prod" etc.
+    apitally.Init(e, cfg)
+
+    // ... register your middleware and routes ...
+}
+```
+</CodeGroup>
+
+You can also set the `APITALLY_WRITE_TOKEN` and `APITALLY_ENV` environment variables instead of setting `WriteToken` and `Env` in code.
+
+Apitally sends data in the background at regular intervals. To deliver the remaining data when your application exits, call `apitally.Shutdown` after your HTTP server has stopped.
+
+```go {11}
+srv := &http.Server{Addr: ":8080", Handler: e}
+go srv.ListenAndServe()
+
+ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+defer stop()
+<-ctx.Done()
+
+shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+defer cancel()
+srv.Shutdown(shutdownCtx)
+apitally.Shutdown(shutdownCtx)
+```
+
+Deploy your application with these changes, or restart it if you're testing locally.
+
+<Check>
+  The basic setup is now complete. Metrics and logs will start appearing in the Apitally
+  dashboard.
+</Check>
+
+## Identify consumers
+
+Consumers are the users or applications calling your API. Identifying them lets you analyze and filter API traffic by consumer in Apitally.
+
+Call `apitally.SetConsumer` with the request context during request handling to associate the current request with a consumer identifier. You can call it wherever the consumer is known, such as in a route handler, existing middleware, or authentication code.
+
+You can also provide a display name, group, and custom attributes for each consumer.
+
+<CodeGroup>
+```go Middleware {4-9}
+e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+    return func(c *echo.Context) error {
+        if user := getCurrentUser(c); user != nil {
+            apitally.SetConsumer(c.Request().Context(), apitally.Consumer{
+                Identifier: user.ID,
+                Name:       user.Name,                            // optional
+                Group:      user.Group,                           // optional
+                Attributes: map[string]string{"plan": user.Plan}, // optional
+            })
+        }
+        return next(c)
+    }
+})
+```
+
+```go Route handler {3-8}
+e.GET("/items", func(c *echo.Context) error {
+    if user := getCurrentUser(c); user != nil {
+        apitally.SetConsumer(c.Request().Context(), apitally.Consumer{
+            Identifier: user.ID,
+            Name:       user.Name,                            // optional
+            Group:      user.Group,                           // optional
+            Attributes: map[string]string{"plan": user.Plan}, // optional
+        })
+    }
+    return c.JSON(http.StatusOK, []string{"item1"})
+})
+```
+</CodeGroup>
+
+## Capture validation errors
+
+Apitally shows validation errors for each endpoint. If you validate request data with [go-playground/validator](https://github.com/go-playground/validator), call `apitally.CaptureValidationError` with the request context and the error before responding with a validation error.
+
+```go {9}
+validate := validator.New()
+
+e.POST("/items", func(c *echo.Context) error {
+    var item Item
+    if err := c.Bind(&item); err != nil {
+        return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+    }
+    if err := validate.Struct(item); err != nil {
+        apitally.CaptureValidationError(c.Request().Context(), err)
+        return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+    }
+    // ...
+})
+```
+
+Validation errors that reach Echo's error handler and result in a 400 or 422 response are captured automatically.
+
+## Capture headers and bodies
+
+Only response headers are captured by default. You can opt in to capture request headers as well as request and response bodies when initializing Apitally.
+
+```go {4-6}
+cfg := apitally.NewConfig()
+cfg.WriteToken = "your-write-token"
+cfg.Env = "dev" // or "prod" etc.
+cfg.CaptureRequestHeaders = true
+cfg.CaptureRequestBody = true
+cfg.CaptureResponseBody = true
+apitally.Init(e, cfg)
+```
+
+## Capture application logs
+
+Apitally captures application logs written with [`log/slog`](https://pkg.go.dev/log/slog) and links them to the request they were logged in. Wrap your log handler with `apitally.NewSlogHandler`, which passes every record on to your handler unchanged.
+
+```go
+slog.SetDefault(slog.New(apitally.NewSlogHandler(slog.NewJSONHandler(os.Stdout, nil))))
+```
+
+Log with the request context, so Apitally can link the record to its request. Logs without a request context are not captured.
+
+```go {2}
+e.GET("/items", func(c *echo.Context) error {
+    slog.InfoContext(c.Request().Context(), "Listing items")
+    return c.JSON(http.StatusOK, []string{"item1"})
+})
+```
+
+<Warning>
+  Wrap a handler such as `slog.NewJSONHandler` or `slog.NewTextHandler`. Wrapping `slog.Default().Handler()` and installing the result with `slog.SetDefault` deadlocks on the first log call.
+</Warning>
+
+## Mask sensitive information
+
+The SDK automatically masks common sensitive query parameters, headers, and body fields.
+
+To mask additional data, pass regular expressions matching query parameter names, header names, or body field names to `MaskQueryParams`, `MaskHeaders`, or `MaskBodyFields`, respectively. Matching is case-insensitive.
+
+```go {3-5}
+cfg := apitally.NewConfig()
+cfg.WriteToken = "your-write-token"
+cfg.MaskQueryParams = []string{`^account_id$`}
+cfg.MaskHeaders = []string{`^X-Custom-Key$`}
+cfg.MaskBodyFields = []string{`^credit_card$`}
+apitally.Init(e, cfg)
+```
+
+You can use the `MaskRequestBody` and `MaskResponseBody` callbacks to mask individual fields or entire bodies using custom logic. Use `MaskLogRecord` to mask or drop application log records.
+
+More information about masking is available [here](/sdk-reference/go/v1/masking).
+
+## Sample requests
+
+If your application receives a lot of traffic, you may want to sample requests to stay within your request logs quota. Metrics will continue to count every request regardless of sampling.
+
+Use `SampleRate` to capture logs and traces for a fraction of requests.
+
+```go {3}
+cfg := apitally.NewConfig()
+cfg.WriteToken = "your-write-token"
+cfg.SampleRate = 0.1 // capture logs and traces for 10% of requests
+apitally.Init(e, cfg)
+```
+
+You can also use the `SampleOnRequest` and `SampleOnResponse` callbacks to make sampling decisions using custom logic.
+
+More information about sampling is available [here](/sdk-reference/go/v1/sampling).
+
+## Instrument third-party libraries
+
+Instrumenting third-party libraries adds details about database queries, HTTP calls to external services, and other operations to your request traces. This lets you see how these operations contribute to API response times.
+
+Use OpenTelemetry instrumentation libraries to instrument the libraries you want to trace. For example, to trace database queries made with `database/sql`, install `otelsql`:
+
+```shell
+go get github.com/XSAM/otelsql
+```
+
+Then open your database with `otelsql.Open` instead of `sql.Open`, and pass the request context to your queries:
+
+```go {1,4}
+db, err := otelsql.Open("postgres", dsn)
+
+e.GET("/items", func(c *echo.Context) error {
+    rows, err := db.QueryContext(c.Request().Context(), "SELECT name FROM items")
+    // ...
+})
+```
+
+Apitally sets up OpenTelemetry automatically, so you don't need to create a tracer provider or configure an exporter.
+
+More information about tracing and instrumenting third-party libraries is available [here](/sdk-reference/go/v1/tracing).

@@ -1,0 +1,316 @@
+---
+title: Migration from v0
+description: Migrate your application to the new Apitally SDK for Go.
+---
+
+The Go SDK now uses OpenTelemetry to collect and send metrics, logs, and traces.
+
+<Warning>
+  Request logging and tracing are now enabled by default. If you previously used the SDK for metrics only, set `SampleRate = 0` to keep that behavior.
+</Warning>
+
+## Installation and setup
+
+The updated [setup guides](/sdk-reference/go/v1/overview#supported-frameworks) provide the installation steps and initialization code for each framework. Follow these to replace your existing SDK integration.
+
+The SDK now requires Go 1.25 or later. The Gin module has been renamed from `github.com/apitally/apitally-go/gin` to `github.com/apitally/apitally-go/gin-v1`. Update your imports and remove the old module with `go mod tidy`.
+
+### Write tokens replace client IDs
+
+The SDK now authenticates with a **write token** instead of a client ID. Your existing app's token (`apt_...`) is available under _Setup instructions_ in the [Apitally dashboard](https://app.apitally.io/apps).
+
+`NewConfig()` no longer takes a client ID. Set the `WriteToken` option, or set the `APITALLY_WRITE_TOKEN` environment variable. A missing or invalid token no longer fails silently in the background. Instead, the SDK logs an error and disables itself.
+
+### `Init` replaces the middleware
+
+Replace the `Middleware` registration with a call to `Init`, which registers everything the SDK needs. Call it after your recovery middleware and OpenTelemetry HTTP instrumentation, and before your other middleware, groups and routes. On Gin and Fiber, routes registered before `Init` are not monitored, and `Init` logs an error when it finds them.
+
+```go
+// Before
+r := gin.Default()
+config := apitally.NewConfig("your-client-id")
+config.Env = "dev"
+r.Use(apitally.Middleware(r, config))
+
+// After
+r := gin.Default()
+cfg := apitally.NewConfig()
+cfg.WriteToken = "your-write-token"
+cfg.Env = "dev"
+apitally.Init(r, cfg)
+```
+
+### Graceful shutdown
+
+Call the new `apitally.Shutdown` function when your application exits, after your HTTP server has stopped, so the SDK can deliver the remaining telemetry. Without it, up to one export interval of telemetry is lost at exit. The [setup guides](/sdk-reference/go/v1/overview#supported-frameworks) show the full pattern.
+
+```go
+srv.Shutdown(ctx)
+apitally.Shutdown(ctx)
+```
+
+## Configuration changes
+
+The `RequestLoggingConfig` type and the `RequestLogging` field have been removed. Their settings are now fields directly on `Config`, with the option changes listed below.
+
+```go
+// Before
+config := apitally.NewConfig("your-client-id")
+config.RequestLogging = &apitally.RequestLoggingConfig{
+    Enabled:         true,
+    LogRequestBody:  true,
+    LogResponseBody: true,
+    MaskHeaders:     []*regexp.Regexp{regexp.MustCompile(`(?i)^X-Internal-`)},
+}
+
+// After
+cfg := apitally.NewConfig()
+cfg.WriteToken = "your-write-token"
+cfg.CaptureRequestBody = true
+cfg.CaptureResponseBody = true
+cfg.MaskHeaders = []string{`^X-Internal-`}
+```
+
+### Changed options
+
+The following options have been changed:
+
+<table>
+  <colgroup>
+    <col width="40%" />
+    <col width="60%" />
+  </colgroup>
+  <thead>
+    <tr>
+      <th style={{ minWidth: "240px" }}>Option</th>
+      <th style={{ minWidth: "300px" }}>Change</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code style={{ whiteSpace: "nowrap" }}>ClientID</code></td>
+      <td>Replaced by <code>WriteToken</code>, which requires a new credential.</td>
+    </tr>
+    <tr>
+      <td><code style={{ whiteSpace: "nowrap" }}>Env</code></td>
+      <td>Can now also be set with the <code>APITALLY_ENV</code> environment variable.</td>
+    </tr>
+    <tr>
+      <td><code style={{ whiteSpace: "nowrap" }}>RequestLogging.LogRequestHeaders</code></td>
+      <td>Renamed to <code>CaptureRequestHeaders</code>.</td>
+    </tr>
+    <tr>
+      <td><code style={{ whiteSpace: "nowrap" }}>RequestLogging.LogRequestBody</code></td>
+      <td>Renamed to <code>CaptureRequestBody</code>.</td>
+    </tr>
+    <tr>
+      <td><code style={{ whiteSpace: "nowrap" }}>RequestLogging.LogResponseHeaders</code></td>
+      <td>Renamed to <code>CaptureResponseHeaders</code>.</td>
+    </tr>
+    <tr>
+      <td><code style={{ whiteSpace: "nowrap" }}>RequestLogging.LogResponseBody</code></td>
+      <td>Renamed to <code>CaptureResponseBody</code>.</td>
+    </tr>
+    <tr>
+      <td><code style={{ whiteSpace: "nowrap" }}>RequestLogging.MaskQueryParams</code></td>
+      <td>Moved to <code>MaskQueryParams</code>, now <code>[]string</code>.</td>
+    </tr>
+    <tr>
+      <td><code style={{ whiteSpace: "nowrap" }}>RequestLogging.MaskHeaders</code></td>
+      <td>Moved to <code>MaskHeaders</code>, now <code>[]string</code>.</td>
+    </tr>
+    <tr>
+      <td><code style={{ whiteSpace: "nowrap" }}>RequestLogging.MaskBodyFields</code></td>
+      <td>Moved to <code>MaskBodyFields</code>, now <code>[]string</code>.</td>
+    </tr>
+    <tr>
+      <td><code style={{ whiteSpace: "nowrap" }}>RequestLogging.ExcludePaths</code></td>
+      <td>Moved to <code>ExcludePaths</code>, now <code>[]string</code>. Matches actual request paths instead of matched route patterns.</td>
+    </tr>
+    <tr>
+      <td><code style={{ whiteSpace: "nowrap" }}>RequestLogging.MaskRequestBodyCallback</code></td>
+      <td>Moved to <code>MaskRequestBody</code> with new arguments.</td>
+    </tr>
+    <tr>
+      <td><code style={{ whiteSpace: "nowrap" }}>RequestLogging.MaskResponseBodyCallback</code></td>
+      <td>Moved to <code>MaskResponseBody</code> with new arguments.</td>
+    </tr>
+    <tr>
+      <td><code style={{ whiteSpace: "nowrap" }}>RequestLogging.ExcludeCallback</code></td>
+      <td>Replaced by <code>SampleOnRequest</code> or <code>SampleOnResponse</code> with new arguments and return values.</td>
+    </tr>
+  </tbody>
+</table>
+
+Pattern options now take regular expressions as strings instead of `*regexp.Regexp` values. They are matched case-insensitively unless a pattern sets its own flags, such as `(?-i:...)`.
+
+### Removed options
+
+These options have been removed:
+
+<table>
+  <colgroup>
+    <col width="40%" />
+    <col width="60%" />
+  </colgroup>
+  <thead>
+    <tr>
+      <th style={{ minWidth: "240px" }}>Removed option</th>
+      <th style={{ minWidth: "300px" }}>Migration</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code style={{ whiteSpace: "nowrap" }}>RequestLogging</code></td>
+      <td>Set its fields directly on <code>Config</code>, applying the changes above. Remove its <code>Enabled</code> flag.</td>
+    </tr>
+    <tr>
+      <td>
+        <code style={{ whiteSpace: "nowrap" }}>RequestLogging.Enabled</code> and<br />
+        <code style={{ whiteSpace: "nowrap" }}>RequestLogging.CaptureTraces</code>
+      </td>
+      <td>Previously defaulted to <code>false</code>. Request logging and tracing are now enabled by default. Use <code>SampleRate = 0</code> to disable request logs and traces.</td>
+    </tr>
+    <tr>
+      <td><code style={{ whiteSpace: "nowrap" }}>RequestLogging.LogQueryParams</code></td>
+      <td>Query parameters are now always captured. To mask all values, use <code>{'MaskQueryParams = []string{".*"}'}</code>.</td>
+    </tr>
+    <tr>
+      <td><code style={{ whiteSpace: "nowrap" }}>RequestLogging.CaptureLogs</code></td>
+      <td>Logs are captured when you wrap your <code>log/slog</code> handler with <code>NewSlogHandler</code> (see <a href="#application-logs">below</a>).</td>
+    </tr>
+    <tr>
+      <td><code style={{ whiteSpace: "nowrap" }}>RequestLogging.LogPanic</code></td>
+      <td>Panics are now always captured in request traces.</td>
+    </tr>
+    <tr>
+      <td><code style={{ whiteSpace: "nowrap" }}>DisableSync</code></td>
+      <td>Use the <code>Disabled</code> option or the <code>APITALLY_DISABLED</code> environment variable. Apitally is also disabled in <code>go test</code> binaries.</td>
+    </tr>
+  </tbody>
+</table>
+
+The [configuration reference](/sdk-reference/go/v1/configuration) lists all available options.
+
+## Consumer identification
+
+The request helpers, such as `SetConsumer()`, now take a `context.Context` instead of the framework's request or context type. This changes the call sites on Echo, Fiber v2 and Chi:
+
+| Framework | Before | After |
+| :--- | :--- | :--- |
+| Gin | `apitally.SetConsumer(c, ...)` | `apitally.SetConsumer(c, ...)` |
+| Echo | `apitally.SetConsumer(c, ...)` | `apitally.SetConsumer(c.Request().Context(), ...)` |
+| Fiber v3 | `apitally.SetConsumer(c, ...)` | `apitally.SetConsumer(c, ...)` |
+| Fiber v2 | `apitally.SetConsumer(c, ...)` | `apitally.SetConsumer(c.UserContext(), ...)` |
+| Chi | `apitally.SetConsumer(r, ...)` | `apitally.SetConsumer(r.Context(), ...)` |
+
+The same applies to `CaptureValidationError`.
+
+`SetConsumerIdentifier` has been removed. Use `SetConsumer` with only the `Identifier` field set.
+
+```go
+// Before
+apitally.SetConsumerIdentifier(c, user.ID)
+
+// After
+apitally.SetConsumer(ctx, apitally.Consumer{Identifier: user.ID})
+```
+
+You can also provide custom attributes for each consumer:
+
+```go
+apitally.SetConsumer(ctx, apitally.Consumer{
+    Identifier: user.ID,
+    Name:       user.Name,                            // optional
+    Group:      user.Group,                           // optional
+    Attributes: map[string]string{"plan": user.Plan}, // optional
+})
+```
+
+## Application logs
+
+Log capture now works with `log/slog`. Wrap your handler with `NewSlogHandler` and log with the request context, for example with `slog.InfoContext`:
+
+```go
+slog.SetDefault(slog.New(apitally.NewSlogHandler(slog.NewJSONHandler(os.Stdout, nil))))
+
+slog.InfoContext(ctx, "Order created", "order_id", order.ID)
+```
+
+Records logged without the request context are not linked to requests and are not captured. See [request context](/sdk-reference/go/v1/tracing#request-context) for the context to pass on each framework.
+
+## Body masking callbacks
+
+`MaskRequestBodyCallback` and `MaskResponseBodyCallback` are now named `MaskRequestBody` and `MaskResponseBody`. Both receive `(span, body)`, rather than the `Request` and `Response` objects. The body is passed as `[]byte` after decompression.
+
+Callbacks may run later on another goroutine against an ended span. Request metadata is available through [`span.Attributes()`](/sdk-reference/go/v1/attributes).
+
+For example, a callback that masks bodies for admin routes becomes:
+
+```go
+// Before
+config.RequestLogging.MaskRequestBodyCallback = func(request *apitally.Request) []byte {
+    if strings.HasPrefix(request.Path, "/admin/") {
+        return nil
+    }
+    return request.Body
+}
+
+// After
+cfg.MaskRequestBody = func(span sdktrace.ReadOnlySpan, body []byte) []byte {
+    attrs := attribute.NewSet(span.Attributes()...)
+    route, _ := attrs.Value("http.route")
+    if strings.HasPrefix(route.AsString(), "/admin/") {
+        return nil
+    }
+    return body
+}
+```
+
+## Request exclusion
+
+Use sampling callbacks to exclude requests: `SampleOnRequest` for early decisions based on the request, or `SampleOnResponse` for decisions based on the response status or consumer. Both receive the span as their only argument.
+
+The callbacks should return `1, true` to capture the request, and `0, true` to exclude it. Callbacks can also return any probability between 0 and 1. Returning `false` as the second value preserves a previously made sampling decision.
+
+For example, to capture only error responses:
+
+```go
+// Before
+config.RequestLogging.ExcludeCallback = func(request *apitally.Request, response *apitally.Response) bool {
+    return response.StatusCode < 400
+}
+
+// After
+cfg.SampleOnResponse = func(span sdktrace.ReadOnlySpan) (float64, bool) {
+    attrs := attribute.NewSet(span.Attributes()...)
+    statusCode, _ := attrs.Value("http.response.status_code")
+    if statusCode.AsInt64() >= 400 {
+        return 1, true
+    }
+    return 0, true
+}
+```
+
+Replace the `ExcludeCallback` option with the appropriate sampling callback. Note that captured headers and bodies are not available in sampling callbacks.
+
+Sampling affects request logs and traces, but not metrics.
+
+See [sampling](/sdk-reference/go/v1/sampling) for details.
+
+### Path exclusions
+
+`ExcludePaths` now matches request paths rather than matched route patterns. If a pattern contains route parameters, update it to match concrete values. For example, replace `^/users/:id$` with `^/users/[^/]+$` to match `/users/123`.
+
+## Existing OpenTelemetry setups
+
+If your application registers a tracer provider from `go.opentelemetry.io/otel/sdk/trace` with `otel.SetTracerProvider` before the first request, the SDK automatically adds its span processor. No manual registration is required.
+
+Review these settings when upgrading:
+
+- **Sampling:** Previously, your provider's sampler affected traces but not Apitally's request logs. It now affects both. Check that its sampling rate provides the request log coverage you want. Metrics remain unsampled.
+
+## Other changes
+
+- **Network access:** The SDK now sends data to `otlp.apitally.io` instead of `hub.apitally.io`. Update firewall allowlists if necessary.
+- **Removed types:** The `ApitallyMiddleware`, `ApitallyConfig` and `ApitallyConsumer` aliases and the `Request` and `Response` types have been removed from the public API.
