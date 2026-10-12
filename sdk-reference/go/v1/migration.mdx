@@ -201,7 +201,7 @@ The request helpers, such as `SetConsumer()`, now take a `context.Context` inste
 | Gin | `apitally.SetConsumer(c, ...)` | `apitally.SetConsumer(c, ...)` |
 | Echo | `apitally.SetConsumer(c, ...)` | `apitally.SetConsumer(c.Request().Context(), ...)` |
 | Fiber v3 | `apitally.SetConsumer(c, ...)` | `apitally.SetConsumer(c, ...)` |
-| Fiber v2 | `apitally.SetConsumer(c, ...)` | `apitally.SetConsumer(c.UserContext(), ...)` |
+| Fiber v2 | `apitally.SetConsumer(c, ...)` | `apitally.SetConsumer(c.UserContext(), ...)` or `c.Context()` |
 | Chi | `apitally.SetConsumer(r, ...)` | `apitally.SetConsumer(r.Context(), ...)` |
 
 `SetConsumerIdentifier` has been removed. Use `SetConsumer` with only the `Identifier` field set.
@@ -242,7 +242,8 @@ apitally.CaptureError(ctx, err)
 Log capture now works with `log/slog`. Wrap your handler with `NewSlogHandler` and log with the request context, for example with `slog.InfoContext`:
 
 ```go
-slog.SetDefault(slog.New(apitally.NewSlogHandler(slog.NewJSONHandler(os.Stdout, nil))))
+handler := slog.NewJSONHandler(os.Stdout, nil)
+slog.SetDefault(slog.New(apitally.NewSlogHandler(handler)))
 
 slog.InfoContext(ctx, "Order created", "order_id", order.ID)
 ```
@@ -281,7 +282,7 @@ cfg.MaskRequestBody = func(span sdktrace.ReadOnlySpan, body []byte) []byte {
 
 Use sampling callbacks to exclude requests: `SampleOnRequest` for early decisions based on the request, or `SampleOnResponse` for decisions based on the response status or consumer. Both receive the span as their only argument.
 
-The callbacks should return `1, true` to capture the request, and `0, true` to exclude it. Callbacks can also return any probability between 0 and 1. Returning `false` as the second value preserves a previously made sampling decision.
+The callbacks should return `1, true` to capture the request, and `0, true` to exclude it. Callbacks can also return any probability between 0 and 1. Returning `false` as the second value from `SampleOnRequest` applies `SampleRate`, and from `SampleOnResponse` preserves the earlier sampling decision.
 
 For example, to capture only error responses:
 
