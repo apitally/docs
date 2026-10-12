@@ -11,7 +11,11 @@ The .NET SDK now uses OpenTelemetry to collect and send metrics, logs, and trace
 
 ## Installation and setup
 
-The updated [setup guide](/sdk-reference/dotnet/v1/setup-guides/aspnet-core) provides the installation steps and initialization code. Follow it to replace your existing SDK integration.
+Upgrade the Apitally package to the latest version:
+
+```shell
+dotnet add package Apitally --prerelease
+```
 
 The SDK now requires .NET 8 or later. If your application references OpenTelemetry packages directly, upgrade them to version 1.19.0 or later.
 
