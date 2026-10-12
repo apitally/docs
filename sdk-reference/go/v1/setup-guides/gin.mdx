@@ -63,22 +63,6 @@ func main() {
 
 You can also set the `APITALLY_WRITE_TOKEN` and `APITALLY_ENV` environment variables instead of setting `WriteToken` and `Env` in code.
 
-Apitally sends data in the background at regular intervals. To deliver the remaining data when your application exits, call `apitally.Shutdown` after your HTTP server has stopped.
-
-```go {11}
-srv := &http.Server{Addr: ":8080", Handler: r}
-go srv.ListenAndServe()
-
-ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
-defer stop()
-<-ctx.Done()
-
-shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-defer cancel()
-srv.Shutdown(shutdownCtx)
-apitally.Shutdown(shutdownCtx)
-```
-
 Deploy your application with these changes, or restart it if you're testing locally.
 
 <Check>
@@ -124,6 +108,41 @@ r.GET("/items", func(c *gin.Context) {
 ```
 </CodeGroup>
 
+## Capture headers and bodies
+
+Only response headers are captured by default. You can opt in to capture request headers as well as request and response bodies when initializing Apitally.
+
+```go {4-6}
+cfg := apitally.NewConfig()
+cfg.WriteToken = "your-write-token"
+cfg.Env = "dev" // or "prod" etc.
+cfg.CaptureRequestHeaders = true
+cfg.CaptureRequestBody = true
+cfg.CaptureResponseBody = true
+apitally.Init(r, cfg)
+```
+
+## Capture application logs
+
+To capture application logs written with [`log/slog`](https://pkg.go.dev/log/slog) and link them to the request they were logged in, wrap your log handler with `apitally.NewSlogHandler`. It passes every record on to your handler unchanged.
+
+```go
+slog.SetDefault(slog.New(apitally.NewSlogHandler(slog.NewJSONHandler(os.Stdout, nil))))
+```
+
+Log with the request context, so Apitally can link the record to its request. Logs without a request context are not captured.
+
+```go {2}
+r.GET("/items", func(c *gin.Context) {
+    slog.InfoContext(c.Request.Context(), "Listing items")
+    c.JSON(http.StatusOK, []string{"item1"})
+})
+```
+
+<Warning>
+  Do not wrap `slog.Default().Handler()` if you pass the result to `slog.SetDefault`, as this causes a deadlock on the first log call.
+</Warning>
+
 ## Capture validation errors
 
 If you validate request data with [go-playground/validator](https://github.com/go-playground/validator), pass the error to `apitally.CaptureError` with the request context. Apitally then counts validation errors by endpoint and field, so you can see which fields clients most often get wrong.
@@ -141,41 +160,6 @@ r.POST("/items", func(c *gin.Context) {
 ```
 
 Validation errors added to the Gin context with `c.Error()` and resulting in a 400 or 422 response are captured automatically.
-
-## Capture headers and bodies
-
-Only response headers are captured by default. You can opt in to capture request headers as well as request and response bodies when initializing Apitally.
-
-```go {4-6}
-cfg := apitally.NewConfig()
-cfg.WriteToken = "your-write-token"
-cfg.Env = "dev" // or "prod" etc.
-cfg.CaptureRequestHeaders = true
-cfg.CaptureRequestBody = true
-cfg.CaptureResponseBody = true
-apitally.Init(r, cfg)
-```
-
-## Capture application logs
-
-Apitally captures application logs written with [`log/slog`](https://pkg.go.dev/log/slog) and links them to the request they were logged in. Wrap your log handler with `apitally.NewSlogHandler`, which passes every record on to your handler unchanged.
-
-```go
-slog.SetDefault(slog.New(apitally.NewSlogHandler(slog.NewJSONHandler(os.Stdout, nil))))
-```
-
-Log with the request context, so Apitally can link the record to its request. Logs without a request context are not captured.
-
-```go {2}
-r.GET("/items", func(c *gin.Context) {
-    slog.InfoContext(c.Request.Context(), "Listing items")
-    c.JSON(http.StatusOK, []string{"item1"})
-})
-```
-
-<Warning>
-  Wrap a handler such as `slog.NewJSONHandler` or `slog.NewTextHandler`. Wrapping `slog.Default().Handler()` and installing the result with `slog.SetDefault` deadlocks on the first log call.
-</Warning>
 
 ## Mask sensitive information
 
@@ -237,3 +221,21 @@ r.GET("/items", func(c *gin.Context) {
 Apitally sets up OpenTelemetry automatically, so you don't need to create a tracer provider or configure an exporter.
 
 More information about tracing and instrumenting third-party libraries is available [here](/sdk-reference/go/v1/tracing).
+
+## Graceful shutdown
+
+Apitally sends data in the background at regular intervals. To deliver the remaining data when your application exits, call `apitally.Shutdown` after your HTTP server has stopped.
+
+```go {11}
+srv := &http.Server{Addr: ":8080", Handler: r}
+go srv.ListenAndServe()
+
+ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+defer stop()
+<-ctx.Done()
+
+shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+defer cancel()
+srv.Shutdown(shutdownCtx)
+apitally.Shutdown(shutdownCtx)
+```
