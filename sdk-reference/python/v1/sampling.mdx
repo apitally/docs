@@ -38,7 +38,7 @@ For more control over which requests are captured, provide a callback function v
 Choose the callback based on when the information you need is available:
 
 - `sample_on_request` runs when the request starts, before it is handled. Only the `http.request.method`, `url.path`, `url.query` and `user_agent.original` attributes are available at this point. Dropped requests are discarded immediately, so this has less overhead.
-- `sample_on_response` runs after the response is complete. Use it when the decision depends on attributes such as `http.route`, `http.response.status_code`, `apitally.consumer.identifier`, or custom attributes set with `apitally.set_request_attribute()`. The SDK retains telemetry until the response completes.
+- `sample_on_response` runs after the response is complete. Use it when the decision depends on attributes such as `http.route`, `http.response.status_code`, `apitally.consumer.identifier`, or custom attributes set with `apitally.set_request_attribute()`. It can't recover requests that `sample_rate` or `sample_on_request` already sampled out.
 
 The callback should return `False` to discard the request, `True` to capture it, or a probability between `0.0` and `1.0`. Return `None` to leave the sampling decision unchanged.
 
