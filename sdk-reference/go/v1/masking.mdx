@@ -1,0 +1,155 @@
+---
+title: Masking
+description: Mask sensitive data with the Apitally SDK for Go.
+---
+
+The Apitally SDK provides mechanisms for masking sensitive data in captured requests, responses, and application logs.
+
+## Default masking
+
+The SDK automatically masks common sensitive query parameters, headers, and request/response body fields based on built-in patterns. For example, fields named `password`, `token`, `secret`, or headers like `Authorization` are masked by default.
+
+See the [data privacy](/data-privacy#data-masking) page for more information about default masking.
+
+## Custom masking
+
+You can extend the default masking rules by providing additional regular expressions via the `MaskQueryParams`, `MaskHeaders`, and `MaskBodyFields` options. Patterns are case-insensitive and match anywhere within the name. Use `^` and `$` anchors for exact matches.
+
+Body field patterns recursively match keys in JSON objects and replace the corresponding values only when they are strings.
+
+The following example uses Gin. The same masking options are available for all supported frameworks.
+
+```go Gin example {16-19}
+import (
+    "github.com/gin-gonic/gin"
+
+    apitally "github.com/apitally/apitally-go/gin-v1"
+)
+
+func main() {
+    r := gin.Default()
+
+    cfg := apitally.NewConfig()
+    cfg.WriteToken = "your-write-token"
+    cfg.Env = "dev"
+    cfg.CaptureRequestHeaders = true
+    cfg.CaptureRequestBody = true
+    cfg.CaptureResponseBody = true
+    // Mask specific query parameters, headers and body fields
+    cfg.MaskQueryParams = []string{`^card_number$`, `^account_id$`}
+    cfg.MaskHeaders = []string{`^X-Custom-Key$`, `^X-Internal-`}
+    cfg.MaskBodyFields = []string{`^credit_card$`, `social_security`}
+    apitally.Init(r, cfg)
+}
+```
+
+### Body masking callbacks
+
+For more control over body masking, you can provide callback functions via the `MaskRequestBody` and `MaskResponseBody` options. Each function receives the ended request [`ReadOnlySpan`](https://pkg.go.dev/go.opentelemetry.io/otel/sdk/trace#ReadOnlySpan) and the captured body as `[]byte`. Request metadata is available through [`span.Attributes()`](/sdk-reference/go/v1/attributes). Each function should return the masked body as `[]byte`, or `nil` to mask the entire body.
+
+```go Callback function examples {59-61}
+import (
+    "encoding/json"
+    "strings"
+
+    "github.com/gin-gonic/gin"
+    "go.opentelemetry.io/otel/attribute"
+    sdktrace "go.opentelemetry.io/otel/sdk/trace"
+
+    apitally "github.com/apitally/apitally-go/gin-v1"
+)
+
+func maskRequestBody(span sdktrace.ReadOnlySpan, body []byte) []byte {
+    attrs := attribute.NewSet(span.Attributes()...)
+    path, _ := attrs.Value("url.path")
+    // Mask entire request body for admin endpoints
+    if strings.HasPrefix(path.AsString(), "/admin/") {
+        return nil
+    }
+    // Otherwise, return the original request body
+    return body
+}
+
+func maskResponseBody(span sdktrace.ReadOnlySpan, body []byte) []byte {
+    attrs := attribute.NewSet(span.Attributes()...)
+    path, _ := attrs.Value("url.path")
+    // Mask entire response body for admin endpoints
+    if strings.HasPrefix(path.AsString(), "/admin/") {
+        return nil
+    }
+    // Mask specific fields in user profile responses
+    if strings.HasPrefix(path.AsString(), "/users/") {
+        var data map[string]any
+        // Return the original body if parsing fails
+        if err := json.Unmarshal(body, &data); err == nil {
+            if _, ok := data["email"]; ok {
+                data["email"] = "******"
+            }
+            if _, ok := data["phone"]; ok {
+                data["phone"] = "******"
+            }
+            if masked, err := json.Marshal(data); err == nil {
+                return masked
+            }
+        }
+    }
+    // Otherwise, return the original response body
+    return body
+}
+
+func main() {
+    r := gin.Default()
+
+    cfg := apitally.NewConfig()
+    cfg.WriteToken = "your-write-token"
+    cfg.Env = "dev"
+    cfg.CaptureRequestHeaders = true
+    cfg.CaptureRequestBody = true
+    cfg.CaptureResponseBody = true
+    // Mask request and response bodies using custom logic
+    cfg.MaskRequestBody = maskRequestBody
+    cfg.MaskResponseBody = maskResponseBody
+    apitally.Init(r, cfg)
+}
+```
+
+<Note>
+  Callbacks are applied before pattern-based field masking. If the returned body contains JSON, it is still masked using the default and custom `MaskBodyFields` patterns.
+</Note>
+
+### Log record masking callback
+
+To mask sensitive data in application logs, provide a callback function via the `MaskLogRecord` option. The function receives a pointer to a `LogRecord` with the `Time`, `Level`, `Message`, and `Attrs` of the log record. You can modify the log message through `record.Message` and structured fields through `record.Attrs`. Return `true` to keep the record, or `false` to drop it.
+
+```go Callback function example {28}
+import (
+    "log/slog"
+    "regexp"
+
+    "github.com/gin-gonic/gin"
+
+    apitally "github.com/apitally/apitally-go/gin-v1"
+)
+
+var tokenPattern = regexp.MustCompile(`token=\S+`)
+
+func maskLogRecord(record *apitally.LogRecord) bool {
+    // Drop debug logs
+    if record.Level < slog.LevelInfo {
+        return false
+    }
+    // Mask tokens
+    record.Message = tokenPattern.ReplaceAllString(record.Message, "token=******")
+    return true
+}
+
+func main() {
+    r := gin.Default()
+
+    cfg := apitally.NewConfig()
+    cfg.WriteToken = "your-write-token"
+    cfg.Env = "dev"
+    cfg.MaskLogRecord = maskLogRecord
+    apitally.Init(r, cfg)
+}
+```

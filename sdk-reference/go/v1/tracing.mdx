@@ -1,0 +1,125 @@
+---
+title: Tracing instrumentation
+sidebarTitle: Tracing
+description: Instrument your Go application with OpenTelemetry for tracing in Apitally.
+---
+
+The Apitally SDK captures [OpenTelemetry](https://opentelemetry.io/docs/languages/go/) spans during request handling. This allows you to see exactly what happened during each request, including database queries, HTTP calls to external services, and custom operations.
+
+If your application does not have an existing OpenTelemetry setup, the SDK configures one automatically. Spans created within a captured request using the standard OpenTelemetry API or instrumentation libraries will be captured, as long as they are started with the request context.
+
+## Request context
+
+In Go, spans are linked to the request through the request's `context.Context`. Pass the request context, or a context derived from it, to instrumented libraries and to the SDK's functions. The request context to pass depends on your framework:
+
+| Framework | Request context |
+| :--- | :--- |
+| Gin | `c.Request.Context()` |
+| Echo | `c.Request().Context()` |
+| Fiber v3 | `c.Context()` |
+| Fiber v2 | `c.UserContext()` |
+| Chi | `r.Context()` |
+
+## Instrument libraries
+
+Use [OpenTelemetry instrumentation libraries](https://opentelemetry.io/ecosystem/registry/?language=go&component=instrumentation) to trace supported libraries.
+
+For example, to trace database queries made with `database/sql`, install `otelsql`:
+
+```shell
+go get github.com/XSAM/otelsql
+```
+
+Then open your database with `otelsql.Open` instead of `sql.Open`, and pass the request context to your queries:
+
+```go {3,6}
+import "github.com/XSAM/otelsql"
+
+db, err := otelsql.Open("postgres", dsn)
+
+// In your request handler
+rows, err := db.QueryContext(ctx, "SELECT name FROM items")
+```
+
+To trace outgoing HTTP requests, install `otelhttp`:
+
+```shell
+go get go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp
+```
+
+Then use an HTTP client with the `otelhttp` transport, and create requests with the request context:
+
+```go {3,6}
+import "go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
+
+client := &http.Client{Transport: otelhttp.NewTransport(http.DefaultTransport)}
+
+// In your request handler
+req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://api.example.com/items", nil)
+resp, err := client.Do(req)
+```
+
+Apitally sets up the OpenTelemetry tracer provider automatically, so you do not need to configure one or add an exporter.
+
+## Existing OpenTelemetry setup
+
+Apitally works alongside your existing OpenTelemetry instrumentation and exporters. If your application registers a tracer provider from `go.opentelemetry.io/otel/sdk/trace` with `otel.SetTracerProvider` before starting the server, Apitally automatically adds its span processor to it.
+
+```go {9}
+import (
+    "go.opentelemetry.io/otel"
+    sdktrace "go.opentelemetry.io/otel/sdk/trace"
+)
+
+tracerProvider := sdktrace.NewTracerProvider(
+    // your existing configuration ...
+)
+otel.SetTracerProvider(tracerProvider)
+```
+
+Your tracer provider's sampler also affects which request logs and traces Apitally captures.
+
+If your application uses OpenTelemetry HTTP instrumentation, such as `otelgin` or `otelhttp`, register its middleware before calling `apitally.Init`, or wrap your handler with `otelhttp.NewHandler`. Apitally then adds its data to the request span created by the instrumentation instead of creating a second one.
+
+```go {2}
+r := gin.Default()
+r.Use(otelgin.Middleware("my-service"))
+apitally.Init(r, cfg)
+```
+
+## Create custom spans
+
+For custom operations that are not covered by library instrumentation, you can create spans using the standard OpenTelemetry API. Start each span with the request context, or a context derived from it, and pass the returned context to nested operations:
+
+```go
+import (
+    "context"
+
+    "go.opentelemetry.io/otel"
+    "go.opentelemetry.io/otel/attribute"
+)
+
+var tracer = otel.Tracer("my-app")
+
+func processOrder(ctx context.Context, orderID string) error {
+    ctx, span := tracer.Start(ctx, "process_order")
+    defer span.End()
+    span.SetAttributes(attribute.String("order.id", orderID))
+
+    // Process the order, passing ctx to nested operations ...
+    return nil
+}
+```
+
+## Capture handled errors
+
+Apitally includes errors in request traces to help you diagnose server errors. Panics are captured automatically, as are errors that are returned to Echo or Fiber, or added to the Gin context with `c.Error()`, and result in a server error response.
+
+If your application handles an error itself, for example by writing an error response directly, call `apitally.CaptureError()` with the request context to include it in the current request trace.
+
+```go
+if err := processOrder(ctx); err != nil {
+    apitally.CaptureError(ctx, err)
+    // Write an error response without returning the error to the framework
+}
+```

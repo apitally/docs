@@ -22,13 +22,15 @@ The following attributes are useful for common callback decisions. The list is n
 
 | Attribute | Type | Description |
 | :--- | :--- | :--- |
-| `http.request.method` | `string` | HTTP method, e.g. `GET` or `POST`. |
-| `url.path` | `string` | Request path, e.g. `/users/123`. |
-| `url.query` | `string` | Query string without `?`, e.g. `page=2`. |
-| `user_agent.original` | `string` | Value of the `User-Agent` header. |
+| `http.request.method` \* | `string` | HTTP method, e.g. `GET` or `POST`. |
+| `url.path` \* | `string` | Request path, e.g. `/users/123`. |
+| `url.query` \* | `string` | Query string without `?`, e.g. `page=2`. |
+| `user_agent.original` \* | `string` | Value of the `User-Agent` header. |
 | `http.route` | `string` | Matched endpoint route pattern, e.g. `/users/{id}`. |
 | `http.response.status_code` | `long` | HTTP response status code, e.g. `200` or `404`. |
 | `apitally.consumer.identifier` | `string` | Consumer identifier supplied via `SetConsumer()`. |
+
+Attributes marked with \* are set when the request starts and are the only ones available to `SampleOnRequest`.
 
 Note that `http.response.status_code` is a `long`, not an `int`. Pattern matching with `is int` doesn't match it.
 

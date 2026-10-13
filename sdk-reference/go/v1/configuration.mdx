@@ -1,0 +1,194 @@
+---
+title: Configuration
+description: Configure the Apitally SDK for Go.
+---
+
+<CodeGroup>
+  ```go Gin {10-14}
+  import (
+      "github.com/gin-gonic/gin"
+
+      apitally "github.com/apitally/apitally-go/gin-v1"
+  )
+
+  func main() {
+      r := gin.Default()
+
+      cfg := apitally.NewConfig()
+      cfg.WriteToken = "your-write-token"
+      cfg.Env = "dev"
+      // other options ...
+      apitally.Init(r, cfg)
+  }
+  ```
+
+  ```go Echo {12-16}
+  import (
+      "github.com/labstack/echo/v5"
+      "github.com/labstack/echo/v5/middleware"
+
+      apitally "github.com/apitally/apitally-go/echo-v5"
+  )
+
+  func main() {
+      e := echo.New()
+      e.Use(middleware.Recover())
+
+      cfg := apitally.NewConfig()
+      cfg.WriteToken = "your-write-token"
+      cfg.Env = "dev"
+      // other options ...
+      apitally.Init(e, cfg)
+  }
+  ```
+
+  ```go Fiber {12-16}
+  import (
+      "github.com/gofiber/fiber/v3"
+      "github.com/gofiber/fiber/v3/middleware/recover"
+
+      apitally "github.com/apitally/apitally-go/fiber-v3"
+  )
+
+  func main() {
+      app := fiber.New()
+      app.Use(recover.New())
+
+      cfg := apitally.NewConfig()
+      cfg.WriteToken = "your-write-token"
+      cfg.Env = "dev"
+      // other options ...
+      apitally.Init(app, cfg)
+  }
+  ```
+
+  ```go Chi {12-16}
+  import (
+      "github.com/go-chi/chi/v5"
+      "github.com/go-chi/chi/v5/middleware"
+
+      apitally "github.com/apitally/apitally-go/chi-v5"
+  )
+
+  func main() {
+      r := chi.NewRouter()
+      r.Use(middleware.Recoverer)
+
+      cfg := apitally.NewConfig()
+      cfg.WriteToken = "your-write-token"
+      cfg.Env = "dev"
+      // other options ...
+      apitally.Init(r, cfg)
+  }
+  ```
+</CodeGroup>
+
+Create the configuration with `apitally.NewConfig()`, which sets the defaults listed below, and pass it to `apitally.Init`.
+
+## Parameters
+
+### General
+
+#### `WriteToken`
+
+Write token for your application in the format `apt_...`. Find it on the _Setup instructions_ page for your app. Required unless the `APITALLY_WRITE_TOKEN` environment variable is set.
+
+#### `Env`
+
+Name of the environment, for example `prod` or `dev`. Can also be set via the `APITALLY_ENV` environment variable. The environment is created automatically if it does not exist. Defaults to `dev`.
+
+#### `AppVersion`
+
+The current version of your application, for example `1.0.0`.
+
+#### `Disabled`
+
+Boolean. Whether to disable the SDK. Truthy `APITALLY_DISABLED` or `OTEL_SDK_DISABLED` environment variables also disable it. Defaults to `false`.
+
+### Data capture
+
+#### `CaptureRequestHeaders`
+
+Boolean. Whether to capture request headers. Default masking applies to common sensitive headers such as `Authorization`. Defaults to `false`.
+
+#### `CaptureRequestBody`
+
+Boolean. Whether to capture the request body. Only JSON and text bodies up to 50 KB are supported. Defaults to `false`.
+
+#### `CaptureResponseHeaders`
+
+Boolean. Whether to capture response headers. Defaults to `true`.
+
+#### `CaptureResponseBody`
+
+Boolean. Whether to capture the response body. Only JSON and text bodies up to 50 KB are supported. Defaults to `false`.
+
+### Masking
+
+#### `MaskQueryParams`
+
+List of regular expressions for matching query parameters to mask. These are applied in addition to the default masking patterns. Defaults to `nil`.
+
+```go
+cfg.MaskQueryParams = []string{`^api_key$`, `^token$`}
+```
+
+#### `MaskHeaders`
+
+List of regular expressions for matching headers to mask. These are applied in addition to the default masking patterns. Defaults to `nil`.
+
+```go
+cfg.MaskHeaders = []string{`^X-Api-Key$`, `^X-Internal-`}
+```
+
+#### `MaskBodyFields`
+
+List of regular expressions for matching request and response body fields to mask. These are applied in addition to the default masking patterns. Defaults to `nil`.
+
+```go
+cfg.MaskBodyFields = []string{`^credit_card$`, `^account_id$`}
+```
+
+#### `MaskRequestBody`
+
+Callback for masking the request body. It receives the request [`ReadOnlySpan`](https://pkg.go.dev/go.opentelemetry.io/otel/sdk/trace#ReadOnlySpan) and the body as `[]byte`, and returns the masked body as `[]byte` or `nil` to mask the entire body.
+
+See example [here](/sdk-reference/go/v1/masking#body-masking-callbacks).
+
+#### `MaskResponseBody`
+
+Callback for masking the response body. It receives the request [`ReadOnlySpan`](https://pkg.go.dev/go.opentelemetry.io/otel/sdk/trace#ReadOnlySpan) and the body as `[]byte`, and returns the masked body as `[]byte` or `nil` to mask the entire body.
+
+See example [here](/sdk-reference/go/v1/masking#body-masking-callbacks).
+
+#### `MaskLogRecord`
+
+Callback for masking application logs. It receives a pointer to a `LogRecord`, which it can modify in place, and returns `true` to keep the record or `false` to drop it.
+
+See example [here](/sdk-reference/go/v1/masking#log-record-masking-callback).
+
+### Sampling
+
+#### `SampleRate`
+
+Fraction of requests to capture as request logs and traces, from `0.0` to `1.0`. Metrics are not sampled. Defaults to `1.0`.
+
+#### `SampleOnRequest`
+
+Callback for adjusting sampling when a request starts. It receives the request [`ReadOnlySpan`](https://pkg.go.dev/go.opentelemetry.io/otel/sdk/trace#ReadOnlySpan) and returns a probability and `true`, or `false` as the second value to use `SampleRate`.
+
+See example [here](/sdk-reference/go/v1/sampling#custom-sampling).
+
+#### `SampleOnResponse`
+
+Callback for adjusting sampling when a response is ready. It receives the ended request [`ReadOnlySpan`](https://pkg.go.dev/go.opentelemetry.io/otel/sdk/trace#ReadOnlySpan) and returns a probability and `true`, or `false` as the second value to preserve the existing decision.
+
+See example [here](/sdk-reference/go/v1/sampling#custom-sampling).
+
+#### `ExcludePaths`
+
+List of regular expressions for matching paths to exclude from request logs and traces. Excluded requests are still included in metrics. Defaults to `nil`.
+
+```go
+cfg.ExcludePaths = []string{`^/admin/$`, `/internal/`}
+```

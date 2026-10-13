@@ -102,13 +102,13 @@ options.MaskBodyFields = ["^credit_card$", "^account_id$"];
 
 #### `MaskRequestBody`
 
-Callback for masking the request body. It receives the request `SpanSnapshot` and the body as a `byte[]`, and returns the masked body as a `byte[]` or `null`.
+Callback for masking the request body. It receives the request `SpanSnapshot` and the body as a `byte[]`, and returns the masked body as a `byte[]` or `null` to mask the entire body.
 
 See example [here](/sdk-reference/dotnet/v1/masking#body-masking-callbacks).
 
 #### `MaskResponseBody`
 
-Callback for masking the response body. It receives the request `SpanSnapshot` and the body as a `byte[]`, and returns the masked body as a `byte[]` or `null`.
+Callback for masking the response body. It receives the request `SpanSnapshot` and the body as a `byte[]`, and returns the masked body as a `byte[]` or `null` to mask the entire body.
 
 See example [here](/sdk-reference/dotnet/v1/masking#body-masking-callbacks).
 

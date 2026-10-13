@@ -22,13 +22,15 @@ The following attributes are useful for common callback decisions. The list is n
 
 | Attribute | Type | Description |
 | :--- | :--- | :--- |
-| `http.request.method` | `str` | HTTP method, e.g. `GET` or `POST`. |
-| `url.path` | `str` | Request path, e.g. `/users/123`. |
-| `url.query` | `str` | Query string without `?`, e.g. `page=2`. |
-| `user_agent.original` | `str` | Value of the `User-Agent` header. |
+| `http.request.method` \* | `str` | HTTP method, e.g. `GET` or `POST`. |
+| `url.path` \* | `str` | Request path, e.g. `/users/123`. |
+| `url.query` \* | `str` | Query string without `?`, e.g. `page=2`. |
+| `user_agent.original` \* | `str` | Value of the `User-Agent` header. |
 | `http.route` | `str` | Matched endpoint route pattern, e.g. `/users/{id}`. |
 | `http.response.status_code` | `int` | HTTP response status code, e.g. `200` or `404`. |
 | `apitally.consumer.identifier` | `str` | Consumer identifier supplied via `apitally.set_consumer()`. |
+
+Attributes marked with \* are set when the request starts and are the only ones available to `sample_on_request`.
 
 ## Set custom attributes
 

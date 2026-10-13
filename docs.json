@@ -258,6 +258,35 @@
                     ]
                   }
                 ]
+              },
+              {
+                "version": "v1",
+                "tag": "beta",
+                "groups": [
+                  {
+                    "group": "SDK reference",
+                    "icon": "book",
+                    "pages": [
+                      "sdk-reference/go/v1/overview",
+                      "sdk-reference/go/v1/migration",
+                      "sdk-reference/go/v1/configuration",
+                      "sdk-reference/go/v1/masking",
+                      "sdk-reference/go/v1/sampling",
+                      "sdk-reference/go/v1/tracing",
+                      "sdk-reference/go/v1/attributes"
+                    ]
+                  },
+                  {
+                    "group": "Setup guides",
+                    "icon": "rocket",
+                    "pages": [
+                      "sdk-reference/go/v1/setup-guides/chi",
+                      "sdk-reference/go/v1/setup-guides/echo",
+                      "sdk-reference/go/v1/setup-guides/fiber",
+                      "sdk-reference/go/v1/setup-guides/gin"
+                    ]
+                  }
+                ]
               }
             ]
           },
