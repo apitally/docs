@@ -5,6 +5,7 @@ description: "Set up the Apitally SDK for your Gin application."
 ---
 
 import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
+import ExistingOpenTelemetrySetupSnippet from "/snippets/v1/existing-opentelemetry-setup-go.mdx";
 
 <Info>This setup guide is for v1 of the Go SDK (currently in beta).</Info>
 
@@ -245,6 +246,6 @@ More information about tracing and instrumenting third-party libraries is availa
 
 ## Existing OpenTelemetry setup
 
-Apitally works alongside your existing OpenTelemetry instrumentation and exporters. If your application registers a tracer provider from `go.opentelemetry.io/otel/sdk/trace` with `otel.SetTracerProvider` before starting the server, Apitally automatically adds its span processor to it.
+<ExistingOpenTelemetrySetupSnippet />
 
 If your application uses OpenTelemetry HTTP instrumentation, such as `otelgin`, register its middleware before calling `apitally.Init`, or wrap your Gin engine with `otelhttp.NewHandler`. Apitally then adds its data to the request span created by the instrumentation instead of creating a second one.
