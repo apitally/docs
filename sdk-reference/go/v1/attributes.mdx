@@ -26,13 +26,15 @@ The following attributes are useful for common callback decisions. The list is n
 
 | Attribute | Type | Description |
 | :--- | :--- | :--- |
-| `http.request.method` | `string` | HTTP method, e.g. `GET` or `POST`. |
-| `url.path` | `string` | Request path, e.g. `/users/123`. |
-| `url.query` | `string` | Query string without `?`, e.g. `page=2`. |
-| `user_agent.original` | `string` | Value of the `User-Agent` header. |
+| `http.request.method` \* | `string` | HTTP method, e.g. `GET` or `POST`. |
+| `url.path` \* | `string` | Request path, e.g. `/users/123`. |
+| `url.query` \* | `string` | Query string without `?`, e.g. `page=2`. |
+| `user_agent.original` \* | `string` | Value of the `User-Agent` header. |
 | `http.route` | `string` | Matched endpoint route pattern, e.g. `/users/:id` or `/users/{id}` (Chi). |
 | `http.response.status_code` | `int64` | HTTP response status code, e.g. `200` or `404`. |
 | `apitally.consumer.identifier` | `string` | Consumer identifier supplied via `SetConsumer()`. |
+
+Attributes marked with \* are set when the request starts and are the only ones available to `SampleOnRequest`.
 
 Read `string` attributes with `AsString()` and `int64` attributes with `AsInt64()`. Both return the zero value for missing attributes.
 
