@@ -21,7 +21,9 @@ dotnet add package OpenTelemetry.Instrumentation.SqlClient
 
 Then register the instrumentation in your `Program.cs` file:
 
-```csharp Program.cs {6-10}
+```csharp Program.cs {1,8-12}
+using OpenTelemetry.Trace;
+
 builder.Services.AddApitally(options =>
 {
     options.WriteToken = "your-write-token";

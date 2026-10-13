@@ -34,7 +34,7 @@ The following attributes are useful for common callback decisions. The list is n
 | `http.response.status_code` | `int64` | HTTP response status code, e.g. `200` or `404`. |
 | `apitally.consumer.identifier` | `string` | Consumer identifier supplied via `SetConsumer()`. |
 
-Attributes marked with \* are set when the request starts and are the only ones available to `SampleOnRequest`.
+Attributes marked with \* are available to `SampleOnRequest` when the request starts.
 
 Read `string` attributes with `AsString()` and `int64` attributes with `AsInt64()`. Both return the zero value for missing attributes.
 

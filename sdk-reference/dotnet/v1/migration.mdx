@@ -247,7 +247,7 @@ options.MaskRequestBody = (span, body) =>
 
 Use sampling callbacks to exclude requests: `SampleOnRequest` for early decisions based on the request, or `SampleOnResponse` for decisions based on the response status or consumer. Both receive the span as their only argument.
 
-The callbacks should return `1.0` to capture the request, and `0.0` to exclude it. Callbacks can also return any probability between 0 and 1. Returning `null` preserves a previously made sampling decision.
+The callbacks should return `1.0` to capture the request, and `0.0` to exclude it. Callbacks can also return any probability between 0 and 1. Returning `null` from `SampleOnRequest` applies `SampleRate`, and returning `null` from `SampleOnResponse` preserves the earlier sampling decision.
 
 For example, to capture only error responses:
 

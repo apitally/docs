@@ -30,7 +30,7 @@ The following attributes are useful for common callback decisions. The list is n
 | `http.response.status_code` | `int` | HTTP response status code, e.g. `200` or `404`. |
 | `apitally.consumer.identifier` | `str` | Consumer identifier supplied via `apitally.set_consumer()`. |
 
-Attributes marked with \* are set when the request starts and are the only ones available to `sample_on_request`.
+Attributes marked with \* are available to `sample_on_request` when the request starts.
 
 ## Set custom attributes
 

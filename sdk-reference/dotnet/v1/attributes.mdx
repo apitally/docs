@@ -30,7 +30,7 @@ The following attributes are useful for common callback decisions. The list is n
 | `http.response.status_code` | `long` | HTTP response status code, e.g. `200` or `404`. |
 | `apitally.consumer.identifier` | `string` | Consumer identifier supplied via `SetConsumer()`. |
 
-Attributes marked with \* are set when the request starts and are the only ones available to `SampleOnRequest`.
+Attributes marked with \* are available to `SampleOnRequest` when the request starts.
 
 Note that `http.response.status_code` is a `long`, not an `int`. Pattern matching with `is int` doesn't match it.
 
