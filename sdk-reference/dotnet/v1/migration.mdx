@@ -23,7 +23,7 @@ The SDK now requires .NET 8 or later. If your application references OpenTelemet
 
 The SDK now authenticates with a **write token** instead of a client ID. Your existing app's token (`apt_...`) is available under _Setup instructions_ in the [Apitally dashboard](https://app.apitally.io/apps).
 
-Use this token as the `WriteToken` option in place of `ClientId`, or set the `APITALLY_WRITE_TOKEN` environment variable. A missing or invalid token no longer fails application startup. Instead, the SDK logs an error and disables itself.
+Use this token as the `WriteToken` option in place of `ClientId`, or set the `APITALLY_WRITE_TOKEN` environment variable.
 
 ### `UseApitally()` has been removed
 
@@ -174,7 +174,7 @@ These options have been removed:
   <tbody>
     <tr>
       <td><code style={{ whiteSpace: "nowrap" }}>RequestLogging</code></td>
-      <td>Set its properties directly on <code>ApitallyOptions</code>, applying the changes above. Remove the <code>Enabled</code> flag.</td>
+      <td>Set its properties directly on <code>ApitallyOptions</code>, applying the changes above. Remove its <code>Enabled</code> flag.</td>
     </tr>
     <tr>
       <td>
@@ -225,9 +225,7 @@ The identifier is now always a `string`. Convert numeric identifiers with `ToStr
 
 ## Body masking callbacks
 
-`MaskRequestBody` and `MaskResponseBody` now both receive `(span, body)`, rather than the `Request` and `Response` objects. The body is passed as a `byte[]` after decompression.
-
-Callbacks may run later on another thread against an ended span snapshot. Request metadata is available through [`span.Attributes`](/sdk-reference/dotnet/v1/attributes).
+`MaskRequestBody` and `MaskResponseBody` now both receive `(span, body)`, rather than the `Request` and `Response` objects. The body is passed as a `byte[]`. Request metadata is available through [`span.Attributes`](/sdk-reference/dotnet/v1/attributes).
 
 For example, a callback that masks bodies for admin routes becomes:
 
@@ -286,7 +284,7 @@ builder.Services.AddApitally();
 
 Review these settings when upgrading:
 
-- **Sampling:** Previously, your provider's sampler affected traces but not Apitally's request logs. It now affects both, so review its sampling rate when upgrading. Metrics remain unsampled.
+- **Sampling:** Previously, your provider's sampler affected traces but not Apitally's request logs. It now affects both. Check that its sampling rate provides the request log coverage you want. Metrics remain unsampled.
 - **Sources:** Previously, the SDK captured activities from any `ActivitySource` during requests. It now captures only the activities your provider is configured for. Register your own sources with `AddSource()`, and add `AddHttpClientInstrumentation()` to keep tracing outgoing HTTP calls.
 
 ## Other changes

@@ -13,13 +13,20 @@ The Go SDK now uses OpenTelemetry to collect and send metrics, logs, and traces.
 
 The updated [setup guides](/sdk-reference/go/v1/overview#supported-frameworks) provide the installation steps and initialization code for each framework. Follow these to replace your existing SDK integration.
 
-The SDK now requires Go 1.25 or later. The Gin module has been renamed from `github.com/apitally/apitally-go/gin` to `github.com/apitally/apitally-go/gin-v1`. Update your imports and remove the old module with `go mod tidy`.
+The SDK now requires Go 1.25 or later. Upgrade the module for your framework:
+
+```shell
+go get github.com/apitally/apitally-go/chi-v5@v1.0.0-beta.2    # or echo-v4, echo-v5, fiber-v2, fiber-v3
+go get github.com/apitally/apitally-go/gin-v1@v1.0.0-beta.2    # replaces github.com/apitally/apitally-go/gin
+```
+
+The Gin module has been renamed from `github.com/apitally/apitally-go/gin` to `github.com/apitally/apitally-go/gin-v1`. Update your imports and remove the old module with `go mod tidy`.
 
 ### Write tokens replace client IDs
 
 The SDK now authenticates with a **write token** instead of a client ID. Your existing app's token (`apt_...`) is available under _Setup instructions_ in the [Apitally dashboard](https://app.apitally.io/apps).
 
-`NewConfig()` no longer takes a client ID. Set the `WriteToken` option, or set the `APITALLY_WRITE_TOKEN` environment variable. A missing or invalid token no longer fails silently in the background. Instead, the SDK logs an error and disables itself.
+`NewConfig()` no longer takes a client ID. Set the `WriteToken` option, or set the `APITALLY_WRITE_TOKEN` environment variable.
 
 ### `Init` replaces the middleware
 
@@ -90,10 +97,6 @@ The following options have been changed:
     <tr>
       <td><code style={{ whiteSpace: "nowrap" }}>ClientID</code></td>
       <td>Replaced by <code>WriteToken</code>, which requires a new credential.</td>
-    </tr>
-    <tr>
-      <td><code style={{ whiteSpace: "nowrap" }}>Env</code></td>
-      <td>Can now also be set with the <code>APITALLY_ENV</code> environment variable.</td>
     </tr>
     <tr>
       <td><code style={{ whiteSpace: "nowrap" }}>RequestLogging.LogRequestHeaders</code></td>
@@ -252,9 +255,7 @@ Records logged without the request context are not linked to requests and are no
 
 ## Body masking callbacks
 
-`MaskRequestBodyCallback` and `MaskResponseBodyCallback` are now named `MaskRequestBody` and `MaskResponseBody`. Both receive `(span, body)`, rather than the `Request` and `Response` objects. The body is passed as `[]byte` after decompression.
-
-Callbacks may run later on another goroutine against an ended span. Request metadata is available through [`span.Attributes()`](/sdk-reference/go/v1/attributes).
+`MaskRequestBodyCallback` and `MaskResponseBodyCallback` are now named `MaskRequestBody` and `MaskResponseBody`. Both receive `(span, body)`, rather than the `Request` and `Response` objects. The body is passed as `[]byte`. Request metadata is available through [`span.Attributes()`](/sdk-reference/go/v1/attributes).
 
 For example, a callback that masks bodies for admin routes becomes:
 
