@@ -160,7 +160,7 @@ r.POST("/items", func(c *gin.Context) {
 })
 ```
 
-Validation errors added to the Gin context with `c.Error()` and resulting in a 400 or 422 response are captured automatically.
+If you use `c.Bind` or `c.BindJSON`, or pass validation errors to `c.Error()`, Apitally captures them automatically for 400 or 422 responses. You don't need to call `apitally.CaptureError` in those cases.
 
 ## Mask sensitive information
 

@@ -199,7 +199,7 @@ app.Post("/items", func(c fiber.Ctx) error {
 })
 ```
 
-Validation errors that reach Fiber's error handler and result in a 400 or 422 response are captured automatically.
+If your handler returns the validator error and your app's `ErrorHandler` responds with a 400 or 422 status code, Apitally captures it automatically. You don't need to call `apitally.CaptureError` in that case.
 
 ## Mask sensitive information
 
