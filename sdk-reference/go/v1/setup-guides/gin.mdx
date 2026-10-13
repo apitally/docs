@@ -40,7 +40,7 @@ go get github.com/apitally/apitally-go/gin-v1@v1.0.0-beta.1
 
 ## Initialize Apitally
 
-Call `apitally.Init` with your Gin engine and a configuration containing the write token and [other configuration options](/sdk-reference/go/v1/configuration) immediately after creating the engine, before registering other middleware and routes. Routes registered before `Init` are not monitored.
+Call `apitally.Init` with your Gin engine and a configuration containing the write token and [other configuration options](/sdk-reference/go/v1/configuration) immediately after `gin.Default()`, before registering other middleware and routes.
 
 ```go {4,10-13}
 import (

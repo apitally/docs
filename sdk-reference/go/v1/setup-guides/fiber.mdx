@@ -46,7 +46,7 @@ go get github.com/apitally/apitally-go/fiber-v2@v1.0.0-beta.1
 
 ## Initialize Apitally
 
-Call `apitally.Init` with your Fiber app and a configuration containing the write token and [other configuration options](/sdk-reference/go/v1/configuration) after adding the recovery middleware, before registering other middleware and routes. Routes registered before `Init` are not monitored.
+Call `apitally.Init` with your Fiber app and a configuration containing the write token and [other configuration options](/sdk-reference/go/v1/configuration) immediately after adding the `recover` middleware, before registering other middleware and routes.
 
 <CodeGroup>
 ```go Fiber v3 {5,12-15}

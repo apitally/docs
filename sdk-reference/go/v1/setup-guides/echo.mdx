@@ -46,7 +46,7 @@ go get github.com/apitally/apitally-go/echo-v4@v1.0.0-beta.1
 
 ## Initialize Apitally
 
-Call `apitally.Init` with your Echo instance and a configuration containing the write token and [other configuration options](/sdk-reference/go/v1/configuration) after adding the recovery middleware, before registering other middleware and routes.
+Call `apitally.Init` with your Echo instance and a configuration containing the write token and [other configuration options](/sdk-reference/go/v1/configuration) immediately after adding the `Recover` middleware, before registering other middleware and routes.
 
 <CodeGroup>
 ```go Echo v5 {5,12-15}
