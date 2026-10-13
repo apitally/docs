@@ -63,7 +63,7 @@ Apitally sets up the OpenTelemetry tracer provider automatically, so you do not 
 
 ## Existing OpenTelemetry setup
 
-Apitally works alongside your existing OpenTelemetry instrumentation and exporters. If your application registers a tracer provider from `go.opentelemetry.io/otel/sdk/trace` with `otel.SetTracerProvider` before the first request, Apitally automatically adds its span processor to it.
+Apitally works alongside your existing OpenTelemetry instrumentation and exporters. If your application registers a tracer provider from `go.opentelemetry.io/otel/sdk/trace` with `otel.SetTracerProvider` before starting the server, Apitally automatically adds its span processor to it.
 
 ```go {9}
 import (
