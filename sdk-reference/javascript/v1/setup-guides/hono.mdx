@@ -5,6 +5,7 @@ description: "Set up the Apitally SDK for your Hono application."
 ---
 
 import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
+import ExistingOpenTelemetrySetupSnippet from "/snippets/v1/existing-opentelemetry-setup-javascript.mdx";
 
 <Info>This setup guide is for v1 of the JavaScript SDK (currently in beta).</Info>
 
@@ -186,6 +187,8 @@ useApitally(app, {
 
 You can also use the `sampleOnRequest` and `sampleOnResponse` callbacks to make sampling decisions using custom logic.
 
+If your application has an existing OpenTelemetry setup, your tracer provider's sampler also affects which request logs and traces Apitally captures.
+
 More information about sampling is available [here](/sdk-reference/javascript/v1/sampling).
 
 ## Instrument third-party libraries
@@ -238,3 +241,7 @@ bun --preload ./instrumentation.mjs app.js
 Apitally sets up OpenTelemetry automatically, so you don't need to create a tracer provider or configure an exporter.
 
 More information about tracing and instrumenting third-party libraries is available [here](/sdk-reference/javascript/v1/tracing).
+
+## Existing OpenTelemetry setup
+
+<ExistingOpenTelemetrySetupSnippet />

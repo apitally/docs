@@ -57,29 +57,6 @@ bun --preload ./instrumentation.mjs app.js
 
 Apitally sets up the OpenTelemetry tracer provider automatically, so you do not need to configure one or add an exporter.
 
-## Existing OpenTelemetry setup
-
-Apitally works alongside your existing OpenTelemetry instrumentation and exporters. If your application registers its own tracer provider, add `ApitallySpanProcessor` to the list of span processors. For example, with `NodeSDK`:
-
-```javascript {2,7}
-import { NodeSDK } from "@opentelemetry/sdk-node";
-import { ApitallySpanProcessor } from "apitally";
-
-const sdk = new NodeSDK({
-  spanProcessors: [
-    // your existing span processors ...
-    new ApitallySpanProcessor(),
-  ],
-  // your existing configuration ...
-});
-
-sdk.start();
-```
-
-<Warning>
-  If you're using version 10.x of the Sentry JavaScript SDK, add `ApitallySpanProcessor` to the `openTelemetrySpanProcessors` option in `Sentry.init()` and enable Sentry tracing. Sentry's sampling settings also affect which request logs and traces Apitally captures.
-</Warning>
-
 ## Create custom spans
 
 For custom operations that are not covered by library instrumentation, you can create spans using the helpers provided by the SDK. These are thin wrappers around the standard OpenTelemetry API, which you can also use directly.
