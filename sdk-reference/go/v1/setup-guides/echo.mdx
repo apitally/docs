@@ -157,7 +157,7 @@ apitally.Init(e, cfg)
 
 ## Capture application logs
 
-To capture application logs written with [`log/slog`](https://pkg.go.dev/log/slog) and link them to the request they were logged in, wrap your log handler with `apitally.NewSlogHandler`. It passes every record on to your handler unchanged.
+To capture application logs written with [`log/slog`](https://pkg.go.dev/log/slog), wrap your log handler with `apitally.NewSlogHandler`. It passes every record on to your handler unchanged.
 
 ```go
 handler := slog.NewJSONHandler(os.Stdout, nil)
@@ -179,9 +179,10 @@ e.GET("/items", func(c *echo.Context) error {
 
 ## Capture validation errors
 
-If you validate request data with [go-playground/validator](https://github.com/go-playground/validator), pass the error to `apitally.CaptureError` with the request context. Apitally then counts validation errors by endpoint and field, so you can see which fields clients most often get wrong.
+If you validate request data with [go-playground/validator](https://github.com/go-playground/validator), Apitally counts validation errors by endpoint and field, so you can see which fields clients most often get wrong. This works automatically when the error your handler returns wraps the validator error:
 
-```go {9}
+<CodeGroup>
+```go Echo v5 {9}
 validate := validator.New()
 
 e.POST("/items", func(c *echo.Context) error {
@@ -190,14 +191,29 @@ e.POST("/items", func(c *echo.Context) error {
         return echo.NewHTTPError(http.StatusBadRequest, err.Error())
     }
     if err := validate.Struct(item); err != nil {
-        apitally.CaptureError(c.Request().Context(), err)
-        return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+        return echo.NewHTTPError(http.StatusBadRequest, err.Error()).Wrap(err)
     }
     // ...
 })
 ```
 
-Validation errors that reach Echo's error handler and result in a 400 or 422 response are captured automatically.
+```go Echo v4 {9}
+validate := validator.New()
+
+e.POST("/items", func(c echo.Context) error {
+    var item Item
+    if err := c.Bind(&item); err != nil {
+        return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+    }
+    if err := validate.Struct(item); err != nil {
+        return echo.NewHTTPError(http.StatusBadRequest, err.Error()).SetInternal(err)
+    }
+    // ...
+})
+```
+</CodeGroup>
+
+If your handler writes the error response itself instead of returning an error, pass the error to `apitally.CaptureError` with the request context.
 
 ## Mask sensitive information
 
