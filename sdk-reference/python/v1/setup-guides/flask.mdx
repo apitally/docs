@@ -177,6 +177,8 @@ apitally.init(
 
 You can also use the `sample_on_request` and `sample_on_response` callbacks to make sampling decisions using custom logic.
 
+If your application has an existing OpenTelemetry setup, your tracer provider's sampler also affects which request logs and traces Apitally captures.
+
 More information about sampling is available [here](/sdk-reference/python/v1/sampling).
 
 ## Instrument third-party libraries
