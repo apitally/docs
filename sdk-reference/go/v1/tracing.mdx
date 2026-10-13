@@ -41,51 +41,7 @@ db, err := otelsql.Open("postgres", dsn)
 rows, err := db.QueryContext(ctx, "SELECT name FROM items")
 ```
 
-To trace outgoing HTTP requests, install `otelhttp`:
-
-```shell
-go get go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp
-```
-
-Then use an HTTP client with the `otelhttp` transport, and create requests with the request context:
-
-```go {3,6}
-import "go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
-
-client := &http.Client{Transport: otelhttp.NewTransport(http.DefaultTransport)}
-
-// In your request handler
-req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://api.example.com/items", nil)
-resp, err := client.Do(req)
-```
-
 Apitally sets up the OpenTelemetry tracer provider automatically, so you do not need to configure one or add an exporter.
-
-## Existing OpenTelemetry setup
-
-Apitally works alongside your existing OpenTelemetry instrumentation and exporters. If your application registers a tracer provider from `go.opentelemetry.io/otel/sdk/trace` with `otel.SetTracerProvider` before starting the server, Apitally automatically adds its span processor to it.
-
-```go {9}
-import (
-    "go.opentelemetry.io/otel"
-    sdktrace "go.opentelemetry.io/otel/sdk/trace"
-)
-
-tracerProvider := sdktrace.NewTracerProvider(
-    // your existing configuration ...
-)
-otel.SetTracerProvider(tracerProvider)
-```
-
-Your tracer provider's sampler also affects which request logs and traces Apitally captures.
-
-If your application uses OpenTelemetry HTTP instrumentation, such as `otelgin` or `otelhttp`, register its middleware before calling `apitally.Init`, or wrap your handler with `otelhttp.NewHandler`. Apitally then adds its data to the request span created by the instrumentation instead of creating a second one.
-
-```go {2}
-r := gin.Default()
-r.Use(otelgin.Middleware("my-service"))
-apitally.Init(r, cfg)
-```
 
 ## Create custom spans
 
@@ -113,7 +69,7 @@ func processOrder(ctx context.Context, orderID string) error {
 
 ## Capture handled errors
 
-Apitally includes errors in request traces to help you diagnose server errors. Panics are captured automatically, as are errors that are returned to Echo or Fiber, or added to the Gin context with `c.Error()`, and result in a server error response.
+Apitally includes errors in request traces to help you diagnose server errors. Panics are captured automatically, as are errors that are returned to Echo or Fiber, or added to the Gin context with `c.Error()`.
 
 If your application handles an error itself, for example by writing an error response directly, call `apitally.CaptureError()` with the request context to include it in the current request trace.
 
