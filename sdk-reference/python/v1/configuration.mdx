@@ -114,13 +114,13 @@ mask_body_fields=[r"^credit_card$", r"^account_id$"],
 
 #### `mask_request_body`
 
-Callback for masking the request body. It receives the request [`ReadableSpan`](https://opentelemetry-python.readthedocs.io/en/stable/sdk/trace.html#opentelemetry.sdk.trace.ReadableSpan) and body as `bytes`, and returns the masked body as `bytes` or `None`.
+Callback for masking the request body. It receives the request [`ReadableSpan`](https://opentelemetry-python.readthedocs.io/en/stable/sdk/trace.html#opentelemetry.sdk.trace.ReadableSpan) and body as `bytes`, and returns the masked body as `bytes` or `None` to mask the entire body.
 
 See example [here](/sdk-reference/python/v1/masking#body-masking-callbacks).
 
 #### `mask_response_body`
 
-Callback for masking the response body. It receives the request [`ReadableSpan`](https://opentelemetry-python.readthedocs.io/en/stable/sdk/trace.html#opentelemetry.sdk.trace.ReadableSpan) and body as `bytes`, and returns the masked body as `bytes` or `None`.
+Callback for masking the response body. It receives the request [`ReadableSpan`](https://opentelemetry-python.readthedocs.io/en/stable/sdk/trace.html#opentelemetry.sdk.trace.ReadableSpan) and body as `bytes`, and returns the masked body as `bytes` or `None` to mask the entire body.
 
 See example [here](/sdk-reference/python/v1/masking#body-masking-callbacks).
 

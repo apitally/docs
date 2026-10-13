@@ -116,13 +116,13 @@ maskBodyFields: [/^credit_card$/i, /^account_id$/i],
 
 #### `maskRequestBody`
 
-Callback for masking the request body. It receives the body as a [`Buffer`](https://nodejs.org/api/buffer.html#class-buffer) and the request [`ReadableSpan`](https://open-telemetry.github.io/opentelemetry-js/interfaces/_opentelemetry_sdk-trace-base.ReadableSpan.html), and returns the masked body as a [`Buffer`](https://nodejs.org/api/buffer.html#class-buffer) or `null`.
+Callback for masking the request body. It receives the body as a [`Buffer`](https://nodejs.org/api/buffer.html#class-buffer) and the request [`ReadableSpan`](https://open-telemetry.github.io/opentelemetry-js/interfaces/_opentelemetry_sdk-trace-base.ReadableSpan.html), and returns the masked body as a [`Buffer`](https://nodejs.org/api/buffer.html#class-buffer) or `null` to mask the entire body.
 
 See example [here](/sdk-reference/javascript/v1/masking#body-masking-callbacks).
 
 #### `maskResponseBody`
 
-Callback for masking the response body. It receives the body as a [`Buffer`](https://nodejs.org/api/buffer.html#class-buffer) and the request [`ReadableSpan`](https://open-telemetry.github.io/opentelemetry-js/interfaces/_opentelemetry_sdk-trace-base.ReadableSpan.html), and returns the masked body as a [`Buffer`](https://nodejs.org/api/buffer.html#class-buffer) or `null`.
+Callback for masking the response body. It receives the body as a [`Buffer`](https://nodejs.org/api/buffer.html#class-buffer) and the request [`ReadableSpan`](https://open-telemetry.github.io/opentelemetry-js/interfaces/_opentelemetry_sdk-trace-base.ReadableSpan.html), and returns the masked body as a [`Buffer`](https://nodejs.org/api/buffer.html#class-buffer) or `null` to mask the entire body.
 
 See example [here](/sdk-reference/javascript/v1/masking#body-masking-callbacks).
 

@@ -151,13 +151,13 @@ cfg.MaskBodyFields = []string{`^credit_card$`, `^account_id$`}
 
 #### `MaskRequestBody`
 
-Callback for masking the request body. It receives the request [`ReadOnlySpan`](https://pkg.go.dev/go.opentelemetry.io/otel/sdk/trace#ReadOnlySpan) and the body as `[]byte`, and returns the masked body as `[]byte` or `nil`.
+Callback for masking the request body. It receives the request [`ReadOnlySpan`](https://pkg.go.dev/go.opentelemetry.io/otel/sdk/trace#ReadOnlySpan) and the body as `[]byte`, and returns the masked body as `[]byte` or `nil` to mask the entire body.
 
 See example [here](/sdk-reference/go/v1/masking#body-masking-callbacks).
 
 #### `MaskResponseBody`
 
-Callback for masking the response body. It receives the request [`ReadOnlySpan`](https://pkg.go.dev/go.opentelemetry.io/otel/sdk/trace#ReadOnlySpan) and the body as `[]byte`, and returns the masked body as `[]byte` or `nil`.
+Callback for masking the response body. It receives the request [`ReadOnlySpan`](https://pkg.go.dev/go.opentelemetry.io/otel/sdk/trace#ReadOnlySpan) and the body as `[]byte`, and returns the masked body as `[]byte` or `nil` to mask the entire body.
 
 See example [here](/sdk-reference/go/v1/masking#body-masking-callbacks).
 
