@@ -128,7 +128,7 @@ apitally.Init(r, cfg)
 
 ## Capture application logs
 
-To capture application logs written with [`log/slog`](https://pkg.go.dev/log/slog) and link them to the request they were logged in, wrap your log handler with `apitally.NewSlogHandler`. It passes every record on to your handler unchanged.
+To capture application logs written with [`log/slog`](https://pkg.go.dev/log/slog), wrap your log handler with `apitally.NewSlogHandler`. It passes every record on to your handler unchanged.
 
 ```go
 handler := slog.NewJSONHandler(os.Stdout, nil)
