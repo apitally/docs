@@ -242,19 +242,17 @@ More information about sampling is available [here](/sdk-reference/go/v1/samplin
 
 ## Graceful shutdown
 
-Apitally sends data in the background at regular intervals. To deliver the remaining data when your application exits, call `apitally.Shutdown` after your Fiber app has stopped.
 
-```go {10}
+Apitally sends data in the background at regular intervals.  Ensure your application calls `app.Shutdown` before it exits, so that Apitally can flush pending data.
+
+```go {7}
 go app.Listen(":8080")
 
 ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 defer stop()
 <-ctx.Done()
 
-shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-defer cancel()
-app.ShutdownWithContext(shutdownCtx)
-apitally.Shutdown(shutdownCtx)
+app.Shutdown()
 ```
 
 ## Instrument third-party libraries

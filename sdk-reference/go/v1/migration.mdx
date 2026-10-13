@@ -11,14 +11,33 @@ The Go SDK now uses OpenTelemetry to collect and send metrics, logs, and traces.
 
 ## Installation and setup
 
-The updated [setup guides](/sdk-reference/go/v1/overview#supported-frameworks) provide the installation steps and initialization code for each framework. Follow these to replace your existing SDK integration.
-
 The SDK now requires Go 1.25 or later. Upgrade the module for your framework:
 
-```shell
-go get github.com/apitally/apitally-go/chi-v5@v1.0.0-beta.2    # or echo-v4, echo-v5, fiber-v2, fiber-v3
-go get github.com/apitally/apitally-go/gin-v1@v1.0.0-beta.2    # replaces github.com/apitally/apitally-go/gin
+<CodeGroup>
+```shell Chi
+go get github.com/apitally/apitally-go/chi-v5@v1.0.0-beta.2
 ```
+
+```shell Echo v5
+go get github.com/apitally/apitally-go/echo-v5@v1.0.0-beta.2
+```
+
+```shell Echo v4
+go get github.com/apitally/apitally-go/echo-v4@v1.0.0-beta.2
+```
+
+```shell Fiber v3
+go get github.com/apitally/apitally-go/fiber-v3@v1.0.0-beta.2
+```
+
+```shell Fiber v2
+go get github.com/apitally/apitally-go/fiber-v2@v1.0.0-beta.2
+```
+
+```shell Gin
+go get github.com/apitally/apitally-go/gin-v1@v1.0.0-beta.2
+```
+</CodeGroup>
 
 The Gin module has been renamed from `github.com/apitally/apitally-go/gin` to `github.com/apitally/apitally-go/gin-v1`. Update your imports and remove the old module with `go mod tidy`.
 
@@ -30,7 +49,7 @@ The SDK now authenticates with a **write token** instead of a client ID. Your ex
 
 ### `Init` replaces the middleware
 
-Replace the `Middleware` registration with a call to `Init`, which registers everything the SDK needs. Call it after your recovery middleware and OpenTelemetry HTTP instrumentation, and before your other middleware, groups and routes.
+Replace the `Middleware` registration with a call to `Init`, which registers everything the SDK needs. Call it after your recovery middleware and OpenTelemetry HTTP instrumentation, and before your other middleware and routes.
 
 ```go
 // Before

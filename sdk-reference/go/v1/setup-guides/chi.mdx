@@ -211,9 +211,9 @@ More information about sampling is available [here](/sdk-reference/go/v1/samplin
 
 ## Graceful shutdown
 
-Apitally sends data in the background at regular intervals. To deliver the remaining data when your application exits, call `apitally.Shutdown` after your HTTP server has stopped.
+Apitally sends data in the background at regular intervals. To flush pending data when your application exits, call `apitally.Shutdown` after your HTTP server has stopped.
 
-```go {11}
+```go {9}
 srv := &http.Server{Addr: ":8080", Handler: r}
 go srv.ListenAndServe()
 
@@ -221,10 +221,8 @@ ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SI
 defer stop()
 <-ctx.Done()
 
-shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-defer cancel()
-srv.Shutdown(shutdownCtx)
-apitally.Shutdown(shutdownCtx)
+srv.Shutdown(context.Background())
+apitally.Shutdown(context.Background())
 ```
 
 ## Instrument third-party libraries
