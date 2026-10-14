@@ -6,8 +6,6 @@ description: "Set up the Apitally SDK for your Django application."
 
 import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
 
-<Info>This setup guide is for v1 of the Python SDK (currently in beta).</Info>
-
 This page guides you through the setup of the Apitally SDK for your [Django Ninja](https://django-ninja.dev) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
 
 <SetupGuideStartSnippet framework="Django Ninja" />
@@ -36,15 +34,15 @@ Install the Apitally SDK with the `django` extra as a dependency in your project
 
 <CodeGroup>
 ```shell pip
-pip install --pre "apitally[django]"
+pip install "apitally[django]"
 ```
 
 ```shell uv
-uv add --prerelease allow "apitally[django]"
+uv add "apitally[django]"
 ```
 
 ```shell poetry
-poetry add --allow-prereleases "apitally[django]"
+poetry add "apitally[django]"
 ```
 </CodeGroup>
 

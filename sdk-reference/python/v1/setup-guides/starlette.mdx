@@ -6,8 +6,6 @@ description: "Set up the Apitally SDK for your Starlette application."
 
 import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
 
-<Info>This setup guide is for v1 of the Python SDK (currently in beta).</Info>
-
 This page guides you through the setup of the Apitally SDK for your [Starlette](https://www.starlette.io) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
 
 <SetupGuideStartSnippet framework="Starlette" />
@@ -36,15 +34,15 @@ Install the Apitally SDK with the `starlette` extra as a dependency in your proj
 
 <CodeGroup>
 ```shell pip
-pip install --pre "apitally[starlette]"
+pip install "apitally[starlette]"
 ```
 
 ```shell uv
-uv add --prerelease allow "apitally[starlette]"
+uv add "apitally[starlette]"
 ```
 
 ```shell poetry
-poetry add --allow-prereleases "apitally[starlette]"
+poetry add "apitally[starlette]"
 ```
 </CodeGroup>
 

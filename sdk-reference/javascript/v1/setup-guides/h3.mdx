@@ -7,17 +7,13 @@ description: "Set up the Apitally SDK for your H3 application."
 import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
 import ExistingOpenTelemetrySetupSnippet from "/snippets/v1/existing-opentelemetry-setup-javascript.mdx";
 
-<Info>This setup guide is for v1 of the JavaScript SDK (currently in beta).</Info>
-
-<Note>Apitally only works with H3 v2 (currently in beta).</Note>
-
 This page guides you through the setup of the Apitally SDK for your [H3](https://h3.dev) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
 
 <SetupGuideStartSnippet framework="H3" />
 
 ## Requirements
 
-Requires Node.js 20.11.1+ or Bun 1.2.0+, with H3 2.0.1-rc.26+.
+Requires Node.js 20.11.1+ or Bun 1.2.0+, with H3 2.0.1+.
 
 ## Create app
 
@@ -39,19 +35,19 @@ Install the Apitally SDK as a dependency in your project.
 
 <CodeGroup>
 ```shell npm
-npm install apitally@next
+npm install apitally
 ```
 
 ```shell yarn
-yarn add apitally@next @opentelemetry/api
+yarn add apitally @opentelemetry/api
 ```
 
 ```shell pnpm
-pnpm add apitally@next
+pnpm add apitally
 ```
 
 ```shell bun
-bun add apitally@next
+bun add apitally
 ```
 </CodeGroup>
 

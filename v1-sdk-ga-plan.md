@@ -15,11 +15,11 @@ Approach: general pages describe v1 behaviour. Mention v0 only where dashboard d
 
 ### docs.json navigation
 
-- [ ] Python, JavaScript, Go, .NET (L101-345): v0 comes first in `versions`, so it is the default. → Move v1 first (or set `"default": true` on it) and remove `"tag": "beta"` (L131, L199, L264, L321). Optional: tag v0 as `"Legacy"`.
+- [x] Python, JavaScript, Go, .NET (L101-345): v0 comes first in `versions`, so it is the default. → Move v1 first (or set `"default": true` on it) and remove `"tag": "beta"` (L131, L199, L264, L321). Optional: tag v0 as `"Legacy"`.
 
 ### docs.json redirects
 
-- [ ] 78 of 108 redirects point to v0. → Point the 68 that cover the standard SDKs to the v1 equivalent, so that "unversioned URL = current version":
+- [x] 78 of 108 redirects point to v0. → Point the 68 that cover the standard SDKs to the v1 equivalent, so that "unversioned URL = current version":
   - `/frameworks/<framework>` (22) and `/setup-guides/<framework>` (22) → `/sdk-reference/<lang>/v1/setup-guides/<framework>`. Every slug exists in v1, including `django`.
   - `/reference/<lang>` (4), `/sdk-reference/<lang>` (4) and `/sdk-reference/<lang>/overview` (4) → `/v1/overview`.
   - `/sdk-reference/<lang>/configuration` and `/tracing` (8) → `/v1/configuration` and `/v1/tracing`.
@@ -30,36 +30,36 @@ Approach: general pages describe v1 behaviour. Mention v0 only where dashboard d
   - dashboard: `/setup-guides/<slug>` (see Part 3)
   - v0 SDK READMEs (as published on PyPI, npm, NuGet and pkg.go.dev for v0 releases): `/setup-guides/<framework>`, `/sdk-reference/<lang>`, `/frameworks/aspnet-core`
 
-  v0 readers who arrive this way land on v1 pages and rely on the version selector, so this item depends on the v0 notice below.
+  v0 readers who arrive this way land on v1 pages and rely on the version selector.
 - [ ] The redirects are permanent (308) but are served with `cache-control: no-store`, so browsers do not keep the old v0 target. After deploying, use `curl -sI` on a few sources to confirm the Cloudflare edge (`cf-cache-status: HIT`) serves the new `location`. Keep explicit entries: a wildcard such as `/sdk-reference/python/:slug*` would also match the versioned paths.
 
 ### Remove beta mentions (v1 pages)
 
-- [ ] Overview pages (4): remove `<Warning>The Apitally SDK v1 is currently in beta.</Warning>` (L29 in `python|javascript|go|dotnet/v1/overview.mdx`).
-- [ ] Setup guides (21: Python 7, JavaScript 9, Go 4, .NET 1): remove `<Info>This setup guide is for v1 of the ... SDK (currently in beta).</Info>` (L9 or L10). Recommendation: remove it entirely. Once v1 is the default, v0 pages get the version notice instead (see below).
-- [ ] `javascript/v1/setup-guides/h3.mdx` L12 and `javascript/v0/setup-guides/h3.mdx` L20: "H3 v2 (currently in beta)". H3 2.x is now stable (`latest` on npm is 2.0.2). → Remove "(currently in beta)". The Requirements line (`2.0.1-rc.26+`) matches the SDK peer dependency, so keep it.
+- [x] Overview pages (4): remove `<Warning>The Apitally SDK v1 is currently in beta.</Warning>` (L29 in `python|javascript|go|dotnet/v1/overview.mdx`).
+- [x] Setup guides (21: Python 7, JavaScript 9, Go 4, .NET 1): remove `<Info>This setup guide is for v1 of the ... SDK (currently in beta).</Info>` (L9 or L10). Recommendation: remove it entirely.
+- [x] `javascript/v1/setup-guides/h3.mdx` L12 and `javascript/v0/setup-guides/h3.mdx` L20: "H3 v2 (currently in beta)". H3 2.x is now stable (`latest` on npm is 2.0.2). → Remove "(currently in beta)". The Requirements line (`2.0.1-rc.26+`) matches the SDK peer dependency, so keep it.
 
 ### Install commands (v1 pages)
 
-- [ ] Python: `python/v1/overview.mdx` and the 7 setup guides. → `pip install --pre` → `pip install`, `uv add --prerelease allow` → `uv add`, `poetry add --allow-prereleases` → `poetry add`.
-- [ ] JavaScript: `javascript/v1/overview.mdx` and the 9 setup guides. → `apitally@next` → `apitally` for npm, yarn, pnpm and bun. Keep `@opentelemetry/api` on the yarn lines.
-- [ ] Go: `go/v1/setup-guides/{chi,echo,fiber,gin}.mdx` and `go/v1/migration.mdx` L18-38. → Drop `@v1.0.0-beta.2`. A plain `go get` resolves to the latest release and also upgrades an existing v0 requirement.
-- [ ] .NET: `dotnet/v1/overview.mdx` L38, `setup-guides/aspnet-core.mdx` L38, `migration.mdx` L17. → Drop `--prerelease`.
-- [ ] Python migration (`python/v1/migration.mdx` L14): the page sends users to the setup guides for installation, but those commands don't upgrade an existing 0.x install. pip reports "Requirement already satisfied" and poetry reports "already present"; check uv. → Add explicit upgrade commands, e.g. `pip install -U ...` and `poetry add ...@latest`. Mirror this in `apitally-py/MIGRATION.md`.
+- [x] Python: `python/v1/overview.mdx` and the 7 setup guides. → `pip install --pre` → `pip install`, `uv add --prerelease allow` → `uv add`, `poetry add --allow-prereleases` → `poetry add`.
+- [x] JavaScript: `javascript/v1/overview.mdx` and the 9 setup guides. → `apitally@next` → `apitally` for npm, yarn, pnpm and bun. Keep `@opentelemetry/api` on the yarn lines.
+- [x] Go: `go/v1/setup-guides/{chi,echo,fiber,gin}.mdx` and `go/v1/migration.mdx` L18-38. → Drop `@v1.0.0-beta.2`. A plain `go get` resolves to the latest release and also upgrades an existing v0 requirement.
+- [x] .NET: `dotnet/v1/overview.mdx` L38, `setup-guides/aspnet-core.mdx` L38, `migration.mdx` L17. → Drop `--prerelease`.
+- [ ] Python migration (`python/v1/migration.mdx` L14): the page sends users to the setup guides for installation, but those commands don't upgrade an existing 0.x install. pip reports "Requirement already satisfied" and poetry reports "already present"; check uv. → Add explicit upgrade commands, e.g. `pip install -U ...` and `poetry add ...@latest`. Mirror this in `apitally-py/MIGRATION.md`. Docs page done; it uses `uv add "...>=1"`, because a plain `uv add` keeps the existing requirement. `MIGRATION.md` is still to do.
 
 ### v0 pages
 
-- [ ] v0 install commands pull v1 after GA. → Pin them to v0 on all standard-SDK v0 overviews and setup guides. Check the syntax for each tool:
+- [x] v0 install commands pull v1 after GA. → Pin them to v0 on all standard-SDK v0 overviews and setup guides. Check the syntax for each tool:
   - Python (overview + 7 guides): `"apitally[<extra>]<1"` for pip, uv and poetry.
   - JavaScript (overview + 9 guides, including `fastify-plugin` lines): `apitally@0`.
   - Go: overview (`{yourFramework}`), chi-v5, echo-v4/v5 and fiber-v2/v3 → `@v0`. The v0 `gin` module path is separate from v1's `gin-v1`, so it is unaffected.
   - .NET (overview + aspnet-core): `--version "0.*"`.
-- [ ] v0 pages give no hint that a newer version exists. → Add a shared notice (e.g. `snippets/v0/legacy-notice.mdx`) to all standard-SDK v0 pages. It says the page documents v0 and links to the v1 overview and migration guide.
+- [x] v0 pages give no hint that a newer version exists. Decided against a notice on v0 pages; the version selector is enough.
 
 ### SDK landing pages and shared snippets
 
-- [ ] `sdk-reference/overview.mdx` L14-29: the standard SDK cards link to `/v0/overview`. → Link to `/v1/overview`. Optional: mention OpenTelemetry in "These SDKs include a client that sends data to Apitally in the background" (L8).
-- [ ] `snippets/setup-guides-accordion.mdx` L1-4 imports the `snippets/v0/setup-guides-*.mdx` card lists. The accordion is used by `introduction.mdx` and `sdk-reference/setup-guides/overview.mdx`, and the general pages link to the latter as "the setup guide for your framework". → Import `snippets/v1/...` instead; the lists are otherwise identical. Keep the Cloudflare Workers import (v0).
+- [x] `sdk-reference/overview.mdx` L14-29: the standard SDK cards link to `/v0/overview`. → Link to `/v1/overview`. Optional: mention OpenTelemetry in "These SDKs include a client that sends data to Apitally in the background" (L8).
+- [x] `snippets/setup-guides-accordion.mdx` L1-4 imports the `snippets/v0/setup-guides-*.mdx` card lists. The accordion is used by `introduction.mdx` and `sdk-reference/setup-guides/overview.mdx`, and the general pages link to the latter as "the setup guide for your framework". → Import `snippets/v1/...` instead; the lists are otherwise identical. Keep the Cloudflare Workers import (v0).
 
 ## Part 2: General pages
 

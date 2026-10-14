@@ -6,8 +6,6 @@ description: "Set up the Apitally SDK for your BlackSheep application."
 
 import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
 
-<Info>This setup guide is for v1 of the Python SDK (currently in beta).</Info>
-
 This page guides you through the setup of the Apitally SDK for your [BlackSheep](https://www.neoteroi.dev/blacksheep/) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
 
 <SetupGuideStartSnippet framework="BlackSheep" />
@@ -36,15 +34,15 @@ Install the Apitally SDK with the `blacksheep` extra as a dependency in your pro
 
 <CodeGroup>
 ```shell pip
-pip install --pre "apitally[blacksheep]"
+pip install "apitally[blacksheep]"
 ```
 
 ```shell uv
-uv add --prerelease allow "apitally[blacksheep]"
+uv add "apitally[blacksheep]"
 ```
 
 ```shell poetry
-poetry add --allow-prereleases "apitally[blacksheep]"
+poetry add "apitally[blacksheep]"
 ```
 </CodeGroup>
 

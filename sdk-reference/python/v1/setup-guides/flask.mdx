@@ -6,8 +6,6 @@ description: "Set up the Apitally SDK for your Flask application."
 
 import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
 
-<Info>This setup guide is for v1 of the Python SDK (currently in beta).</Info>
-
 This page guides you through the setup of the Apitally SDK for your [Flask](https://flask.palletsprojects.com) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
 
 <SetupGuideStartSnippet framework="Flask" />
@@ -36,15 +34,15 @@ Install the Apitally SDK with the `flask` extra as a dependency in your project.
 
 <CodeGroup>
 ```shell pip
-pip install --pre "apitally[flask]"
+pip install "apitally[flask]"
 ```
 
 ```shell uv
-uv add --prerelease allow "apitally[flask]"
+uv add "apitally[flask]"
 ```
 
 ```shell poetry
-poetry add --allow-prereleases "apitally[flask]"
+poetry add "apitally[flask]"
 ```
 </CodeGroup>
 
