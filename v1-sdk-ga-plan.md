@@ -65,7 +65,7 @@ Approach: general pages describe v1 behaviour. Mention v0 only where dashboard d
 
 ### how-it-works.mdx
 
-- [ ] L9-12: SDK cards link to `/v0/overview`. → Link to v1.
+- [x] L9-12: SDK cards link to `/v0/overview`. → Link to v1.
 - [ ] L6: "lightweight middleware or plugin". → v1 SDKs are built on OpenTelemetry and export OTLP directly to Apitally, with no collector or agent. They work alongside an existing OpenTelemetry setup.
 - [ ] L17-28: the diagram (light and dark) shows "Apitally Hub" and "syncs with Apitally in 1 minute intervals". → Needs a new v1 diagram, hosted on assets.apitally.io outside this repo.
 - [ ] L30-36: the functionality list ends with a "Non-blocking client" and lists "OpenTelemetry integration to capture traces" as an add-on. → Describe the v1 parts:
@@ -86,7 +86,7 @@ Approach: general pages describe v1 behaviour. Mention v0 only where dashboard d
 - [ ] L52: "If the response is a validation error (status 400 or 422), the middleware inspects the response body". → Detection is framework-specific: exception hooks, framework error objects, or response bodies. Validation and server errors are aggregated per process and sent as separate events, independent of sampling.
 - [ ] L54-55: "synchronizes the aggregated data with Apitally in one minute intervals". → Metrics are aggregated in-process as exponential histograms. They are exported every 15 s during an environment's first hour and every 60 s after that; the server can set the interval anywhere from 5 to 60 s. The first export goes out ~2 s after activation.
 - [ ] L57-58: "If request logging is enabled, the client writes ... to a compressed temporary file". → Request logging is on by default. Each request becomes a trace (request span plus child spans) with its application logs, buffered until the response completes. It is subject to exclusions and sampling, and metrics always count every request. Traces and logs are batched into the gzip spool and sent each export cycle.
-- [ ] L66: the queue statement is still accurate (the OTLP receiver publishes to NATS JetStream). No change.
+- [x] L66: the queue statement is still accurate (the OTLP receiver publishes to NATS JetStream). No change.
 - [ ] L68 (pre-existing): CPU/memory data is kept for 32 days only, not aggregated for 13 months. → Clarify that the retention statement applies to request metrics.
 
 ### data-privacy.mdx
@@ -138,13 +138,13 @@ Customers use this page for vendor and GDPR assessments. v1 collects more by def
   - L345: `exclude_callbacks` (typo; v0 used `exclude_callback`) was removed. → Describe `sample_rate`, `sample_on_request` and `sample_on_response`. `exclude_paths` matches the request path with the query string stripped.
 - [ ] L351-353 "Data transit": → v1 uses OTLP/HTTP (protobuf, gzip) over HTTPS to `otlp.apitally.io`. Add that telemetry is buffered on the host in gzip files in the OS temp dir until delivered (max 50 MB, memory fallback), and that the standard proxy env vars are honoured.
 - [ ] L363 (pre-existing): retention. → Add traces/spans (15 days). CPU/memory are kept 32 days, not 13 months.
-- [ ] L357-359 storage and L371 compliance: no change. The OTLP receiver runs in the same DigitalOcean cluster.
+- [x] L357-359 storage and L371 compliance: no change. The OTLP receiver runs in the same DigitalOcean cluster.
 
 ### introduction.mdx
 
 - [ ] L56-57: "You'll see the first data in the dashboard within a few seconds". The first export goes out ~2 s after activation, and many frameworks activate on the first request (see how-it-works). → "within a few seconds of the first request".
 - [ ] L43-50: "Add middleware to your application". → Optional rewording, since v1 setup is "install the SDK and initialize it" (e.g. `apitally.init`).
-- [ ] L63: the setup guide list is fixed by the accordion change in Part 1.
+- [x] L63: the setup guide list is fixed by the accordion change in Part 1.
 
 ### usage-limits.mdx
 
