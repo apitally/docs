@@ -9,7 +9,49 @@ Make the v1 SDKs (Python, JavaScript, Go, .NET) the default and remove beta ment
 
 Baseline: docs `40c9184`. Facts checked on 2026-10-14 against apitally-py `53a4d57`, apitally-js `1297654`, apitally-go `0f17a37`, apitally-dotnet `5fb2d92` and cloud `6bc15859` (including `cloud/docs/sdks/spec.md` and `design.md`). Line numbers refer to the baseline.
 
-Approach: general pages describe v1 behaviour. Keep copy to what a developer needs; SDK internals (buffer sizes, limits, per-framework activation) stay out unless a page's purpose requires them.
+## Approach
+
+General pages describe how Apitally works with the current SDKs. Keep copy to what a developer needs. SDK internals (buffer sizes, limits, per-framework activation) stay out unless a page's purpose requires them.
+
+### Writing rules for copy changes
+
+These rules apply to every copy edit in Part 2, in addition to the writing standard in `AGENTS.md`.
+
+**The result must read as if it had always been written this way.**
+
+- Describe current behaviour as the behaviour. Never frame it as a change, with words such as "now", "no longer", "new", "previously", "has been replaced", "starting with" or "unlike before".
+- Don't mention v0, v1 or SDK versions on general pages. Refer to "the Apitally SDKs" or "the SDK for <language>". Comparisons with v0 belong only in the migration guides.
+- The plan items contain context for the editor, such as notes like "(also for v0)", "pre-existing" or "v0 did X", and → instructions. They explain why an edit is needed and which facts to convey. None of it goes into the copy, and the wording of an item is not the wording to use.
+
+**Edit pages, not sentences.**
+
+- Before editing, read the entire page and the pages it links to. Understand what each section is for and the order in which a reader works through it.
+- Treat all plan items for a page as one revision of that page. When a fact changes the premise of a section (e.g. a section titled "Enable logging" when logging is on by default), rewrite the section from the new premise, including its heading, opening sentence, body and links. Never fix one sentence and leave neighbouring sentences that still rest on the old premise.
+- Put new facts where a reader would look for them. Merge them into existing sentences and lists, and reorder or restructure when needed. Don't append sentences to the nearest paragraph, and don't add Note, Tip or Warning callouts to patch in information.
+- Remove what no longer has a reason to exist. A revised section is usually about as long as the original, or shorter. Any extra length needs a clear reason.
+- When a fact changes, text that only explained or qualified the old behaviour goes with it. Don't replace it with a statement of what a reader would expect anyway. For example, CPU values above 100% needed an explanation, but values up to 100% don't, so that sentence is deleted and not rewritten as "values can't exceed 100%". Never describe the absence of a limitation, caveat or required step.
+
+**Match the page and the rest of the docs.**
+
+- Keep the page's voice, tense, level of detail, heading style, list style, callout use and formatting of code and option names.
+- Use terms the docs already use (request logs, consumers, environments, endpoints). Keep OpenTelemetry vocabulary (span, OTLP, resource attributes) off product pages unless the page needs that precision, as data-privacy does for listing collected data, or already uses it, as traces.mdx does for "span". Link to the SDK reference for details instead of repeating them.
+- State a fact the same way on every page where it appears, e.g. what response time measures or what is captured by default. Settle the wording where the fact first appears and reuse it.
+- Mention a per-language difference only when a reader would otherwise act wrongly (e.g. Go needs `apitally.NewSlogHandler` to capture logs). Keep it to one clause and link to the SDK reference.
+
+**Write precisely.**
+
+- Verify every fact against the sources of truth in `AGENTS.md` at the time of editing. The facts in this plan were checked against the baseline commits and may have changed since.
+- No hedging unless the behaviour really is conditional. No marketing words and no filler such as "It's worth noting", "This ensures that", "seamless", "comprehensive" or "robust".
+- No em dashes, and no colons or semicolons in the middle of a sentence. Split the sentence or rephrase it. A colon is fine at the end of a sentence that introduces a list or code block.
+
+**Check before handing over.**
+
+1. Reread the whole page top to bottom as a first-time reader. It must flow, contain no repetition or contradictions, and refer to nothing that was removed. Each heading must still describe its section.
+2. Read the diff on its own and ask whether a reader who never saw the old page would notice anything patched in.
+3. Search the changed text for change language and version references (`now`, `no longer`, `new`, `previously`, `v0`, `v1`), and for semicolons and mid-sentence colons.
+4. When a heading changes, search this repo and the cloud and website repos for links to the old anchor.
+5. Run `mise exec -- mint broken-links`.
+6. Work on one page at a time and leave changes uncommitted for review. Tick items only after the review.
 
 ## Part 1: SDK reference
 
@@ -64,7 +106,7 @@ Approach: general pages describe v1 behaviour. Keep copy to what a developer nee
 - [ ] L30-36: the functionality list ends with a "Non-blocking client" and lists "OpenTelemetry integration to capture traces" as an add-on. → Describe the v1 parts at the same level of detail (4-5 bullets): request instrumentation, log capture, metrics aggregation, background export.
 - [ ] L44-47 "On startup": "introspects ... sent in a once-off request". → The SDK sends endpoints, versions, its configuration and the OpenAPI spec (where available) when the application starts serving requests.
 - [ ] L51: "times the invokation of the request handler". → Time runs until the response is complete, including streaming. Fix the typo "invokation".
-- [ ] L52: "If the response is a validation error (status 400 or 422), the middleware inspects the response body". → Make it generic (the SDK captures validation error details). Add that validation and server errors are captured for every request, including requests excluded from logging by sampling.
+- [ ] L52: "If the response is a validation error (status 400 or 422), the middleware inspects the response body". → Make it generic (the SDK captures validation error details), or remove it if the rewritten section covers it.
 - [ ] L54-55: "synchronizes the aggregated data with Apitally in one minute intervals". → Every 60 seconds (15 seconds during the first hour).
 - [ ] L57-58: "If request logging is enabled, the client writes ... to a compressed temporary file". → Request logging is on by default. Each request is captured as a trace with its application logs, subject to exclusions and sampling. Metrics count every request.
 - [x] L66: the queue statement is still accurate (the OTLP receiver publishes to NATS JetStream). No change.
@@ -74,19 +116,19 @@ Approach: general pages describe v1 behaviour. Keep copy to what a developer nee
 
 Customers use this page for vendor and GDPR assessments, and it claims to be a complete overview of collected data. v1 collects more by default than v0: traces, application logs, client IP and user agent.
 
-- [ ] L9: "Require explicit user opt-in for features that could capture sensitive data". This no longer holds: traces and application logs are on by default. → Restate the principle: payloads (bodies) and request headers still require opt-in.
+- [ ] L9: "Require explicit user opt-in for features that could capture sensitive data". This no longer holds, because traces and application logs are on by default. → Restate the principle around what does require opt-in (bodies and request headers).
 - [ ] L20-21: says option names are in Python `snake_case`. → Keep, but use v1 Python names throughout.
 - [ ] L24: the legend "Potentially sensitive and not collected by default" no longer matches application logs and traces. → Separate "sensitive" from "off by default", or reword the legend and re-mark each item.
 - [ ] L26-58 "Application metadata":
   - The Versions example `"apitally": "0.21.3"` is v0. v1 sends the runtime, framework packages and app version. The SDK version travels in the `telemetry.distro.version` resource attribute.
-  - Add the SDK configuration. Callbacks appear as `true`, and the write token is never included.
+  - Add the SDK configuration (configured callbacks are sent as `true`, not their code).
   - Add the OpenAPI spec: FastAPI, Litestar and Django (DRF/Ninja) only.
   - Add resource attributes: `service.name` (default `unknown_service:<executable>`), a random instance ID, the environment, SDK name and version, and anything in `OTEL_RESOURCE_ATTRIBUTES`.
 - [ ] L60-131 "Metrics & analytics":
   - L76/L81: "histogram in 1 KB buckets" and L86: "10 ms buckets". → Exponential histograms.
   - L86: the response time definition. → Same as the how-it-works L51 fix.
   - L90-103 Consumer: add the custom `attributes`.
-  - L105-116 Validation error info: the example uses v0 `loc`/`msg`/`type`. → Use the v1 fields `source`, `field`, `message` and `type`. It still contains no input values.
+  - L105-116 Validation error info: the example uses v0 `loc`/`msg`/`type`. → Use the v1 fields `source`, `field`, `message` and `type`.
   - Missing (also for v0): CPU utilization and memory usage. → Add them.
 - [ ] L133-277 "Request logs":
   - L135: "if request logging is enabled". → On by default, for requests kept by sampling (`sample_rate`, `sample_on_request`, `sample_on_response`) and exclusions.
@@ -106,11 +148,10 @@ Customers use this page for vendor and GDPR assessments, and it claims to be a c
   - L310-319: add `cvv` and `cvc` to body fields.
   - L321: callback names (as above).
   - Add `mask_log_record` for application logs.
-  - Add that query parameters are also masked in URL attributes of other spans, and that a failing masking callback results in `[REDACTED]`.
+  - Add that query parameters are also masked in the URLs of other spans in a trace (e.g. outgoing requests).
 - [ ] L323-349 "Data filtering":
   - L328-333: health, ping, ready and live patterns now accept a trailing slash (e.g. `/_?healthz?/?$`).
   - Missing (also for v0): the default user-agent exclusions `health[-_ ]?check`, `microsoft-azure-application-lb`, `googlehc` and `kube-probe`.
-  - L325: excluded requests are dropped from request logs, traces and application logs, but metrics still count them.
   - L345: `exclude_callbacks` (typo; v0 used `exclude_callback`) was removed. → Describe `sample_rate`, `sample_on_request` and `sample_on_response`.
 - [ ] L351-353 "Data transit": → HTTPS to `otlp.apitally.io`. Add that data is buffered in temporary files on the host until it is delivered.
 - [ ] L363 (pre-existing): retention. → Add traces (15 days). CPU/memory are kept 32 days, not 13 months.
@@ -123,7 +164,7 @@ Customers use this page for vendor and GDPR assessments, and it claims to be a c
 
 ### usage-limits.mdx
 
-- [ ] L26 Tip: "exclude certain requests from logging using custom exclusion rules". → Use `sample_rate`, the sampling callbacks and `exclude_paths`. Add that request logs, traces and application logs are captured by default, so quotas are used without any configuration.
+- [ ] L26 Tip: "exclude certain requests from logging using custom exclusion rules". → Use `sample_rate`, the sampling callbacks and `exclude_paths`.
 
 ### api-metrics/errors.mdx
 
@@ -141,11 +182,11 @@ Customers use this page for vendor and GDPR assessments, and it claims to be a c
 
 ### api-metrics/endpoints.mdx
 
-- [ ] L64-65: "based on the `Content-Length` headers". → v1 uses `Content-Length` when present and otherwise counts body bytes (streamed and chunked bodies).
+- [ ] L64-65: "These are based on the `Content-Length` headers in the requests and responses." Sizes are the actual body sizes, including streamed and chunked bodies, which is what a reader expects. → Delete the sentence.
 
 ### api-metrics/resources.mdx
 
-- [ ] L17-18: "measured per-process and not relative to available cores, the value can exceed 100%". → v1 normalizes across available CPUs (0-100%). Keep the >100% statement as v0-only; both versions feed the same charts.
+- [ ] L17-18: "measured per-process and not relative to available cores, the value can exceed 100%". → Delete the second sentence. Nothing replaces it.
 
 ### api-logs-traces/request-logs.mdx
 
@@ -158,7 +199,7 @@ Customers use this page for vendor and GDPR assessments, and it claims to be a c
 
 ### api-logs-traces/traces.mdx
 
-- [ ] L10: "If enabled". → Traces are captured for every logged request by default.
+- [ ] L10: "If enabled, you'll find traces in the request details". → Drop "If enabled".
 - [ ] L19-24 "Enable tracing": "must be explicitly enabled ... alongside request logging". → On by default. The SDKs are built on OpenTelemetry, create the request span automatically and work alongside an existing OpenTelemetry setup. Link to the per-language v1 tracing pages for instrumenting libraries.
 
 ## Part 3: Outside this repo (coordinate at GA)
