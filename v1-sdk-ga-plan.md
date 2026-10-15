@@ -101,16 +101,16 @@ These rules apply to every copy edit in Part 2, in addition to the writing stand
 ### how-it-works.mdx
 
 - [x] L9-12: SDK cards link to `/v0/overview`. → Link to v1.
-- [ ] L6: "lightweight middleware or plugin". → v1 SDKs are built on OpenTelemetry and export OTLP directly to Apitally, with no collector or agent. They work alongside an existing OpenTelemetry setup.
+- [x] L6: "lightweight middleware or plugin". → v1 SDKs are built on OpenTelemetry and export OTLP directly to Apitally, with no collector or agent. They work alongside an existing OpenTelemetry setup.
 - [ ] L17-28: the diagram (light and dark) shows "Apitally Hub" and "syncs with Apitally in 1 minute intervals". → Replace it with a v1 diagram (Part 3). If none is ready by GA, remove the images.
-- [ ] L30-36: the functionality list ends with a "Non-blocking client" and lists "OpenTelemetry integration to capture traces" as an add-on. → Describe the v1 parts at the same level of detail (4-5 bullets): request instrumentation, log capture, metrics aggregation, background export.
-- [ ] L44-47 "On startup": "introspects ... sent in a once-off request". → The SDK sends endpoints, versions, its configuration and the OpenAPI spec (where available) when the application starts serving requests.
-- [ ] L51: "times the invokation of the request handler". → Time runs until the response is complete, including streaming. Fix the typo "invokation".
-- [ ] L52: "If the response is a validation error (status 400 or 422), the middleware inspects the response body". → Make it generic (the SDK captures validation error details), or remove it if the rewritten section covers it.
-- [ ] L54-55: "synchronizes the aggregated data with Apitally in one minute intervals". → Every 60 seconds (15 seconds during the first hour).
-- [ ] L57-58: "If request logging is enabled, the client writes ... to a compressed temporary file". → Request logging is on by default. Each request is captured as a trace with its application logs, subject to exclusions and sampling. Metrics count every request.
+- [x] L30-36: the functionality list ends with a "Non-blocking client" and lists "OpenTelemetry integration to capture traces" as an add-on. → Describe the v1 parts at the same level of detail (4-5 bullets): request instrumentation, log capture, metrics aggregation, background export.
+- [x] L44-47 "On startup": "introspects ... sent in a once-off request". → Describe application metadata collection and background delivery, with endpoint details and version information as examples. Keep configuration and OpenAPI collection details for the data-privacy page.
+- [x] L51: "times the invokation of the request handler". → Describe server-side response time and request/response metadata capture. Avoid a universal streaming-completion claim because Fiber finalizes known-length streams when the handler returns. Reuse "server-side response time" on the related pages.
+- [x] L52: "If the response is a validation error (status 400 or 422), the middleware inspects the response body". → Omit the validation-error explanation from the runtime section. Keep the section focused on request observation, local aggregation, traces and background delivery.
+- [x] L54-55: "synchronizes the aggregated data with Apitally in one minute intervals". → Describe background delivery as normally about once a minute. Omit the faster schedule during the first hour of an app environment.
+- [x] L57-58: "If request logging is enabled, the client writes ... to a compressed temporary file". → Describe traces, associated application logs and local buffering as part of the whole-section rewrite. Keep configuration defaults and controls in the SDK reference. Integrate background delivery into the prose and remove the redundant runtime note.
 - [x] L66: the queue statement is still accurate (the OTLP receiver publishes to NATS JetStream). No change.
-- [ ] L68 (pre-existing): CPU/memory data is kept for 32 days only, not aggregated for 13 months. → Clarify that the retention statement applies to request metrics.
+- [x] L68 (pre-existing): CPU/memory data is kept for 32 days only, not aggregated for 13 months. → Scope the 32-day and 13-month retention periods to request metrics, without implying delayed aggregation. State 15-day retention for request logs and traces, with longer retention available on request. Keep CPU/memory retention details on the data-privacy page.
 
 ### data-privacy.mdx
 
