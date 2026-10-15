@@ -116,14 +116,16 @@ These rules apply to every copy edit in Part 2, in addition to the writing stand
 
 Customers use this page for vendor and GDPR assessments, and it claims to be a complete overview of collected data. v1 collects more by default than v0: traces, application logs, client IP and user agent.
 
-- [ ] L9: "Require explicit user opt-in for features that could capture sensitive data". This no longer holds, because traces and application logs are on by default. → Restate the principle around what does require opt-in (bodies and request headers).
+- [x] L9: "Require explicit user opt-in for features that could capture sensitive data". This no longer holds, because traces and application logs are on by default. → Remove the opt-in principle and retain the existing control and transparency principles. Explain capture defaults in the data collection sections.
 - [ ] L20-21: says option names are in Python `snake_case`. → Keep, but use v1 Python names throughout.
-- [ ] L24: the legend "Potentially sensitive and not collected by default" no longer matches application logs and traces. → Separate "sensitive" from "off by default", or reword the legend and re-mark each item.
-- [ ] L26-58 "Application metadata":
-  - The Versions example `"apitally": "0.21.3"` is v0. v1 sends the runtime, framework packages and app version. The SDK version travels in the `telemetry.distro.version` resource attribute.
-  - Add the SDK configuration (configured callbacks are sent as `true`, not their code).
-  - Add the OpenAPI spec: FastAPI, Litestar and Django (DRF/Ninja) only.
-  - Add resource attributes: `service.name` (default `unknown_service:<executable>`), a random instance ID, the environment, SDK name and version, and anything in `OTEL_RESOURCE_ATTRIBUTES`.
+- [ ] L24: the legend "Potentially sensitive and not collected by default" no longer matches application logs and traces. → Replace shields with toggle icons for configurable collection. Use primary-colored toggle-on for collected by default and red toggle-off for not collected by default. The approved legend is applied. Update each entry's icon alongside its capture defaults as its section is revised; leave items without a capture setting unmarked.
+- [x] L26-58 "Application metadata":
+  - Describe the collected metadata without a startup-only claim. Include endpoint summaries and descriptions where available.
+  - Replace Versions with Framework and versions, covering the framework identifier, runtime and framework package versions, and optional application version. Remove the Apitally version from the example; it belongs to resource attributes.
+  - Add SDK configuration, including capture, sampling, masking and exclusion settings. Configured callbacks are sent as `true`, not their code. The write token is excluded.
+  - Add the OpenAPI specification from FastAPI, Litestar and Django (DRF/Ninja), where available.
+  - Add resource attributes covering service name, random instance identifier, environment, SDK names and versions, and custom attributes from environment variables or an existing provider.
+  - Keep collection descriptions focused on what is collected. Omit unsolicited masking caveats.
 - [ ] L60-131 "Metrics & analytics":
   - L76/L81: "histogram in 1 KB buckets" and L86: "10 ms buckets". → Exponential histograms.
   - L86: the response time definition. → Same as the how-it-works L51 fix.
