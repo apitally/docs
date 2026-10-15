@@ -13,6 +13,18 @@ Baseline: docs `40c9184`. Facts checked on 2026-10-14 against apitally-py `53a4d
 
 General pages describe how Apitally works with the current SDKs. Keep copy to what a developer needs. SDK internals (buffer sizes, limits, per-framework activation) stay out unless a page's purpose requires them.
 
+### Collaboration workflow
+
+Follow this workflow with the user when continuing this plan.
+
+1. Work through one item at a time, in order, unless the user explicitly defers it. Treat a paragraph or section as a coherent piece of writing rather than adding sentences mechanically for checklist items.
+2. Agree on the message before drafting wording. Verify relevant behaviour against source code, then discuss what the reader needs to know and what belongs in the text. Use verification to support a focused editorial discussion. Plan items and verification findings are inputs to that discussion, not automatic additions to the docs.
+3. Once the message is agreed, present three wording options in context, with enough surrounding text to judge how they read. Use independent subagents for drafting and polishing, then review their work before presenting it. Present finished wording, not raw drafts.
+4. Edit only after the user approves the wording. Apply the selected option and requested adjustments without adding unapproved claims or qualifications.
+5. Write for the reader. Keep text clear, direct, accurate and necessary. Describe current behaviour without migration framing. Avoid unnecessary internals, unsolicited caveats, generic AI phrasing, em dashes, semicolons and mid-sentence colons. Follow the detailed writing rules below.
+6. Review the integrated result. Reread the whole page after editing, check flow and repetition, run appropriate checks, and update the plan to reflect the actual decisions.
+7. Leave changes uncommitted unless the user asks to commit. Push only when asked. Explicitly deferred work stays deferred.
+
 ### Writing rules for copy changes
 
 These rules apply to every copy edit in Part 2, in addition to the writing standard in `AGENTS.md`.
