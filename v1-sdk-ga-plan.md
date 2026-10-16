@@ -175,7 +175,7 @@ Customers use this page for vendor and GDPR assessments, and it claims to be a c
   - Follow with compact links to the Python, JavaScript, Go and .NET Sampling pages.
   - Keep default exclusion inventories, sampling-rate instructions and dashboard filtering instructions out of this privacy section.
   - Move the verified default path and user-agent patterns into `snippets/v1/default-exclusions.mdx`, imported by all four SDK Sampling pages in place of their links back to the privacy page. Correct trailing-slash matching in the health, ping, ready and live patterns. Place Default exclusions at the bottom of all four pages, after Exclude paths.
-  - Follow-up pending approval: `snippets/default-masking-and-exclusion.mdx`, used by six v0/serverless pages, still promises default exclusion lists on the privacy page.
+  - Follow-up completed: removed the closing privacy-page reference from `snippets/default-masking-and-exclusion.mdx`, as approved. Preserved both default-behavior paragraphs. Reviewed the snippet in all six complete v0/serverless pages; the surrounding content remains coherent without the reference. Whitespace, broken-link and build validation checks passed.
   - Scope approval is not wording approval. Present independently drafted and polished options, then wait for explicit wording approval before editing.
 - [x] L351-353 "Data transit": verified HTTPS/TLS behavior across all four v1 SDKs. Keep the existing wording unchanged. The user excluded local temporary-file storage as irrelevant to this page; do not add it under Data transit or Data storage.
 - [x] L363 (pre-existing): retention (approved wording applied; whitespace, broken-link and build validation checks passed).
@@ -217,17 +217,25 @@ Customers use this page for vendor and GDPR assessments, and it claims to be a c
 
 ### api-logs-traces/request-logs.mdx
 
-- [ ] L15-21 "Enable logging": "By default, our SDKs don't capture request logs." → On by default. Request headers and bodies are opt-in, response headers are on by default. Sampling reduces volume. Rename the section (e.g. "Configure logging").
+- [x] L15-21: renamed the section to "Configure logging" and applied the approved paragraph: "You can choose what data to capture and mask sensitive data. Sampling and exclusions let you control log volume or stop collecting request logs altogether."
+  - Describe general capabilities, not defaults or migration steps. Keep capture inventories, setting names and sampling-rate details in the SDK reference.
+  - Lead with capture and masking. Describe stopping collection as part of volume control, not as a separate on/off switch.
+  - Preserved the setup-guide link and the rest of the page. No links to the old heading were found in the docs, cloud or website repos.
+  - Whole-page review, wording, whitespace, broken-link and build validation checks passed.
 
 ### api-logs-traces/application-logs.mdx
 
-- [ ] L10: "Log capture must be explicitly enabled alongside request logging". → On by default in Python, JavaScript and .NET. Go requires `apitally.NewSlogHandler`.
-- [ ] L29-30 Supported loggers, Go: "slog (must use context-aware logging)". → Also requires wrapping the handler with `apitally.NewSlogHandler`.
+- [x] L10: removed the complete enablement-and-setup paragraph, as approved, so the introduction flows directly into the screenshot. The user excluded the proposed Go setup link; keep the Go entry unlinked.
+- [x] L29-30: updated the Go entry to "slog (standard library, requires additional setup and context-aware logging)" and changed the list introduction to "The following loggers are supported:". Kept the handler name in the SDK reference and preserved all other entries and the opening explanation.
+  - Verified capture behavior and all listed logger integrations against current SDK sources. Reviewed the complete page after removing the unexplained referral. Whitespace, broken-link and build validation checks passed.
 
 ### api-logs-traces/traces.mdx
 
-- [ ] L10: "If enabled, you'll find traces in the request details". → Drop "If enabled".
-- [ ] L19-24 "Enable tracing": "must be explicitly enabled ... alongside request logging". → On by default. The SDKs are built on OpenTelemetry, create the request span automatically and work alongside an existing OpenTelemetry setup. Link to the per-language v1 tracing pages for instrumenting libraries.
+- [x] L10: applied approved option 1, "To view a trace, open the request details from the request logs." Verified the location against the cloud request-log modal.
+- [x] L19-24: renamed the section to "Instrumentation", removed the separate enablement instruction, and linked all four SDK tracing pages for library instrumentation instructions.
+  - Changed "integrate with" to "are built on" OpenTelemetry, as approved, to describe the SDKs' tracing foundation. Preserved the capture clause and the rest of the page.
+  - Kept default announcements, request-span internals and existing-provider setup details out of this product page.
+  - No links to the old heading were found in the docs, cloud or website repos. Whole-page review, wording, whitespace, broken-link and build validation checks passed.
 
 ## Part 3: Outside this repo (coordinate at GA)
 
