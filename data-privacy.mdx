@@ -20,10 +20,10 @@ This is a complete overview of the data collected by Apitally.
   Check out the [SDK reference](/sdk-reference/overview) for your language to see the equivalent parameter names.
 </Tip>
 
-Icons indicate collection defaults and masking support:
+Icons indicate configurable data collection and masking support:
 
-<span style={{ position: "relative", top: -2 }}><Icon icon="toggle-on" color="#0b9797" /></span> = Collected by default<br />
-<span style={{ position: "relative", top: -2 }}><Icon icon="toggle-off" color="#c46b6a" /></span> = Not collected by default<br />
+<span style={{ position: "relative", top: -2 }}><Icon icon="toggle-on" color="#0b9797" /></span> = Configurable, collected by default<br />
+<span style={{ position: "relative", top: -2 }}><Icon icon="toggle-off" color="#c46b6a" /></span> = Configurable, not collected by default<br />
 <span style={{ position: "relative", top: -2 }}><Icon icon="shield" /></span> = Supports masking
 
 ### Application metadata
@@ -364,6 +364,8 @@ You can add additional patterns via the `mask_body_fields` option. For more gran
 ### Application logs
 
 You can mask application log messages using the `mask_log_record` callback.
+
+See the SDK reference for [Python](/sdk-reference/python/v1/masking), [JavaScript](/sdk-reference/javascript/v1/masking), [Go](/sdk-reference/go/v1/masking) or [.NET](/sdk-reference/dotnet/v1/masking).
 
 ## Data filtering
 
