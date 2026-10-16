@@ -314,13 +314,13 @@ Request logs contain details of individual requests, along with associated appli
 
 ## Data masking
 
-The Apitally SDKs mask common sensitive query parameters, headers and request/response body fields on the client side based on the below default patterns (regular expressions). You can add additional patterns using the configuration options mentioned below. Patterns are case-insensitive and match anywhere within the name.
+The Apitally SDKs mask common sensitive query parameters, headers and request/response body fields on the client side using the default patterns (regular expressions) below. These default patterns are case-insensitive and match anywhere within the name. You can add additional patterns using the configuration options in each section.
 
 ### Query parameters
 
 ```
 auth
-api-?key
+api[-_]?key
 secret
 token
 password
@@ -333,7 +333,7 @@ You can add additional patterns via the `mask_query_params` option.
 
 ```
 auth
-api-?key
+api[-_]?key
 secret
 token
 cookie
@@ -343,6 +343,8 @@ You can add additional patterns via the `mask_headers` option.
 
 ### Body fields
 
+The following patterns apply to string-valued fields in JSON request and response bodies.
+
 ```
 password
 pwd
@@ -351,10 +353,16 @@ secret
 auth
 card[-_ ]?number
 ccv
+cvv
+cvc
 ssn
 ```
 
-You can add additional patterns via the `mask_body_fields` option. For more granular control you can also specify callback functions via `mask_request_body_callback` and `mask_response_body_callback`.
+You can add additional patterns via the `mask_body_fields` option. For more granular control you can also specify callback functions via `mask_request_body` and `mask_response_body`.
+
+### Application logs
+
+You can mask application log messages using the `mask_log_record` callback.
 
 ## Data filtering
 

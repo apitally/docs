@@ -149,7 +149,7 @@ Customers use this page for vendor and GDPR assessments, and it claims to be a c
   - Add periodic application-process CPU utilization, resident memory usage and uptime.
   - Keep the existing copy wherever possible. Describe collected data neutrally, without alarming clauses or unnecessary caveats.
   - Review the three introductions together in page order: Application metadata, Application metrics, Request metrics. Approved wording describes application details, periodic per-process measurements, and request measurements combined into counts and histograms within the application before delivery to Apitally. Avoid repeated "The Apitally SDKs collect the following" introductions.
-- [ ] L133-277 "Request logs" (edits applied, awaiting user review):
+- [x] L133-277 "Request logs" (reviewed; broken-link and build validation checks passed):
   - The user authorized selecting and integrating the wording directly for review instead of choosing between bundled options. Preserve existing fields, examples and links where possible.
   - Introduce the contents of individual request records, including associated application logs and traces. Keep default-state announcements and sampling controls out of the introduction. Sampling belongs in Data filtering.
   - L146: remove the obsolete query-string stripping instruction. Retain the full URL, query-parameter masking description and example.
@@ -162,12 +162,13 @@ Customers use this page for vendor and GDPR assessments, and it claims to be a c
     - The example's root span uses `"kind": "INTERNAL"`; in v1 it is `SERVER`.
   - L264-276 Exception info: describe type, message and stack trace recorded in the request's trace. Remove `log_exception` and the unhandled/HTTP 500 restriction, which does not apply to all trace exceptions. Retain the optional Sentry event ID and example.
   - Missing: client IP (`client.address`) is always sent, with no opt-out (v0 only derived it from captured headers). The user agent is also always sent. → Add "Client IP" and "User agent" items.
-- [ ] L279-321 "Data masking":
+- [ ] L279-321 "Data masking" (approved scope applied, awaiting review):
   - L287/L300: `api-?key` → `api[-_]?key`.
-  - L310-319: add `cvv` and `cvc` to body fields.
-  - L321: callback names (as above).
-  - Add `mask_log_record` for application logs.
-  - Add that query parameters are also masked in the URLs of other spans in a trace (e.g. outgoing requests).
+  - L310-319: add `cvv` and `cvc` to body fields, retaining `ccv`. Describe the scope as string-valued fields in JSON request and response bodies.
+  - L321: use `mask_request_body` and `mask_response_body` for the callbacks.
+  - Add a short Application logs subsection identifying `mask_log_record` for masking log messages.
+  - Scope the case-insensitive, substring matching description to the default patterns. Preserve the existing structure and omit per-language differences and warning paragraphs.
+  - The user explicitly excluded the proposed explanation of query-parameter masking in outgoing trace URLs.
 - [ ] L323-349 "Data filtering":
   - L328-333: health, ping, ready and live patterns now accept a trailing slash (e.g. `/_?healthz?/?$`).
   - Missing (also for v0): the default user-agent exclusions `health[-_ ]?check`, `microsoft-azure-application-lb`, `googlehc` and `kube-probe`.
