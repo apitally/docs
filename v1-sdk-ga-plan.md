@@ -169,14 +169,18 @@ Customers use this page for vendor and GDPR assessments, and it claims to be a c
   - Add a short Application logs subsection identifying `mask_log_record` for masking log messages.
   - Scope the case-insensitive, substring matching description to the default patterns. Preserve the existing structure and omit per-language differences and warning paragraphs.
   - The user explicitly excluded the proposed explanation of query-parameter masking in outgoing trace URLs.
-- [ ] L323-349 "Data filtering" (approved wording applied, awaiting final review):
+- [x] L323-349 "Data filtering" (reviewed; broken-link and build validation checks passed):
   - Use the user's exact two paragraphs explaining selective exclusion of request logs and associated traces and application logs, using paths or sampling callbacks. Exclusions happen within the application before delivery, while request metrics remain collected.
   - Follow with compact links to the Python, JavaScript, Go and .NET Sampling pages.
   - Keep default exclusion inventories, sampling-rate instructions and dashboard filtering instructions out of this privacy section.
-  - Move the verified default path and user-agent patterns into `snippets/v1/default-exclusions.mdx`, imported by all four SDK Sampling pages in place of their links back to the privacy page. Correct trailing-slash matching in the health, ping, ready and live patterns.
+  - Move the verified default path and user-agent patterns into `snippets/v1/default-exclusions.mdx`, imported by all four SDK Sampling pages in place of their links back to the privacy page. Correct trailing-slash matching in the health, ping, ready and live patterns. Place Default exclusions at the bottom of all four pages, after Exclude paths.
+  - Follow-up pending approval: `snippets/default-masking-and-exclusion.mdx`, used by six v0/serverless pages, still promises default exclusion lists on the privacy page.
   - Scope approval is not wording approval. Present independently drafted and polished options, then wait for explicit wording approval before editing.
-- [ ] L351-353 "Data transit": → HTTPS to `otlp.apitally.io`. Add that data is buffered in temporary files on the host until it is delivered.
-- [ ] L363 (pre-existing): retention. → Add traces (15 days). CPU/memory are kept 32 days, not 13 months.
+- [x] L351-353 "Data transit": verified HTTPS/TLS behavior across all four v1 SDKs. Keep the existing wording unchanged. The user excluded local temporary-file storage as irrelevant to this page; do not add it under Data transit or Data storage.
+- [x] L363 (pre-existing): retention (approved wording applied; whitespace, broken-link and build validation checks passed).
+  - Preserve "allowing you to analyze long-term trends" and the existing deletion and backup paragraphs.
+  - Specify aggregated request metrics for 13 months; CPU utilization, memory usage and uptime monitoring data for 32 days; request logs, application logs and traces for 15 days by default.
+  - Reuse "with longer retention available on request" from `how-it-works.mdx` for logs and traces.
 - [x] L357-359 storage and L371 compliance: no change. The OTLP receiver runs in the same DigitalOcean cluster.
 
 ### introduction.mdx
