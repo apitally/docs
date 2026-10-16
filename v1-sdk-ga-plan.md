@@ -130,8 +130,9 @@ These rules apply to every copy edit in Part 2, in addition to the writing stand
 Customers use this page for vendor and GDPR assessments, and it claims to be a complete overview of collected data. v1 collects more by default than v0: traces, application logs, client IP and user agent.
 
 - [x] L9: "Require explicit user opt-in for features that could capture sensitive data". This no longer holds, because traces and application logs are on by default. → Remove the opt-in principle and retain the existing control and transparency principles. Explain capture defaults in the data collection sections.
-- [ ] L20-21: says option names are in Python `snake_case`. → Keep, but use v1 Python names throughout.
-- [ ] L24: the legend "Potentially sensitive and not collected by default" no longer matches application logs and traces. → Replace shields with toggle icons for configurable collection. Use primary-colored toggle-on for collected by default and red toggle-off for not collected by default. The approved legend is applied. Update each entry's icon alongside its capture defaults as its section is revised; leave items without a capture setting unmarked.
+- [x] L20-21: keep Python `snake_case` notation. All option names verified against the Python SDK v1 source.
+- [ ] L24: finish toggle coverage review. Request headers, request bodies and response bodies use toggle-off; response headers and application logs use toggle-on. Both Consumer entries also use toggle-off because consumer data requires the user's implementation and is not collected by default. Do not limit icons to dedicated capture settings.
+  - Add the user-selected shield icon with the legend "Supports masking" to URL, Request headers, Request body, Response headers, Response body and Application logs. Place it after the toggle where present. Applied; whitespace, broken-link and build validation checks passed.
 - [x] L26-58 "Application metadata":
   - Describe the collected metadata without a startup-only claim. Include endpoint summaries and descriptions where available.
   - Replace Versions with Framework and versions, covering the framework identifier, runtime and framework package versions, and optional application version. Remove the Apitally version from the example; it belongs to resource attributes.
@@ -143,7 +144,7 @@ Customers use this page for vendor and GDPR assessments, and it claims to be a c
   - Replace Metrics & analytics with peer-level Request metrics and Application metrics sections, alongside Application metadata and Request logs. Retain all existing request entries and links.
   - Describe size and response-time measurements as histograms without bucket implementation details.
   - Use the approved response-time definition, "Time taken by your application to respond to the request." Reuse this wording on related pages.
-  - Add consumer custom `attributes` to the description and example. Remove the shield without adding a toggle.
+  - Add consumer custom `attributes` to the description and example. Replace the shield with toggle-off because consumer data is not collected by default.
   - Update validation error fields to `source`, `field`, `message` and `type`. Remove the invalid-value exclusion claim without adding a warning.
   - Add exception type and remove the restriction to unhandled exceptions. Retain the HTTP 500 condition and optional Sentry event ID.
   - Add periodic application-process CPU utilization, resident memory usage and uptime.
@@ -179,6 +180,7 @@ Customers use this page for vendor and GDPR assessments, and it claims to be a c
 - [x] L351-353 "Data transit": verified HTTPS/TLS behavior across all four v1 SDKs. Keep the existing wording unchanged. The user excluded local temporary-file storage as irrelevant to this page; do not add it under Data transit or Data storage.
 - [x] L363 (pre-existing): retention (approved wording applied; whitespace, broken-link and build validation checks passed).
   - Preserve "allowing you to analyze long-term trends" and the existing deletion and backup paragraphs.
+  - Separate follow-up, explicitly deferred by the user: review the existing "all associated data" deletion claim against `cloud/apitally_cloud/backend/apps.py::delete_app_data`, whose table list omits raw requests/resources and liveness data. Leave the claim unchanged for this update.
   - Specify aggregated request metrics for 13 months; CPU utilization, memory usage and uptime monitoring data for 32 days; request logs, application logs and traces for 15 days by default.
   - Reuse "with longer retention available on request" from `how-it-works.mdx` for logs and traces.
 - [x] L357-359 storage and L371 compliance: no change. The OTLP receiver runs in the same DigitalOcean cluster.
