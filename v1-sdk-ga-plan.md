@@ -114,11 +114,11 @@ These rules apply to every copy edit in Part 2, in addition to the writing stand
 
 - [x] L9-12: SDK cards link to `/v0/overview`. → Link to v1.
 - [x] L6: "lightweight middleware or plugin". → v1 SDKs are built on OpenTelemetry and export OTLP directly to Apitally, with no collector or agent. They work alongside an existing OpenTelemetry setup.
-- [ ] L17-28: the diagram (light and dark) shows "Apitally Hub" and "syncs with Apitally in 1 minute intervals". → Replace it with a v1 diagram (Part 3). If none is ready by GA, remove the images.
+- [ ] L17-28: the diagram (light and dark) shows "Apitally Hub" and "syncs with Apitally in 1 minute intervals". → Replace it with a v1 diagram (Part 3). If none is ready by GA, remove the images. Explicitly deferred by the user.
 - [x] L30-36: the functionality list ends with a "Non-blocking client" and lists "OpenTelemetry integration to capture traces" as an add-on. → Describe the v1 parts at the same level of detail (4-5 bullets): request instrumentation, log capture, metrics aggregation, background export.
 - [x] L44-47 "On startup": "introspects ... sent in a once-off request". → Describe application metadata collection and background delivery, with endpoint details and version information as examples. Keep configuration and OpenAPI collection details for the data-privacy page.
 - [x] L51: "times the invokation of the request handler". → Describe response time and request/response metadata capture. Avoid a universal streaming-completion claim because Fiber finalizes known-length streams when the handler returns.
-- [ ] Response-time wording follow-up: align the runtime paragraph with the approved data-privacy definition, "Time taken by your application to respond to the request." The user rejected "server-side response time" as documentation terminology.
+- [x] Response-time wording follow-up: dropped at the user's request. Leave the runtime paragraph unchanged.
 - [x] L52: "If the response is a validation error (status 400 or 422), the middleware inspects the response body". → Omit the validation-error explanation from the runtime section. Keep the section focused on request observation, local aggregation, traces and background delivery.
 - [x] L54-55: "synchronizes the aggregated data with Apitally in one minute intervals". → Describe background delivery as normally about once a minute. Omit the faster schedule during the first hour of an app environment.
 - [x] L57-58: "If request logging is enabled, the client writes ... to a compressed temporary file". → Describe traces, associated application logs and local buffering as part of the whole-section rewrite. Keep configuration defaults and controls in the SDK reference. Integrate background delivery into the prose and remove the redundant runtime note.
@@ -131,7 +131,7 @@ Customers use this page for vendor and GDPR assessments, and it claims to be a c
 
 - [x] L9: "Require explicit user opt-in for features that could capture sensitive data". This no longer holds, because traces and application logs are on by default. → Remove the opt-in principle and retain the existing control and transparency principles. Explain capture defaults in the data collection sections.
 - [x] L20-21: keep Python `snake_case` notation. All option names verified against the Python SDK v1 source.
-- [ ] L24: finish toggle coverage review. Request headers, request bodies and response bodies use toggle-off; response headers and application logs use toggle-on. Both Consumer entries also use toggle-off because consumer data requires the user's implementation and is not collected by default. Do not limit icons to dedicated capture settings.
+- [x] L24: toggle coverage and legend reviewed, approved and committed. Request headers, request bodies and response bodies use toggle-off; response headers and application logs use toggle-on. Both Consumer entries also use toggle-off because consumer data requires the user's implementation and is not collected by default. The legend identifies configurable collection, with the toggle state showing the default. Do not limit icons to dedicated capture settings.
   - Add the user-selected shield icon with the legend "Supports masking" to URL, Request headers, Request body, Response headers, Response body and Application logs. Place it after the toggle where present. Applied; whitespace, broken-link and build validation checks passed.
 - [x] L26-58 "Application metadata":
   - Describe the collected metadata without a startup-only claim. Include endpoint summaries and descriptions where available.
@@ -187,12 +187,12 @@ Customers use this page for vendor and GDPR assessments, and it claims to be a c
 
 ### introduction.mdx
 
-- [ ] L56-57: "You'll see the first data in the dashboard within a few seconds". Many frameworks (e.g. Express, Flask, Go) only start sending data on the first request. → "within a few seconds of the first request".
+- [x] L56-57: keep "You'll see the first data in the dashboard within a few seconds" unchanged. Verified current SDK origins: startup activation and an initial export after approximately two seconds make the proposed "of the first request" addition unnecessary.
 - [x] L63: the setup guide list is fixed by the accordion change in Part 1.
 
 ### usage-limits.mdx
 
-- [ ] L26 Tip: "exclude certain requests from logging using custom exclusion rules". → Use `sample_rate`, the sampling callbacks and `exclude_paths`.
+- [x] L26 Tip: replaced the custom exclusion rules wording with the approved sampling-only message about reducing the volume of ingested logs and traces to stay within quotas. Retained the SDK reference link. The user excluded path exclusions and chose language-neutral wording without setting names or callback details. Whole-page review, whitespace, broken-link and build validation checks passed.
 
 ### api-metrics/errors.mdx
 
