@@ -148,6 +148,7 @@ Customers use this page for vendor and GDPR assessments, and it claims to be a c
   - Add exception type and remove the restriction to unhandled exceptions. Retain the HTTP 500 condition and optional Sentry event ID.
   - Add periodic application-process CPU utilization, resident memory usage and uptime.
   - Keep the existing copy wherever possible. Describe collected data neutrally, without alarming clauses or unnecessary caveats.
+  - Review the three introductions together in page order: Application metadata, Application metrics, Request metrics. Approved wording describes application details, periodic per-process measurements, and request measurements combined into counts and histograms within the application before delivery to Apitally. Avoid repeated "The Apitally SDKs collect the following" introductions.
 - [ ] L133-277 "Request logs":
   - L135: "if request logging is enabled". → On by default, for requests kept by sampling (`sample_rate`, `sample_on_request`, `sample_on_response`) and exclusions.
   - L146: `log_query_params` was removed and query strings are always captured. → To mask all values, use `mask_query_params=[r".*"]`.
