@@ -18,8 +18,8 @@ General pages describe how Apitally works with the current SDKs. Keep copy to wh
 Follow this workflow with the user when continuing this plan.
 
 1. Work through one item at a time, in order, unless the user explicitly defers it. Treat a paragraph or section as a coherent piece of writing rather than adding sentences mechanically for checklist items.
-2. Agree on the message before drafting wording. Verify relevant behaviour against source code, then discuss what the reader needs to know and what belongs in the text. Use verification to support a focused editorial discussion. Plan items and verification findings are inputs to that discussion, not automatic additions to the docs.
-3. Once the message is agreed, present three wording options in context, with enough surrounding text to judge how they read. Use independent subagents for drafting and polishing, then review their work before presenting it. Present finished wording, not raw drafts.
+2. Verify whether each item still needs a change. Preserve existing text unless it is inaccurate or a required change makes it unclear. Skip obsolete plan items and bring the user only the smallest necessary edits. Agree on any unresolved message before drafting wording. Plan items and verification findings are inputs to that discussion, not automatic additions to the docs.
+3. For a straightforward correction with an agreed message, present the minimal edit for approval without a wording exercise. Where an editorial choice is needed, present three wording options in context, with enough surrounding text to judge how they read. Use independent subagents for drafting and polishing, then review their work before presenting it. Present finished wording, not raw drafts.
 4. Edit only after the user approves the wording. Apply the selected option and requested adjustments without adding unapproved claims or qualifications.
 5. Write for the reader. Keep text clear, direct, accurate and necessary. Describe current behaviour without migration framing. Avoid unnecessary internals, unsolicited caveats, generic AI phrasing, em dashes, semicolons and mid-sentence colons. Follow the detailed writing rules below.
 6. Review the integrated result. Reread the whole page after editing, check flow and repetition, run appropriate checks, and update the plan to reflect the actual decisions.
@@ -196,25 +196,24 @@ Customers use this page for vendor and GDPR assessments, and it claims to be a c
 
 ### api-metrics/errors.mdx
 
-- [ ] L36-50: the list of supported validation frameworks. → Update to v1:
-  - Express: add Zod (express-validator, celebrate/Joi, Zod).
-  - Add H3 (Zod / Standard Schema).
-  - Add ASP.NET Core (MVC `ModelState`, `ProblemDetails`).
-  - Chi: requires passing the error to `apitally.CaptureError`, as in v0.
-  - Python is unchanged (FastAPI, Django Ninja, Litestar). Koa and Hapi: none.
-- [ ] L67-69 Sentry: v1 supports Sentry linking in Python and JavaScript only. v0 Go and .NET advertised it. → State the supported SDKs.
+- [x] L36-50: updated the validation-framework list and applied the user's approved introduction. Whole-page review, whitespace, broken-link and build validation checks passed.
+  - Added Zod to Express, H3 with Zod or other Standard Schema-compatible libraries, and ASP.NET Core.
+  - Kept the other framework entries unchanged. Koa and Hapi remain unlisted.
+  - The user excluded Chi `CaptureError` instructions as too detailed for this page. Keep setup requirements in the SDK reference.
+  - Approved introduction describes capture from commonly used libraries without the universal automatic-capture claim.
+- [x] L67-69 Sentry: applied approved option 3. Retained the dashboard setup location and links from server error details, and identified Python and JavaScript as the supported SDKs. Checks passed with the rest of the page.
 
 ### api-metrics/performance.mdx
 
-- [ ] L9: "measure the time it takes your route handler functions to respond". → Use the approved data-privacy definition, "Time taken by your application to respond to the request."
+- [x] L9: replaced only "route handler functions" with "application", as approved, to describe application response time rather than route-handler execution. The rest of the page is unchanged. Whole-page review, whitespace, broken-link and build validation checks passed.
 
 ### api-metrics/endpoints.mdx
 
-- [ ] L64-65: "These are based on the `Content-Length` headers in the requests and responses." Sizes are the actual body sizes, including streamed and chunked bodies, which is what a reader expects. → Delete the sentence.
+- [x] L64-65: deleted the `Content-Length` explanation as approved, without replacement. SDKs also measure body bytes directly. The rest of the page is unchanged. Whole-page review, whitespace, broken-link and build validation checks passed.
 
 ### api-metrics/resources.mdx
 
-- [ ] L17-18: "measured per-process and not relative to available cores, the value can exceed 100%". → Delete the second sentence. Nothing replaces it.
+- [x] L17-18: deleted the sentence about per-process CPU values exceeding 100%, as approved. Verified normalization by CPU count in all four SDKs. Nothing replaces it; the rest of the page is unchanged. Whole-page review, whitespace, broken-link and build validation checks passed.
 
 ### api-logs-traces/request-logs.mdx
 
