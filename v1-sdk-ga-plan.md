@@ -149,18 +149,18 @@ Customers use this page for vendor and GDPR assessments, and it claims to be a c
   - Add periodic application-process CPU utilization, resident memory usage and uptime.
   - Keep the existing copy wherever possible. Describe collected data neutrally, without alarming clauses or unnecessary caveats.
   - Review the three introductions together in page order: Application metadata, Application metrics, Request metrics. Approved wording describes application details, periodic per-process measurements, and request measurements combined into counts and histograms within the application before delivery to Apitally. Avoid repeated "The Apitally SDKs collect the following" introductions.
-- [ ] L133-277 "Request logs":
-  - L135: "if request logging is enabled". → On by default, for requests kept by sampling (`sample_rate`, `sample_on_request`, `sample_on_response`) and exclusions.
-  - L146: `log_query_params` was removed and query strings are always captured. → To mask all values, use `mask_query_params=[r".*"]`.
+- [ ] L133-277 "Request logs" (edits applied, awaiting user review):
+  - The user authorized selecting and integrating the wording directly for review instead of choosing between bundled options. Preserve existing fields, examples and links where possible.
+  - Introduce the contents of individual request records, including associated application logs and traces. Keep default-state announcements and sampling controls out of the introduction. Sampling belongs in Data filtering.
+  - L146: remove the obsolete query-string stripping instruction. Retain the full URL, query-parameter masking description and example.
   - L159, L170, L184, L194: `log_request_headers`, `log_request_body`, `log_response_headers` and `log_response_body` → `capture_*`. `mask_request_body_callback`/`mask_response_body_callback` → `mask_request_body`/`mask_response_body`.
   - L203: the response time definition. → As above.
   - L207-221 Consumer: as in metrics.
-  - L222-235 Application logs: "disabled by default". → On by default (`capture_logs`). In Go, capture requires wrapping the slog handler with `apitally.NewSlogHandler`.
-  - L236-263 Traces: "Only collected if enabled via `capture_traces`". → On by default. The trace includes spans from any OpenTelemetry instrumentation active during the request, with their attributes (e.g. outgoing URLs, database queries). Only query parameters in URL attributes are masked.
-    - Some SDKs enable instrumentation themselves: JavaScript traces outgoing fetch/undici calls, and .NET (when it owns the tracer provider) adds HttpClient instrumentation and all ActivitySources, which includes database spans.
+  - L222-235 Application logs: describe log records and their metadata and attributes. Correct the field-level `capture_logs` default and use toggle-on. Keep Go setup and integration details out of this privacy inventory.
+  - L236-263 Traces: remove the obsolete `capture_traces` instruction and shield. Describe the request span and associated spans with their attributes, including outgoing URLs and database queries supplied by instrumentation. Keep per-language instrumentation details out.
     - Custom attributes from `set_request_attribute` are included.
     - The example's root span uses `"kind": "INTERNAL"`; in v1 it is `SERVER`.
-  - L264-276 Exception info: `log_exception` was removed. → Exceptions are always recorded in traces.
+  - L264-276 Exception info: describe type, message and stack trace recorded in the request's trace. Remove `log_exception` and the unhandled/HTTP 500 restriction, which does not apply to all trace exceptions. Retain the optional Sentry event ID and example.
   - Missing: client IP (`client.address`) is always sent, with no opt-out (v0 only derived it from captured headers). The user agent is also always sent. → Add "Client IP" and "User agent" items.
 - [ ] L279-321 "Data masking":
   - L287/L300: `api-?key` → `api[-_]?key`.

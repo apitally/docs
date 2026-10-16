@@ -161,7 +161,7 @@ Request measurements are combined into counts and histograms within your applica
 
 ### Request logs
 
-The following data is collected for each request handled by your application, if request logging is enabled.
+Request logs contain details of individual requests, along with associated application logs and traces.
 
 <AccordionGroup>
   <Accordion title="HTTP method and path">
@@ -170,11 +170,21 @@ The following data is collected for each request handled by your application, if
     Example: `POST /v1/orders`
   </Accordion>
   <Accordion title="URL">
-    The full request URL.
+    The full request URL, including query parameters.
 
-    Query parameters can be stripped by disabling `log_query_params` (enabled by default). Default masking rules apply to query parameters. Additional masking rules can be specified using `mask_query_params`.
+    Default masking rules apply to query parameter values. Additional masking rules can be specified using `mask_query_params`.
 
     Example: `https://api.example.com/v1/books?search=api+design`
+  </Accordion>
+  <Accordion title="Client IP">
+    IP address of the client.
+
+    Example: `192.0.2.1`
+  </Accordion>
+  <Accordion title="User agent">
+    User agent string identifying the client software.
+
+    Example: `curl/8.10.1`
   </Accordion>
   <Accordion title="Response status code">
     Example: `200 OK`
@@ -184,19 +194,19 @@ The following data is collected for each request handled by your application, if
 
     Example: `4786 bytes`
   </Accordion>
-  <Accordion title={<>Request headers <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
-    Only collected if enabled via `log_request_headers` (disabled by default). Default masking rules apply. Additional masking rules can be specified using `mask_headers`.
+  <Accordion title={<>Request headers <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="toggle-off" color="#c46b6a" /></span></>}>
+    Only collected if enabled via `capture_request_headers` (disabled by default). Default masking rules apply. Additional masking rules can be specified using `mask_headers`.
 
     Example:
 
     ```
     Host: api.example.com
-    Authorization: ******
+    Authorization: [REDACTED]
     X-Real-Ip: 147.98.24.101
     ```
   </Accordion>
-  <Accordion title={<>Request body <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
-    Only collected if enabled via `log_request_body` (disabled by default). Default masking rules apply. Additional masking rules can be specified using `mask_body_fields` and `mask_request_body_callback`.
+  <Accordion title={<>Request body <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="toggle-off" color="#c46b6a" /></span></>}>
+    Only collected if enabled via `capture_request_body` (disabled by default). Default masking rules apply. Additional masking rules can be specified using `mask_body_fields` and `mask_request_body`.
 
     Example:
 
@@ -209,8 +219,8 @@ The following data is collected for each request handled by your application, if
 
     Example: `4678 bytes`
   </Accordion>
-  <Accordion title="Response headers">
-    Can be disabled via `log_response_headers` (enabled by default). Default masking rules apply. Additional masking rules can be specified using `mask_headers`.
+  <Accordion title={<>Response headers <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="toggle-on" color="#0b9797" /></span></>}>
+    Can be disabled via `capture_response_headers` (enabled by default). Default masking rules apply. Additional masking rules can be specified using `mask_headers`.
 
     Example:
 
@@ -219,8 +229,8 @@ The following data is collected for each request handled by your application, if
     Content-Length: 36
     ```
   </Accordion>
-  <Accordion title={<>Response body <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
-    Only collected if enabled via `log_response_body` (disabled by default). Default masking rules apply. Additional masking rules can be specified using `mask_body_fields` and `mask_response_body_callback`.
+  <Accordion title={<>Response body <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="toggle-off" color="#c46b6a" /></span></>}>
+    Only collected if enabled via `capture_response_body` (disabled by default). Default masking rules apply. Additional masking rules can be specified using `mask_body_fields` and `mask_response_body`.
 
     Example:
 
@@ -229,12 +239,12 @@ The following data is collected for each request handled by your application, if
     ```
   </Accordion>
   <Accordion title="Response time">
-    Time elapsed between start and finish of the route handler invokation for the request.
+    Time taken by your application to respond to the request.
 
     Example: `82 ms`
   </Accordion>
-  <Accordion title={<>Consumer <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
-    Consumer identifier, and optionally name and group, as provided by your own implementation.
+  <Accordion title="Consumer">
+    Consumer identifier, and optionally name, group and custom attributes, as provided by your own implementation.
 
     See the [setup guide](/sdk-reference/setup-guides/overview) for your framework for how to associate requests with consumers.
 
@@ -244,14 +254,15 @@ The following data is collected for each request handled by your application, if
     {
       "identifier": "john.doe@example.com",
       "name": "John Doe",
-      "group": "Users"
+      "group": "Users",
+      "attributes": {"plan": "pro"}
     }
     ```
   </Accordion>
-  <Accordion title={<>Application logs <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
-    Log messages emitted by the application during request handling.
+  <Accordion title={<>Application logs <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="toggle-on" color="#0b9797" /></span></>}>
+    Application log records associated with the request, including messages, timestamps, severity, logger information and available attributes.
 
-    Only collected if enabled via `capture_logs` (disabled by default).
+    Can be disabled via `capture_logs` (enabled by default).
 
     Example:
 
@@ -262,10 +273,8 @@ The following data is collected for each request handled by your application, if
     ]
     ```
   </Accordion>
-  <Accordion title={<>Traces <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
-    OpenTelemetry spans created by the application during request handling.
-
-    Only collected if enabled via `capture_traces` (disabled by default).
+  <Accordion title="Traces">
+    The request span and associated OpenTelemetry spans, including their attributes. These can contain custom request attributes, outgoing request URLs and database queries supplied by instrumentation.
 
     Example:
 
@@ -274,7 +283,7 @@ The following data is collected for each request handled by your application, if
       {
         "span_id": "a1b2c3d4e5f60001",
         "name": "GET /v1/orders/{orderId}",
-        "kind": "INTERNAL",
+        "kind": "SERVER",
         "start_time": 1735689600000000000,
         "end_time": 1735689600082000000
       },
@@ -291,9 +300,7 @@ The following data is collected for each request handled by your application, if
     ```
   </Accordion>
   <Accordion title="Exception info">
-    Exception message and stack trace. May also include a Sentry event ID, if available.
-
-    Only captured if an unhandled exception occurred during request handling, leading to a `500 Internal Server Error` response. Can be disabled via `log_exception` (enabled by default).
+    Exception type, message and stack trace recorded in the request's trace. May also include a Sentry event ID, if available.
 
     Example:
 
