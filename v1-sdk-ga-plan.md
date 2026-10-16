@@ -162,17 +162,19 @@ Customers use this page for vendor and GDPR assessments, and it claims to be a c
     - The example's root span uses `"kind": "INTERNAL"`; in v1 it is `SERVER`.
   - L264-276 Exception info: describe type, message and stack trace recorded in the request's trace. Remove `log_exception` and the unhandled/HTTP 500 restriction, which does not apply to all trace exceptions. Retain the optional Sentry event ID and example.
   - Missing: client IP (`client.address`) is always sent, with no opt-out (v0 only derived it from captured headers). The user agent is also always sent. → Add "Client IP" and "User agent" items.
-- [ ] L279-321 "Data masking" (approved scope applied, awaiting review):
+- [x] L279-321 "Data masking" (reviewed; broken-link and build validation checks passed):
   - L287/L300: `api-?key` → `api[-_]?key`.
   - L310-319: add `cvv` and `cvc` to body fields, retaining `ccv`. Describe the scope as string-valued fields in JSON request and response bodies.
   - L321: use `mask_request_body` and `mask_response_body` for the callbacks.
   - Add a short Application logs subsection identifying `mask_log_record` for masking log messages.
   - Scope the case-insensitive, substring matching description to the default patterns. Preserve the existing structure and omit per-language differences and warning paragraphs.
   - The user explicitly excluded the proposed explanation of query-parameter masking in outgoing trace URLs.
-- [ ] L323-349 "Data filtering":
-  - L328-333: health, ping, ready and live patterns now accept a trailing slash (e.g. `/_?healthz?/?$`).
-  - Missing (also for v0): the default user-agent exclusions `health[-_ ]?check`, `microsoft-azure-application-lb`, `googlehc` and `kube-probe`.
-  - L345: `exclude_callbacks` (typo; v0 used `exclude_callback`) was removed. → Describe `sample_rate`, `sample_on_request` and `sample_on_response`.
+- [ ] L323-349 "Data filtering" (approved wording applied, awaiting final review):
+  - Use the user's exact two paragraphs explaining selective exclusion of request logs and associated traces and application logs, using paths or sampling callbacks. Exclusions happen within the application before delivery, while request metrics remain collected.
+  - Follow with compact links to the Python, JavaScript, Go and .NET Sampling pages.
+  - Keep default exclusion inventories, sampling-rate instructions and dashboard filtering instructions out of this privacy section.
+  - Move the verified default path and user-agent patterns into `snippets/v1/default-exclusions.mdx`, imported by all four SDK Sampling pages in place of their links back to the privacy page. Correct trailing-slash matching in the health, ping, ready and live patterns.
+  - Scope approval is not wording approval. Present independently drafted and polished options, then wait for explicit wording approval before editing.
 - [ ] L351-353 "Data transit": → HTTPS to `otlp.apitally.io`. Add that data is buffered in temporary files on the host until it is delivered.
 - [ ] L363 (pre-existing): retention. → Add traces (15 days). CPU/memory are kept 32 days, not 13 months.
 - [x] L357-359 storage and L371 compliance: no change. The OTLP receiver runs in the same DigitalOcean cluster.
