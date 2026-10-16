@@ -20,10 +20,10 @@ This is a complete overview of the data collected by Apitally.
   Check out the [SDK reference](/sdk-reference/overview) for your language to see the equivalent parameter names.
 </Tip>
 
-Toggle icons indicate configurable data collection.
+Toggle icons indicate configurable data collection:
 
-<span style={{ position: "relative", top: -2 }}><Icon icon="toggle-on" color="#0b9797" /></span> Collected by default<br />
-<span style={{ position: "relative", top: -2 }}><Icon icon="toggle-off" color="#ef4444" /></span> Not collected by default
+<span style={{ position: "relative", top: -2 }}><Icon icon="toggle-on" color="#0b9797" /></span> = Collected by default<br />
+<span style={{ position: "relative", top: -2 }}><Icon icon="toggle-off" color="#c46b6a" /></span> = Not collected by default
 
 ### Application metadata
 
@@ -69,9 +69,25 @@ The Apitally SDKs collect the following information about your application and i
   </Accordion>
 </AccordionGroup>
 
-### Metrics & analytics
+### Application metrics
 
-The following data is collected for each request handled by your application and immediately aggregated on the client-side.
+The Apitally SDKs collect the following measurements periodically.
+
+<AccordionGroup>
+  <Accordion title="CPU utilization">
+    CPU utilization of the application process.
+  </Accordion>
+  <Accordion title="Memory usage">
+    Resident memory usage of the application process.
+  </Accordion>
+  <Accordion title="Uptime">
+    Uptime in seconds.
+  </Accordion>
+</AccordionGroup>
+
+### Request metrics
+
+The Apitally SDKs collect the following request data and aggregate metrics locally.
 
 <AccordionGroup>
   <Accordion title="HTTP method and path">
@@ -85,22 +101,22 @@ The following data is collected for each request handled by your application and
     Example: `200 OK`
   </Accordion>
   <Accordion title="Request size">
-    Size of the request body. Recorded as a histogram in 1 KB buckets.
+    Size of the request body. Recorded as a histogram.
 
     Example: `5 KB`
   </Accordion>
   <Accordion title="Response size">
-    Size of the response body. Recorded as a histogram in 1 KB buckets.
+    Size of the response body. Recorded as a histogram.
 
     Example: `5 KB`
   </Accordion>
   <Accordion title="Response time">
-    Time elapsed between start and finish of the route handler invokation for the request. Recorded as a histogram in 10 ms buckets.
+    Time taken by your application to respond to the request. Recorded as a histogram.
 
     Example: `80 ms`
   </Accordion>
-  <Accordion title={<>Consumer <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
-    Consumer identifier, and optionally name and group, as provided by your own implementation.
+  <Accordion title="Consumer">
+    Consumer identifier, and optionally name, group and custom attributes, as provided by your own implementation.
 
     See the [setup guide](/sdk-reference/setup-guides/overview) for your framework for how to associate requests with consumers.
 
@@ -110,12 +126,13 @@ The following data is collected for each request handled by your application and
     {
       "identifier": "john.doe@example.com",
       "name": "John Doe",
-      "group": "Users"
+      "group": "Users",
+      "attributes": {"plan": "pro"}
     }
     ```
   </Accordion>
   <Accordion title="Validation error info">
-    Details about validation errors leading to a `4xx` response. Includes error type, message and field name. Doesn't include the invalid value.
+    Details about validation errors leading to a `4xx` response. Includes source, field name, message and error type.
 
     Only captured if a supported framework is used. See [here](/api-metrics/errors#validation-errors) for details.
 
@@ -123,14 +140,14 @@ The following data is collected for each request handled by your application and
 
     ```json
     [
-      {"loc": "query.title", "msg": "ensure this value has at least 3 characters", "type": "value_error.any_str.min_length"}
+      {"source": "query", "field": "title", "message": "ensure this value has at least 3 characters", "type": "value_error.any_str.min_length"}
     ]
     ```
   </Accordion>
   <Accordion title="Exception info">
-    Exception message and stack trace. May also include a Sentry event ID, if available.
+    Exception type, message and stack trace. May also include a Sentry event ID, if available.
 
-    Only captured if an unhandled exception occurred during request handling, leading to a `500 Internal Server Error` response.
+    Only captured if an exception occurred during request handling, leading to a `500 Internal Server Error` response.
 
     Example:
 

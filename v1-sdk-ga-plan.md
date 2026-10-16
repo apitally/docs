@@ -117,7 +117,8 @@ These rules apply to every copy edit in Part 2, in addition to the writing stand
 - [ ] L17-28: the diagram (light and dark) shows "Apitally Hub" and "syncs with Apitally in 1 minute intervals". → Replace it with a v1 diagram (Part 3). If none is ready by GA, remove the images.
 - [x] L30-36: the functionality list ends with a "Non-blocking client" and lists "OpenTelemetry integration to capture traces" as an add-on. → Describe the v1 parts at the same level of detail (4-5 bullets): request instrumentation, log capture, metrics aggregation, background export.
 - [x] L44-47 "On startup": "introspects ... sent in a once-off request". → Describe application metadata collection and background delivery, with endpoint details and version information as examples. Keep configuration and OpenAPI collection details for the data-privacy page.
-- [x] L51: "times the invokation of the request handler". → Describe server-side response time and request/response metadata capture. Avoid a universal streaming-completion claim because Fiber finalizes known-length streams when the handler returns. Reuse "server-side response time" on the related pages.
+- [x] L51: "times the invokation of the request handler". → Describe response time and request/response metadata capture. Avoid a universal streaming-completion claim because Fiber finalizes known-length streams when the handler returns.
+- [ ] Response-time wording follow-up: align the runtime paragraph with the approved data-privacy definition, "Time taken by your application to respond to the request." The user rejected "server-side response time" as documentation terminology.
 - [x] L52: "If the response is a validation error (status 400 or 422), the middleware inspects the response body". → Omit the validation-error explanation from the runtime section. Keep the section focused on request observation, local aggregation, traces and background delivery.
 - [x] L54-55: "synchronizes the aggregated data with Apitally in one minute intervals". → Describe background delivery as normally about once a minute. Omit the faster schedule during the first hour of an app environment.
 - [x] L57-58: "If request logging is enabled, the client writes ... to a compressed temporary file". → Describe traces, associated application logs and local buffering as part of the whole-section rewrite. Keep configuration defaults and controls in the SDK reference. Integrate background delivery into the prose and remove the redundant runtime note.
@@ -138,12 +139,15 @@ Customers use this page for vendor and GDPR assessments, and it claims to be a c
   - Add the OpenAPI specification from FastAPI, Litestar and Django (DRF/Ninja), where available.
   - Add resource attributes covering service name, random instance identifier, environment, SDK names and versions, and custom attributes from environment variables or an existing provider.
   - Keep collection descriptions focused on what is collected. Omit unsolicited masking caveats.
-- [ ] L60-131 "Metrics & analytics":
-  - L76/L81: "histogram in 1 KB buckets" and L86: "10 ms buckets". → Exponential histograms.
-  - L86: the response time definition. → Same as the how-it-works L51 fix.
-  - L90-103 Consumer: add the custom `attributes`.
-  - L105-116 Validation error info: the example uses v0 `loc`/`msg`/`type`. → Use the v1 fields `source`, `field`, `message` and `type`.
-  - Missing (also for v0): CPU utilization and memory usage. → Add them.
+- [x] L60-131 "Metrics & analytics" (reviewed; broken-link and build validation checks passed):
+  - Replace Metrics & analytics with peer-level Request metrics and Application metrics sections, alongside Application metadata and Request logs. Retain all existing request entries and links.
+  - Describe size and response-time measurements as histograms without bucket implementation details.
+  - Use the approved response-time definition, "Time taken by your application to respond to the request." Reuse this wording on related pages.
+  - Add consumer custom `attributes` to the description and example. Remove the shield without adding a toggle.
+  - Update validation error fields to `source`, `field`, `message` and `type`. Remove the invalid-value exclusion claim without adding a warning.
+  - Add exception type and remove the restriction to unhandled exceptions. Retain the HTTP 500 condition and optional Sentry event ID.
+  - Add periodic application-process CPU utilization, resident memory usage and uptime.
+  - Keep the existing copy wherever possible. Describe collected data neutrally, without alarming clauses or unnecessary caveats.
 - [ ] L133-277 "Request logs":
   - L135: "if request logging is enabled". → On by default, for requests kept by sampling (`sample_rate`, `sample_on_request`, `sample_on_response`) and exclusions.
   - L146: `log_query_params` was removed and query strings are always captured. → To mask all values, use `mask_query_params=[r".*"]`.
@@ -192,7 +196,7 @@ Customers use this page for vendor and GDPR assessments, and it claims to be a c
 
 ### api-metrics/performance.mdx
 
-- [ ] L9: "measure the time it takes your route handler functions to respond". → Same as the how-it-works L51 fix.
+- [ ] L9: "measure the time it takes your route handler functions to respond". → Use the approved data-privacy definition, "Time taken by your application to respond to the request."
 
 ### api-metrics/endpoints.mdx
 
