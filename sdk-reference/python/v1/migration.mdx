@@ -13,6 +13,22 @@ The Python SDK now uses OpenTelemetry to collect and send metrics, logs, and tra
 
 The updated [setup guides](/sdk-reference/python/v1/overview#supported-frameworks) provide the installation steps and initialization code for each framework. Follow these to replace your existing SDK integration.
 
+To upgrade an existing installation, run:
+
+<CodeGroup>
+```shell pip
+pip install -U "apitally[<your_framework>]"
+```
+
+```shell uv
+uv add "apitally[<your_framework>]>=1"
+```
+
+```shell poetry
+poetry add "apitally[<your_framework>]@latest"
+```
+</CodeGroup>
+
 ### Write tokens replace client IDs
 
 The SDK now authenticates with a **write token** instead of a client ID. Your existing app's token (`apt_...`) is available under _Setup instructions_ in the [Apitally dashboard](https://app.apitally.io/apps).

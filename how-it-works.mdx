@@ -3,13 +3,13 @@ title: "How it works"
 description: "Seamless integration with our open-source SDKs."
 ---
 
-Apitally integrates with your application via a lightweight middleware or plugin, provided by one of our open-source SDKs. The SDKs send data directly to Apitally, without the need for additional infrastructure or agents, and without affecting the performance of your application.
+Apitally integrates with your application through open-source SDKs built on OpenTelemetry. The SDKs send data directly to Apitally, without requiring a separate collector or agent, and can work alongside an existing OpenTelemetry setup.
 
 <CardGroup cols={3}>
-  <Card title="SDK for Python" icon="python" href="/sdk-reference/python/v0/overview" />
-  <Card title="SDK for Node.js" icon="node-js" href="/sdk-reference/javascript/v0/overview" />
-  <Card title="SDK for Go" icon="golang" href="/sdk-reference/go/v0/overview" />
-  <Card title="SDK for .NET" icon="microsoft" href="/sdk-reference/dotnet/v0/overview" />
+  <Card title="SDK for Python" icon="python" href="/sdk-reference/python/v1/overview" />
+  <Card title="SDK for Node.js" icon="node-js" href="/sdk-reference/javascript/v1/overview" />
+  <Card title="SDK for Go" icon="golang" href="/sdk-reference/go/v1/overview" />
+  <Card title="SDK for .NET" icon="microsoft" href="/sdk-reference/dotnet/v1/overview" />
 </CardGroup>
 
 The diagram below illustrates how the SDKs works.
@@ -29,11 +29,11 @@ The diagram below illustrates how the SDKs works.
 
 The SDKs include the following functionality:
 
-- Introspection of your application to capture metadata about available endpoints
-- Lightweight middleware that captures request and response data
-- Instrumentation of logging libraries to capture application logs
-- OpenTelemetry integration to capture traces during request handling
-- Non-blocking client that handles communication with Apitally
+- Discovery of available endpoints in your application
+- Capture of request and response data, including traces
+- Capture of application logs associated with requests
+- Aggregation of request metrics and collection of application CPU and memory usage
+- Background export of collected data to Apitally
 
 <Note>
   The client is designed to be resilient to temporary network failures
@@ -43,26 +43,18 @@ The SDKs include the following functionality:
 
 ## On startup
 
-When your application starts and the Apitally middleware is initialized, it introspects your application to capture metadata about all available endpoints.
-This metadata is then sent to Apitally in a once-off request.
+The SDK collects application metadata, such as endpoint details and version information, and sends it to Apitally in the background.
 
 ## During runtime
 
-When your application handles a request, the middleware times the invokation of the request handler and captures metadata about the request and response, such as the HTTP method, matched route, and the HTTP status code.
-If the response is a validation error (status 400 or 422), the middleware inspects the response body for further details about the error.
+As your application handles requests, the SDK captures the HTTP method, matched route and response status code. It also measures server-side response time and the sizes of request and response bodies. It aggregates this data locally into request metrics, grouped by endpoint, status code and consumer.
 
-The captured metadata is then passed to the client which immediately aggregates it with previously received data.
-The client synchronizes the aggregated data with Apitally in one minute intervals.
+Alongside these metrics, the SDK builds traces of individual requests, linking instrumented operations and captured application logs to the request.
 
-If request logging is enabled, the client writes the request and response data to a compressed temporary file on disk.
-During the next synchronization interval, the client reads the log file and streams the compressed data to Apitally.
-
-<Note>
-  Communication with Apitally happens asynchronously and doesn't interfere with your application's request handling.
-</Note>
+The collected data is buffered locally and sent to Apitally in the background, normally about once a minute.
 
 ## Server side
 
-When Apitally receives data from your application, it puts it in a queue for asynchronous processing. The data should be processed and visible on the dashboard within a few seconds.
+When Apitally receives data from your application, it queues it for asynchronous processing. The data is normally processed and visible on the dashboard within a few seconds.
 
-Data is retained at 1-minute granularity for 32 days and then aggregated to 30-minute intervals. We delete data completely after 13 months.
+Request metrics are retained at 1-minute resolution for 32 days and at 30-minute resolution for 13 months. Request logs and traces are retained for 15 days, with longer retention available on request.

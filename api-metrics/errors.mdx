@@ -30,17 +30,17 @@ For validation and server errors, the modal includes a *Details* tab that provid
 
 Many frameworks offer built-in validation for incoming requests, or are compatible with third-party validation libraries.
 
-Apitally detects commonly used libraries and automatically captures validation error details.
-This can help you refine validation rules or reveal issues on the consumer side.
+Apitally captures validation error details from commonly used libraries. This can help you refine validation rules or reveal issues on the consumer side.
 
 This is currently supported for the following frameworks:
 
 - FastAPI (using pydantic)
 - Django Ninja (using pydantic)
 - Litestar (using pydantic, attrs or other modeling libraries)
-- Express (using express-validator or Joi + celebrate)
+- Express (using express-validator, Joi + celebrate or Zod)
 - Fastify (using Ajv)
 - NestJS (using class-validator)
+- H3 (using Zod or other Standard Schema-compatible libraries)
 - Hono (using Zod)
 - AdonisJS (using VineJS)
 - Elysia
@@ -48,6 +48,7 @@ This is currently supported for the following frameworks:
 - Echo (using validator)
 - Fiber (using validator)
 - Gin (using validator)
+- ASP.NET Core
 
 ## Server errors
 
@@ -66,4 +67,4 @@ To do this, simply select *Mark as expected* from the dropdown menu in the error
 
 ## Sentry integration
 
-If your team has set up the Sentry integration under *Settings > Integrations*, links to the Sentry issues created for captured exceptions will appear in the server error details.
+If your team has set up the Sentry integration under *Settings > Integrations*, links to Sentry issues for captured exceptions will appear in the server error details. This integration is supported by the Python and JavaScript SDKs.

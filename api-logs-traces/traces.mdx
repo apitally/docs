@@ -7,7 +7,7 @@ description: Get a breakdown of time spent during the handling of each request.
 When a request takes longer than expected, traces help you understand exactly where the time is being spent.
 Whether it's a slow database query, an external API call, or a custom operation in your code, traces provide the visibility you need to identify and resolve bottlenecks.
 
-If enabled, you'll find traces in the request details in the request logs.
+To view a trace, open the request details from the request logs.
 
 <img src="https://assets.apitally.io/docs/2026-01-31/request-log-item-trace.webp" alt="Traces" className="rounded-xl" />
 
@@ -16,9 +16,8 @@ Spans are visualized as horizontal bars, with their width reflecting their durat
 
 Click on a span to view its attributes in the table below, which can include details such as the database query, the HTTP method and URL of an external request, or any custom attributes your instrumentation has added.
 
-## Enable tracing
+## Instrumentation
 
-Tracing must be explicitly enabled in your application alongside request logging.
-The Apitally SDKs integrate with [OpenTelemetry](https://opentelemetry.io/) and capture any spans created during request handling.
+The Apitally SDKs are built on [OpenTelemetry](https://opentelemetry.io/) and capture any spans created during request handling.
 
-See the [setup guide](/sdk-reference/setup-guides/overview) for your framework to learn how to enable tracing and instrument libraries like database drivers and HTTP clients.
+See the SDK reference for [Python](/sdk-reference/python/v1/tracing), [JavaScript](/sdk-reference/javascript/v1/tracing), [Go](/sdk-reference/go/v1/tracing), or [.NET](/sdk-reference/dotnet/v1/tracing) to learn how to instrument libraries like database drivers and HTTP clients.

@@ -7,15 +7,13 @@ description: "Set up the Apitally SDK for your AdonisJS application."
 import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
 import ExistingOpenTelemetrySetupSnippet from "/snippets/v1/existing-opentelemetry-setup-javascript.mdx";
 
-<Info>This setup guide is for v1 of the JavaScript SDK (currently in beta).</Info>
-
 This page guides you through the setup of the Apitally SDK for your [AdonisJS](https://adonisjs.com) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
 
 <SetupGuideStartSnippet framework="AdonisJS" />
 
 ## Requirements
 
-Requires Node.js 20.6+ and either AdonisJS 6.3+ or AdonisJS 7.x.
+Requires Node.js `^20.16` or `>=22.3` and either AdonisJS 6.3+ or AdonisJS 7.x.
 
 ## Create app
 
@@ -31,35 +29,17 @@ After submitting, you will see tailored setup instructions for your app. These i
   The **write token** (`apt_...`) provided in the setup instructions uniquely identifies your app for the purpose of data ingestion only. It does not grant any kind of read access to your data.
 </Note>
 
-## Install the SDK
+## Install and configure the SDK
 
-Install the Apitally SDK as a dependency in your project.
-
-<CodeGroup>
-```shell npm
-npm install apitally@next
-```
-
-```shell yarn
-yarn add apitally@next @opentelemetry/api
-```
-
-```shell pnpm
-pnpm add apitally@next
-```
-</CodeGroup>
-
-## Initialize Apitally
-
-Configure Apitally by running the following Ace command from your application directory:
+Run the following Ace command from your application directory:
 
 ```shell
-node ace configure apitally
+node ace add apitally
 ```
 
-You'll be prompted for your write token, environment (default `dev`), and whether to capture request headers, request bodies, and response bodies.
+The command installs Apitally and prompts for your write token, environment (default `dev`), and whether to capture request headers, request bodies, and response bodies.
 
-The command saves your answers and configures Apitally automatically. Your write token and environment are stored in `.env`. Your preferences are saved in `config/apitally.ts`. You can edit this file to set [other configuration options](/sdk-reference/javascript/v1/configuration).
+It sets up the provider, middleware, and exception handling automatically. Your write token and environment are stored in `.env`. Your capture preferences are saved in `config/apitally.ts`, where you can also set other [configuration options](/sdk-reference/javascript/v1/configuration).
 
 Deploy your application with these changes, or restart it if you're testing locally.
 

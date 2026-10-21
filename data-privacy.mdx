@@ -6,7 +6,6 @@ description: "How Apitally handles data collection, storage, and retention."
 Apitally is built with a strong focus on data privacy. We hold ourselves to these principles:
 
 - Collect only the data that's required
-- Require explicit user opt-in for features that could capture sensitive data
 - Offer extensive configuration options to control data collection, masking and filtering
 - Provide full transparency about what data is collected and how it's handled
 
@@ -21,15 +20,19 @@ This is a complete overview of the data collected by Apitally.
   Check out the [SDK reference](/sdk-reference/overview) for your language to see the equivalent parameter names.
 </Tip>
 
-<span style={{ position: "relative", top: -2 }}><Icon icon="shield" /></span> *= Potentially sensitive and not collected by default.*
+Icons indicate configurable data collection and masking support:
+
+<span style={{ position: "relative", top: -2 }}><Icon icon="toggle-on" color="#0b9797" /></span> = Configurable, collected by default<br />
+<span style={{ position: "relative", top: -2 }}><Icon icon="toggle-off" color="#c46b6a" /></span> = Configurable, not collected by default<br />
+<span style={{ position: "relative", top: -2 }}><Icon icon="shield" /></span> = Supports masking
 
 ### Application metadata
 
-The following data is collected once on application startup.
+The Apitally SDKs record details of your application's API, configuration and runtime environment.
 
 <AccordionGroup>
   <Accordion title="Endpoints">
-    HTTP method and path of all routes registered in your application.
+    HTTP methods and route paths identified by the SDK, with summaries and descriptions where the framework provides them.
 
     Example:
 
@@ -41,25 +44,51 @@ The following data is collected once on application startup.
     ]
     ```
   </Accordion>
-  <Accordion title="Versions">
-    Versions of the Apitally SDK, your framework and runtime.
+  <Accordion title="Framework and versions">
+    Framework identifier, runtime and framework package versions, and an application version if you provide one.
 
-    Example:
+    Example versions:
 
     ```json
     {
-      "apitally": "0.21.3",
       "fastapi": "0.121.1",
       "starlette": "0.49.3",
       "python": "3.13.9"
     }
     ```
   </Accordion>
+  <Accordion title="SDK configuration">
+    SDK settings, including capture and sampling settings and custom masking and exclusion patterns. Configured callbacks are recorded as `true`, not their code. The write token is excluded.
+  </Accordion>
+  <Accordion title="OpenAPI specification">
+    The complete generated OpenAPI specification, when available from FastAPI, Litestar, Django REST Framework or Django Ninja.
+  </Accordion>
+  <Accordion title="Resource attributes">
+    Service name, a random instance identifier, environment, and the names and versions of the Apitally and OpenTelemetry SDKs.
+
+    Custom OpenTelemetry resource attributes supplied through environment variables or an existing provider are also included.
+  </Accordion>
 </AccordionGroup>
 
-### Metrics & analytics
+### Application metrics
 
-The following data is collected for each request handled by your application and immediately aggregated on the client-side.
+CPU utilization, memory usage and uptime are measured periodically for each application process.
+
+<AccordionGroup>
+  <Accordion title="CPU utilization">
+    CPU utilization of the application process.
+  </Accordion>
+  <Accordion title="Memory usage">
+    Resident memory usage of the application process.
+  </Accordion>
+  <Accordion title="Uptime">
+    Uptime in seconds.
+  </Accordion>
+</AccordionGroup>
+
+### Request metrics
+
+Request measurements are combined into counts and histograms within your application before being sent to Apitally.
 
 <AccordionGroup>
   <Accordion title="HTTP method and path">
@@ -73,22 +102,22 @@ The following data is collected for each request handled by your application and
     Example: `200 OK`
   </Accordion>
   <Accordion title="Request size">
-    Size of the request body. Recorded as a histogram in 1 KB buckets.
+    Size of the request body. Recorded as a histogram.
 
     Example: `5 KB`
   </Accordion>
   <Accordion title="Response size">
-    Size of the response body. Recorded as a histogram in 1 KB buckets.
+    Size of the response body. Recorded as a histogram.
 
     Example: `5 KB`
   </Accordion>
   <Accordion title="Response time">
-    Time elapsed between start and finish of the route handler invokation for the request. Recorded as a histogram in 10 ms buckets.
+    Time taken by your application to respond to the request. Recorded as a histogram.
 
     Example: `80 ms`
   </Accordion>
-  <Accordion title={<>Consumer <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
-    Consumer identifier, and optionally name and group, as provided by your own implementation.
+  <Accordion title={<>Consumer <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="toggle-off" color="#c46b6a" /></span></>}>
+    Consumer identifier, and optionally name, group and custom attributes, as provided by your own implementation.
 
     See the [setup guide](/sdk-reference/setup-guides/overview) for your framework for how to associate requests with consumers.
 
@@ -98,12 +127,13 @@ The following data is collected for each request handled by your application and
     {
       "identifier": "john.doe@example.com",
       "name": "John Doe",
-      "group": "Users"
+      "group": "Users",
+      "attributes": {"plan": "pro"}
     }
     ```
   </Accordion>
   <Accordion title="Validation error info">
-    Details about validation errors leading to a `4xx` response. Includes error type, message and field name. Doesn't include the invalid value.
+    Details about validation errors leading to a `4xx` response. Includes source, field name, message and error type.
 
     Only captured if a supported framework is used. See [here](/api-metrics/errors#validation-errors) for details.
 
@@ -111,14 +141,14 @@ The following data is collected for each request handled by your application and
 
     ```json
     [
-      {"loc": "query.title", "msg": "ensure this value has at least 3 characters", "type": "value_error.any_str.min_length"}
+      {"source": "query", "field": "title", "message": "ensure this value has at least 3 characters", "type": "value_error.any_str.min_length"}
     ]
     ```
   </Accordion>
   <Accordion title="Exception info">
-    Exception message and stack trace. May also include a Sentry event ID, if available.
+    Exception type, message and stack trace. May also include a Sentry event ID, if available.
 
-    Only captured if an unhandled exception occurred during request handling, leading to a `500 Internal Server Error` response.
+    Only captured if an exception occurred during request handling, leading to a `500 Internal Server Error` response.
 
     Example:
 
@@ -132,7 +162,7 @@ The following data is collected for each request handled by your application and
 
 ### Request logs
 
-The following data is collected for each request handled by your application, if request logging is enabled.
+Request logs contain details of individual requests, along with associated application logs and traces.
 
 <AccordionGroup>
   <Accordion title="HTTP method and path">
@@ -140,12 +170,22 @@ The following data is collected for each request handled by your application, if
 
     Example: `POST /v1/orders`
   </Accordion>
-  <Accordion title="URL">
-    The full request URL.
+  <Accordion title={<>URL <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
+    The full request URL, including query parameters.
 
-    Query parameters can be stripped by disabling `log_query_params` (enabled by default). Default masking rules apply to query parameters. Additional masking rules can be specified using `mask_query_params`.
+    Default masking rules apply to query parameter values. Additional masking rules can be specified using `mask_query_params`.
 
     Example: `https://api.example.com/v1/books?search=api+design`
+  </Accordion>
+  <Accordion title="Client IP">
+    IP address of the client, as reported by your framework.
+
+    Example: `192.0.2.1`
+  </Accordion>
+  <Accordion title="User agent">
+    User agent string identifying the client software.
+
+    Example: `curl/8.10.1`
   </Accordion>
   <Accordion title="Response status code">
     Example: `200 OK`
@@ -155,19 +195,19 @@ The following data is collected for each request handled by your application, if
 
     Example: `4786 bytes`
   </Accordion>
-  <Accordion title={<>Request headers <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
-    Only collected if enabled via `log_request_headers` (disabled by default). Default masking rules apply. Additional masking rules can be specified using `mask_headers`.
+  <Accordion title={<>Request headers <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="toggle-off" color="#c46b6a" /></span> <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
+    Only collected if enabled via `capture_request_headers` (disabled by default). Default masking rules apply. Additional masking rules can be specified using `mask_headers`.
 
     Example:
 
     ```
     Host: api.example.com
-    Authorization: ******
+    Authorization: [REDACTED]
     X-Real-Ip: 147.98.24.101
     ```
   </Accordion>
-  <Accordion title={<>Request body <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
-    Only collected if enabled via `log_request_body` (disabled by default). Default masking rules apply. Additional masking rules can be specified using `mask_body_fields` and `mask_request_body_callback`.
+  <Accordion title={<>Request body <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="toggle-off" color="#c46b6a" /></span> <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
+    Only collected if enabled via `capture_request_body` (disabled by default). Default masking rules apply. Additional masking rules can be specified using `mask_body_fields` and `mask_request_body`.
 
     Example:
 
@@ -180,8 +220,8 @@ The following data is collected for each request handled by your application, if
 
     Example: `4678 bytes`
   </Accordion>
-  <Accordion title="Response headers">
-    Can be disabled via `log_response_headers` (enabled by default). Default masking rules apply. Additional masking rules can be specified using `mask_headers`.
+  <Accordion title={<>Response headers <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="toggle-on" color="#0b9797" /></span> <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
+    Can be disabled via `capture_response_headers` (enabled by default). Default masking rules apply. Additional masking rules can be specified using `mask_headers`.
 
     Example:
 
@@ -190,8 +230,8 @@ The following data is collected for each request handled by your application, if
     Content-Length: 36
     ```
   </Accordion>
-  <Accordion title={<>Response body <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
-    Only collected if enabled via `log_response_body` (disabled by default). Default masking rules apply. Additional masking rules can be specified using `mask_body_fields` and `mask_response_body_callback`.
+  <Accordion title={<>Response body <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="toggle-off" color="#c46b6a" /></span> <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
+    Only collected if enabled via `capture_response_body` (disabled by default). Default masking rules apply. Additional masking rules can be specified using `mask_body_fields` and `mask_response_body`.
 
     Example:
 
@@ -200,12 +240,12 @@ The following data is collected for each request handled by your application, if
     ```
   </Accordion>
   <Accordion title="Response time">
-    Time elapsed between start and finish of the route handler invokation for the request.
+    Time taken by your application to respond to the request.
 
     Example: `82 ms`
   </Accordion>
-  <Accordion title={<>Consumer <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
-    Consumer identifier, and optionally name and group, as provided by your own implementation.
+  <Accordion title={<>Consumer <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="toggle-off" color="#c46b6a" /></span></>}>
+    Consumer identifier, and optionally name, group and custom attributes, as provided by your own implementation.
 
     See the [setup guide](/sdk-reference/setup-guides/overview) for your framework for how to associate requests with consumers.
 
@@ -215,14 +255,15 @@ The following data is collected for each request handled by your application, if
     {
       "identifier": "john.doe@example.com",
       "name": "John Doe",
-      "group": "Users"
+      "group": "Users",
+      "attributes": {"plan": "pro"}
     }
     ```
   </Accordion>
-  <Accordion title={<>Application logs <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
-    Log messages emitted by the application during request handling.
+  <Accordion title={<>Application logs <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="toggle-on" color="#0b9797" /></span> <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
+    Application log records associated with the request, including messages, timestamps, severity, logger information and available attributes.
 
-    Only collected if enabled via `capture_logs` (disabled by default).
+    Can be disabled via `capture_logs` (enabled by default).
 
     Example:
 
@@ -233,10 +274,8 @@ The following data is collected for each request handled by your application, if
     ]
     ```
   </Accordion>
-  <Accordion title={<>Traces <span style={{ position: "relative", top: -2, marginLeft: "0.25rem" }}><Icon icon="shield" /></span></>}>
-    OpenTelemetry spans created by the application during request handling.
-
-    Only collected if enabled via `capture_traces` (disabled by default).
+  <Accordion title="Traces">
+    The request span and associated OpenTelemetry spans, including their attributes. These can contain custom request attributes, outgoing request URLs and database queries supplied by instrumentation.
 
     Example:
 
@@ -245,7 +284,7 @@ The following data is collected for each request handled by your application, if
       {
         "span_id": "a1b2c3d4e5f60001",
         "name": "GET /v1/orders/{orderId}",
-        "kind": "INTERNAL",
+        "kind": "SERVER",
         "start_time": 1735689600000000000,
         "end_time": 1735689600082000000
       },
@@ -262,9 +301,7 @@ The following data is collected for each request handled by your application, if
     ```
   </Accordion>
   <Accordion title="Exception info">
-    Exception message and stack trace. May also include a Sentry event ID, if available.
-
-    Only captured if an unhandled exception occurred during request handling, leading to a `500 Internal Server Error` response. Can be disabled via `log_exception` (enabled by default).
+    Exception type, message and stack trace recorded in the request's trace. May also include a Sentry event ID, if available.
 
     Example:
 
@@ -278,13 +315,13 @@ The following data is collected for each request handled by your application, if
 
 ## Data masking
 
-The Apitally SDKs mask common sensitive query parameters, headers and request/response body fields on the client side based on the below default patterns (regular expressions). You can add additional patterns using the configuration options mentioned below. Patterns are case-insensitive and match anywhere within the name.
+The Apitally SDKs mask common sensitive query parameters, headers and request/response body fields on the client side using the default patterns (regular expressions) below. These default patterns are case-insensitive and match anywhere within the name. You can add additional patterns using the configuration options in each section.
 
 ### Query parameters
 
 ```
 auth
-api-?key
+api[-_]?key
 secret
 token
 password
@@ -297,7 +334,7 @@ You can add additional patterns via the `mask_query_params` option.
 
 ```
 auth
-api-?key
+api[-_]?key
 secret
 token
 cookie
@@ -307,6 +344,8 @@ You can add additional patterns via the `mask_headers` option.
 
 ### Body fields
 
+The following patterns apply to string-valued fields in JSON request and response bodies.
+
 ```
 password
 pwd
@@ -315,38 +354,26 @@ secret
 auth
 card[-_ ]?number
 ccv
+cvv
+cvc
 ssn
 ```
 
-You can add additional patterns via the `mask_body_fields` option. For more granular control you can also specify callback functions via `mask_request_body_callback` and `mask_response_body_callback`.
+You can add additional patterns via the `mask_body_fields` option. For more granular control you can also specify callback functions via `mask_request_body` and `mask_response_body`.
+
+### Application logs
+
+You can mask application log messages using the `mask_log_record` callback.
+
+See the SDK reference for [Python](/sdk-reference/python/v1/masking), [JavaScript](/sdk-reference/javascript/v1/masking), [Go](/sdk-reference/go/v1/masking) or [.NET](/sdk-reference/dotnet/v1/masking).
 
 ## Data filtering
 
-The Apitally SDK automatically excludes requests to common static assets and health check endpoints from the request logs (not metrics) using the patterns below. They are applied to the request path.
+You can exclude selected requests from request logs, along with their associated traces and application logs. Exclusions can be based on the request path or custom conditions using sampling callbacks.
 
-```
-/_?healthz?$
-/_?health[_-]?checks?$
-/_?heart[_-]?beats?$
-/ping$
-/ready$
-/live$
-/favicon(?:-[\w-]+)?\.(ico|png|svg)$
-/apple-touch-icon(?:-[\w-]+)?\.png$
-/robots\.txt$
-/sitemap\.xml$
-/manifest\.json$
-/site\.webmanifest$
-/service-worker\.js$
-/sw\.js$
-/\.well-known/
-```
+The SDK applies these exclusions within your application before sending data to Apitally. Request metrics are still collected for excluded requests.
 
-You can add additional patterns for exclusion via the `exclude_paths` option. For more granular control you can also provide a callback function via `exclude_callbacks`.
-
-<Note>
-  These exclusions don't impact metrics. If you'd like to exclude certain endpoints from metrics, you can mark them as excluded in the dashboard. See [here](/api-metrics/traffic#exclude-endpoints) for details.
-</Note>
+See the SDK reference for [Python](/sdk-reference/python/v1/sampling), [JavaScript](/sdk-reference/javascript/v1/sampling), [Go](/sdk-reference/go/v1/sampling) or [.NET](/sdk-reference/dotnet/v1/sampling).
 
 ## Data transit
 
@@ -360,7 +387,7 @@ Database backups are created hourly and are stored in a private <a href="https:/
 
 ## Data retention
 
-Apitally retains aggregated metrics for 13 months, allowing you to analyze long-term trends. Request and application log data is retained for 15 days.
+Apitally retains aggregated request metrics for 13 months, allowing you to analyze long-term trends. CPU utilization, memory usage and uptime monitoring data are retained for 32 days. Request logs, application logs and traces are retained for 15 days by default, with longer retention available on request.
 
 When an app is deleted in the Apitally dashboard, all associated data is deleted from the database, but is still included in previously created backups.
 

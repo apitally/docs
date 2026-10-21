@@ -7,8 +7,6 @@ description: "Set up the Apitally SDK for your Express application."
 import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
 import ExistingOpenTelemetrySetupSnippet from "/snippets/v1/existing-opentelemetry-setup-javascript.mdx";
 
-<Info>This setup guide is for v1 of the JavaScript SDK (currently in beta).</Info>
-
 This page guides you through the setup of the Apitally SDK for your [Express](https://expressjs.com) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
 
 <SetupGuideStartSnippet framework="Express" />
@@ -37,15 +35,15 @@ Install the Apitally SDK as a dependency in your project.
 
 <CodeGroup>
 ```shell npm
-npm install apitally@next
+npm install apitally
 ```
 
 ```shell yarn
-yarn add apitally@next @opentelemetry/api
+yarn add apitally @opentelemetry/api
 ```
 
 ```shell pnpm
-pnpm add apitally@next
+pnpm add apitally
 ```
 </CodeGroup>
 
@@ -53,7 +51,7 @@ pnpm add apitally@next
 
 Import `apitally/express/register` on the first line of your application's entry file, before any other imports. This ensures routes are captured even in routers defined in other modules.
 
-Then call `useApitally` with your Express application, the write token, and [other configuration options](/sdk-reference/javascript/v1/configuration) after creating the app.
+Then call `useApitally` with your Express application, the write token, and other [configuration options](/sdk-reference/javascript/v1/configuration) after creating the app.
 
 <CodeGroup>
 ```javascript ESM {1,8-11}

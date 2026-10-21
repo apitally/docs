@@ -7,10 +7,6 @@ description: "Set up the Apitally SDK for your Hono application."
 import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
 import ExistingOpenTelemetrySetupSnippet from "/snippets/v1/existing-opentelemetry-setup-javascript.mdx";
 
-<Info>This setup guide is for v1 of the JavaScript SDK (currently in beta).</Info>
-
-<Tip>Running Hono on Cloudflare Workers? Follow [this setup guide](/sdk-reference/javascript-serverless/v0/setup-guides/hono-cloudflare-workers) instead.</Tip>
-
 This page guides you through the setup of the Apitally SDK for your [Hono](https://hono.dev) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
 
 <SetupGuideStartSnippet framework="Hono" />
@@ -18,6 +14,8 @@ This page guides you through the setup of the Apitally SDK for your [Hono](https
 ## Requirements
 
 Requires Node.js 20.6+ or Bun 1.2.0+, with Hono 4.8.4+.
+
+<Tip>Running Hono on Cloudflare Workers? Follow [this setup guide](/sdk-reference/javascript-serverless/v0/setup-guides/hono-cloudflare-workers) instead.</Tip>
 
 ## Create app
 
@@ -39,25 +37,25 @@ Install the Apitally SDK as a dependency in your project.
 
 <CodeGroup>
 ```shell npm
-npm install apitally@next
+npm install apitally
 ```
 
 ```shell yarn
-yarn add apitally@next @opentelemetry/api
+yarn add apitally @opentelemetry/api
 ```
 
 ```shell pnpm
-pnpm add apitally@next
+pnpm add apitally
 ```
 
 ```shell bun
-bun add apitally@next
+bun add apitally
 ```
 </CodeGroup>
 
 ## Initialize Apitally
 
-Call `useApitally` with your Hono application, the write token, and [other configuration options](/sdk-reference/javascript/v1/configuration) immediately after creating the app, before registering middleware and routes.
+Call `useApitally` with your Hono application, the write token, and other [configuration options](/sdk-reference/javascript/v1/configuration) immediately after creating the app, before registering middleware and routes.
 
 <CodeGroup>
 ```javascript ESM {6-9}

@@ -6,8 +6,6 @@ description: "Set up the Apitally SDK for your Litestar application."
 
 import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
 
-<Info>This setup guide is for v1 of the Python SDK (currently in beta).</Info>
-
 This page guides you through the setup of the Apitally SDK for your [Litestar](https://litestar.dev/) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
 
 <SetupGuideStartSnippet framework="Litestar" />
@@ -36,21 +34,21 @@ Install the Apitally SDK with the `litestar` extra as a dependency in your proje
 
 <CodeGroup>
 ```shell pip
-pip install --pre "apitally[litestar]"
+pip install "apitally[litestar]"
 ```
 
 ```shell uv
-uv add --prerelease allow "apitally[litestar]"
+uv add "apitally[litestar]"
 ```
 
 ```shell poetry
-poetry add --allow-prereleases "apitally[litestar]"
+poetry add "apitally[litestar]"
 ```
 </CodeGroup>
 
 ## Initialize Apitally
 
-Add `ApitallyPlugin` to your Litestar application with the write token and [other configuration options](/sdk-reference/python/v1/configuration) when creating the app.
+Add `ApitallyPlugin` to your Litestar application with the write token and other [configuration options](/sdk-reference/python/v1/configuration) when creating the app.
 
 ```python {4-7}
 from apitally.litestar import ApitallyPlugin

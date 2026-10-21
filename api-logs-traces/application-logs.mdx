@@ -7,15 +7,13 @@ description: View application logs in the context of API requests.
 The Apitally SDKs can instrument various logging libraries to automatically capture logs emitted by your application during request handling.
 These are associated with the corresponding request and displayed in the request details in the request logs.
 
-Log capture must be explicitly enabled alongside request logging. See the [setup guide](/sdk-reference/setup-guides/overview) for your framework for instructions.
-
 <img src="https://assets.apitally.io/docs/2026-01-31/request-log-item-logs.webp" alt="Application logs" className="rounded-xl" />
 
 <Tip>Click on a log entry to see the full message, in case it's truncated.</Tip>
 
 ## Supported loggers
 
-The following loggers are instrumented automatically if used in your application:
+The following loggers are supported:
 
 - Python
   - logging (standard library)
@@ -27,6 +25,6 @@ The following loggers are instrumented automatically if used in your application
   - Logger in NestJS
   - Built-in logging methods in hapi
 - Go
-  - slog (standard library, must use context-aware logging)
+  - slog (standard library, requires additional setup and context-aware logging)
 - .NET
   - Microsoft.Extensions.Logging (standard library)

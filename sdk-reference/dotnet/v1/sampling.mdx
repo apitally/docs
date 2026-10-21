@@ -3,17 +3,13 @@ title: Sampling
 description: Sample request logs and traces and exclude requests with the Apitally SDK for .NET.
 ---
 
+import DefaultExclusionsSnippet from "/snippets/v1/default-exclusions.mdx";
+
 The Apitally SDK provides options for sampling request logs and traces and excluding requests you don't want to capture.
 
 <Note>
   Requests excluded or sampled out won't be logged, but are still counted in metrics. To exclude endpoints from metrics, you can mark them as excluded in the [dashboard](/api-metrics/traffic#exclude-endpoints).
 </Note>
-
-## Default exclusions
-
-The SDK automatically excludes common static assets and health check endpoints, such as `/robots.txt` or `/healthz`.
-
-See the [data privacy](/data-privacy#data-filtering) page for more information about default exclusions.
 
 ## Sample rate
 
@@ -99,3 +95,7 @@ builder.Services.AddApitally(options =>
     options.ExcludePaths = ["/admin/", "/internal/"];
 });
 ```
+
+## Default exclusions
+
+<DefaultExclusionsSnippet />
