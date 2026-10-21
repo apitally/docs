@@ -12,21 +12,6 @@ Apitally integrates with your application through open-source SDKs built on Open
   <Card title="SDK for .NET" icon="microsoft" href="/sdk-reference/dotnet/v1/overview" />
 </CardGroup>
 
-The diagram below illustrates how the SDKs works.
-
-<img
-  className="block dark:hidden rounded-xl"
-  style={{ border: "solid 1px #22222222" }}
-  src="https://assets.apitally.io/docs/how-it-works-light.png"
-  alt="Diagram showing how the Apitally SDKs works"
-/>
-<img
-  className="hidden dark:block rounded-xl"
-  style={{ border: "solid 1px #dddddd22" }}
-  src="https://assets.apitally.io/docs/how-it-works-dark.png"
-  alt="Diagram showing how the Apitally SDKs works"
-/>
-
 The SDKs include the following functionality:
 
 - Discovery of available endpoints in your application
@@ -36,9 +21,7 @@ The SDKs include the following functionality:
 - Background export of collected data to Apitally
 
 <Note>
-  The client is designed to be resilient to temporary network failures
-  when communicating with Apitally and will retry sending data for up to
-  1 hour.
+  The SDKs are designed to be resilient to temporary network failures when communicating with Apitally and will retry sending data for up to 1 hour.
 </Note>
 
 ## On startup
