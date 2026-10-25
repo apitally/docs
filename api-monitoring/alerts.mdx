@@ -77,12 +77,18 @@ Apitally provides several options for controlling the frequency and timing of al
 
 Tuning these settings helps prevent alert fatigue from transient issues while ensuring you're notified of persistent problems.
 
-## Slack integration
+## Integrations
 
-Apitally integrates with Slack to send alert notifications to a channel in your Slack workspace.
-You can set up the Slack integration under *Settings > Integrations*.
+In addition to email, you can receive alert notifications through the following integrations. You can set these up under *Settings > Integrations*.
 
-## Microsoft Teams integration
+### Slack
 
-Apitally also offers an integration with Microsoft Teams for alert notifications using the Incoming Webhook connector.
-To set this up, navigate to *Settings > Integrations* and then follow the instructions on the screen.
+The Slack integration sends alert notifications to a channel in your Slack workspace.
+
+### Microsoft Teams
+
+The Microsoft Teams integration sends alert notifications using the Incoming Webhook connector.
+
+### incident.io
+
+The incident.io integration sends alert notifications using an HTTP alert source. When an alert resolves in Apitally, its status is automatically updated in incident.io.
