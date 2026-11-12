@@ -81,7 +81,7 @@
           {
             "group": "For agents",
             "icon": "robot",
-            "pages": ["agents/cli-and-skill"]
+            "pages": ["agents/mcp-server", "agents/cli-and-skill"]
           }
         ]
       },

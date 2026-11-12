@@ -34,9 +34,12 @@ Verify every documented behavior, option, default, signature, version requiremen
 | ----------------------------------------------------- | -------------------------- | ---------- |
 | `api-metrics/`, `api-logs-traces/`, `api-monitoring/` | `apitally/cloud` (private) | `../cloud` |
 | `api-reference.mdx`                                   | `apitally/cloud` (private) | `../cloud` |
+| `agents/mcp-server.mdx`                               | `apitally/cloud` (private) | `../cloud` |
 | `agents/cli-and-skill.mdx`                            | `apitally/cli`             | `../cli`   |
 
 The API reference endpoint pages are generated from https://api.apitally.io/openapi.json, which is served by `../cloud/apitally_cloud/api`.
+
+The MCP server is `../cloud/apitally_cloud/mcp`. Verify the client setup instructions on its page against each client's own documentation.
 
 ## Editing pages
 
