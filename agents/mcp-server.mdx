@@ -1,0 +1,183 @@
+---
+title: Apitally MCP server
+sidebarTitle: MCP server
+description: Connect AI agents to Apitally, so they can analyze your API metrics, request logs, and traces, and manage your apps and alerts.
+---
+
+The Apitally MCP server lets AI agents work with Apitally on your behalf. Agents can analyze API metrics, investigate errors using request logs and traces, and check uptime and alerts. They can also make changes, such as creating apps for new APIs and configuring alert rules, health checks, endpoints, and consumers.
+
+It works with any client that supports remote [MCP](https://modelcontextprotocol.io) servers, including coding agents such as Claude Code, Codex, and Cursor, and chat apps such as Claude and ChatGPT.
+
+<Tip>
+  The MCP server is the right choice for most agentic use cases. For more complex analyses or for analyzing large amounts of data, use the [Apitally CLI](/agents/cli-and-skill) instead, which lets agents load data into a local database and query it with SQL.
+</Tip>
+
+## Example prompts
+
+With the MCP server set up, you can ask an agent about your APIs or have it make changes in Apitally, instead of doing it yourself in the dashboard. For example:
+
+- "Which endpoints of my API returned the most server errors in the last 24 hours, and what caused them?"
+- "Why did response times for `POST /orders` get slower this week?"
+- "Who are the top 10 consumers of my API this month, and how did their usage change compared to last month?"
+- "Add Apitally to this FastAPI project."
+- "Create an alert for when the error rate in prod exceeds 5% over 15 minutes."
+
+## Setup
+
+The MCP server is available at the following URL:
+
+```
+https://mcp.apitally.io/mcp
+```
+
+When you add the MCP server to a client, a consent screen opens in your browser, where you choose whether the agent gets read-only or read & write [access](#access).
+
+### Claude Code
+
+Add the MCP server and sign in:
+
+```bash
+claude mcp add --transport http apitally \
+  https://mcp.apitally.io/mcp
+claude mcp login apitally
+```
+
+### Codex
+
+Add the MCP server, which also starts the sign-in:
+
+```bash
+codex mcp add apitally --url https://mcp.apitally.io/mcp
+```
+
+The Codex CLI and IDE extension share this configuration.
+
+### Cursor
+
+Click the button below to add the MCP server to Cursor:
+
+<a href="cursor://anysphere.cursor-deeplink/mcp/install?name=apitally&config=eyJ1cmwiOiJodHRwczovL21jcC5hcGl0YWxseS5pby9tY3AifQ==">
+  <img src="https://cursor.com/deeplink/mcp-install-dark.svg" alt="Add Apitally MCP server to Cursor" className="block dark:hidden" noZoom />
+  <img src="https://cursor.com/deeplink/mcp-install-light.svg" alt="Add Apitally MCP server to Cursor" className="hidden dark:block" noZoom />
+</a>
+
+Alternatively, add the MCP server to `~/.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "apitally": {
+      "url": "https://mcp.apitally.io/mcp"
+    }
+  }
+}
+```
+
+Then sign in when Cursor asks you to connect the MCP server.
+
+### VS Code
+
+1. With **Copilot** selected as the session target, run **Chat: Open Customizations** from the Command Palette and select **MCP Servers**.
+2. Select **Add Server** in the **User** group, choose **HTTP**, and enter `https://mcp.apitally.io/mcp`.
+3. Enter `apitally` as the server ID.
+4. Select **Global**, then **Copilot Global**.
+5. Sign in when VS Code asks you to authenticate.
+
+### Claude
+
+In [claude.ai](https://claude.ai) or the Claude desktop app:
+
+1. Open the [Add custom connector](https://claude.ai/customize/connectors?modal=add-custom-connector&connectorName=Apitally&connectorUrl=https%3A%2F%2Fmcp.apitally.io%2Fmcp) dialog with the name and URL filled in. Alternatively, go to **Customize > Connectors**, select **Add**, then **Add custom connector**, and enter `Apitally` as the name and `https://mcp.apitally.io/mcp` as the URL.
+2. Click **Continue**, keep the detected authentication settings, and click **Add**.
+3. Click **Connect** and sign in.
+
+On Team and Enterprise plans, an owner first adds the connector under **Organization settings > Connectors**. Members then connect it under **Customize > Connectors**.
+
+### ChatGPT
+
+In ChatGPT on the web:
+
+1. Go to [Plugins](https://chatgpt.com/plugins), select the plus button, then **Add custom MCP server**.
+2. Enter `Apitally` as the name and `https://mcp.apitally.io/mcp` as the server URL under **Connection**.
+3. Select **OAuth** as the authentication method.
+4. Review the risk warning, select **I understand and want to continue**, then **Create as a plugin**.
+5. Install the plugin and sign in.
+
+Whether you can add custom MCP servers depends on your ChatGPT plan and workspace permissions.
+
+### Pi
+
+Add the MCP server and sign in:
+
+```bash
+pi mcp add apitally --url https://mcp.apitally.io/mcp
+pi mcp login apitally
+```
+
+### Other clients
+
+For any other client, add `https://mcp.apitally.io/mcp` as a remote MCP server, following the client's documentation.
+
+## API keys
+
+Agents that can't open a browser for you to log in, for example in a CI pipeline, can authenticate with an API key instead. Create one in the Apitally dashboard under **Settings > API keys** and configure the client to send it as a bearer token in the `Authorization` header.
+
+For example, in Claude Code:
+
+```bash
+claude mcp add --transport http apitally \
+  https://mcp.apitally.io/mcp \
+  --header "Authorization: Bearer your-api-key"
+```
+
+## Access
+
+When you authorize an agent, you choose one of two scopes:
+
+- **Read-only**: The agent can retrieve data.
+- **Read & write**: The agent can also make changes, using the tools that create, update, delete, or revoke something.
+
+The agent can access the apps of all your teams. To make changes in a team, you also need the admin or owner role in that team.
+
+An API key gives access to the apps of its own team only, with the scope selected for the key.
+
+You can see the agents you have connected and revoke their access in the Apitally dashboard under **Settings > Agents**.
+
+## Tools
+
+The MCP server provides the following tools.
+
+| Tool                     | Description                                                   |
+| ------------------------ | ------------------------------------------------------------- |
+| `list_teams`             | List your teams, with your role in each                       |
+| `list_apps`              | List the apps of all your teams, with their environments      |
+| `create_app`             | Create an app to monitor an API with Apitally                 |
+| `update_app`             | Update an app's name, framework, or response time threshold   |
+| `list_write_tokens`      | List the write tokens of an app                               |
+| `create_write_token`     | Create an additional write token for an app                   |
+| `revoke_write_token`     | Revoke a write token of an app                                |
+| `list_endpoints`         | List the endpoints of an app                                  |
+| `update_endpoint_config` | Exclude an endpoint or set its response time threshold        |
+| `list_consumers`         | List the consumers of an app                                  |
+| `list_consumer_groups`   | List the consumer groups of an app                            |
+| `update_consumer`        | Rename a consumer or assign it to a consumer group            |
+| `get_metrics`            | Get traffic, error, and performance metrics of an app         |
+| `get_resource_usage`     | Get the CPU and memory usage of an app environment over time  |
+| `list_errors`            | List the errors of an app by endpoint and status code         |
+| `get_error`              | Get an error's details, with affected requests and consumers  |
+| `update_error_config`    | Mark a client error of an endpoint as expected, or unmark it  |
+| `search_request_logs`    | Search the request logs of an app                             |
+| `get_request`            | Get a request's details, with headers, payloads, and logs     |
+| `search_spans`           | Search the spans of an app's traces across requests           |
+| `get_trace`              | Get the spans of a trace, with their attributes and events    |
+| `get_uptime`             | Get the uptime and health check results of an app environment |
+| `update_uptime_checks`   | Update the uptime and health check settings of an environment |
+| `list_alert_rules`       | List the alert rules of an app, with their current state      |
+| `create_alert_rule`      | Create a custom alert rule for an app environment             |
+| `update_alert_rule`      | Update or mute a custom alert rule                            |
+| `delete_alert_rule`      | Delete a custom alert rule and its alert history              |
+| `list_alerts`            | List the alert history of an app                              |
+
+## Rate limits
+
+The MCP server allows up to 100 requests per minute for each connected agent or API key.
