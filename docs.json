@@ -21,6 +21,9 @@
   "interaction": {
     "drilldown": false
   },
+  "contextual": {
+    "options": ["copy", "view"]
+  },
   "navbar": {
     "links": [
       {

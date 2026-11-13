@@ -28,6 +28,25 @@ header [data-component-part="products-selector-trigger"] {
   margin-left: 0.5rem;
 }
 
+#page-context-menu button:not(:hover) {
+  background-color: transparent;
+}
+
+#page-context-menu-button {
+  color: rgb(var(--gray-600));
+}
+
+html.dark #page-context-menu-button {
+  color: rgb(var(--gray-400));
+}
+
+@media (min-width: 640px) {
+  .eyebrow + div > #page-context-menu {
+    align-self: flex-start;
+    margin-top: -1.875rem;
+  }
+}
+
 header a:has(> .nav-logo) {
   flex-shrink: 0;
 }
