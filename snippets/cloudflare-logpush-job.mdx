@@ -8,4 +8,4 @@ Log in to the [Cloudflare dashboard](https://dash.cloudflare.com/) and navigate 
 | If logs match... | Filtered logs: <br /> EventType equals `fetch` and <br /> ScriptName equals `{your-worker-name}` |
 | Send the following fields... | General: <br /> Event, EventTimestampMs, Logs |
 
-In the HTTP endpoint, replace `{client-id}` with your app's client ID and `{env}` with the environment (e.g. `prod` or `dev`). In the filter criteria, replace `{your-worker-name}` with the name of your Worker, as specified in your Wrangler config.
+In the HTTP endpoint, replace `{client-id}` with your app's client ID and `{env}` with the environment (e.g. `prod` or `dev`). New environments are created automatically when Apitally first receives data for them. In the filter criteria, replace `{your-worker-name}` with the name of your Worker, as specified in your Wrangler config.

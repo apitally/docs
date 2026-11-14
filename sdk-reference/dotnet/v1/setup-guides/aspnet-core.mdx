@@ -65,7 +65,7 @@ var app = builder.Build();
 
 If your application uses a `Startup` class, call `services.AddApitally()` in `ConfigureServices`.
 
-The SDK uses the ASP.NET Core environment name (e.g. from `ASPNETCORE_ENVIRONMENT`) to determine the environment in Apitally. `Production` maps to `prod` and `Development` maps to `dev`, matching the default environments of your app. To use a different environment name, set the [`Env`](/sdk-reference/dotnet/v1/configuration#env) option or the `APITALLY_ENV` environment variable.
+The SDK uses the ASP.NET Core environment name (e.g. from `ASPNETCORE_ENVIRONMENT`) to determine the environment in Apitally. `Production` maps to `prod` and `Development` maps to `dev`, matching the default environments of your app. To use a different environment name, set the [`Env`](/sdk-reference/dotnet/v1/configuration#env) option or the `APITALLY_ENV` environment variable. New environments are created automatically when Apitally first receives data for them.
 
 You can also set the `APITALLY_WRITE_TOKEN` environment variable instead of configuring `WriteToken`.
 
