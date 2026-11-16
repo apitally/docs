@@ -87,11 +87,13 @@ You can also download the binary for your platform from the [latest release](htt
 
 The CLI uses the Apitally [API](/api-reference) under the hood and therefore requires a team-scoped API key.
 
-Authenticate using a browser-based flow that creates and saves an API key to `~/.apitally/auth.json`:
+Authenticate using a browser-based login:
 
 ```bash
 npx @apitally/cli auth
 ```
+
+The CLI prints a code and opens a page in the Apitally dashboard. Confirm that the page shows the same code, select a team and a scope, and click **Authorize**. The CLI then receives a new [personal API key](/api-reference#authentication) and saves it to `~/.apitally/auth.json`.
 
 If you already have an API key, you can provide it directly:
 
