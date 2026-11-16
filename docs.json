@@ -55,6 +55,11 @@
             ]
           },
           {
+            "group": "Agents",
+            "icon": "robot",
+            "pages": ["agents/mcp-server", "agents/cli-and-skill"]
+          },
+          {
             "group": "API metrics",
             "icon": "chart-line",
             "pages": [
@@ -80,11 +85,6 @@
             "group": "API monitoring",
             "icon": "bell",
             "pages": ["api-monitoring/uptime", "api-monitoring/alerts"]
-          },
-          {
-            "group": "For agents",
-            "icon": "robot",
-            "pages": ["agents/mcp-server", "agents/cli-and-skill"]
           }
         ]
       },
