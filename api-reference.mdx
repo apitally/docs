@@ -27,12 +27,10 @@ curl -H "Api-Key: your-api-key" https://api.apitally.io/v1/apps
 
 You can manage API keys in the Apitally dashboard under **Settings > API keys**. Keys are scoped to a team and grant access to all apps within that team. There are two types of keys:
 
-- **Personal**: Tied to the user who creates it, and only works while that user is an active member of the team. Each team member can create up to 10 personal keys. The [CLI](/agents/cli-and-skill#authentication) creates a personal key when you log in.
-- **Service**: For integrations. Not tied to a user, so it keeps working when its creator leaves the team. Only admins and owners can create service keys, up to 10 per team.
+- **Personal**: Tied to the user who creates it, and only works while that user is an active member of the team.
+- **Service**: For integrations. Not tied to a user, so it keeps working when its creator leaves the team. Only admins and owners can create service keys.
 
-Each key has a **Read-only** or **Read & write** scope. Only admins and owners can grant the **Read & write** scope, and for a personal key it only applies while its user is an admin or owner of the team. All endpoints of this API only read data, so the **Read-only** scope is sufficient. The **Read & write** scope allows [MCP server](/agents/mcp-server#api-keys) clients to make changes.
-
-API access is included in all paid plans and the free trial. If your team's plan doesn't include API access, for example after the free trial ends without an upgrade, the API returns a `403 Forbidden` response.
+Each key has a **Read-only** or **Read & write** scope. Only admins and owners can grant the **Read & write** scope, and for a personal key it only applies while its user is an admin or owner of the team.
 
 ## Rate limits
 
