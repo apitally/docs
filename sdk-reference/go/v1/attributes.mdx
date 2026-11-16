@@ -40,7 +40,7 @@ Read `string` attributes with `AsString()` and `int64` attributes with `AsInt64(
 
 ## Set custom attributes
 
-Use `apitally.SetRequestAttributes()` with the [request context](/sdk-reference/go/v1/tracing#request-context) in your request handling code to attach custom metadata to the current request span. These attributes are included in the request trace and available to response-stage sampling and masking callbacks.
+Use `apitally.SetRequestAttributes()` with the [request context](/sdk-reference/go/v1/tracing#request-context) in your request handling code to attach custom metadata to the current request span. These attributes are included in the request trace and available to response-stage sampling and masking callbacks. They are also shown in the request log details.
 
 ```go
 apitally.SetRequestAttributes(ctx, attribute.String("tenant.id", tenantID))

@@ -36,7 +36,7 @@ Note that `http.response.status_code` is a `long`, not an `int`. Pattern matchin
 
 ## Set custom attributes
 
-Use the `SetRequestAttribute()` method of the `IApitally` service in your request handling code to attach custom metadata to the current request span. These attributes are included in the request trace and available to response-stage sampling and masking callbacks.
+Use the `SetRequestAttribute()` method of the `IApitally` service in your request handling code to attach custom metadata to the current request span. These attributes are included in the request trace and available to response-stage sampling and masking callbacks. They are also shown in the request log details.
 
 ```csharp
 apitally.SetRequestAttribute("tenant.id", tenantId);
