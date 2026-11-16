@@ -8,7 +8,7 @@ In the Apitally SDK, each API request is represented by a span. Span attributes 
 You can use this metadata to make decisions in [sampling](/sdk-reference/python/v1/sampling#custom-sampling) and [masking](/sdk-reference/python/v1/masking#body-masking-callbacks) callbacks, which receive the `span` object as an argument. Access attributes through `span.attributes`. Individual attributes might be missing, so use `.get()`:
 
 ```python {4-5}
-from opentelemetry.sdk.trace import ReadableSpan
+from apitally import ReadableSpan
 
 def callback(span: ReadableSpan):
     attributes = span.attributes or {}
@@ -34,7 +34,7 @@ Attributes marked with \* are available to `sample_on_request` when the request 
 
 ## Set custom attributes
 
-Use `apitally.set_request_attribute()` in your request handling code to attach custom metadata to the current request span. These attributes are included in the request trace and available to response-stage sampling and masking callbacks.
+Use `apitally.set_request_attribute()` in your request handling code to attach custom metadata to the current request span. These attributes are included in the request trace and available to response-stage sampling and masking callbacks. They are also stored with the request log, so you can see them in the request details in the Apitally dashboard and retrieve them using the [API](/api-reference/request-logs/get-request-details).
 
 ```python
 import apitally
