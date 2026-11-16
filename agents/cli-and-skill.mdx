@@ -93,9 +93,7 @@ Authenticate using a browser-based login:
 npx @apitally/cli auth
 ```
 
-The CLI prints a code and opens a page in the Apitally dashboard. Confirm that the page shows the same code, select a team and a scope, and click **Authorize**. The CLI then receives a new [personal API key](/api-reference#authentication) and saves it to `~/.apitally/auth.json`. All CLI commands only read data, so the **Read-only** scope is sufficient.
-
-The CLI also prints the URL of the page, so you can complete the login in a browser on another device, for example when running the CLI over SSH or in a container. The code expires after 10 minutes.
+The CLI prints a code and opens a page in the Apitally dashboard. Confirm that the page shows the same code, select a team and a scope, and click **Authorize**. The CLI then receives a new [personal API key](/api-reference#authentication) and saves it to `~/.apitally/auth.json`.
 
 If you already have an API key, you can provide it directly:
 
