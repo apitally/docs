@@ -33,7 +33,7 @@ Attributes marked with \* are available to `sampleOnRequest` when the request st
 
 ## Set custom attributes
 
-Use `setRequestAttribute()` in your request handling code to attach custom metadata to the current request span. These attributes are included in the request trace and available to response-stage sampling and masking callbacks.
+Use `setRequestAttribute()` in your request handling code to attach custom metadata to the current request span. These attributes are included in the request trace and available to response-stage sampling and masking callbacks. They are also stored with the request log, so you can see them in the request details in the Apitally dashboard and retrieve them using the [API](/api-reference/request-logs/get-request-details).
 
 ```javascript
 import { setRequestAttribute } from "apitally";
