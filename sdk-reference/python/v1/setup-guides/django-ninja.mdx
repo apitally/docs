@@ -5,7 +5,6 @@ description: "Set up the Apitally SDK for your Django application."
 ---
 
 import SetupGuideStartSnippet from "/snippets/setup-guide-start.mdx";
-import AgentSetupTip from "/snippets/agent-setup-tip.mdx";
 
 This page guides you through the setup of the Apitally SDK for your [Django Ninja](https://django-ninja.dev) application. If you don't have an Apitally account yet, [sign up](https://app.apitally.io/?signup) before getting started.
 
@@ -23,13 +22,11 @@ To get started, create a new app in the [Apitally dashboard](https://app.apitall
 
 You can also configure the environments (e.g. `prod` and `dev`) for your app, or simply accept the defaults.
 
-After submitting, you will see tailored setup instructions for your app. These include your write token and code snippets you can copy and paste into your project.
+After submitting, you will see tailored setup instructions for your app. These include your write token and code snippets you can copy and paste into your project. You can also copy a prompt from there to have a coding agent set up Apitally for you.
 
 <Note>
   The **write token** (`apt_...`) provided in the setup instructions uniquely identifies your app for the purpose of data ingestion only. It does not grant any kind of read access to your data.
 </Note>
-
-<AgentSetupTip />
 
 ## Install the SDK
 
