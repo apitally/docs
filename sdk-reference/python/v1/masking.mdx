@@ -47,8 +47,8 @@ For more control over body masking, you can provide callback functions via the `
 import json
 
 import apitally
+from apitally import ReadableSpan
 from fastapi import FastAPI
-from opentelemetry.sdk.trace import ReadableSpan
 
 
 def mask_request_body(span: ReadableSpan, body: bytes) -> bytes | None:
@@ -108,8 +108,8 @@ To mask sensitive data in application logs, provide a callback function via the 
 import re
 
 import apitally
+from apitally import ReadWriteLogRecord
 from fastapi import FastAPI
-from opentelemetry.sdk._logs import ReadWriteLogRecord
 
 
 def mask_log_record(record: ReadWriteLogRecord) -> ReadWriteLogRecord | None:

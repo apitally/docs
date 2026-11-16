@@ -8,7 +8,7 @@ In the Apitally SDK, each API request is represented by a span. Span attributes 
 You can use this metadata to make decisions in [sampling](/sdk-reference/python/v1/sampling#custom-sampling) and [masking](/sdk-reference/python/v1/masking#body-masking-callbacks) callbacks, which receive the `span` object as an argument. Access attributes through `span.attributes`. Individual attributes might be missing, so use `.get()`:
 
 ```python {4-5}
-from opentelemetry.sdk.trace import ReadableSpan
+from apitally import ReadableSpan
 
 def callback(span: ReadableSpan):
     attributes = span.attributes or {}
