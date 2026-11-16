@@ -41,8 +41,8 @@ The callback should return `False` to discard the request, `True` to capture it,
 <CodeGroup>
   ```python Sample on request
   import apitally
+  from apitally import ReadableSpan
   from fastapi import FastAPI
-  from opentelemetry.sdk.trace import ReadableSpan
 
 
   def should_capture_request(span: ReadableSpan) -> bool:
@@ -63,8 +63,8 @@ The callback should return `False` to discard the request, `True` to capture it,
 
   ```python Sample on response
   import apitally
+  from apitally import ReadableSpan
   from fastapi import FastAPI
-  from opentelemetry.sdk.trace import ReadableSpan
 
 
   def should_capture_request(span: ReadableSpan) -> bool:
