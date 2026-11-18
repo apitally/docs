@@ -47,9 +47,10 @@ There are additional options for more complex alerting needs, such as filtering,
 
 You can narrow down the scope of your alerts using the following filters:
 
-- *Consumer:* Monitor a specific API consumer.
-- *Consumer group:* Track metrics for a group of consumers.
-- *Endpoint:* Alert on a specific API endpoint.
+- API consumer or consumer group
+- HTTP method (e.g. `GET`, `POST`)
+- Endpoint path (supports wildcards)
+- Response status code (e.g. `502`, `5xx`)
 
 These filters can be found under *Additional filters* when creating or editing an alert.
 
