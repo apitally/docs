@@ -77,30 +77,30 @@ Then sign in when Cursor asks you to connect the MCP server.
 
 ### VS Code
 
-1. With **Copilot** selected as the session target, run **Chat: Open Customizations** from the Command Palette and select **MCP Servers**.
-2. Select **Add Server** in the **User** group, choose **HTTP**, and enter `https://mcp.apitally.io/mcp`.
+1. With *Copilot* selected as the session target, run *Chat: Open Customizations* from the Command Palette and select *MCP Servers*.
+2. Select *Add Server* in the *User* group, choose *HTTP*, and enter `https://mcp.apitally.io/mcp`.
 3. Enter `apitally` as the server ID.
-4. Select **Global**, then **Copilot Global**.
+4. Select *Global*, then *Copilot Global*.
 5. Sign in when VS Code asks you to authenticate.
 
 ### Claude
 
 In [claude.ai](https://claude.ai) or the Claude desktop app:
 
-1. Open the [Add custom connector](https://claude.ai/customize/connectors?modal=add-custom-connector&connectorName=Apitally&connectorUrl=https%3A%2F%2Fmcp.apitally.io%2Fmcp) dialog with the name and URL filled in. Alternatively, go to **Customize > Connectors**, select **Add**, then **Add custom connector**, and enter `Apitally` as the name and `https://mcp.apitally.io/mcp` as the URL.
-2. Click **Continue**, keep the detected authentication settings, and click **Add**.
-3. Click **Connect** and sign in.
+1. Open the [Add custom connector](https://claude.ai/customize/connectors?modal=add-custom-connector&connectorName=Apitally&connectorUrl=https%3A%2F%2Fmcp.apitally.io%2Fmcp) dialog with the name and URL filled in. Alternatively, go to *Customize > Connectors*, select *Add*, then *Add custom connector*, and enter `Apitally` as the name and `https://mcp.apitally.io/mcp` as the URL.
+2. Click *Continue*, keep the detected authentication settings, and click *Add*.
+3. Click *Connect* and sign in.
 
-On Team and Enterprise plans, an owner first adds the connector under **Organization settings > Connectors**. Members then connect it under **Customize > Connectors**.
+On Team and Enterprise plans, an owner first adds the connector under *Organization settings > Connectors*. Members then connect it under *Customize > Connectors*.
 
 ### ChatGPT
 
 In ChatGPT on the web:
 
-1. Go to [Plugins](https://chatgpt.com/plugins), select the plus button, then **Add custom MCP server**.
-2. Enter `Apitally` as the name and `https://mcp.apitally.io/mcp` as the server URL under **Connection**.
-3. Select **OAuth** as the authentication method.
-4. Review the risk warning, select **I understand and want to continue**, then **Create as a plugin**.
+1. Go to [Plugins](https://chatgpt.com/plugins), select the plus button, then *Add custom MCP server*.
+2. Enter `Apitally` as the name and `https://mcp.apitally.io/mcp` as the server URL under *Connection*.
+3. Select *OAuth* as the authentication method.
+4. Review the risk warning, select *I understand and want to continue*, then *Create as a plugin*.
 5. Install the plugin and sign in.
 
 Whether you can add custom MCP servers depends on your ChatGPT plan and workspace permissions.
@@ -120,7 +120,7 @@ For any other client, add `https://mcp.apitally.io/mcp` as a remote MCP server, 
 
 ## API keys
 
-Agents that can't open a browser for you to log in, for example in a CI pipeline, can authenticate with an API key instead. Create one in the Apitally dashboard under **Settings > API keys** and configure the client to send it as a bearer token in the `Authorization` header.
+Agents that can't open a browser for you to log in, for example in a CI pipeline, can authenticate with an API key instead. Create one in the Apitally dashboard under *Settings > API keys* and configure the client to send it as a bearer token in the `Authorization` header.
 
 For example, in Claude Code:
 
@@ -141,7 +141,7 @@ The agent can access the apps of all your teams. To make changes in a team, you 
 
 An API key gives access to the apps of its own team only, with the scope selected for the key.
 
-You can see the agents you have connected and revoke their access in the Apitally dashboard under **Settings > Agents**.
+You can see the agents you have connected and revoke their access in the Apitally dashboard under *Settings > Agents*.
 
 ## Tools
 
